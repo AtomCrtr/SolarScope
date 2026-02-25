@@ -1,8 +1,12 @@
 # 🔭 SolarScope
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://solarscope-app.streamlit.app/)
+
 > **Application interactive pour explorer l'espace**, construite avec Streamlit et des données réelles de la NASA et d'une base PostgreSQL hébergée sur Railway.
 
 🎯 **Conçu pour les enfants** — langage simple, visuels immersifs, quiz et anecdotes !
+
+🔗 **[👉 Accéder à l'application](https://solarscope-app.streamlit.app/)**
 
 ---
 
