@@ -1,0 +1,44 @@
+# === Secrets & Environnement ===
+.env
+.env.local
+*.env
+
+# === Streamlit secrets locaux ===
+.streamlit/secrets.toml
+
+# === Python ===
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# === Environnements virtuels ===
+venv/
+.venv/
+env/
+ENV/
+
+# === IDE ===
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# === OS ===
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# === Logs ===
+*.log
+logs/
+
+# === Données temporaires ===
+*.csv
+*.xlsx
+!*.example.*

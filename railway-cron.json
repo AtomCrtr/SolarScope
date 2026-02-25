@@ -1,0 +1,9 @@
+{
+  "jobs": {
+    "data-refresh": {
+      "schedule": "0 6 * * *",
+      "buildCommand": "pip install -r requirements.txt",
+      "startCommand": "python -m ingestion.run_all"
+    }
+  }
+}
