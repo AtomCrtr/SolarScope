@@ -8,11 +8,17 @@ const SpaceWeatherDashboard = dynamic(() => import('@/components/SpaceWeatherDas
 
 
 /* ── Data ── */
+const SDO_BASE = 'https://sdo.gsfc.nasa.gov/assets/img/latest'
+
+function sdoProxy(file: string) {
+    return `/api/sdo?url=${encodeURIComponent(`${SDO_BASE}/${file}`)}`
+}
+
 const SDO_IMAGES = [
-    { src: 'https://sdo.gsfc.nasa.gov/assets/img/latest/latest_512_0171.jpg', label: '🔵 Ultraviolet 171Å', desc: 'Boucles de plasma chaud — 600 000°C', wavelength: '17,1 nm' },
-    { src: 'https://sdo.gsfc.nasa.gov/assets/img/latest/latest_512_0304.jpg', label: '🔴 Hélium 304Å', desc: 'Chromosphère — 50 000°C', wavelength: '30,4 nm' },
-    { src: 'https://sdo.gsfc.nasa.gov/assets/img/latest/latest_512_HMIB.jpg', label: '⚫ Magnétogramme HMI', desc: 'Champ magnétique en surface', wavelength: '617,3 nm' },
-    { src: 'https://sdo.gsfc.nasa.gov/assets/img/latest/latest_512_0094.jpg', label: '💚 Flare 094Å', desc: 'Détecte les éruptions X — 6 millions°C', wavelength: '9,4 nm' },
+    { src: sdoProxy('latest_512_0171.jpg'), label: '🔵 Ultraviolet 171Å', desc: 'Boucles de plasma chaud — 600 000°C', wavelength: '17,1 nm' },
+    { src: sdoProxy('latest_512_0304.jpg'), label: '🔴 Hélium 304Å', desc: 'Chromosphère — 50 000°C', wavelength: '30,4 nm' },
+    { src: sdoProxy('latest_512_HMIB.jpg'), label: '⚫ Magnétogramme HMI', desc: 'Champ magnétique en surface', wavelength: '617,3 nm' },
+    { src: sdoProxy('latest_512_0094.jpg'), label: '💚 Flare 094Å', desc: 'Détecte les éruptions X — 6 millions°C', wavelength: '9,4 nm' },
 ]
 
 const FACTS = [
