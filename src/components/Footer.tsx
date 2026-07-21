@@ -44,7 +44,7 @@ const SOURCES = [
     { name: 'NASA SDO', url: 'https://sdo.gsfc.nasa.gov', desc: 'Images solaires en direct' },
     { name: 'ESA / JWST', url: 'https://webbtelescope.org', desc: 'Images du télescope Webb' },
     { name: 'The Space Devs', url: 'https://thespacedevs.com', desc: 'Prochains lancements' },
-    { name: 'NASA Open Data', url: 'https://data.nasa.gov', desc: 'Base météorites & plus' },
+    { name: 'NASA Open Data', url: 'https://data.nasa.gov', desc: 'Catalogue public & archives' },
 ]
 
 export default function Footer() {

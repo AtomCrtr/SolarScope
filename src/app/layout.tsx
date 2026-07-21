@@ -8,7 +8,6 @@ import Breadcrumb from '@/components/Breadcrumb'
 import ThemeToggle from '@/components/ThemeToggle'
 
 const BASE_URL = 'https://solarscope.vercel.app'
-const OG_IMAGE = `${BASE_URL}/og-image.png`
 
 export const metadata: Metadata = {
   title: {
@@ -29,17 +28,14 @@ export const metadata: Metadata = {
     siteName: 'SolarScope',
     title: 'SolarScope 🔭 — Explorer l\'Univers avec la NASA',
     description: 'Planètes en 3D, positions réelles J2000, télescope Webb, ISS live, aurores boréales, météorites… données NASA en temps réel pour tous.',
-    images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: 'SolarScope — Explore l\'Univers' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'SolarScope 🔭 — Explorer l\'Univers',
     description: 'Planètes, Mars, JWST, ISS et données NASA en direct.',
-    images: [OG_IMAGE],
   },
   icons: {
     icon: '/favicon.ico',
-    apple: '/apple-touch-icon.png',
   },
   robots: { index: true, follow: true },
 }

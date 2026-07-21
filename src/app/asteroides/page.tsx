@@ -35,14 +35,17 @@ interface Asteroid { id: string; name: string; date: string; distKm: string; dia
 export default function AsteroidsPage() {
     const [asteroids, setAsteroids] = useState<Asteroid[]>([])
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(false)
+    const [updatedAt, setUpdatedAt] = useState<string | null>(null)
     const maxSize = Math.max(...SIZE_COMPARISONS.map(s => s.size))
 
     useEffect(() => {
-        const today = new Date()
-        const start = today.toISOString().split('T')[0]
-        const end = new Date(today.getTime() + 7 * 86400000).toISOString().split('T')[0]
-        fetch(`https://api.nasa.gov/neo/rest/v1/feed?start_date=${start}&end_date=${end}&api_key=DEMO_KEY`)
-            .then(r => r.json())
+        const controller = new AbortController()
+        fetch('/api/asteroids', { signal: controller.signal })
+            .then(r => {
+                if (!r.ok) throw new Error('NASA NeoWs unavailable')
+                return r.json()
+            })
             .then(data => {
                 const list: Asteroid[] = []
                 Object.values(data.near_earth_objects || {}).forEach((day: unknown) => {
@@ -60,8 +63,14 @@ export default function AsteroidsPage() {
                 })
                 list.sort((a, b) => parseFloat(a.distKm) - parseFloat(b.distKm))
                 setAsteroids(list.slice(0, 20))
+                setUpdatedAt(data.updatedAt || null)
                 setLoading(false)
-            }).catch(() => setLoading(false))
+            }).catch(fetchError => {
+                if (fetchError instanceof DOMException && fetchError.name === 'AbortError') return
+                setError(true)
+                setLoading(false)
+            })
+        return () => controller.abort()
     }, [])
 
     const total = asteroids.length
@@ -101,8 +110,8 @@ export default function AsteroidsPage() {
                 {[
                     { label: 'Proches cette semaine', val: loading ? '...' : `${total}`, color: '#6366f1' },
                     { label: 'Potentiellement dangereux', val: loading ? '...' : `${dangerous}`, color: '#ef4444' },
-                    { label: 'Surveillés en tout', val: '36 000+', color: '#f59e0b' },
-                    { label: 'Connus dans la ceinture', val: '1.2 million', color: '#10b981' },
+                    { label: 'Fenêtre analysée', val: '7 jours', color: '#f59e0b' },
+                    { label: 'Source', val: 'NeoWs', color: '#10b981' },
                 ].map(s => (
                     <div key={s.label} className="card" style={{ padding: '1.25rem', textAlign: 'center' }}>
                         <div style={{ fontSize: '1.6rem', fontFamily: 'Outfit, sans-serif', fontWeight: 900, background: s.color, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>{s.val}</div>
@@ -113,9 +122,14 @@ export default function AsteroidsPage() {
 
             {/* Live close approaches table */}
             <div className="card" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
-                <h2 className="section-title" style={{ color: '#e2e8f0' }}>🔴 Passages proches cette semaine (NASA NeoWs)</h2>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                    <h2 className="section-title" style={{ color: '#e2e8f0' }}>🔴 Passages proches cette semaine (NASA NeoWs)</h2>
+                    {updatedAt && <span style={{ color: '#64748b', fontSize: '0.68rem' }}>Actualisé à {new Date(updatedAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>}
+                </div>
                 {loading ? (
                     <div style={{ textAlign: 'center', padding: '2rem', color: '#64748b' }}>⏳ Chargement des données NASA...</div>
+                ) : error ? (
+                    <div style={{ textAlign: 'center', padding: '2rem', color: '#f59e0b' }}>📡 Le service NASA NeoWs est temporairement indisponible.</div>
                 ) : (
                     <div style={{ overflow: 'auto' }}>
                         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem', minWidth: 600 }}>

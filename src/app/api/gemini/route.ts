@@ -7,6 +7,8 @@ interface Message {
     text: string
 }
 
+type GeminiMode = 'chat' | 'story'
+
 export async function POST(req: NextRequest) {
     if (!GEMINI_API_KEY) {
         return NextResponse.json(
@@ -15,23 +17,40 @@ export async function POST(req: NextRequest) {
         )
     }
 
-    const body = await req.json()
-    const { question, history } = body as { question: string; history: Message[] }
+    const body = await req.json().catch(() => null)
+    const { question, history = [], mode = 'chat' } = (body ?? {}) as {
+        question?: string
+        history?: Message[]
+        mode?: GeminiMode
+    }
 
-    if (!question?.trim()) {
+    const trimmedQuestion = question?.trim() ?? ''
+
+    if (!trimmedQuestion) {
         return NextResponse.json({ error: 'Question vide.' }, { status: 400 })
     }
 
-    const systemPrompt = `Tu es SolarBot, assistant spatial pour enfants 7-14 ans. 
-Tu expliques l'espace simplement, avec des emojis et des phrases courtes. 
+    if (trimmedQuestion.length > 4000) {
+        return NextResponse.json({ error: 'Question trop longue.' }, { status: 400 })
+    }
+
+    const safeHistory = Array.isArray(history) ? history : []
+
+    const systemPrompt = mode === 'story'
+        ? `Tu es SolarBot, conteur spatial pour enfants 8-12 ans.
+Tu écris des histoires spatiales éducatives, poétiques et scientifiquement prudentes.
+Réponds toujours en français, en 180 à 220 mots maximum.`
+        : `Tu es SolarBot, assistant spatial pour enfants 7-14 ans.
+Tu expliques l'espace simplement, avec des emojis et des phrases courtes.
 Réponds toujours en français, max 3-4 phrases.`
 
-    const histCtx = (history ?? [])
+    const histCtx = safeHistory
         .slice(-4)
-        .map((m: Message) => `${m.role === 'user' ? 'Enfant' : 'SolarBot'}: ${m.text}`)
+        .filter((m: Message) => m?.text && (m.role === 'user' || m.role === 'bot'))
+        .map((m: Message) => `${m.role === 'user' ? 'Enfant' : 'SolarBot'}: ${m.text.slice(0, 1000)}`)
         .join('\n')
 
-    const fullPrompt = `${systemPrompt}\n\n${histCtx}\n\nEnfant: ${question}\nSolarBot:`
+    const fullPrompt = `${systemPrompt}\n\n${histCtx}\n\nEnfant: ${trimmedQuestion}\nSolarBot:`
 
     try {
         const res = await fetch(
@@ -41,7 +60,7 @@ Réponds toujours en français, max 3-4 phrases.`
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     contents: [{ parts: [{ text: fullPrompt }] }],
-                    generationConfig: { temperature: 0.8, maxOutputTokens: 300 },
+                    generationConfig: { temperature: mode === 'story' ? 0.9 : 0.8, maxOutputTokens: mode === 'story' ? 700 : 300 },
                 }),
             }
         )

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { Fragment, useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface Message {
@@ -30,8 +30,21 @@ async function askSolarBot(question: string, history: Message[]): Promise<string
     }
 }
 
-function formatText(text: string) {
-    return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/>')
+function FormattedText({ text }: { text: string }) {
+    return (
+        <>
+            {text.split('\n').map((line, lineIndex) => (
+                <Fragment key={`${lineIndex}-${line}`}>
+                    {lineIndex > 0 && <br />}
+                    {line.split(/(\*\*[^*]+\*\*)/g).map((part, partIndex) => (
+                        part.startsWith('**') && part.endsWith('**')
+                            ? <strong key={partIndex}>{part.slice(2, -2)}</strong>
+                            : <Fragment key={partIndex}>{part}</Fragment>
+                    ))}
+                </Fragment>
+            ))}
+        </>
+    )
 }
 
 export default function SolarBotWidget() {
@@ -164,7 +177,7 @@ export default function SolarBotWidget() {
                                         background: msg.role === 'user' ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'rgba(255,255,255,0.06)',
                                         border: msg.role === 'bot' ? '1px solid rgba(255,255,255,0.06)' : 'none',
                                         color: '#e2e8f0', fontSize: '0.82rem', lineHeight: 1.65,
-                                    }} dangerouslySetInnerHTML={{ __html: formatText(msg.text) }} />
+                                    }}><FormattedText text={msg.text} /></div>
                                 </div>
                             ))}
                             {loading && (

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useRef, useMemo } from 'react'
 import { motion } from 'framer-motion'
 
 interface Meteorite {
@@ -120,7 +120,7 @@ const STATIC_METEORITES: Meteorite[] = [
 
 export default function MeteoritesPage() {
     const [meteorites, setMeteorites] = useState<Meteorite[]>(STATIC_METEORITES)
-    const [loading, setLoading] = useState(false)
+    const loading = false
     const [search, setSearch] = useState('')
     const [sortBy, setSortBy] = useState<'mass' | 'year'>('mass')
     const [hovered, setHovered] = useState<Meteorite | null>(null)
@@ -128,29 +128,6 @@ export default function MeteoritesPage() {
     const [classFilter, setClassFilter] = useState<string>('Tous')
 
     const CLASS_CHIPS = ['Tous', 'L', 'H', 'LL', 'Iron', 'Pallasite', 'CM', 'CV']
-
-    /* Try NASA API in background — enriches dataset if reachable */
-    useEffect(() => {
-        const URLS = [
-            'https://data.nasa.gov/resource/gh4g-9sfh.json?$limit=2000&$where=reclat+IS+NOT+NULL+AND+reclong+IS+NOT+NULL&$order=mass+DESC&$$app_token=DEMO_KEY',
-            'https://corsproxy.io/?https://data.nasa.gov/resource/gh4g-9sfh.json?$limit=2000&$where=reclat+IS+NOT+NULL&$order=mass+DESC',
-        ]
-        const tryFetch = async () => {
-            for (const url of URLS) {
-                try {
-                    const controller = new AbortController()
-                    const tid = setTimeout(() => controller.abort(), 8000)
-                    const r = await fetch(url, { signal: controller.signal })
-                    clearTimeout(tid)
-                    if (r.ok) {
-                        const d = await r.json()
-                        if (Array.isArray(d) && d.length > 50) { setMeteorites(d); return }
-                    }
-                } catch { /* keep static data */ }
-            }
-        }
-        tryFetch()
-    }, [])
 
     const stats = useMemo(() => {
         if (!meteorites.length) return null
@@ -193,13 +170,13 @@ export default function MeteoritesPage() {
 
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="page-header">
                 <div className="badge" style={{ background: 'rgba(249,115,22,0.12)', color: '#fb923c', borderColor: 'rgba(249,115,22,0.25)' }}>
-                    ☄️ BASE NASA — {meteorites.length.toLocaleString('fr-FR')} MÉTÉORITES
+                    ☄️ ARCHIVE NASA — ÉCHANTILLON DE {meteorites.length.toLocaleString('fr-FR')} MÉTÉORITES
                 </div>
                 <h1 className="page-title" style={{ background: 'linear-gradient(135deg, #fed7aa, #f97316, #c2410c)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
                     Carte des Météorites
                 </h1>
                 <p className="page-subtitle">
-                    47 000+ impacts répertoriés par la NASA depuis l&apos;Antiquité. Chaque point représente une roche venue de l&apos;espace.
+                    Un échantillon cartographié du catalogue historique « Meteorite Landings ». Chaque point représente une roche venue de l&apos;espace.
                 </p>
             </motion.div>
 

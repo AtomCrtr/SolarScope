@@ -85,49 +85,49 @@ const MARS_TIMELINE = [
 /* ─────────────────────────────────────────── Curated NASA Gallery ── */
 const MARS_GALLERY = [
     {
-        src: 'https://mars.nasa.gov/system/resources/detail_files/25989_PIA24430-web.jpg',
+        src: 'https://images-assets.nasa.gov/image/PIA24430/PIA24430~orig.jpg',
         title: 'Premier vol Ingenuity',
         desc: 'Le premier hélicoptère extraterrestre en vol · Sol 58',
         rover: 'Perseverance', camera: 'NavCam', sol: 58, color: '#8b5cf6'
     },
     {
-        src: 'https://mars.nasa.gov/system/resources/detail_files/26241_PIA24546-web.jpg',
+        src: 'https://images-assets.nasa.gov/image/PIA24546/PIA24546~orig.jpg',
         title: 'Perseverance au Cratère Jezero',
         desc: 'Vue panoramique depuis le site d\'atterrissage · Sol 13',
         rover: 'Perseverance', camera: 'MastCam-Z', sol: 13, color: '#8b5cf6'
     },
     {
-        src: 'https://mars.nasa.gov/system/resources/detail_files/25591_PIA24542-full2.jpg',
+        src: 'https://images-assets.nasa.gov/image/PIA24542/PIA24542~orig.jpg',
         title: 'Selfie de Perseverance',
         desc: 'Auto-portrait avec Ingenuity en arrière-plan · Sol 46',
         rover: 'Perseverance', camera: 'WATSON', sol: 46, color: '#8b5cf6'
     },
     {
-        src: 'https://mars.nasa.gov/system/resources/detail_files/8706_curiosity-selfie2019.jpg',
+        src: '/rovers/curiosity.png',
         title: 'Curiosity au Mont Sharp',
         desc: 'Selfie au pied du Mont Sharp · Sol 2291',
         rover: 'Curiosity', camera: 'MAHLI', sol: 2291, color: '#ef4444'
     },
     {
-        src: 'https://mars.nasa.gov/system/resources/detail_files/7952_mars-surface-rock-curiosity-pia22207.jpg',
+        src: '/textures/mars.jpg',
         title: 'Roches de Vera Rubin Ridge',
         desc: 'Litage sédimentaire martien · Sol 1769',
         rover: 'Curiosity', camera: 'MastCam', sol: 1769, color: '#ef4444'
     },
     {
-        src: 'https://mars.nasa.gov/system/resources/detail_files/6453_PIA19839.jpg',
+        src: 'https://images-assets.nasa.gov/image/PIA19839/PIA19839~orig.jpg',
         title: 'Coucher de soleil martien',
         desc: 'Crépuscule bleu sur Mars — Cratère Gale · Sol 956',
         rover: 'Curiosity', camera: 'MastCam', sol: 956, color: '#ef4444'
     },
     {
-        src: 'https://mars.nasa.gov/system/resources/detail_files/6911_mars-opportunity-rover-marathon.jpg',
+        src: '/rovers/opportunity.png',
         title: 'Marathon Valley — Opportunity',
         desc: 'Au bord du Cratère Endeavour · Sol 3966',
         rover: 'Opportunity', camera: 'PanCam', sol: 3966, color: '#f97316'
     },
     {
-        src: 'https://mars.nasa.gov/system/resources/detail_files/26455_PIA24836-full2.jpg',
+        src: 'https://images-assets.nasa.gov/image/PIA24836/PIA24836~orig.jpg',
         title: 'Dunes de sable noir',
         desc: 'Champs de dunes basaltiques depuis Perseverance · Sol 170',
         rover: 'Perseverance', camera: 'Hazcam', sol: 170, color: '#8b5cf6'
@@ -279,7 +279,11 @@ export default function MarsPage() {
                             whileHover={{ scale: 1.04, borderColor: `${photo.color}50` }}>
                             <img src={photo.src} alt={photo.title}
                                 style={{ width: '100%', height: 160, objectFit: 'cover', display: 'block', background: 'rgba(0,0,0,0.5)' }}
-                                onError={e => { (e.target as HTMLImageElement).src = '/rovers/' + photo.rover.toLowerCase() + '.png' }}
+                                onError={e => {
+                                    const image = e.currentTarget
+                                    image.onerror = null
+                                    image.src = '/textures/mars.jpg'
+                                }}
                             />
                             <div style={{ padding: '0.4rem 0.6rem', background: 'rgba(0,0,0,0.78)', backdropFilter: 'blur(6px)' }}>
                                 <div style={{ color: photo.color, fontSize: '0.65rem', fontWeight: 700, fontFamily: 'Outfit' }}>{photo.rover} · {photo.camera}</div>

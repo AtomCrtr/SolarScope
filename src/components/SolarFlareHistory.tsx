@@ -39,13 +39,7 @@ export default function SolarFlareHistory() {
 
     useEffect(() => {
         // Solar flare history (NOAA SWPC)
-        const now = new Date()
-        const past = new Date(now)
-        past.setDate(past.getDate() - 30)
-        const start = past.toISOString().slice(0, 10)
-        const end = now.toISOString().slice(0, 10)
-
-        fetch(`https://api.nasa.gov/DONKI/FLR?startDate=${start}&endDate=${end}&api_key=GsPmvsX1qKcrYHCxdgEuKi7DrJYoXtYZ1u2aOVLF`)
+        fetch('/api/solar-flares')
             .then(r => r.json())
             .then((data: SolarFlare[]) => {
                 setFlares(Array.isArray(data) ? data.slice(-20).reverse() : [])

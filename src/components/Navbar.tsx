@@ -18,7 +18,7 @@ const NAV_GROUPS = [
             { icon: '🪐', title: 'Planètes', href: '/planetes', desc: 'Les 8 planètes en 3D + positions J2000' },
             { icon: '🔴', title: 'Mars', href: '/mars', desc: 'Photos rovers Curiosity & Perseverance' },
             { icon: '☄️', title: 'Astéroïdes', href: '/asteroides', desc: 'NEO qui frôlent la Terre — base NASA' },
-            { icon: '🪨', title: 'Météorites', href: '/meteorites', desc: '47 000 impacts sur carte interactive' },
+            { icon: '🪨', title: 'Météorites', href: '/meteorites', desc: 'Catalogue historique sur carte interactive' },
         ],
     },
     {
@@ -38,7 +38,7 @@ const NAV_GROUPS = [
             { icon: '🔭', title: 'Télescope Webb', href: '/jwst', desc: 'Galerie des images JWST les plus épiques' },
             { icon: '🌌', title: 'Ciel ce soir', href: '/ciel', desc: 'Carte du ciel selon ta géolocalisation' },
             { icon: '🌠', title: 'Photo du Jour', href: '/photo-du-jour', desc: 'APOD — image NASA choisie chaque jour' },
-            { icon: '🌟', title: 'Exoplanètes', href: '/exoplanetes', desc: '+5 800 planètes hors du système solaire' },
+            { icon: '🌟', title: 'Exoplanètes', href: '/exoplanetes', desc: 'Catalogue NASA des mondes confirmés' },
         ],
     },
     {
@@ -46,7 +46,7 @@ const NAV_GROUPS = [
         label: '🎓 Découverte',
         color: '#10b981',
         pages: [
-            { icon: '📰', title: 'Actualités', href: '/actualites', desc: 'Les dernières news spatiales en français' },
+            { icon: '📰', title: 'Actualités', href: '/actualites', desc: 'Publications officielles NASA actualisées' },
             { icon: '🎮', title: 'Quiz spatial', href: '/quiz', desc: 'Teste tes connaissances sur l\'Univers !' },
         ],
     },
@@ -148,7 +148,12 @@ export default function Navbar({ themeToggle }: { themeToggle?: React.ReactNode 
                                     onMouseLeave={handleMouseLeave}>
 
                                     {/* Group trigger button */}
-                                    <button style={{
+                                    <button
+                                        type="button"
+                                        aria-expanded={isOpen}
+                                        aria-haspopup="true"
+                                        onClick={() => setOpenGroup(isOpen ? null : group.id)}
+                                        style={{
                                         display: 'flex', alignItems: 'center', gap: '0.3rem',
                                         padding: '6px 11px', borderRadius: '10px', cursor: 'pointer',
                                         fontSize: '0.78rem', fontWeight: 600, whiteSpace: 'nowrap',
@@ -243,6 +248,8 @@ export default function Navbar({ themeToggle }: { themeToggle?: React.ReactNode 
                         <button
                             onClick={() => setMobileOpen(!mobileOpen)}
                             aria-label="Menu"
+                            aria-expanded={mobileOpen}
+                            type="button"
                             className="md:hidden"
                             style={{
                                 width: 36, height: 36, borderRadius: 10,

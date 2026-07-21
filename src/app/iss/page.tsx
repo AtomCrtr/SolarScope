@@ -1,8 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
+import type { DashboardData } from '@/lib/space-data'
 
 const ISSGlobe = dynamic(() => import('@/components/ISSGlobe'), { ssr: false })
 
@@ -59,44 +60,27 @@ export default function ISSPage() {
         return () => clearInterval(id)
     }, [])
 
-    // ── Fetch astronauts once ──
+    // ── Shared server-side data: crew + next launch ──
     useEffect(() => {
-        // The open-notify API requires a proxy as it doesn't support HTTPS from browsers
-        // Try multiple sources
-        const tryFetch = async () => {
-            try {
-                const r = await fetch('https://corsproxy.io/?https://api.open-notify.org/astros.json')
-                const d = await r.json()
-                if (d.people?.length > 0) {
-                    setAstronauts(d.people)
-                    return
+        const controller = new AbortController()
+        fetch('/api/dashboard', { signal: controller.signal })
+            .then(r => {
+                if (!r.ok) throw new Error('dashboard unavailable')
+                return r.json() as Promise<DashboardData>
+            })
+            .then(data => {
+                setAstronauts(data.crew)
+                if (data.nextLaunch) {
+                    setNextLaunch({
+                        name: data.nextLaunch.name,
+                        net: data.nextLaunch.net,
+                        agency: data.nextLaunch.agency,
+                        rocket: data.nextLaunch.rocket,
+                    })
                 }
-            } catch { /* try next */ }
-            // Accurate fallback — ISS Crew March 2026
-            // Expedition 72: Butch Wilmore & Suni Williams returned Feb 2025 via Crew Dragon
-            // Current: Expedition 72/73 with Crew-10 (Mar 2025) + Soyuz MS-27
-            setAstronauts([
-                { name: 'Takuya Onishi', craft: 'ISS' },
-                { name: 'Nick Hague', craft: 'ISS' },
-                { name: 'Sasha Gorbunov', craft: 'ISS' },
-                { name: 'Anne McClain', craft: 'ISS' },
-                { name: 'Sophie Adenot', craft: 'ISS' },  // ESA (France) — Crew-10
-                { name: 'Aleksei Ovchinin', craft: 'ISS' },
-                { name: 'Ivan Vagner', craft: 'ISS' },
-            ])
-        }
-        tryFetch()
-    }, [])
-
-    // ── Fetch next launch ──
-    useEffect(() => {
-        fetch('https://ll.thespacedevs.com/2.2.0/launch/upcoming/?limit=1&format=json')
-            .then(r => r.json())
-            .then(d => {
-                const l = d.results?.[0]
-                if (l) setNextLaunch({ name: l.name, net: l.net, agency: l.launch_service_provider?.name || 'NASA', rocket: l.rocket?.configuration?.name || '' })
             })
             .catch(() => { })
+        return () => controller.abort()
     }, [])
 
     const issOnISS = astronauts.filter(a => a.craft === 'ISS')

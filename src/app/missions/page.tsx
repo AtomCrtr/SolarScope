@@ -18,9 +18,9 @@ const MISSIONS = [
     { name: 'New Horizons', annee: 2015, pays: 'USA', type: 'Sonde', statut: 'Active', emoji: '🛸', color: '#f59e0b', description: "Première sonde à survoler Pluton ! Elle a révélé un monde avec des montagnes de glace et un cœur géant.", fun: "New Horizons contient une partie des cendres de Clyde Tombaugh, le découvreur de Pluton." },
     { name: 'James Webb (JWST)', annee: 2021, pays: 'USA/ESA/CSA', type: 'Télescope', statut: 'Active', emoji: '🔭', color: '#10b981', description: "Le plus puissant télescope spatial jamais construit. Il observe l'Univers en infrarouge et voit les premières galaxies nées après le Big Bang.", fun: "Son miroir fait 6.5 mètres de diamètre, mais si poli que la surface n'a que 25 nanomètres d'irrégularités." },
     { name: 'Perseverance (Mars)', annee: 2021, pays: 'USA', type: 'Rover', statut: 'Active', emoji: '🤖', color: '#ef4444', description: "Le dernier rover martien, accompagné d'Ingenuity, le premier hélicoptère à voler sur une autre planète !", fun: "Le nom 'Perseverance' a été choisi par un élève de 7ème lors d'un concours." },
-    { name: 'Artemis I', annee: 2022, pays: 'USA', type: 'Vol habité', statut: 'Terminée', emoji: '🚀', color: '#6366f1', description: "Premier vol du programme Artemis. La capsule Orion a fait le tour de la Lune sans équipage.", fun: "L'objectif d'Artemis : renvoyer des humains sur la Lune d'ici 2026, dont la première femme !" },
+    { name: 'Artemis I', annee: 2022, pays: 'USA', type: 'Vol habité', statut: 'Terminée', emoji: '🚀', color: '#6366f1', description: "Premier vol du programme Artemis. La capsule Orion a fait le tour de la Lune sans équipage.", fun: "Cette mission a validé le lanceur SLS et le vaisseau Orion avant le premier vol habité." },
     { name: 'JUICE', annee: 2023, pays: 'ESA', type: 'Sonde', statut: 'Active', emoji: '🛸', color: '#f59e0b', description: "Mission vers Jupiter et ses lunes glacées (Europe, Ganymède, Callisto) pour chercher des océans et de la vie.", fun: "JUICE arrivera près de Jupiter en 2031, après 8 ans de voyage !" },
-    { name: 'Artemis II', annee: 2025, pays: 'USA/CSA', type: 'Vol habité', statut: 'Active', emoji: '🚀', color: '#6366f1', description: "Premier vol habité du programme Artemis. 4 astronautes feront le tour de la Lune.", fun: "L'astronaute canadien Jeremy Hansen sera le premier non-Américain à survoler la Lune." },
+    { name: 'Artemis II', annee: 2026, pays: 'USA/CSA', type: 'Vol habité', statut: 'Terminée', emoji: '🚀', color: '#6366f1', description: "Premier vol habité du programme Artemis. Orion a emmené quatre astronautes autour de la Lune du 1er au 10 avril 2026.", fun: "L'équipage a dépassé le record de distance d'Apollo 13 avant de revenir dans le Pacifique." },
 ]
 
 interface UpcomingLaunch {
@@ -39,36 +39,6 @@ const TYPE_COLORS: Record<string, string> = {
 
 const ALL_TYPES = ['Satellite', 'Vol habité', 'Sonde', 'Télescope', 'Rover', 'Station']
 
-/* ─── Updated 2025 company & stats (v4 API frozen at 2022) ─── */
-const SPACEX_2025 = {
-    company: {
-        employees: 13000,
-        vehicles: 5,
-        launch_sites: 3,
-        valuation: 210e9,
-        founder: 'Elon Musk',
-        founded: 2002,
-        cto: 'Elon Musk',
-        coo: 'Gwynne Shotwell',
-        test_sites: 1,
-        summary: 'SpaceX conçoit, fabrique et lance des engins spatiaux et des fusées avancés. L\'objectif est de révolutionner les technologies spatiales afin de permettre à l\'humanité de vivre sur d\'autres planètes. En 2025, SpaceX détient le record du lancement le plus lourd de l\'histoire avec Starship.',
-    },
-    latestLaunch: {
-        id: 'starship-ift6', name: 'Starship IFT-6', flight_number: 422,
-        date_utc: '2025-03-06T10:00:00.000Z', success: true,
-        details: 'Sixième vol intégré de Starship. Le Super Heavy Booster B14 a effectué un retour à la tour de lancement réussi, "chopsticks catch" n°3. Ship S34 a complété son trajet suborbital et réussi son amerrissage dans l\'Océan Indien.',
-        links: { patch: { small: 'https://images2.imgbox.com/94/f2/uj3ookFE_o.png' }, webcast: 'https://www.youtube.com/watch?v=placeholder', article: null },
-        cores: [{ core: 'b14', reuse_count: 2, landing_success: true, landing_type: 'ASDS chopsticks' }],
-        payloads: [], launchpad: 'Starbase',
-    },
-    stats: { total: 430, success: 419, reused: 380, landings: 320 },
-    rockets: [
-        { id: 'falcon9', name: 'Falcon 9', active: true, success_rate_pct: 98.7, first_flight: '2010-06-04', stages: 2, height: { meters: 70 }, mass: { kg: 549054 }, description: 'La fusée orbital réutilisable la plus fiable de l\'histoire. Plus de 320 atterrissages réussis du premier étage, réduisant le coût de lancement d\'un facteur 10.', flickr_images: ['https://imgur.com/DaCfMsj.jpg'] },
-        { id: 'falconheavy', name: 'Falcon Heavy', active: true, success_rate_pct: 100, first_flight: '2018-02-06', stages: 2, height: { meters: 70 }, mass: { kg: 1420788 }, description: 'La fusée la plus puissante en service actif. Formée de trois propulseurs Falcon 9, elle peut envoyer 64 tonnes en orbite basse — le double du Shuttle.', flickr_images: ['https://imgur.com/573IfNk.jpg'] },
-        { id: 'starship', name: 'Starship', active: true, success_rate_pct: 83, first_flight: '2023-04-20', stages: 2, height: { meters: 122 }, mass: { kg: 5000000 }, description: 'Le véhicule spatial le plus grand et le plus puissant jamais construit. 33 moteurs Raptor. Objectif : transport de masse vers Mars. 6 vols intégrés en 2023-2025.', flickr_images: ['https://imgur.com/1bxqIOT.jpg'] },
-    ],
-}
-
 export default function MissionsPage() {
     const [typeFilter, setTypeFilter] = useState<string[]>(ALL_TYPES)
     const [statutFilter, setStatutFilter] = useState<'Toutes' | 'Active' | 'Terminée'>('Toutes')
@@ -76,18 +46,13 @@ export default function MissionsPage() {
     const [launchLoading, setLaunchLoading] = useState(true)
 
     useEffect(() => {
-        fetch('https://ll.thespacedevs.com/2.2.0/launch/upcoming/?limit=5&format=json')
-            .then(r => r.json())
+        fetch('/api/launches?limit=5')
+            .then(r => {
+                if (!r.ok) throw new Error('launch calendar unavailable')
+                return r.json()
+            })
             .then(d => {
-                setLaunches((d.results || []).map((l: never) => ({
-                    id: (l as { id: string }).id,
-                    name: (l as { name: string }).name,
-                    net: (l as { net: string }).net,
-                    agency: (l as { launch_service_provider?: { name: string } }).launch_service_provider?.name || 'Agence inconnue',
-                    rocket: (l as { rocket?: { configuration?: { name: string } } }).rocket?.configuration?.name || '',
-                    status: (l as { status?: { name: string } }).status?.name || '',
-                    image: (l as { image?: string | null }).image || null,
-                })))
+                setLaunches(d.launches || [])
             })
             .catch(() => { })
             .finally(() => setLaunchLoading(false))

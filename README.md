@@ -24,9 +24,9 @@
 | 🔭 **JWST** | Les 6 images iconiques du James Webb Space Telescope |
 | 🌠 **Astéroïdes** | Données NASA NeoWs — astéroïdes proches de la Terre |
 | 🌌 **Exoplanètes** | Catalogue des planètes au-delà du Système Solaire |
-| ☄️ **Météorites** | Base de données NASA des météorites tombées |
+| ☄️ **Météorites** | Échantillon cartographié de l’archive NASA Meteorite Landings |
 | 📸 **Photo du Jour** | APOD — Astronomy Picture of the Day (NASA) |
-| 🗞️ **Actualités** | Flux RSS actualités spatiales en temps réel |
+| 🗞️ **Actualités** | Publications récentes issues du flux RSS officiel de la NASA |
 | 🎮 **Quiz** | Quiz astronomie 3 niveaux (Débutant → Expert) |
 | 🤖 **SolarBot** | Assistant IA propulsé par Google Gemini |
 
@@ -40,6 +40,16 @@
 - **Styling** : CSS Modules (design system maison, dark/light mode)
 - **IA** : Google Gemini API (`gemini-2.0-flash-lite`) via API Route sécurisée
 - **Déploiement** : [Vercel](https://vercel.com)
+
+### Couche de données
+
+Les sources volatiles sont récupérées par des routes serveur (`/api/dashboard`, `/api/news`,
+`/api/asteroids`, `/api/launches`, `/api/solar-flares`). Les clés restent côté serveur, les réponses
+sont mises en cache selon la fréquence de mise à jour de chaque fournisseur et l’interface affiche
+explicitement l’indisponibilité d’une source au lieu d’inventer une valeur de remplacement.
+
+Le catalogue historique NASA « Meteorite Landings » n’étant plus exposé de façon fiable par son ancien
+endpoint Socrata, la page Météorites utilise un échantillon embarqué et l’indique comme une archive.
 
 ---
 

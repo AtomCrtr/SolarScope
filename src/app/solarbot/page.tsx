@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { Fragment, useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface Message {
@@ -28,35 +28,36 @@ const STORY_THEMES = [
     { emoji: '🌊', label: 'Mission sur Europe', prompt: 'Raconte l\'histoire d\'une mission pour explorer l\'océan sous la glace d\'Europe (lune de Jupiter). Maximum 200 mots, pour enfants de 8-12 ans. En français.' },
 ]
 
-async function askSolarBot(question: string, history: Message[]): Promise<string> {
-    const systemPrompt = `Tu es SolarBot, un assistant spatial éducatif pour les enfants de 7 à 14 ans. 
-Tu expliques les concepts de l'espace de manière simple, amusante et enthousiaste. 
-Utilise des emojis, des comparaisons du quotidien, et des phrases courtes. 
-Réponds toujours en français. 
-Si on te pose une question qui n'a pas de rapport avec l'espace ou la science, redirige gentiment vers un sujet spatial.`
-
-    const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY
-    if (!apiKey) {
-        return '🔑 Clé API Gemini manquante. Ajoute **NEXT_PUBLIC_GEMINI_API_KEY** dans ton fichier `.env.local` pour activer SolarBot !'
-    }
-
-    const historyContext = history.slice(-6).map(m => `${m.role === 'user' ? 'Enfant' : 'SolarBot'}: ${m.text}`).join('\n')
-    const fullPrompt = `${systemPrompt}\n\nHistorique:\n${historyContext}\n\nQuestion de l'enfant: ${question}`
-
+async function askSolarBot(question: string, history: Message[], mode: 'chat' | 'story' = 'chat'): Promise<string> {
     try {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        const res = await fetch('/api/gemini', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: fullPrompt }] }],
-                generationConfig: { temperature: 0.8, maxOutputTokens: 500 },
-            }),
+            body: JSON.stringify({ question, history, mode }),
         })
         const data = await res.json()
-        return data?.candidates?.[0]?.content?.parts?.[0]?.text || '🤖 SolarBot réfléchit encore... Réessaie !'
+        if (!res.ok) return data.error ?? '🤖 SolarBot réfléchit encore... Réessaie !'
+        return data.text ?? '🤖 SolarBot réfléchit encore... Réessaie !'
     } catch {
         return '🌐 Erreur de connexion. Vérifie ta connexion Internet et réessaie.'
     }
+}
+
+function FormattedText({ text }: { text: string }) {
+    return (
+        <>
+            {text.split('\n').map((line, lineIndex) => (
+                <Fragment key={`${lineIndex}-${line}`}>
+                    {lineIndex > 0 && <br />}
+                    {line.split(/(\*\*[^*]+\*\*)/g).map((part, partIndex) => (
+                        part.startsWith('**') && part.endsWith('**')
+                            ? <strong key={partIndex}>{part.slice(2, -2)}</strong>
+                            : <Fragment key={partIndex}>{part}</Fragment>
+                    ))}
+                </Fragment>
+            ))}
+        </>
+    )
 }
 
 export default function SolarBotPage() {
@@ -90,15 +91,9 @@ export default function SolarBotPage() {
 
     const generateStory = async () => {
         setStoryLoading(true)
-        const answer = await askSolarBot(STORY_THEMES[selectedTheme].prompt, [])
+        const answer = await askSolarBot(STORY_THEMES[selectedTheme].prompt, [], 'story')
         setStory(answer)
         setStoryLoading(false)
-    }
-
-    const formatText = (text: string) => {
-        return text
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\n/g, '<br/>')
     }
 
     return (
@@ -164,7 +159,7 @@ export default function SolarBotPage() {
                                                 background: msg.role === 'user' ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'rgba(255,255,255,0.05)',
                                                 border: msg.role === 'bot' ? '1px solid rgba(255,255,255,0.07)' : 'none',
                                                 color: '#e2e8f0', fontSize: '0.88rem', lineHeight: 1.7,
-                                            }} dangerouslySetInnerHTML={{ __html: formatText(msg.text) }} />
+                                            }}><FormattedText text={msg.text} /></div>
                                             <div style={{ fontSize: '0.68rem', color: '#475569', marginTop: '0.25rem', textAlign: msg.role === 'user' ? 'right' : 'left' }}>{msg.time}</div>
                                         </div>
                                     </motion.div>
@@ -248,7 +243,7 @@ export default function SolarBotPage() {
                                     <div style={{ color: '#c084fc', fontWeight: 700, fontFamily: 'Outfit, sans-serif', marginBottom: '0.75rem' }}>
                                         {STORY_THEMES[selectedTheme].emoji} {STORY_THEMES[selectedTheme].label}
                                     </div>
-                                    <div style={{ color: '#cbd5e1', lineHeight: 1.85, fontSize: '0.9rem' }} dangerouslySetInnerHTML={{ __html: formatText(story) }} />
+                                    <div style={{ color: '#cbd5e1', lineHeight: 1.85, fontSize: '0.9rem' }}><FormattedText text={story} /></div>
                                 </motion.div>
                             )}
                         </div>
@@ -265,7 +260,7 @@ export default function SolarBotPage() {
                     <span style={{ color: '#f87171', fontWeight: 700 }}>⚙️ Configuration :</span> Crée le fichier{' '}
                     <code style={{ background: 'rgba(0,0,0,0.3)', padding: '1px 6px', borderRadius: 4, color: '#a78bfa' }}>.env.local</code>
                     {' '}à la racine du projet et ajoute :<br />
-                    <code style={{ color: '#86efac', display: 'block', marginTop: '0.4rem' }}>NEXT_PUBLIC_GEMINI_API_KEY=ta_clé_ici</code>
+                    <code style={{ color: '#86efac', display: 'block', marginTop: '0.4rem' }}>GEMINI_API_KEY=ta_clé_ici</code>
                     Obtiens une clé gratuite sur{' '}<a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style={{ color: '#60a5fa' }}>aistudio.google.com</a>
                 </p>
             </div>

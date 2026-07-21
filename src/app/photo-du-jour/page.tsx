@@ -1,10 +1,21 @@
+import { getNasaApiKey } from '@/lib/space-data'
+
 async function getApod() {
     try {
-        const res = await fetch(
-            `https://api.nasa.gov/planetary/apod?api_key=GsPmvsX1qKcrYHCxdgEuKi7DrJYoXtYZ1u2aOVLF&count=13`,
-            { next: { revalidate: 3600 } }
-        )
-        return await res.json()
+        const end = new Date()
+        const start = new Date(end.getTime() - 12 * 86_400_000)
+        const url = new URL('https://api.nasa.gov/planetary/apod')
+        url.searchParams.set('api_key', getNasaApiKey())
+        url.searchParams.set('start_date', start.toISOString().slice(0, 10))
+        url.searchParams.set('end_date', end.toISOString().slice(0, 10))
+        url.searchParams.set('thumbs', 'true')
+
+        const res = await fetch(url, { next: { revalidate: 3600 } })
+        if (!res.ok) throw new Error(`NASA APOD ${res.status}`)
+        const photos = await res.json()
+        return Array.isArray(photos)
+            ? photos.sort((a: Record<string, string>, b: Record<string, string>) => a.date.localeCompare(b.date))
+            : []
     } catch {
         return []
     }
@@ -13,7 +24,7 @@ async function getApod() {
 export default async function ApodPage() {
     const photos = await getApod()
     const hero = photos[photos.length - 1]
-    const gallery = photos.slice(0, -1).filter((p: Record<string, string>) => p.media_type === 'image')
+    const gallery = photos.slice(0, -1).filter((p: Record<string, string>) => p.media_type === 'image').reverse()
 
     return (
         <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
@@ -60,6 +71,12 @@ export default async function ApodPage() {
                             </div>
                         </div>
                     </div>
+                </div>
+            )}
+
+            {!hero && (
+                <div className="card" style={{ padding: '2rem', marginBottom: '3rem', textAlign: 'center', color: '#f59e0b' }}>
+                    📡 Le service NASA APOD est temporairement indisponible.
                 </div>
             )}
 

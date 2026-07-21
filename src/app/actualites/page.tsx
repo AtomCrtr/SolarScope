@@ -1,168 +1,190 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
-
-interface Article { title: string; source: string; url: string; date: string; summary: string; category: string }
-
-const STATIC_ARTICLES: Article[] = [
-    { title: "James Webb révèle les premières étoiles de l'Univers", source: 'NASA', url: 'https://www.nasa.gov/james-webb-space-telescope/', date: '2026-02-15', summary: "Le télescope spatial James Webb a détecté des étoiles de la première génération, nées juste après le Big Bang, ouvrant une fenêtre sur l'aube de l'Univers.", category: 'Télescope' },
-    { title: 'Artemis II : les astronautes prêts pour le tour de la Lune', source: 'NASA', url: 'https://www.nasa.gov/artemis/', date: '2026-02-10', summary: "Quatre astronautes sont sélectionnés pour le vol Artemis II, le premier vol habité autour de la Lune depuis Apollo 17 en 1972.", category: 'Exploration' },
-    { title: "Apophis 2029 : la Terre se prépare pour le grand rendez-vous", source: 'ESA', url: 'https://www.esa.int/', date: '2026-01-28', summary: "L'astéroïde Apophis passera à seulement 31 000 km de la Terre le 13 avril 2029. Les agences spatiales planifient des missions d'étude rapprochée.", category: 'Astéroïde' },
-    { title: "Perseverance : découverte de molécules organiques sur Mars", source: 'NASA JPL', url: 'https://mars.nasa.gov/', date: '2026-01-20', summary: "Le rover Perseverance a détecté des molécules organiques complexes dans le cratère Jezero, renforçant l'hypothèse d'une vie passée sur Mars.", category: 'Mars' },
-    { title: "JUICE : la sonde européenne se rapproche de Jupiter", source: 'ESA', url: 'https://www.esa.int/Science_Exploration/Space_Science/Juice', date: '2026-01-15', summary: "La mission JUICE (Jupiter Icy Moons Explorer) envoie ses premières images des lunes glacées de Jupiter, en route vers son insertion orbitale en 2031.", category: 'Sonde' },
-    { title: "Etoile à neutrons : une nouvelle pulsation détectée par le FAST", source: 'CNRS', url: 'https://www.cnrs.fr/', date: '2026-01-05', summary: "Le radiotélescope chinois FAST a capté les signaux les plus précis d'une étoile à neutrons, permettant de tester la relativité générale avec une précision record.", category: 'Radio astronomie' },
-    { title: 'SpaceX Starship : vol orbital réussi', source: 'SpaceX', url: 'https://www.spacex.com/', date: '2025-12-20', summary: "Starship a complété son premier vol orbital complet avec amerrissage réussi du vaisseau. Un pas historique vers Mars.", category: 'Lanceur' },
-    { title: "Europa Clipper : la NASA en route vers la lune glacée de Jupiter", source: 'NASA JPL', url: 'https://europa.nasa.gov/', date: '2025-12-10', summary: "La sonde Europa Clipper a effectué son premier fly-by de la Lune pour gagner de l'élan. Elle atteindra Jupiter en 2030 pour chercher des signes de vie dans l'océan sous-glaciaire d'Europe.", category: 'Sonde' },
-    { title: "Aurores boréales record en France en 2025", source: 'CNES', url: 'https://www.cnes.fr/', date: '2025-11-15', summary: "Suite à une tempête solaire majeure classe X9, des aurores boréales ont été visibles jusqu'en Provence. Le Soleil est au maximum de son cycle d'activité 25.", category: 'Météo spatiale' },
-    { title: "Trou noir M87 : nouvelles images de l'Event Horizon Telescope", source: 'ESO', url: 'https://www.eso.org/', date: '2025-10-28', summary: "La collaboration Event Horizon Telescope publie des images haute résolution du trou noir supermassif de M87, révélant des structures en jet inédites.", category: 'Télescope' },
-    { title: "TRAPPIST-1e : Webb détecte une atmosphère candidate", source: 'NASA/ESA JWST', url: 'https://www.nasa.gov/james-webb-space-telescope/', date: '2025-09-10', summary: "Le James Webb a détecté des signatures spectrales compatibles avec une atmosphère de dioxyde de carbone sur TRAPPIST-1e, dans la zone habitable de son étoile.", category: 'Exoplanètes' },
-    { title: 'Ingenuity : 70 vols sur Mars avant la retraite', source: 'NASA JPL', url: 'https://mars.nasa.gov/technology/helicopter/', date: '2025-08-05', summary: "Le petit hélicoptère martien a accompli 70 vols, parcourant 17 km avant d'être officiellement mis à la retraite. Un succès au-delà de toutes les espérances initiales.", category: 'Mars' },
-]
-
-const ALL_CATEGORIES = ['Tous', 'Télescope', 'Exploration', 'Astéroïde', 'Mars', 'Sonde', 'Radio astronomie', 'Lanceur', 'Météo spatiale', 'Exoplanètes']
+import type { NewsArticle } from '@/lib/space-data'
 
 const CATEGORY_COLORS: Record<string, string> = {
-    'Télescope': '#10b981', 'Exploration': '#6366f1', 'Astéroïde': '#f59e0b',
-    'Mars': '#ef4444', 'Sonde': '#3b82f6', 'Radio astronomie': '#8b5cf6',
-    'Lanceur': '#06b6d4', 'Météo spatiale': '#f97316', 'Exoplanètes': '#a855f7',
+  Mars: '#f87171',
+  Univers: '#a78bfa',
+  Astéroïdes: '#fb923c',
+  Exploration: '#818cf8',
+  Soleil: '#fbbf24',
+  Terre: '#34d399',
+  Sciences: '#38bdf8',
 }
 
+function formatDate(date: string) {
+  return new Date(date).toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  })
+}
 
 export default function ActualitesPage() {
-    const [loaded, setLoaded] = useState(false)
-    const [search, setSearch] = useState('')
-    const [catFilter, setCatFilter] = useState('Tous')
+  const [articles, setArticles] = useState<NewsArticle[]>([])
+  const [updatedAt, setUpdatedAt] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
+  const [search, setSearch] = useState('')
+  const [category, setCategory] = useState('Tous')
 
-    useEffect(() => { setTimeout(() => setLoaded(true), 500) }, [])
+  useEffect(() => {
+    const controller = new AbortController()
+    fetch('/api/news', { signal: controller.signal })
+      .then(response => {
+        if (!response.ok) throw new Error('news unavailable')
+        return response.json() as Promise<{ articles: NewsArticle[]; updatedAt: string }>
+      })
+      .then(data => {
+        setArticles(data.articles)
+        setUpdatedAt(data.updatedAt)
+      })
+      .catch(fetchError => {
+        if (fetchError instanceof DOMException && fetchError.name === 'AbortError') return
+        setError(true)
+      })
+      .finally(() => setLoading(false))
+    return () => controller.abort()
+  }, [])
 
-    const filtered = STATIC_ARTICLES.filter(a =>
-        (catFilter === 'Tous' || a.category === catFilter) &&
-        (a.title.toLowerCase().includes(search.toLowerCase()) ||
-            a.summary.toLowerCase().includes(search.toLowerCase()))
+  const categories = useMemo(
+    () => ['Tous', ...Array.from(new Set(articles.map(article => article.category)))],
+    [articles],
+  )
+
+  const filtered = useMemo(() => {
+    const query = search.trim().toLowerCase()
+    return articles.filter(article =>
+      (category === 'Tous' || article.category === category) &&
+      (!query || `${article.title} ${article.summary}`.toLowerCase().includes(query)),
     )
+  }, [articles, category, search])
 
-    return (
-        <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="page-header">
-                <div className="badge">📰 ACTU SPATIALE</div>
-                <h1 className="page-title" style={{ background: 'linear-gradient(135deg, #bfdbfe, #3b82f6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                    Actualités
-                </h1>
-                <p className="page-subtitle">Les dernières découvertes et missions de l&apos;exploration spatiale</p>
-            </motion.div>
+  return (
+    <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
+      <motion.header initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="page-header">
+        <div className="badge">📰 PUBLICATIONS OFFICIELLES</div>
+        <h1 className="page-title gradient-text-blue">Actualités spatiales</h1>
+        <p className="page-subtitle">
+          Le fil récemment publié par la NASA, sans titres artificiels ni dates figées.
+        </p>
+      </motion.header>
 
-            {/* Search */}
-            <div style={{ marginBottom: '2rem', maxWidth: 500, margin: '0 auto 2rem' }}>
-                <input
-                    value={search} onChange={e => setSearch(e.target.value)}
-                    placeholder="🔍 Rechercher un article..."
-                    style={{
-                        width: '100%', padding: '0.75rem 1.25rem', borderRadius: '1rem', fontSize: '0.875rem',
-                        background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-                        color: '#e2e8f0', outline: 'none', fontFamily: 'inherit',
-                    }}
-                />
+      <div className="card" style={{ padding: '1rem 1.25rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+          <span className={error ? 'live-orb is-loading' : 'live-orb'} />
+          <div>
+            <div style={{ color: 'var(--text)', fontSize: '0.8rem', fontWeight: 700 }}>
+              {error ? 'Flux temporairement indisponible' : 'Flux officiel NASA connecté'}
             </div>
-
-            {/* Category chips */}
-            <div style={{ display: 'flex', gap: '0.375rem', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '1.5rem' }}>
-                {ALL_CATEGORIES.map(cat => (
-                    <button key={cat} onClick={() => setCatFilter(cat)} style={{
-                        padding: '0.3rem 0.875rem', borderRadius: 99, fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer',
-                        background: catFilter === cat ? `${CATEGORY_COLORS[cat] || '#6366f1'}18` : 'rgba(255,255,255,0.04)',
-                        border: `1px solid ${catFilter === cat ? (CATEGORY_COLORS[cat] || '#6366f1') + '40' : 'rgba(255,255,255,0.07)'}`,
-                        color: catFilter === cat ? (CATEGORY_COLORS[cat] || '#a78bfa') : '#64748b',
-                        transition: 'all 0.15s',
-                    }}>
-                        {cat}
-                    </button>
-                ))}
+            <div style={{ color: 'var(--text-muted)', fontSize: '0.68rem' }}>
+              {updatedAt ? `Actualisé à ${new Date(updatedAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}` : 'Synchronisation en cours'} · Articles en anglais
             </div>
-
-            {/* Live data sources */}
-            <div className="card" style={{ padding: '1.25rem', marginBottom: '2rem', display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                <span style={{ color: '#64748b', fontSize: '0.8rem' }}>📡 Sources en direct :</span>
-                {[
-                    { label: 'NASA Actualités', url: 'https://www.nasa.gov/news/', color: '#3b82f6' },
-                    { label: 'ESA News', url: 'https://www.esa.int/Newsroom', color: '#6366f1' },
-                    { label: 'CNRS Astrophysique', url: 'https://www.cnrs.fr/fr/themes/univers', color: '#10b981' },
-                    { label: 'SpaceWeather.com', url: 'https://spaceweather.com/', color: '#f59e0b' },
-                ].map(s => (
-                    <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer" style={{
-                        padding: '0.375rem 0.875rem', borderRadius: 999, fontSize: '0.75rem', fontWeight: 600,
-                        background: `${s.color}12`, color: s.color, border: `1px solid ${s.color}30`,
-                        textDecoration: 'none', transition: 'all 0.2s',
-                    }}>{s.label} ↗</a>
-                ))}
-            </div>
-
-            {/* Article grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
-                {(loaded ? filtered : STATIC_ARTICLES.slice(0, 3)).map((a, i) => (
-                    <motion.a
-                        key={a.title}
-                        href={a.url} target="_blank" rel="noopener noreferrer"
-                        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}
-                        className="card"
-                        style={{ padding: '1.5rem', textDecoration: 'none', display: 'block', cursor: 'pointer' }}
-                        whileHover={{ y: -4, borderColor: `${CATEGORY_COLORS[a.category] || '#6366f1'}50` }}
-                    >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem', gap: '0.5rem' }}>
-                            <span style={{
-                                fontSize: '0.7rem', padding: '2px 10px', borderRadius: 999, fontWeight: 700,
-                                background: `${CATEGORY_COLORS[a.category] || '#6366f1'}15`,
-                                color: CATEGORY_COLORS[a.category] || '#a78bfa',
-                                border: `1px solid ${CATEGORY_COLORS[a.category] || '#6366f1'}30`,
-                                whiteSpace: 'nowrap',
-                            }}>{a.category}</span>
-                            <span style={{ color: '#475569', fontSize: '0.7rem', whiteSpace: 'nowrap' }}>{new Date(a.date).toLocaleDateString('fr-FR')}</span>
-                        </div>
-                        <h3 style={{ color: '#e2e8f0', fontFamily: 'Outfit, sans-serif', fontWeight: 700, fontSize: '0.95rem', lineHeight: 1.5, marginBottom: '0.625rem' }}>{a.title}</h3>
-                        <p style={{ color: '#64748b', fontSize: '0.8rem', lineHeight: 1.7, marginBottom: '0.875rem' }}>{a.summary}</p>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <span style={{ color: '#475569', fontSize: '0.72rem' }}>📰 {a.source}</span>
-                            <span style={{ color: '#6366f1', fontSize: '0.78rem', fontWeight: 600 }}>Lire →</span>
-                        </div>
-                    </motion.a>
-                ))}
-                {!loaded && [...Array(3)].map((_, i) => (
-                    <div key={i} className="card" style={{ padding: '1.5rem', opacity: 0.4 }}>
-                        <div style={{ height: 16, borderRadius: 8, background: 'rgba(255,255,255,0.1)', marginBottom: '0.75rem', width: '40%' }} />
-                        <div style={{ height: 24, borderRadius: 8, background: 'rgba(255,255,255,0.08)', marginBottom: '0.5rem' }} />
-                        <div style={{ height: 16, borderRadius: 8, background: 'rgba(255,255,255,0.06)', marginBottom: '0.25rem' }} />
-                        <div style={{ height: 16, borderRadius: 8, background: 'rgba(255,255,255,0.06)', width: '70%' }} />
-                    </div>
-                ))}
-            </div>
-
-            {/* External resources */}
-            <div className="card" style={{ padding: '1.5rem' }}>
-                <h2 className="section-title" style={{ color: '#e2e8f0' }}>🔗 Ressources astronomiques</h2>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem' }}>
-                    {[
-                        { icon: '🌍', label: 'NASA Worldview', url: 'https://worldview.earthdata.nasa.gov/', desc: 'Images satellite en temps réel' },
-                        { icon: '🌤️', label: 'Space Weather', url: 'https://spaceweather.com/', desc: 'Météo spatiale & aurores boréales' },
-                        { icon: '☄️', label: 'Asteroid Watch', url: 'https://cneos.jpl.nasa.gov/', desc: 'Surveillance des astéroïdes' },
-                        { icon: '📡', label: 'NASA Live', url: 'https://www.nasa.gov/live', desc: 'Diffusion en direct de la NASA' },
-                        { icon: '🔭', label: 'Heavens-Above', url: 'https://www.heavens-above.com/', desc: 'Passages ISS & satellites' },
-                        { icon: '🌌', label: 'Stellarium', url: 'https://stellarium-web.org/', desc: 'Planétarium en ligne gratuit' },
-                    ].map(r => (
-                        <a key={r.label} href={r.url} target="_blank" rel="noopener noreferrer" style={{
-                            padding: '0.875rem 1rem', borderRadius: '0.75rem', textDecoration: 'none',
-                            background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)',
-                            display: 'flex', gap: '0.625rem', alignItems: 'flex-start',
-                            transition: 'all 0.2s',
-                        }}>
-                            <span style={{ fontSize: '1.3rem' }}>{r.icon}</span>
-                            <div>
-                                <div style={{ color: '#a78bfa', fontWeight: 700, fontSize: '0.82rem' }}>{r.label}</div>
-                                <div style={{ color: '#475569', fontSize: '0.72rem' }}>{r.desc}</div>
-                            </div>
-                        </a>
-                    ))}
-                </div>
-            </div>
+          </div>
         </div>
-    )
+        <a href="https://www.nasa.gov/rss-feeds/" target="_blank" rel="noopener noreferrer" className="btn-ghost" style={{ padding: '0.55rem 1rem', fontSize: '0.75rem' }}>
+          Vérifier la source ↗
+        </a>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(220px, 1fr) auto', gap: '0.75rem', alignItems: 'center', marginBottom: '1.25rem' }} className="max-sm:grid-cols-1">
+        <label style={{ position: 'relative' }}>
+          <span className="sr-only">Rechercher dans les articles</span>
+          <input
+            value={search}
+            onChange={event => setSearch(event.target.value)}
+            placeholder="Rechercher dans les publications…"
+            style={{
+              width: '100%', padding: '0.8rem 1rem 0.8rem 2.6rem', borderRadius: '0.85rem',
+              background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)',
+              font: 'inherit', fontSize: '0.82rem', outline: 'none',
+            }}
+          />
+          <span aria-hidden="true" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>⌕</span>
+        </label>
+        <span style={{ color: 'var(--text-muted)', fontSize: '0.72rem', textAlign: 'right' }}>
+          {loading ? 'Chargement…' : `${filtered.length} publication${filtered.length > 1 ? 's' : ''}`}
+        </span>
+      </div>
+
+      <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
+        {categories.map(item => {
+          const color = CATEGORY_COLORS[item] || '#818cf8'
+          const selected = item === category
+          return (
+            <button
+              key={item}
+              onClick={() => setCategory(item)}
+              aria-pressed={selected}
+              style={{
+                padding: '0.38rem 0.8rem', borderRadius: 999, cursor: 'pointer',
+                background: selected ? `${color}18` : 'var(--surface)',
+                border: `1px solid ${selected ? `${color}55` : 'var(--border)'}`,
+                color: selected ? color : 'var(--text-muted)', fontSize: '0.7rem', fontWeight: 700,
+              }}
+            >
+              {item}
+            </button>
+          )
+        })}
+      </div>
+
+      {loading && (
+        <div className="grid-3" aria-label="Chargement des actualités">
+          {[0, 1, 2, 3, 4, 5].map(index => <div key={index} className="skeleton-card" style={{ height: 240 }} />)}
+        </div>
+      )}
+
+      {!loading && error && (
+        <div className="card" style={{ padding: '2rem', textAlign: 'center' }}>
+          <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📡</div>
+          <h2 style={{ color: 'var(--text)', font: "700 1.1rem 'Outfit', sans-serif" }}>Impossible de joindre le flux NASA</h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.82rem', marginTop: '0.4rem' }}>Réessayez dans quelques instants ou consultez directement la source officielle.</p>
+        </div>
+      )}
+
+      {!loading && !error && filtered.length === 0 && (
+        <div className="card" style={{ padding: '2rem', color: 'var(--text-muted)', textAlign: 'center' }}>
+          Aucun article ne correspond à cette recherche.
+        </div>
+      )}
+
+      {!loading && !error && filtered.length > 0 && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))', gap: '1rem' }}>
+          {filtered.map((article, index) => {
+            const color = CATEGORY_COLORS[article.category] || '#818cf8'
+            return (
+              <motion.a
+                key={`${article.url}-${index}`}
+                href={article.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="card"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: Math.min(index * 0.035, 0.35) }}
+                style={{ minHeight: 245, padding: '1.4rem', textDecoration: 'none', display: 'flex', flexDirection: 'column' }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.75rem', alignItems: 'center' }}>
+                  <span style={{ color, background: `${color}12`, border: `1px solid ${color}30`, borderRadius: 999, padding: '0.2rem 0.65rem', fontSize: '0.64rem', fontWeight: 800 }}>
+                    {article.category}
+                  </span>
+                  <time dateTime={article.date} style={{ color: 'var(--text-muted)', fontSize: '0.65rem' }}>{formatDate(article.date)}</time>
+                </div>
+                <h2 style={{ margin: '1rem 0 0.6rem', color: 'var(--text)', font: "750 1rem/1.45 'Outfit', sans-serif" }}>{article.title}</h2>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.77rem', lineHeight: 1.65, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  {article.summary}
+                </p>
+                <div style={{ marginTop: 'auto', paddingTop: '1rem', display: 'flex', justifyContent: 'space-between', color: '#7c8ca4', fontSize: '0.7rem' }}>
+                  <span>NASA</span><span style={{ color }}>Lire l’article ↗</span>
+                </div>
+              </motion.a>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
 }
