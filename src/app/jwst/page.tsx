@@ -243,7 +243,12 @@ export default function JWSTPage() {
       {/* Webb vs Hubble */}
       <div className="card" style={{ padding: '1.5rem' }}>
         <h2 className="section-title" style={{ color: '#e2e8f0' }}>📡 Webb vs Hubble</h2>
-        <div style={{ overflowX: 'auto' }}>
+        <div
+          role="region"
+          aria-label="Comparatif des télescopes spatiaux"
+          tabIndex={0}
+          style={{ overflowX: 'auto' }}
+        >
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
             <thead>
               <tr>

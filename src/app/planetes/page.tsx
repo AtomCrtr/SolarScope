@@ -51,7 +51,7 @@ export default function PlanetesPage() {
                     }}>
                         <div style={{ fontSize: '1.4rem', marginBottom: '0.2rem' }}>{pl.emoji}</div>
                         <div style={{ fontSize: '0.8rem' }}>{pl.name}</div>
-                        <div style={{ fontSize: '0.65rem', color: '#64748b', marginTop: 1 }}>{pl.moons} lune{pl.moons !== 1 ? 's' : ''}</div>
+                        <div style={{ fontSize: '0.65rem', color: '#94a3b8', marginTop: 1 }}>{pl.moons} lune{pl.moons !== 1 ? 's' : ''}</div>
                     </button>
                 ))}
             </div>

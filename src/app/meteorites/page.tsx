@@ -205,7 +205,7 @@ export default function MeteoritesPage() {
                         padding: '0.25rem 0.75rem', borderRadius: 99, fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer',
                         background: classFilter === chip ? 'rgba(249,115,22,0.15)' : 'rgba(255,255,255,0.04)',
                         border: `1px solid ${classFilter === chip ? 'rgba(249,115,22,0.4)' : 'rgba(255,255,255,0.07)'}`,
-                        color: classFilter === chip ? '#fb923c' : '#64748b',
+                        color: classFilter === chip ? '#fb923c' : '#94a3b8',
                         transition: 'all 0.15s',
                     }}>
                         {chip === 'Tous' ? '☄️ Tous' : chip}
