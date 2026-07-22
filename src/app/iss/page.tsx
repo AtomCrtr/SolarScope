@@ -3,23 +3,10 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
-import type { DashboardData } from '@/lib/space-data'
+import type { DashboardData, IssPosition } from '@/lib/space-data'
 import KidsGuide from '@/components/KidsGuide'
 
 const ISSGlobe = dynamic(() => import('@/components/ISSGlobe'), { ssr: false })
-
-interface ISSPos {
-    latitude: number
-    longitude: number
-    altitude: number
-    velocity: number
-    timestamp: number
-}
-
-interface Astronaut {
-    name: string
-    craft: string
-}
 
 interface LaunchInfo {
     name: string
@@ -37,23 +24,37 @@ function daysSince(dateStr: string) {
 }
 
 export default function ISSPage() {
-    const [issPos, setIssPos] = useState<ISSPos | null>(null)
-    const [astronauts, setAstronauts] = useState<Astronaut[]>([])
+    const [issPos, setIssPos] = useState<IssPosition | null>(null)
+    const [positionLoading, setPositionLoading] = useState(true)
+    const [positionError, setPositionError] = useState(false)
+    const [astronauts, setAstronauts] = useState<DashboardData['crew']>([])
+    const [crewLoading, setCrewLoading] = useState(true)
+    const [crewError, setCrewError] = useState(false)
     const [nextLaunch, setNextLaunch] = useState<LaunchInfo | null>(null)
 
-    // ── Fetch ISS position every 2 seconds ──
+    // The browser calls our validated proxy to avoid cross-origin failures.
     useEffect(() => {
+        const controller = new AbortController()
         async function fetchISS() {
             try {
-                const r = await fetch('https://api.wheretheiss.at/v1/satellites/25544')
-                if (!r.ok) return
-                const d: ISSPos = await r.json()
+                const r = await fetch('/api/iss-position', { signal: controller.signal, cache: 'no-store' })
+                if (!r.ok) throw new Error('ISS position unavailable')
+                const d: IssPosition = await r.json()
                 setIssPos(d)
-            } catch { /* silent */ }
+                setPositionError(false)
+            } catch (error) {
+                if (error instanceof DOMException && error.name === 'AbortError') return
+                setPositionError(true)
+            } finally {
+                if (!controller.signal.aborted) setPositionLoading(false)
+            }
         }
         fetchISS()
-        const id = setInterval(fetchISS, 2000)
-        return () => clearInterval(id)
+        const id = setInterval(fetchISS, 5_000)
+        return () => {
+            controller.abort()
+            clearInterval(id)
+        }
     }, [])
 
     // ── Shared server-side data: crew + next launch ──
@@ -66,6 +67,7 @@ export default function ISSPage() {
             })
             .then(data => {
                 setAstronauts(data.crew)
+                setCrewError(!data.sources.crew)
                 if (data.nextLaunch) {
                     setNextLaunch({
                         name: data.nextLaunch.name,
@@ -75,12 +77,19 @@ export default function ISSPage() {
                     })
                 }
             })
-            .catch(() => { })
+            .catch(error => {
+                if (error instanceof DOMException && error.name === 'AbortError') return
+                setCrewError(true)
+            })
+            .finally(() => {
+                if (!controller.signal.aborted) setCrewLoading(false)
+            })
         return () => controller.abort()
     }, [])
 
-    const issOnISS = astronauts.filter(a => a.craft === 'ISS')
+    const issOnISS = astronauts.filter(a => a.station === 'ISS')
     const daysOnOrbit = daysSince('1998-11-20')
+    const missingPosition = positionLoading ? '…' : 'Indisponible'
 
     return (
         <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
@@ -103,10 +112,10 @@ export default function ISSPage() {
             {/* ISS Stats */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem', marginBottom: '2rem' }} className="max-sm:grid-cols-2">
                 {[
-                    { icon: '📍', label: 'Latitude', val: issPos ? formatLatLng(issPos.latitude, 'N', 'S') : '—' },
-                    { icon: '↔️', label: 'Longitude', val: issPos ? formatLatLng(issPos.longitude, 'E', 'O') : '—' },
-                    { icon: '🚀', label: 'Altitude', val: issPos ? `${issPos.altitude.toFixed(1)} km` : '—' },
-                    { icon: '⚡', label: 'Vitesse', val: issPos ? `${(issPos.velocity).toFixed(0)} km/h` : '—' },
+                    { icon: '📍', label: 'Latitude', val: issPos ? formatLatLng(issPos.latitude, 'N', 'S') : missingPosition },
+                    { icon: '↔️', label: 'Longitude', val: issPos ? formatLatLng(issPos.longitude, 'E', 'O') : missingPosition },
+                    { icon: '🚀', label: 'Altitude', val: issPos ? `${issPos.altitude.toFixed(1)} km` : missingPosition },
+                    { icon: '⚡', label: 'Vitesse', val: issPos ? `${issPos.velocity.toFixed(0)} km/h` : missingPosition },
                 ].map(s => (
                     <motion.div key={s.label} className="stat-card" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                         <div style={{ fontSize: '1.5rem' }}>{s.icon}</div>
@@ -128,8 +137,10 @@ export default function ISSPage() {
                         border: '1px solid rgba(96,165,250,0.3)', borderRadius: 99,
                         padding: '4px 12px', display: 'flex', alignItems: 'center', gap: 6,
                     }}>
-                        <span className="pulse-dot" style={{ width: 7, height: 7, background: '#60a5fa', boxShadow: '0 0 6px #60a5fa' }} />
-                        <span style={{ color: '#60a5fa', fontSize: '0.7rem', fontWeight: 700 }}>Live — Mise à jour /2s</span>
+                        <span className="pulse-dot" style={{ width: 7, height: 7, background: issPos ? '#60a5fa' : '#f59e0b', boxShadow: `0 0 6px ${issPos ? '#60a5fa' : '#f59e0b'}` }} />
+                        <span style={{ color: issPos ? '#60a5fa' : '#f59e0b', fontSize: '0.7rem', fontWeight: 700 }}>
+                            {positionLoading ? 'Connexion à l’ISS…' : positionError && !issPos ? 'Position indisponible' : positionError ? 'Dernière position connue' : 'Position vérifiée toutes les 5 s'}
+                        </span>
                     </div>
                     <div style={{ position: 'absolute', bottom: 10, right: 12, color: '#334155', fontSize: '0.6rem' }}>🖱 Glisser pour pivoter</div>
                 </div>
@@ -143,12 +154,12 @@ export default function ISSPage() {
                                 Équipage actuel
                             </h2>
                             <span style={{ marginLeft: 'auto', background: 'rgba(16,185,129,0.12)', color: '#10b981', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 99, padding: '2px 8px', fontSize: '0.68rem', fontWeight: 700 }}>
-                                {issOnISS.length} pers.
+                                {crewLoading ? '…' : crewError ? 'Indispo.' : `${issOnISS.length} pers.`}
                             </span>
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            {astronauts.slice(0, 8).map((a, i) => (
-                                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', padding: '0.5rem', borderRadius: '0.5rem', background: 'rgba(255,255,255,0.03)' }}>
+                            {issOnISS.slice(0, 10).map(a => (
+                                <div key={`${a.name}-${a.craft}`} style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', padding: '0.5rem', borderRadius: '0.5rem', background: 'rgba(255,255,255,0.03)' }}>
                                     <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', flexShrink: 0 }}>
                                         {a.name.charAt(0)}
                                     </div>
@@ -158,6 +169,7 @@ export default function ISSPage() {
                                     </div>
                                 </div>
                             ))}
+                            {!crewLoading && crewError && <p style={{ color: '#f59e0b', fontSize: '0.75rem' }}>Équipage temporairement indisponible.</p>}
                         </div>
                     </div>
 

@@ -3,7 +3,9 @@ import { getUpcomingLaunches } from '@/lib/space-data'
 
 export async function GET(request: NextRequest) {
   const requestedLimit = Number(request.nextUrl.searchParams.get('limit') || 8)
-  const limit = Math.min(Math.max(requestedLimit, 1), 12)
+  const limit = Number.isFinite(requestedLimit)
+    ? Math.min(Math.max(Math.trunc(requestedLimit), 1), 12)
+    : 8
   const provider = request.nextUrl.searchParams.get('provider')?.trim()
   try {
     const launches = await getUpcomingLaunches(limit, provider)

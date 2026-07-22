@@ -704,6 +704,7 @@ video {
 .home-kpi-topline { min-height: 22px; display: flex; justify-content: space-between; color: #475569; font-size: 0.65rem; font-weight: 800; }
 .data-live { color: #34d399; font-size: 0.56rem; letter-spacing: 0.12em; }
 .home-kpi strong { display: block; margin: 1.15rem 0 0.35rem; font: 800 clamp(2rem, 3vw, 3rem)/1 'Outfit', sans-serif; letter-spacing: -0.04em; }
+.home-kpi strong.is-unavailable { font-size: 1rem; letter-spacing: 0; }
 .home-kpi-label { display: block; color: #d2dae8; font-size: 0.78rem; font-weight: 700; }
 .home-kpi small { display: block; margin-top: 0.3rem; color: #59677c; font-size: 0.65rem; }
 

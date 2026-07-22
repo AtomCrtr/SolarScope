@@ -3,20 +3,15 @@ import { revalidateTag } from 'next/cache'
 import {
   getAsteroidFeed,
   getDashboardData,
+  getIssPosition,
   getNasaNews,
   getSolarFlares,
+  getSpaceWeatherData,
   getUpcomingLaunches,
+  SPACE_CACHE_TAGS,
 } from '@/lib/space-data'
 
 export const dynamic = 'force-dynamic'
-
-const CACHE_TAGS = [
-  'space-dashboard',
-  'space-launches',
-  'space-asteroids',
-  'space-flares',
-  'space-news',
-]
 
 export async function GET(request: NextRequest) {
   const secret = process.env.CRON_SECRET
@@ -36,7 +31,7 @@ export async function GET(request: NextRequest) {
     )
   }
 
-  CACHE_TAGS.forEach(tag => revalidateTag(tag, 'max'))
+  SPACE_CACHE_TAGS.forEach(tag => revalidateTag(tag, 'max'))
 
   const jobs = await Promise.allSettled([
     getDashboardData(),
@@ -44,6 +39,8 @@ export async function GET(request: NextRequest) {
     getAsteroidFeed(),
     getSolarFlares(),
     getNasaNews(),
+    getIssPosition(),
+    getSpaceWeatherData(),
   ])
 
   const refreshed = jobs.filter(job => job.status === 'fulfilled').length

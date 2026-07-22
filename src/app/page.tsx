@@ -84,7 +84,13 @@ function formatCountdown(ms: number | null) {
 
 function formatFreshness(value: string | undefined) {
   if (!value) return 'Connexion aux sources…'
-  return `Actualisé à ${new Date(value).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`
+  return `Sources vérifiées à ${new Date(value).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`
+}
+
+function formatRemoteKpi(value: number | null | undefined, available: boolean | undefined, loading: boolean) {
+  if (loading) return '…'
+  if (!available || value === null || value === undefined) return 'Indisponible'
+  return value.toLocaleString('fr-FR')
 }
 
 export default function HomePage() {
@@ -111,20 +117,21 @@ export default function HomePage() {
     () => data ? Object.values(data.sources).filter(Boolean).length : 0,
     [data],
   )
-  const issCrew = data?.crew.filter(member => member.craft.toUpperCase() === 'ISS').length ?? null
+  const dashboardLoading = data === null && !dataError
+  const issCrew = data?.crew.filter(member => member.station === 'ISS').length ?? null
 
   const kpis = [
     {
-      value: data?.exoplanetCount?.toLocaleString('fr-FR') ?? '—',
+      value: formatRemoteKpi(data?.exoplanetCount, data?.sources.exoplanets, dashboardLoading),
       label: 'exoplanètes confirmées', source: 'NASA Exoplanet Archive', color: '#c084fc', live: data?.sources.exoplanets,
     },
     {
-      value: data?.nearEarthObjectCount?.toLocaleString('fr-FR') ?? '—',
+      value: formatRemoteKpi(data?.nearEarthObjectCount, data?.sources.asteroids, dashboardLoading),
       label: 'objets proches catalogués', source: 'NASA NeoWs', color: '#fb923c', live: data?.sources.asteroids,
     },
     {
-      value: issCrew === null ? '—' : String(issCrew),
-      label: 'personnes à bord de l’ISS', source: 'Open Notify', color: '#38bdf8', live: data?.sources.crew,
+      value: formatRemoteKpi(issCrew, data?.sources.crew, dashboardLoading),
+      label: 'personnes à bord de l’ISS', source: 'People in Space', color: '#38bdf8', live: data?.sources.crew,
     },
     {
       value: martianSolsSince('2021-02-18').toLocaleString('fr-FR'),
@@ -160,7 +167,7 @@ export default function HomePage() {
           <div className="source-health" aria-live="polite">
             <span>{dataError ? 'Sources momentanément indisponibles' : `${activeSources}/4 flux connectés`}</span>
             <span className="source-health-line" />
-            <span>NASA · NOAA · IPAC · Launch Library</span>
+            <span>NASA · IPAC · People in Space · The Space Devs</span>
           </div>
         </motion.div>
 
@@ -222,7 +229,7 @@ export default function HomePage() {
               <span>0{index + 1}</span>
               {kpi.live && <span className="data-live">EN DIRECT</span>}
             </div>
-            <strong style={{ color: kpi.color }}>{kpi.value}</strong>
+            <strong className={kpi.value === 'Indisponible' ? 'is-unavailable' : undefined} style={{ color: kpi.color }}>{kpi.value}</strong>
             <span className="home-kpi-label">{kpi.label}</span>
             <small>{kpi.source}</small>
           </motion.article>

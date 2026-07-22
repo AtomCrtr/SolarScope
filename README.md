@@ -11,7 +11,7 @@ Production : [solar-scope.vercel.app](https://solar-scope.vercel.app)
 - Deux niveaux de lecture : une synthèse simple, puis les données scientifiques détaillées.
 - Système solaire et rovers en 3D avec Three.js.
 - ISS, équipages et prochains lancements.
-- Activité solaire NOAA, images NASA SDO/SOHO et indice Kp.
+- Activité solaire NOAA et images NASA SDO/SOHO.
 - Astéroïdes NeoWs, exoplanètes, APOD et actualités NASA.
 - Galerie JWST, archive pédagogique des météorites et quiz.
 - SolarBot avec consignes adaptées aux enfants, avertissement sur ses limites, limitation de débit et réponses locales de secours.
@@ -25,12 +25,14 @@ Les routes serveur valident les réponses externes et conservent la dernière r�
 | Données | Source | Cache |
 |---|---|---:|
 | Tableau de bord et équipages | NASA/IPAC, NASA NeoWs, People in Space | 15 à 60 min |
+| Position de l’ISS | Where The ISS At, via `/api/iss-position` | 5 s |
+| Vent solaire, champ magnétique et rayons X | NOAA SWPC, via `/api/space-weather` | 60 s |
 | Lancements | The Space Devs | 15 min |
 | Actualités | Flux RSS NASA | 30 min |
 | Astéroïdes et éruptions | NASA NeoWs / DONKI | 60 min |
 | Photo du jour | NASA APOD | 60 min |
 
-Les caches se renouvellent à la demande. Un cron Vercel quotidien appelle aussi `/api/refresh` afin de préchauffer les sources même sans visite. `/api/health` expose leur état sans révéler de secret. La page Météorites utilise un échantillon embarqué de l’ancienne archive NASA et l’indique explicitement.
+Les caches se renouvellent à la demande. Un cron Vercel quotidien appelle aussi `/api/refresh` afin de préchauffer les sources même sans visite. `/api/health` contrôle séparément les compteurs, les lancements, la position ISS, le vent solaire et les rayons X, sans révéler de secret. La page Météorites utilise un échantillon embarqué de l’ancienne archive NASA et l’indique explicitement.
 
 ## Développement local
 

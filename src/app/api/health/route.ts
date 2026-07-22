@@ -1,21 +1,36 @@
 import { NextResponse } from 'next/server'
-import { getDashboardData } from '@/lib/space-data'
+import { getDashboardData, getIssPosition, getSpaceWeatherData } from '@/lib/space-data'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
   const startedAt = Date.now()
   try {
-    const dashboard = await getDashboardData()
-    const healthySources = Object.values(dashboard.sources).filter(Boolean).length
-    const healthy = healthySources >= 3
+    const [dashboardResult, positionResult, weatherResult] = await Promise.allSettled([
+      getDashboardData(),
+      getIssPosition(),
+      getSpaceWeatherData(),
+    ])
+    const dashboardSources = dashboardResult.status === 'fulfilled'
+      ? dashboardResult.value.sources
+      : { exoplanets: false, asteroids: false, crew: false, launches: false }
+    const weatherSources = weatherResult.status === 'fulfilled'
+      ? weatherResult.value.sources
+      : { solarWind: false, xray: false }
+    const sources = {
+      ...dashboardSources,
+      issPosition: positionResult.status === 'fulfilled',
+      ...weatherSources,
+    }
+    const healthySources = Object.values(sources).filter(Boolean).length
+    const healthy = healthySources >= 5
 
     return NextResponse.json(
       {
         status: healthy ? 'ok' : 'degraded',
         checkedAt: new Date().toISOString(),
         latencyMs: Date.now() - startedAt,
-        sources: dashboard.sources,
+        sources,
       },
       {
         status: healthy ? 200 : 503,

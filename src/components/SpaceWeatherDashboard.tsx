@@ -2,20 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-
-/* ─── Types ─── */
-interface SolarWind {
-    speed: number       // km/s
-    density: number     // p/cm³
-    temperature: number // K
-}
-
-interface MagneticField {
-    bz: number     // nT — negative = southward = dangerous
-    bt: number     // nT — total
-    lat: number
-    lon: number
-}
+import type { MagneticField, SolarWind, SpaceWeatherData } from '@/lib/space-data'
 
 /* ─── Helpers ─── */
 function getFlareClass(flux: number): { label: string; color: string; bg: string; danger: string } {
@@ -201,6 +188,14 @@ function SOHOPanel() {
     )
 }
 
+function DataUnavailable({ label }: { label: string }) {
+    return (
+        <div role="status" style={{ padding: '1rem', borderRadius: '0.75rem', background: 'rgba(245,158,11,0.07)', color: '#fbbf24', fontSize: '0.8rem', textAlign: 'center' }}>
+            📡 {label} temporairement indisponible.
+        </div>
+    )
+}
+
 /* ─── Main Dashboard ─── */
 export default function SpaceWeatherDashboard() {
     const [wind, setWind] = useState<SolarWind | null>(null)
@@ -208,47 +203,26 @@ export default function SpaceWeatherDashboard() {
     const [xrayHistory, setXrayHistory] = useState<number[]>([])
     const [loading, setLoading] = useState(true)
     const [lastUpdate, setLastUpdate] = useState<string>('')
+    const [sources, setSources] = useState<SpaceWeatherData['sources']>({ solarWind: false, xray: false })
     const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
     const fetchAll = async () => {
         try {
-            // 1. Solar wind plasma (speed, density, temp)
-            const plasmaRes = await fetch('https://services.swpc.noaa.gov/products/solar-wind/plasma-7-day.json')
-            const plasmaData: [string, string, string, string][] = await plasmaRes.json()
-            const lastPlasma = plasmaData[plasmaData.length - 1]
-            if (lastPlasma) {
-                setWind({
-                    speed: parseFloat(lastPlasma[1]) || 0,
-                    density: parseFloat(lastPlasma[2]) || 0,
-                    temperature: parseFloat(lastPlasma[3]) || 0,
-                })
+            const response = await fetch('/api/space-weather', { cache: 'no-store' })
+            const payload = await response.json() as SpaceWeatherData
+            setWind(payload.wind)
+            setMag(payload.magneticField)
+            setXrayHistory(payload.xrayHistory)
+            setSources(payload.sources)
+            if (payload.observedAt) {
+                setLastUpdate(new Date(payload.observedAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }))
             }
-
-            // 2. Magnetic field (Bz, Bt)
-            const magRes = await fetch('https://services.swpc.noaa.gov/products/solar-wind/mag-7-day.json')
-            const magData: [string, string, string, string, string, string, string][] = await magRes.json()
-            const lastMag = magData[magData.length - 1]
-            if (lastMag) {
-                setMag({
-                    bz: parseFloat(lastMag[3]) || 0,
-                    bt: parseFloat(lastMag[6]) || 0,
-                    lat: parseFloat(lastMag[4]) || 0,
-                    lon: parseFloat(lastMag[5]) || 0,
-                })
-            }
-
-            // 3. X-ray flux (6h history)
-            const xrayRes = await fetch('https://services.swpc.noaa.gov/json/goes/primary/xrays-6-hour.json')
-            const xrayData: { time_tag: string; flux: number }[] = await xrayRes.json()
-            // Take every 4th point (1 per minute → 1 per 4min for 6h = ~90 points)
-            const sampled = xrayData.filter((_, i) => i % 4 === 0)
-            const fluxHistory = sampled.map(d => d.flux)
-            setXrayHistory(fluxHistory)
-
-            setLastUpdate(new Date().toLocaleTimeString('fr-FR'))
-            setLoading(false)
-        } catch (e) {
-            console.error('Space weather fetch error:', e)
+        } catch {
+            setWind(null)
+            setMag(null)
+            setXrayHistory([])
+            setSources({ solarWind: false, xray: false })
+        } finally {
             setLoading(false)
         }
     }
@@ -263,6 +237,8 @@ export default function SpaceWeatherDashboard() {
     }, [])
 
     const windStatus = wind ? getWindStatus(wind.speed) : null
+    const availableSources = Object.values(sources).filter(Boolean).length
+    const statusColor = availableSources === 2 ? '#22c55e' : availableSources === 1 ? '#f59e0b' : '#ef4444'
 
     return (
         <div style={{ padding: '3rem 2rem 4rem', maxWidth: 'var(--max-w)', margin: '0 auto' }}>
@@ -279,9 +255,9 @@ export default function SpaceWeatherDashboard() {
                         </p>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <motion.div animate={{ scale: [1, 1.3, 1] }} transition={{ repeat: Infinity, duration: 2 }} style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e' }} />
-                        <span style={{ fontSize: '0.72rem', color: '#475569' }}>
-                            {loading ? 'Chargement…' : `Mis à jour ${lastUpdate}`}
+                        <motion.div animate={{ scale: [1, 1.3, 1] }} transition={{ repeat: Infinity, duration: 2 }} style={{ width: 8, height: 8, borderRadius: '50%', background: statusColor }} />
+                        <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                            {loading ? 'Chargement…' : availableSources === 0 ? 'Données indisponibles' : `Observations de ${lastUpdate || 'maintenant'}`}
                         </span>
                         <button onClick={fetchAll} style={{ padding: '3px 10px', borderRadius: 99, fontSize: '0.68rem', fontWeight: 600, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', color: '#64748b', cursor: 'pointer' }}>
                             ↺ Actualiser
@@ -307,8 +283,9 @@ export default function SpaceWeatherDashboard() {
                                 <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#e2e8f0', fontFamily: 'Outfit' }}>Vent Solaire</div>
                                 {windStatus && <div style={{ fontSize: '0.7rem', color: windStatus.color, fontWeight: 600 }}>{windStatus.label}</div>}
                             </div>
-                            <div style={{ marginLeft: 'auto', fontSize: '0.65rem', color: '#334155' }}>Source : NOAA ACE/DSCOVR satellite L1</div>
+                            <div style={{ marginLeft: 'auto', fontSize: '0.65rem', color: '#64748b' }}>Source : NOAA SWPC · vent propagé vers la Terre</div>
                         </div>
+                        {!wind && <DataUnavailable label="Vent solaire" />}
                         <div style={{ display: 'flex', justifyContent: 'space-around', gap: '1rem', flexWrap: 'wrap' }}>
                             {wind && <>
                                 <Gauge value={wind.speed} min={200} max={900} color={windStatus?.color || '#f59e0b'} unit="km/s" label="Vitesse" />
@@ -346,6 +323,7 @@ export default function SpaceWeatherDashboard() {
                                     <div style={{ fontSize: '0.7rem', color: '#475569' }}>Interplanetary Magnetic Field</div>
                                 </div>
                             </div>
+                            {!mag && <DataUnavailable label="Champ magnétique" />}
                             {mag && <BzBar bz={mag.bz} bt={mag.bt} />}
                             {mag && (
                                 <div style={{ marginTop: '0.875rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
@@ -362,7 +340,7 @@ export default function SpaceWeatherDashboard() {
                             )}
                             <div style={{ marginTop: '0.875rem', padding: '0.625rem', background: 'rgba(99,102,241,0.06)', borderRadius: '0.625rem', border: '1px solid rgba(99,102,241,0.12)' }}>
                                 <div style={{ fontSize: '0.65rem', color: '#475569', lineHeight: 1.6 }}>
-                                    💡 <strong style={{ color: '#94a3b8' }}>Bz négatif</strong> = le champ magnétique solaire pointe vers le sud. Il se reconnecter avec le champ terrestre et laisse passer les particules chargées — ce sont les aurores boréales.
+                                    💡 <strong style={{ color: '#94a3b8' }}>Bz négatif</strong> = le champ magnétique solaire pointe vers le sud. Il peut se reconnecter avec le champ terrestre et favoriser l’arrivée de particules chargées à l’origine des aurores.
                                 </div>
                             </div>
                         </motion.div>
@@ -377,6 +355,7 @@ export default function SpaceWeatherDashboard() {
                                     <div style={{ fontSize: '0.7rem', color: '#475569' }}>Satellite GOES (NOAA) — canal 1–8 Å</div>
                                 </div>
                             </div>
+                            {!xrayHistory.length && <DataUnavailable label="Rayons X solaires" />}
                             <XraySparkline history={xrayHistory} />
                             <div style={{ marginTop: '0.875rem', display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '0.3rem' }}>
                                 {[

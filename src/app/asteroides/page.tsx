@@ -49,7 +49,7 @@ export default function AsteroidsPage() {
             })
             .then(data => {
                 const list = Array.isArray(data.asteroids) ? data.asteroids : []
-                setAsteroids(list.slice(0, 20))
+                setAsteroids(list)
                 setUpdatedAt(data.updatedAt || null)
                 setLoading(false)
             }).catch(fetchError => {
@@ -97,13 +97,13 @@ export default function AsteroidsPage() {
             {/* Live KPIs */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '0.75rem', marginBottom: '2rem' }}>
                 {[
-                    { label: 'Proches cette semaine', val: loading ? '...' : `${total}`, color: '#6366f1' },
-                    { label: 'Potentiellement dangereux', val: loading ? '...' : `${dangerous}`, color: '#ef4444' },
+                    { label: 'Proches cette semaine', val: loading ? '…' : error ? 'Indisponible' : `${total}`, color: '#6366f1' },
+                    { label: 'Potentiellement dangereux', val: loading ? '…' : error ? 'Indisponible' : `${dangerous}`, color: '#ef4444' },
                     { label: 'Fenêtre analysée', val: '7 jours', color: '#f59e0b' },
                     { label: 'Source', val: 'NeoWs', color: '#10b981' },
                 ].map(s => (
                     <div key={s.label} className="card" style={{ padding: '1.25rem', textAlign: 'center' }}>
-                        <div style={{ fontSize: '1.6rem', fontFamily: 'Outfit, sans-serif', fontWeight: 900, background: s.color, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>{s.val}</div>
+                        <div style={{ fontSize: s.val === 'Indisponible' ? '0.9rem' : '1.6rem', fontFamily: 'Outfit, sans-serif', fontWeight: 900, color: s.color }}>{s.val}</div>
                         <div style={{ color: '#64748b', fontSize: '0.75rem', marginTop: 4 }}>{s.label}</div>
                     </div>
                 ))}
@@ -113,7 +113,7 @@ export default function AsteroidsPage() {
             <div className="card" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
                     <h2 className="section-title" style={{ color: '#e2e8f0' }}>🔴 Passages proches cette semaine (NASA NeoWs)</h2>
-                    {updatedAt && <span style={{ color: '#64748b', fontSize: '0.68rem' }}>Actualisé à {new Date(updatedAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>}
+                    {updatedAt && <span style={{ color: '#64748b', fontSize: '0.68rem' }}>Vérifié à {new Date(updatedAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>}
                 </div>
                 {loading ? (
                     <div style={{ textAlign: 'center', padding: '2rem', color: '#64748b' }}>⏳ Chargement des données NASA...</div>

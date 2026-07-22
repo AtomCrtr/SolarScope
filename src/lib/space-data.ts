@@ -1,6 +1,41 @@
 export interface CrewMember {
   name: string
   craft: string
+  station: 'ISS' | 'Tiangong' | 'Other'
+}
+
+export interface IssPosition {
+  latitude: number
+  longitude: number
+  altitude: number
+  velocity: number
+  timestamp: number
+  updatedAt: string
+}
+
+export interface SolarWind {
+  speed: number
+  density: number
+  temperature: number
+}
+
+export interface MagneticField {
+  bz: number
+  bt: number
+  lat: number
+  lon: number
+}
+
+export interface SpaceWeatherData {
+  wind: SolarWind | null
+  magneticField: MagneticField | null
+  xrayHistory: number[]
+  observedAt: string | null
+  updatedAt: string
+  sources: {
+    solarWind: boolean
+    xray: boolean
+  }
 }
 
 export interface UpcomingLaunch {
@@ -67,6 +102,8 @@ export const SPACE_CACHE_TAGS = [
   'space-asteroids',
   'space-launches',
   'space-flares',
+  'space-iss',
+  'space-weather',
 ] as const
 
 const NASA_API_KEY = process.env.NASA_API_KEY || 'DEMO_KEY'
@@ -83,7 +120,9 @@ function stringValue(value: unknown): string | null {
 }
 
 function numberValue(value: unknown): number | null {
-  const parsed = typeof value === 'number' ? value : typeof value === 'string' ? Number(value) : Number.NaN
+  const normalized = typeof value === 'string' ? value.trim() : value
+  if (normalized === '') return null
+  const parsed = typeof normalized === 'number' ? normalized : typeof normalized === 'string' ? Number(normalized) : Number.NaN
   return Number.isFinite(parsed) ? parsed : null
 }
 
@@ -122,18 +161,25 @@ async function fetchJson(
   return response.json()
 }
 
-function parseCrew(payload: unknown): CrewMember[] {
+export function stationForCraft(craft: string): CrewMember['station'] {
+  const normalized = craft.toLowerCase()
+  if (/shenzhou|tiangong/.test(normalized)) return 'Tiangong'
+  if (/\biss\b|soyuz|dragon|starliner/.test(normalized)) return 'ISS'
+  return 'Other'
+}
+
+export function parseCrew(payload: unknown): CrewMember[] {
   if (!isRecord(payload)) return []
   return recordArray(payload.people)
     .map((person) => {
       const name = stringValue(person.name)
       const craft = stringValue(person.spacecraft) || stringValue(person.craft)
-      return name && craft ? { name, craft } : null
+      return name && craft ? { name, craft, station: stationForCraft(craft) } : null
     })
     .filter((member): member is CrewMember => member !== null)
 }
 
-function parseLaunches(payload: unknown): LaunchDetails[] {
+export function parseLaunches(payload: unknown, now = Date.now()): LaunchDetails[] {
   if (!isRecord(payload)) return []
 
   return recordArray(payload.results)
@@ -165,17 +211,145 @@ function parseLaunches(payload: unknown): LaunchDetails[] {
         url: stringValue(launch.url),
       }
     })
-    .filter((launch): launch is LaunchDetails => launch !== null)
+    .filter((launch): launch is LaunchDetails => launch !== null && Date.parse(launch.net) > now)
 }
 
 export async function getUpcomingLaunches(limit = 8, provider?: string): Promise<LaunchDetails[]> {
-  const safeLimit = Math.min(Math.max(Math.trunc(limit), 1), 12)
+  const requestedLimit = Number.isFinite(limit) ? Math.trunc(limit) : 8
+  const safeLimit = Math.min(Math.max(requestedLimit, 1), 12)
   const upstream = new URL('https://ll.thespacedevs.com/2.2.0/launch/upcoming/')
-  upstream.searchParams.set('limit', String(safeLimit))
+  upstream.searchParams.set('limit', String(Math.min(safeLimit + 4, 12)))
   upstream.searchParams.set('format', 'json')
   if (provider?.trim()) upstream.searchParams.set('lsp__name', provider.trim().slice(0, 40))
 
-  return parseLaunches(await fetchJson(upstream, 900, 'space-launches'))
+  return parseLaunches(await fetchJson(upstream, 900, 'space-launches')).slice(0, safeLimit)
+}
+
+type ParsedSolarWind = {
+  wind: SolarWind
+  magneticField: MagneticField
+  observedAt: string
+}
+
+export function parseSolarWindPayload(payload: unknown): ParsedSolarWind | null {
+  if (!Array.isArray(payload) || !Array.isArray(payload[0])) return null
+  const header = payload[0].map(value => String(value))
+  const column = (name: string) => header.indexOf(name)
+  const required = ['time_tag', 'speed', 'density', 'temperature', 'bx', 'by', 'bz', 'bt']
+  const indexes = Object.fromEntries(required.map(name => [name, column(name)])) as Record<string, number>
+  const propagatedTimeIndex = column('propagated_time_tag')
+  if (Object.values(indexes).some(index => index < 0)) return null
+
+  for (let index = payload.length - 1; index >= 1; index -= 1) {
+    const row = payload[index]
+    if (!Array.isArray(row)) continue
+    const observedAt = stringValue(row[propagatedTimeIndex]) || stringValue(row[indexes.time_tag])
+    const speed = numberValue(row[indexes.speed])
+    const density = numberValue(row[indexes.density])
+    const temperature = numberValue(row[indexes.temperature])
+    const bx = numberValue(row[indexes.bx])
+    const by = numberValue(row[indexes.by])
+    const bz = numberValue(row[indexes.bz])
+    const bt = numberValue(row[indexes.bt])
+    if (!observedAt || Number.isNaN(Date.parse(observedAt)) || [speed, density, temperature, bx, by, bz, bt].some(value => value === null)) continue
+
+    const horizontal = Math.sqrt((bx as number) ** 2 + (by as number) ** 2)
+    return {
+      wind: { speed: speed as number, density: density as number, temperature: temperature as number },
+      magneticField: {
+        bz: bz as number,
+        bt: bt as number,
+        lat: Math.atan2(bz as number, horizontal) * 180 / Math.PI,
+        lon: Math.atan2(by as number, bx as number) * 180 / Math.PI,
+      },
+      observedAt,
+    }
+  }
+
+  return null
+}
+
+export function parseXrayPayload(payload: unknown): { history: number[]; observedAt: string | null } {
+  const points = recordArray(payload)
+    .filter(point => stringValue(point.energy) === '0.1-0.8nm')
+    .map(point => ({
+      time: stringValue(point.time_tag),
+      flux: numberValue(point.flux),
+    }))
+    .filter(point => point.time && !Number.isNaN(Date.parse(point.time)) && point.flux !== null && point.flux > 0)
+
+  const step = Math.max(1, Math.ceil(points.length / 90))
+  const sampled = points.filter((_, index) => index % step === 0)
+  const last = points.at(-1)
+  if (last && sampled.at(-1) !== last) sampled.push(last)
+
+  return {
+    history: sampled.map(point => point.flux as number),
+    observedAt: last?.time ?? null,
+  }
+}
+
+export async function getIssPosition(): Promise<IssPosition> {
+  const payload = await fetchJson(
+    'https://api.wheretheiss.at/v1/satellites/25544',
+    5,
+    'space-iss',
+  )
+  if (!isRecord(payload)) throw new Error('Invalid ISS position payload')
+
+  const latitude = numberValue(payload.latitude)
+  const longitude = numberValue(payload.longitude)
+  const altitude = numberValue(payload.altitude)
+  const velocity = numberValue(payload.velocity)
+  const timestamp = numberValue(payload.timestamp)
+  const valid = latitude !== null && latitude >= -90 && latitude <= 90
+    && longitude !== null && longitude >= -180 && longitude <= 180
+    && altitude !== null && altitude > 300 && altitude < 500
+    && velocity !== null && velocity > 25_000 && velocity < 30_000
+    && timestamp !== null && timestamp > 0
+  if (!valid) throw new Error('Invalid ISS position values')
+
+  return {
+    latitude,
+    longitude,
+    altitude,
+    velocity,
+    timestamp,
+    updatedAt: new Date(timestamp * 1_000).toISOString(),
+  }
+}
+
+export async function getSpaceWeatherData(): Promise<SpaceWeatherData> {
+  const [solarWindResult, xrayResult] = await Promise.allSettled([
+    fetchJson(
+      'https://services.swpc.noaa.gov/products/geospace/propagated-solar-wind-1-hour.json',
+      60,
+      'space-weather',
+    ),
+    fetchJson(
+      'https://services.swpc.noaa.gov/json/goes/primary/xrays-6-hour.json',
+      60,
+      'space-weather',
+    ),
+  ])
+
+  const solarWind = solarWindResult.status === 'fulfilled' ? parseSolarWindPayload(solarWindResult.value) : null
+  const xray = xrayResult.status === 'fulfilled' ? parseXrayPayload(xrayResult.value) : { history: [], observedAt: null }
+  const observationTimes = [solarWind?.observedAt, xray.observedAt]
+    .filter((value): value is string => Boolean(value))
+    .sort((a, b) => Date.parse(b) - Date.parse(a))
+
+  return {
+    wind: solarWind?.wind ?? null,
+    magneticField: solarWind?.magneticField ?? null,
+    xrayHistory: xray.history,
+    observedAt: observationTimes[0] ?? null,
+    updatedAt: new Date().toISOString(),
+    sources: {
+      solarWind: solarWind !== null,
+      xray: xray.history.length > 0,
+    },
+  }
 }
 
 export async function getDashboardData(): Promise<DashboardData> {
@@ -196,7 +370,7 @@ export async function getDashboardData(): Promise<DashboardData> {
       900,
       'space-dashboard',
     ),
-    getUpcomingLaunches(1),
+    getUpcomingLaunches(5),
   ])
 
   const exoplanetsPayload = exoplanetsResult.status === 'fulfilled' ? exoplanetsResult.value : null
@@ -206,12 +380,15 @@ export async function getDashboardData(): Promise<DashboardData> {
   const exoplanetRecord = Array.isArray(exoplanetsPayload) && isRecord(exoplanetsPayload[0]) ? exoplanetsPayload[0] : null
   const asteroidRecord = isRecord(asteroidPayload) ? asteroidPayload : null
   const firstLaunch = launches[0]
+  const exoplanetCount = numberValue(exoplanetRecord?.planet_count)
+  const nearEarthObjectCount = numberValue(asteroidRecord?.near_earth_object_count)
+  const crew = parseCrew(crewPayload)
 
   return {
     updatedAt: new Date().toISOString(),
-    exoplanetCount: numberValue(exoplanetRecord?.planet_count),
-    nearEarthObjectCount: numberValue(asteroidRecord?.near_earth_object_count),
-    crew: parseCrew(crewPayload),
+    exoplanetCount,
+    nearEarthObjectCount,
+    crew,
     nextLaunch: firstLaunch
       ? {
           name: firstLaunch.name,
@@ -222,10 +399,10 @@ export async function getDashboardData(): Promise<DashboardData> {
         }
       : null,
     sources: {
-      exoplanets: exoplanetRecord !== null,
-      asteroids: asteroidRecord !== null,
-      crew: crewPayload !== null,
-      launches: launchResult.status === 'fulfilled',
+      exoplanets: exoplanetCount !== null && exoplanetCount > 0,
+      asteroids: nearEarthObjectCount !== null && nearEarthObjectCount > 0,
+      crew: crew.length > 0,
+      launches: firstLaunch !== undefined,
     },
   }
 }
