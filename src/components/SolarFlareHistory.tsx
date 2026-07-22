@@ -96,7 +96,7 @@ export default function SolarFlareHistory() {
 
                 {/* SVG wind speed chart */}
                 <div style={{ background: 'rgba(0,0,0,0.2)', borderRadius: '0.75rem', overflow: 'hidden', padding: '0.5rem' }}>
-                    <svg width="100%" viewBox={`0 0 ${windChart.length * 14} 80`} preserveAspectRatio="none" style={{ display: 'block', height: 80 }}>
+                    <svg role="img" aria-label="Historique de la vitesse du vent solaire" width="100%" viewBox={`0 0 ${windChart.length * 14} 80`} preserveAspectRatio="none" style={{ display: 'block', height: 80 }}>
                         {/* Fill area */}
                         <defs>
                             <linearGradient id="windGrad" x1="0" y1="0" x2="0" y2="1">

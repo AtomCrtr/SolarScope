@@ -20,7 +20,9 @@ export default function StarField() {
         const ctx = canvas.getContext('2d')
         if (!ctx) return
 
-        let animId: number
+        let animId: number | undefined
+        let isVisible = !document.hidden
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
         const stars: Star[] = []
         const STAR_COUNT = 200
 
@@ -82,19 +84,33 @@ export default function StarField() {
                 ctx.fill()
             })
 
-            animId = requestAnimationFrame(draw)
+            if (!reduceMotion && isVisible) animId = requestAnimationFrame(draw)
         }
         draw()
 
+        const onVisibilityChange = () => {
+            isVisible = !document.hidden
+            if (isVisible && !reduceMotion) {
+                if (animId) cancelAnimationFrame(animId)
+                animId = requestAnimationFrame(draw)
+            } else if (animId) {
+                cancelAnimationFrame(animId)
+                animId = undefined
+            }
+        }
+        document.addEventListener('visibilitychange', onVisibilityChange)
+
         return () => {
-            cancelAnimationFrame(animId)
+            if (animId) cancelAnimationFrame(animId)
             window.removeEventListener('resize', resize)
+            document.removeEventListener('visibilitychange', onVisibilityChange)
         }
     }, [])
 
     return (
         <canvas
             ref={canvasRef}
+            aria-hidden="true"
             className="fixed inset-0 pointer-events-none z-0"
             style={{ background: 'linear-gradient(135deg, #060614 0%, #0d0d2b 50%, #060614 100%)' }}
         />

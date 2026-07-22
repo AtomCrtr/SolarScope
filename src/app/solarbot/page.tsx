@@ -139,7 +139,7 @@ export default function SolarBotPage() {
                         {/* Chat window */}
                         <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
                             {/* Messages */}
-                            <div style={{ height: 420, overflowY: 'auto', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                            <div aria-live="polite" aria-busy={loading} style={{ height: 420, overflowY: 'auto', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                                 {messages.map((msg, i) => (
                                     <motion.div key={i}
                                         initial={{ opacity: 0, y: 10, scale: 0.96 }}
@@ -182,10 +182,12 @@ export default function SolarBotPage() {
                             {/* Input */}
                             <div style={{ padding: '1rem', borderTop: '1px solid rgba(255,255,255,0.07)', display: 'flex', gap: '0.75rem' }}>
                                 <input
+                                    aria-label="Question pour SolarBot"
                                     value={input}
                                     onChange={e => setInput(e.target.value)}
                                     onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage()}
                                     placeholder="Pose ta question sur l'espace..."
+                                    maxLength={1000}
                                     disabled={loading}
                                     style={{
                                         flex: 1, padding: '0.75rem 1rem', borderRadius: 12, fontSize: '0.9rem',
@@ -193,14 +195,14 @@ export default function SolarBotPage() {
                                         color: '#e2e8f0', outline: 'none',
                                     }}
                                 />
-                                <button onClick={() => sendMessage()} disabled={loading || !input.trim()} style={{
+                                <button aria-label="Envoyer la question" onClick={() => sendMessage()} disabled={loading || !input.trim()} style={{
                                     padding: '0.75rem 1.25rem', borderRadius: 12, fontWeight: 700,
                                     background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
                                     color: 'white', border: 'none', cursor: 'pointer', fontSize: '1rem',
                                     opacity: loading || !input.trim() ? 0.5 : 1,
                                 }}>🚀</button>
                                 {messages.length > 1 && (
-                                    <button onClick={() => setMessages([messages[0]])} title="Effacer" style={{
+                                    <button aria-label="Effacer la conversation" onClick={() => setMessages([messages[0]])} title="Effacer" style={{
                                         padding: '0.75rem', borderRadius: 12, background: 'rgba(239,68,68,0.1)',
                                         color: '#f87171', border: '1px solid rgba(239,68,68,0.2)', cursor: 'pointer',
                                     }}>🗑</button>
@@ -254,14 +256,11 @@ export default function SolarBotPage() {
             {/* API key note */}
             <div style={{
                 marginTop: '1.5rem', padding: '1rem 1.25rem', borderRadius: '0.875rem',
-                background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.15)',
+                background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.15)',
             }}>
                 <p style={{ color: '#94a3b8', fontSize: '0.78rem', lineHeight: 1.6 }}>
-                    <span style={{ color: '#f87171', fontWeight: 700 }}>⚙️ Configuration :</span> Crée le fichier{' '}
-                    <code style={{ background: 'rgba(0,0,0,0.3)', padding: '1px 6px', borderRadius: 4, color: '#a78bfa' }}>.env.local</code>
-                    {' '}à la racine du projet et ajoute :<br />
-                    <code style={{ color: '#86efac', display: 'block', marginTop: '0.4rem' }}>GEMINI_API_KEY=ta_clé_ici</code>
-                    Obtiens une clé gratuite sur{' '}<a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style={{ color: '#60a5fa' }}>aistudio.google.com</a>
+                    🔒 Ne partage jamais ton nom complet, ton adresse ou ton école. SolarBot peut se tromper : vérifie
+                    les informations importantes grâce aux sources scientifiques proposées sur le site.
                 </p>
             </div>
         </div>

@@ -81,6 +81,8 @@ interface Earth3DProps {
 export default function Earth3D({ height = 520, autoRotate = true, showControls = true }: Earth3DProps) {
     return (
         <Canvas
+            role="img"
+            aria-label="Globe terrestre interactif en trois dimensions"
             style={{ height, background: 'transparent' }}
             camera={{ position: [0, 0.8, 6.2], fov: 42 }}
             gl={{ antialias: true, alpha: true }}

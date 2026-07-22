@@ -1,9 +1,9 @@
 'use client'
 
-import { Suspense, useRef, useState, useEffect } from 'react'
+import { Suspense, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useGLTF, OrbitControls, Html } from '@react-three/drei'
-import { motion } from 'framer-motion'
+import Image from 'next/image'
 import * as THREE from 'three'
 
 /* ─── Rover 3D mesh (only for Perseverance GLB) ─── */
@@ -11,11 +11,7 @@ function RoverMesh({ url }: { url: string }) {
     const { scene } = useGLTF(url)
     const groupRef = useRef<THREE.Group>(null)
 
-    // Compute bounding box once after load
-    const [offset, setOffset] = useState<[number, number, number]>([0, 0, 0])
-    const [modelScale, setModelScale] = useState(1)
-
-    useEffect(() => {
+    const { offset, modelScale } = useMemo(() => {
         const box = new THREE.Box3().setFromObject(scene)
         const center = new THREE.Vector3()
         const size = new THREE.Vector3()
@@ -23,8 +19,10 @@ function RoverMesh({ url }: { url: string }) {
         box.getSize(size)
         const maxDim = Math.max(size.x, size.y, size.z) || 1
         const s = 4 / maxDim
-        setModelScale(s)
-        setOffset([-center.x * s, -center.y * s, -center.z * s])
+        return {
+            modelScale: s,
+            offset: [-center.x * s, -center.y * s, -center.z * s] as [number, number, number],
+        }
     }, [scene])
 
     useFrame(() => {
@@ -54,7 +52,7 @@ function CanvasLoader() {
 function PerseveranceCanvas({ height }: { height: number }) {
     return (
         <div style={{ height, width: '100%' }}>
-            <Canvas camera={{ position: [6, 3, 6], fov: 40 }} gl={{ antialias: true, alpha: true }}>
+            <Canvas role="img" aria-label="Modèle interactif en trois dimensions du rover Perseverance" camera={{ position: [6, 3, 6], fov: 40 }} gl={{ antialias: true, alpha: true }}>
                 <ambientLight intensity={0.5} />
                 <directionalLight position={[10, 8, 5]} intensity={2} color="#fff5e0" />
                 <directionalLight position={[-6, 4, -4]} intensity={0.5} color="#6688ff" />
@@ -83,9 +81,11 @@ function CuriosityDisplay({ height }: { height: number }) {
             background: 'radial-gradient(ellipse at center, rgba(239,68,68,0.08) 0%, rgba(0,0,0,0.97) 100%)',
             gap: '0.5rem', padding: '1rem'
         }}>
-            <img
+            <Image
                 src="/rovers/curiosity.png"
                 alt="Curiosity rover — rendu 3D officiel NASA"
+                width={1000}
+                height={700}
                 style={{
                     maxHeight: height - 60,
                     maxWidth: '100%',

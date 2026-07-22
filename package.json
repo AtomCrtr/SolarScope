@@ -2,26 +2,43 @@
   "name": "solarscope-next",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:a11y": "playwright test",
+    "check": "npm run lint && npm run typecheck && npm test && npm run build"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",
-    "framer-motion": "^12.40.0",
-    "next": "16.2.7",
-    "react": "19.2.7",
-    "react-dom": "19.2.7",
-    "three": "^0.184.0"
+    "framer-motion": "^12.42.2",
+    "next": "16.2.11",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "three": "^0.185.1"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.3.0",
+    "@axe-core/playwright": "^4.11.1",
+    "@playwright/test": "^1.55.0",
+    "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^20.19.42",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19",
-    "tailwindcss": "^4.3.0",
-    "typescript": "^5"
+    "eslint": "^9.0.0",
+    "eslint-config-next": "16.2.11",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5",
+    "vitest": "^3.2.4"
+  },
+  "overrides": {
+    "postcss": "8.5.10",
+    "sharp": "0.35.3"
   }
 }

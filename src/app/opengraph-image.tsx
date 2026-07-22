@@ -16,7 +16,7 @@ export default function OpenGraphImage() {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 28, fontWeight: 700 }}>
-          <div style={{ width: 46, height: 46, borderRadius: 13, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#7161ef' }}>⌁</div>
+          <div style={{ width: 46, height: 46, borderRadius: 13, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#7161ef' }}>S</div>
           SolarScope
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>

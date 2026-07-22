@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
 
 interface WebbImage {
   nasa_id: string
@@ -95,6 +96,15 @@ export default function JWSTPage() {
       .finally(() => setLoading(false))
   }, [])
 
+  useEffect(() => {
+    if (selectedHighlight === null) return
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setSelectedHighlight(null)
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [selectedHighlight])
+
   return (
     <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
 
@@ -122,14 +132,15 @@ export default function JWSTPage() {
         ))}
       </div>
 
+      <h2 className="sr-only">Galeries d’images du télescope James Webb</h2>
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
+      <div role="tablist" aria-label="Choisir une galerie Webb" style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
         {(['gallery', 'nasa'] as const).map(tab => (
-          <button key={tab} onClick={() => setActiveTab(tab)} style={{
+          <button key={tab} role="tab" aria-selected={activeTab === tab} onClick={() => setActiveTab(tab)} style={{
             padding: '0.5rem 1.25rem', borderRadius: 99, fontSize: '0.82rem', fontWeight: 700, cursor: 'pointer',
             background: activeTab === tab ? 'rgba(99,102,241,0.2)' : 'rgba(255,255,255,0.04)',
             border: `1px solid ${activeTab === tab ? 'rgba(99,102,241,0.45)' : 'rgba(255,255,255,0.07)'}`,
-            color: activeTab === tab ? '#a5b4fc' : '#64748b', transition: 'all 0.2s',
+            color: activeTab === tab ? '#a5b4fc' : '#94a3b8', transition: 'all 0.2s',
           }}>
             {tab === 'gallery' ? '🌌 Images iconiques Webb' : '🛰️ Galerie NASA live'}
           </button>
@@ -140,11 +151,11 @@ export default function JWSTPage() {
       {activeTab === 'gallery' && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem', marginBottom: '2rem' }} className="max-sm:grid-cols-1">
           {HIGHLIGHTS.map((h, i) => (
-            <motion.div key={h.title} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.06 }}
+            <motion.button type="button" aria-label={`Agrandir ${h.title}`} key={h.title} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.06 }}
               onClick={() => setSelectedHighlight(i)}
-              style={{ cursor: 'pointer', borderRadius: '1rem', overflow: 'hidden', border: `1px solid ${h.color}20`, position: 'relative' }}
+              style={{ cursor: 'pointer', borderRadius: '1rem', overflow: 'hidden', border: `1px solid ${h.color}20`, position: 'relative', padding: 0, textAlign: 'left', background: 'transparent' }}
               whileHover={{ scale: 1.02 }}>
-              <img src={h.img} alt={h.title}
+              <Image src={h.img} alt={h.title} width={800} height={440}
                 style={{ width: '100%', height: 220, objectFit: 'cover', display: 'block' }}
                 onError={e => { (e.target as HTMLImageElement).src = `https://placehold.co/400x220/0a0a1a/6366f1?text=Webb+${encodeURIComponent(h.category)}` }} />
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, transparent 55%)' }} />
@@ -157,7 +168,7 @@ export default function JWSTPage() {
               <div style={{ position: 'absolute', top: 10, right: 10, background: `${h.color}20`, border: `1px solid ${h.color}40`, borderRadius: 99, padding: '2px 8px', fontSize: '0.65rem', color: h.color, fontWeight: 700 }}>
                 JWST
               </div>
-            </motion.div>
+            </motion.button>
           ))}
         </div>
       )}
@@ -175,7 +186,7 @@ export default function JWSTPage() {
                 initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.03 }}
                 style={{ display: 'block', textDecoration: 'none', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid rgba(99,102,241,0.12)' }}
                 whileHover={{ scale: 1.04 }}>
-                <img src={img.thumb} alt={img.title} style={{ width: '100%', height: 170, objectFit: 'cover', display: 'block' }}
+                <Image src={img.thumb} alt={img.title} width={600} height={400} style={{ width: '100%', height: 170, objectFit: 'cover', display: 'block' }}
                   onError={e => { (e.target as HTMLImageElement).src = 'https://placehold.co/400x170/0a0a1a/6366f1?text=JWST' }} />
                 <div style={{ padding: '0.5rem 0.625rem', background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)' }}>
                   <div style={{ color: '#c7d2fe', fontSize: '0.65rem', fontWeight: 600, lineHeight: 1.3 }}>{img.title?.slice(0, 55)}{img.title?.length > 55 ? '…' : ''}</div>
@@ -192,16 +203,19 @@ export default function JWSTPage() {
         {selectedHighlight !== null && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             onClick={() => setSelectedHighlight(null)}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="jwst-dialog-title"
             style={{ position: 'fixed', inset: 0, zIndex: 9000, background: 'rgba(0,0,0,0.93)', backdropFilter: 'blur(20px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
             <motion.div initial={{ scale: 0.88 }} animate={{ scale: 1 }} exit={{ scale: 0.88 }}
               onClick={e => e.stopPropagation()}
               style={{ maxWidth: 900, width: '100%', borderRadius: '1.25rem', overflow: 'hidden', border: '1px solid rgba(99,102,241,0.2)' }}>
-              <img src={HIGHLIGHTS[selectedHighlight].img} alt="" style={{ width: '100%', maxHeight: '60vh', objectFit: 'contain', background: '#000', display: 'block' }} />
+              <Image src={HIGHLIGHTS[selectedHighlight].img} alt={HIGHLIGHTS[selectedHighlight].title} width={1400} height={900} style={{ width: '100%', height: 'auto', maxHeight: '60vh', objectFit: 'contain', background: '#000', display: 'block' }} />
               <div style={{ padding: '1.25rem 1.5rem', background: '#080818' }}>
                 <div style={{ color: HIGHLIGHTS[selectedHighlight].color, fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.375rem' }}>
                   {HIGHLIGHTS[selectedHighlight].category} · JWST {HIGHLIGHTS[selectedHighlight].year}
                 </div>
-                <h3 style={{ color: '#e2e8f0', fontWeight: 700, fontFamily: 'Outfit', fontSize: '1.1rem', marginBottom: '0.625rem' }}>{HIGHLIGHTS[selectedHighlight].title}</h3>
+                <h2 id="jwst-dialog-title" style={{ color: '#e2e8f0', fontWeight: 700, fontFamily: 'Outfit', fontSize: '1.1rem', marginBottom: '0.625rem' }}>{HIGHLIGHTS[selectedHighlight].title}</h2>
                 <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: 1.7 }}>{HIGHLIGHTS[selectedHighlight].desc}</p>
                 <button onClick={() => setSelectedHighlight(null)} style={{ marginTop: '1rem', padding: '0.5rem 1rem', borderRadius: 99, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8', cursor: 'pointer', fontSize: '0.8rem' }}>✕ Fermer</button>
               </div>

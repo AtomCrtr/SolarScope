@@ -8,11 +8,14 @@ export default function ThemeToggle() {
     const [mounted, setMounted] = useState(false)
 
     useEffect(() => {
-        setMounted(true)
-        const saved = localStorage.getItem('solarscope-theme') as 'dark' | 'light' | null
-        const preferred = saved || 'dark'
-        setTheme(preferred)
-        document.documentElement.setAttribute('data-theme', preferred)
+        const frame = requestAnimationFrame(() => {
+            setMounted(true)
+            const saved = localStorage.getItem('solarscope-theme') as 'dark' | 'light' | null
+            const preferred = saved || 'dark'
+            setTheme(preferred)
+            document.documentElement.setAttribute('data-theme', preferred)
+        })
+        return () => cancelAnimationFrame(frame)
     }, [])
 
     const toggle = useCallback(() => {

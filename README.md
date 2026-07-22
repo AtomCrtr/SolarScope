@@ -1,151 +1,84 @@
-<div align="center">
-  <h1>🔭 SolarScope</h1>
-  <p><strong>Explore l'Univers avec la NASA — Application web spatiale interactive</strong></p>
+# 🔭 SolarScope
 
-  ![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)
-  ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)
-  ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)
-  ![Three.js](https://img.shields.io/badge/Three.js-0.183-black?logo=three.js)
-  ![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-black?logo=vercel)
+SolarScope est un observatoire spatial pédagogique en français : visualisations 3D, suivi de l’ISS, météo solaire, objets proches de la Terre, missions et publications scientifiques.
 
-  ### 🌐 [solar-scope.vercel.app](https://solar-scope.vercel.app)
-</div>
+Production : [solar-scope.vercel.app](https://solar-scope.vercel.app)
 
----
+## Fonctionnalités
 
-## ✨ Fonctionnalités
+- Système solaire et rovers en 3D avec Three.js.
+- ISS, équipages et prochains lancements.
+- Activité solaire NOAA, images NASA SDO/SOHO et indice Kp.
+- Astéroïdes NeoWs, exoplanètes, APOD et actualités NASA.
+- Galerie JWST, archive pédagogique des météorites et quiz.
+- SolarBot avec Gemini 2.5 Flash Lite, limitation de débit et réponses locales de secours.
+- Métadonnées par page, Open Graph, sitemap, robots et manifeste PWA.
+- Mode clair/sombre, navigation clavier et prise en charge de `prefers-reduced-motion`.
 
-| Page | Description |
-|------|-------------|
-| 🌍 **Système Solaire** | Visualiseur 3D interactif des planètes (positions réelles J2000) |
-| 🔴 **Mars** | Globe 3D + infos rovers Curiosity & Perseverance |
-| ☀️ **Soleil** | Météo spatiale en direct (NOAA), éruptions solaires, indice Kp |
-| 🛸 **ISS Tracker** | Position en temps réel de la Station Spatiale + équipage |
-| 🔭 **JWST** | Les 6 images iconiques du James Webb Space Telescope |
-| 🌠 **Astéroïdes** | Données NASA NeoWs — astéroïdes proches de la Terre |
-| 🌌 **Exoplanètes** | Catalogue des planètes au-delà du Système Solaire |
-| ☄️ **Météorites** | Échantillon cartographié de l’archive NASA Meteorite Landings |
-| 📸 **Photo du Jour** | APOD — Astronomy Picture of the Day (NASA) |
-| 🗞️ **Actualités** | Publications récentes issues du flux RSS officiel de la NASA |
-| 🎮 **Quiz** | Quiz astronomie 3 niveaux (Débutant → Expert) |
-| 🤖 **SolarBot** | Assistant IA propulsé par Google Gemini |
+## Sources et fraîcheur des données
 
----
+Les routes serveur valident les réponses externes et conservent la dernière réponse en cache pendant une durée adaptée :
 
-## 🛠️ Stack Technique
+| Données | Source | Cache |
+|---|---|---:|
+| Tableau de bord et équipages | NASA/IPAC, NASA NeoWs, People in Space | 15 à 60 min |
+| Lancements | The Space Devs | 15 min |
+| Actualités | Flux RSS NASA | 30 min |
+| Astéroïdes et éruptions | NASA NeoWs / DONKI | 60 min |
+| Photo du jour | NASA APOD | 60 min |
 
-- **Framework** : [Next.js 16](https://nextjs.org) (App Router, TypeScript)
-- **3D** : [Three.js](https://threejs.org) + [@react-three/fiber](https://r3f.docs.pmnd.rs) + [@react-three/drei](https://github.com/pmndrs/drei)
-- **Animations** : [Framer Motion](https://www.framer.com/motion/)
-- **Styling** : CSS Modules (design system maison, dark/light mode)
-- **IA** : Google Gemini API (`gemini-2.0-flash-lite`) via API Route sécurisée
-- **Déploiement** : [Vercel](https://vercel.com)
+Les caches se renouvellent à la demande. Un cron Vercel quotidien appelle aussi `/api/refresh` afin de préchauffer les sources même sans visite. `/api/health` expose leur état sans révéler de secret. La page Météorites utilise un échantillon embarqué de l’ancienne archive NASA et l’indique explicitement.
 
-### Couche de données
+## Développement local
 
-Les sources volatiles sont récupérées par des routes serveur (`/api/dashboard`, `/api/news`,
-`/api/asteroids`, `/api/launches`, `/api/solar-flares`). Les clés restent côté serveur, les réponses
-sont mises en cache selon la fréquence de mise à jour de chaque fournisseur et l’interface affiche
-explicitement l’indisponibilité d’une source au lieu d’inventer une valeur de remplacement.
-
-Le catalogue historique NASA « Meteorite Landings » n’étant plus exposé de façon fiable par son ancien
-endpoint Socrata, la page Météorites utilise un échantillon embarqué et l’indique comme une archive.
-
----
-
-## 🚀 Lancer en local
-
-### Prérequis
-- Node.js 18+
-- Une clé NASA API (gratuite sur [api.nasa.gov](https://api.nasa.gov))
-- Une clé Google Gemini (gratuite sur [aistudio.google.com](https://aistudio.google.com))
-
-### Installation
+Prérequis : Node.js 20.9 ou plus récent.
 
 ```bash
-# Cloner le repo
 git clone https://github.com/AtomCrtr/SolarScope.git
 cd SolarScope
-
-# Installer les dépendances
 npm install
-
-# Configurer les variables d'environnement
 cp .env.example .env.local
-# Remplir .env.local avec vos clés API
-
-# Lancer le serveur de développement
 npm run dev
 ```
 
-Ouvrir [http://localhost:3000](http://localhost:3000) 🚀
-
----
-
-## 🔑 Variables d'environnement
-
-Créer un fichier `.env.local` à la racine :
+Variables disponibles :
 
 ```env
-# NASA API (https://api.nasa.gov)
-NASA_API_KEY=your_nasa_api_key
-
-# Google Gemini — côté serveur uniquement (NE PAS préfixer NEXT_PUBLIC_)
-GEMINI_API_KEY=your_gemini_api_key
+NEXT_PUBLIC_SITE_URL=https://solar-scope.vercel.app
+NASA_API_KEY=DEMO_KEY
+GEMINI_API_KEY=
+GEMINI_MODEL=gemini-2.5-flash-lite
+CRON_SECRET=
 ```
 
----
+`NASA_API_KEY=DEMO_KEY` convient au développement avec un quota réduit. Sans clé Gemini, SolarBot reste fonctionnel avec ses réponses éducatives locales. `CRON_SECRET` doit être une valeur longue et aléatoire ; Vercel l’envoie automatiquement au cron dans l’en-tête `Authorization`.
 
-## 📦 Déployer sur Vercel
+## Contrôles qualité
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/AtomCrtr/SolarScope)
-
-1. Cliquer le bouton ci-dessus
-2. Ajouter `NASA_API_KEY` et `GEMINI_API_KEY` dans les **Environment Variables**
-3. Déployer 🎉
-
----
-
-## 📁 Structure du projet
-
-```
-├── src/
-│   ├── app/
-│   │   ├── api/gemini/     # API Route sécurisée (SolarBot)
-│   │   ├── planetes/       # Système Solaire 3D
-│   │   ├── mars/           # Globe Mars 3D
-│   │   ├── soleil/         # Météo spatiale
-│   │   ├── iss/            # ISS Tracker
-│   │   ├── jwst/           # James Webb
-│   │   ├── asteroides/     # Astéroïdes NASA
-│   │   ├── exoplanetes/    # Exoplanètes
-│   │   ├── meteorites/     # Météorites
-│   │   ├── photo-du-jour/  # APOD NASA
-│   │   ├── actualites/     # Actualités spatiales
-│   │   ├── quiz/           # Quiz astronomie
-│   │   └── solarbot/       # SolarBot IA
-│   └── components/
-│       ├── Navbar.tsx
-│       ├── StarField.tsx
-│       ├── Earth3D.tsx
-│       ├── Planet3D.tsx
-│       ├── Sun3D.tsx
-│       ├── ISSGlobe.tsx
-│       ├── SolarBotWidget.tsx
-│       └── ...
-├── public/
-├── .env.example
-└── next.config.ts
+```bash
+npm run lint
+npm run typecheck
+npm test
+npm run build
+npm run test:a11y
 ```
 
----
+Les mêmes vérifications sont exécutées par GitHub Actions à chaque push et pull request. Dependabot regroupe les mises à jour hebdomadaires. Les tests d’accessibilité utilisent Playwright et axe sur des vues ordinateur et mobile.
 
-## 📜 Licence
+## Déploiement Vercel
 
-MIT — Utilise librement, données NASA en Open Data.
+1. Importer `AtomCrtr/SolarScope` dans Vercel.
+2. Déclarer `NEXT_PUBLIC_SITE_URL`, `NASA_API_KEY`, `GEMINI_API_KEY` et `CRON_SECRET` pour l’environnement Production.
+3. Conserver la branche de production sur `main`.
 
----
+Chaque push sur `main` déclenche alors automatiquement un nouveau déploiement. `vercel.json` déclare le rafraîchissement planifié des données.
 
-<div align="center">
-  Made with ❤️ by <a href="https://github.com/AtomCrtr">AtomCrtr</a> · Données fournies par la <a href="https://api.nasa.gov">NASA</a> & <a href="https://ai.google.dev">Google Gemini</a>
-</div>
+## Architecture
+
+- Next.js 16 App Router, React 19 et TypeScript.
+- CSS global/Tailwind CSS 4 et Framer Motion.
+- Three.js 0.185, React Three Fiber et Drei.
+- Routes serveur sécurisées pour les fournisseurs externes et Gemini.
+- Vercel pour l’hébergement, les fonctions et le cron.
+
+Les mentions de source restent affichées dans le pied de page. Consultez aussi la [politique de confidentialité](https://solar-scope.vercel.app/confidentialite).

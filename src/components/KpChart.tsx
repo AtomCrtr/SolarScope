@@ -210,6 +210,8 @@ export default function KpChart() {
             <div style={{ width: '100%', overflow: 'hidden', borderRadius: '0.75rem', background: 'rgba(0,0,0,0.2)', padding: '0.5rem' }}>
                 <canvas
                     ref={canvasRef}
+                    role="img"
+                    aria-label="Évolution de l'indice géomagnétique Kp sur sept jours"
                     width={760}
                     height={200}
                     style={{ width: '100%', height: 'auto', display: 'block' }}

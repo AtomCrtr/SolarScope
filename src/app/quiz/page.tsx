@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 
 const QUIZ_BANK_DEBUTANT = [
@@ -47,13 +47,11 @@ const ANECDOTES = [
     { emoji: '⚖️', title: 'Le Soleil perd du poids', text: 'Le Soleil perd 4 millions de tonnes par seconde... mais il lui reste du carburant pour 5 milliards d\'années !' },
 ]
 
-const CELESTIAL_EVENTS = [
-    { emoji: '🌕', date: '14 mars 2026', name: 'Pleine lune du Ver', detail: 'Visible à l\'œil nu' },
-    { emoji: '🌑', date: '29 mars 2026', name: 'Nouvelle lune', detail: 'Idéal pour observer les étoiles' },
-    { emoji: '☄️', date: 'Avril 2026', name: 'Pluie de Lyrides', detail: '20 étoiles filantes / heure' },
-    { emoji: '🌑☀️', date: '12 août 2026', name: 'Éclipse solaire totale', detail: 'Événement exceptionnel !' },
-    { emoji: '🔴', date: '7 sept. 2026', name: 'Éclipse lunaire partielle', detail: 'La Lune devient rouge' },
-    { emoji: '✨', date: 'Déc. 2026', name: 'Pluie de Géminides', detail: 'La plus belle de l\'année' },
+const OBSERVATION_RESOURCES = [
+    { emoji: '🌕', name: 'Phases de la Lune', detail: 'Calendrier quotidien et phases calculées par la NASA.', url: 'https://science.nasa.gov/moon/daily-moon-guide/' },
+    { emoji: '🌑☀️', name: 'Prochaines éclipses', detail: 'Dates, zones de visibilité et consignes de sécurité officielles.', url: 'https://science.nasa.gov/eclipses/future-eclipses/' },
+    { emoji: '☄️', name: 'Pluies de météores', detail: 'Guides d’observation régulièrement actualisés.', url: 'https://science.nasa.gov/solar-system/meteors-meteorites/meteor-showers/' },
+    { emoji: '🔭', name: 'Le ciel ce mois-ci', detail: 'Le guide mensuel « What’s Up » du Jet Propulsion Laboratory.', url: 'https://science.nasa.gov/skywatching/whats-up/' },
 ]
 
 const VIDEOS = [
@@ -246,14 +244,18 @@ export default function QuizPage() {
 
             {tab === 'events' && (
                 <motion.div key="events" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                    <p style={{ color: 'var(--text-subtle)', marginBottom: '1rem', lineHeight: 1.7 }}>
+                        Les calendriers astronomiques évoluent chaque année. Ces liens officiels remplacent l’ancien
+                        calendrier figé afin de toujours afficher les dates les plus récentes.
+                    </p>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
-                        {CELESTIAL_EVENTS.map(ev => (
-                            <div key={ev.name} className="card" style={{ padding: '1.25rem', textAlign: 'center', borderTop: ev.name.toLowerCase().includes('eclipse') ? '4px solid #f59e0b' : '4px solid #6366f1' }}>
-                                <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{ev.emoji}</div>
-                                <div style={{ color: '#8b5cf6', fontSize: '0.8rem', fontWeight: 600, marginBottom: '0.25rem' }}>{ev.date}</div>
-                                <strong style={{ color: '#e2e8f0', display: 'block', marginBottom: '0.25rem' }}>{ev.name}</strong>
-                                <p style={{ color: '#64748b', fontSize: '0.78rem' }}>{ev.detail}</p>
-                            </div>
+                        {OBSERVATION_RESOURCES.map(resource => (
+                            <a key={resource.name} href={resource.url} target="_blank" rel="noopener noreferrer" className="card" style={{ padding: '1.25rem', textAlign: 'center', borderTop: '4px solid #6366f1', textDecoration: 'none' }}>
+                                <div aria-hidden="true" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{resource.emoji}</div>
+                                <strong style={{ color: '#e2e8f0', display: 'block', marginBottom: '0.25rem' }}>{resource.name}</strong>
+                                <p style={{ color: '#94a3b8', fontSize: '0.78rem' }}>{resource.detail}</p>
+                                <span style={{ color: '#a78bfa', fontSize: '0.72rem', display: 'inline-block', marginTop: '0.75rem' }}>Ouvrir la source NASA ↗</span>
+                            </a>
                         ))}
                     </div>
                 </motion.div>

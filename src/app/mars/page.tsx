@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import dynamic from 'next/dynamic'
+import Image from 'next/image'
 
 const Planet3D = dynamic(() => import('@/components/Planet3D'), { ssr: false })
 const RoverViewer3D = dynamic(() => import('@/components/RoverViewer3D'), { ssr: false })
@@ -77,7 +78,7 @@ const MARS_TIMELINE = [
     { year: '2021', flag: '🇺🇸', event: 'Perseverance + Ingenuity', detail: 'Premier hélicoptère extraterrestre. Production d\'O₂. Collecte d\'échantillons pour retour.' },
     { year: '2022', flag: '🇦🇪', event: 'Hope Probe — Orbiteur', detail: 'Premier orbiteur des Émirats Arabes Unis. Cartographie de la météo martienne en 3D.' },
     { year: '2021', flag: '🇨🇳', event: 'Tianwen-1 + Zhurong', detail: 'Premières missions chinoises complètes : orbiteur + atterrisseur + rover.' },
-    { year: '2029', flag: '🌍', event: '🔮 Mars Sample Return (prévu)', detail: 'Retour des 23+ carottes de Perseverance sur Terre — révolution scientifique possible.' },
+    { year: 'À confirmer', flag: '🌍', event: '🔮 Mars Sample Return', detail: 'La NASA réévalue l’architecture, le calendrier et le coût du retour des échantillons. Aucune date de retour n’est actuellement confirmée.' },
 ]
 
 
@@ -138,6 +139,15 @@ export default function MarsPage() {
     const [activeRover, setActiveRover] = useState<'curiosity' | 'perseverance'>('curiosity')
     const [lightboxIdx, setLightboxIdx] = useState<number | null>(null)
     const activeRoverDetail = ROVERS_DETAIL.find(r => r.key === activeRover)!
+
+    useEffect(() => {
+        if (lightboxIdx === null) return
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') setLightboxIdx(null)
+        }
+        document.addEventListener('keydown', onKeyDown)
+        return () => document.removeEventListener('keydown', onKeyDown)
+    }, [lightboxIdx])
 
     return (
         <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
@@ -259,7 +269,7 @@ export default function MarsPage() {
                 <h2 className="section-title" style={{ color: '#e2e8f0', marginBottom: '0.5rem' }}>
                     🛸 Maquette 3D — {activeRoverDetail.name}
                 </h2>
-                <p style={{ color: '#475569', fontSize: '0.72rem', marginBottom: '1rem' }}>
+                <p style={{ color: '#94a3b8', fontSize: '0.72rem', marginBottom: '1rem' }}>
                     Modèle 3D officiel NASA · Faites pivoter avec la souris
                 </p>
                 <RoverViewer3D rover={activeRover} height={360} />
@@ -269,15 +279,15 @@ export default function MarsPage() {
             <div className="divider" />
             <div style={{ marginBottom: '2.5rem' }}>
                 <h2 className="section-title" style={{ color: '#e2e8f0', marginBottom: '0.25rem' }}>📸 Galerie — Icônes de l&apos;exploration martienne</h2>
-                <p style={{ color: '#475569', fontSize: '0.72rem', marginBottom: '1.25rem' }}>Sélection des photos les plus marquantes — Curiosity, Opportunity &amp; Perseverance</p>
+                <p style={{ color: '#94a3b8', fontSize: '0.72rem', marginBottom: '1.25rem' }}>Sélection des photos les plus marquantes — Curiosity, Opportunity &amp; Perseverance</p>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.625rem' }} className="max-sm:grid-cols-2">
                     {MARS_GALLERY.map((photo, i) => (
-                        <motion.div key={i}
+                        <motion.button type="button" aria-label={`Agrandir ${photo.title}`} key={i}
                             initial={{ opacity: 0, scale: 0.94 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.03 }}
                             onClick={() => setLightboxIdx(i)}
-                            style={{ cursor: 'pointer', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)', position: 'relative' }}
+                            style={{ cursor: 'pointer', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)', position: 'relative', padding: 0, textAlign: 'left', background: 'transparent' }}
                             whileHover={{ scale: 1.04, borderColor: `${photo.color}50` }}>
-                            <img src={photo.src} alt={photo.title}
+                            <Image src={photo.src} alt={photo.title} width={640} height={400}
                                 style={{ width: '100%', height: 160, objectFit: 'cover', display: 'block', background: 'rgba(0,0,0,0.5)' }}
                                 onError={e => {
                                     const image = e.currentTarget
@@ -293,7 +303,7 @@ export default function MarsPage() {
                             <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0)', transition: 'background 0.2s', pointerEvents: 'none' }}>
                                 <span style={{ fontSize: '1.5rem', opacity: 0, transition: 'opacity 0.2s' }}>🔍</span>
                             </div>
-                        </motion.div>
+                        </motion.button>
                     ))}
                 </div>
             </div>
@@ -304,6 +314,9 @@ export default function MarsPage() {
                     <motion.div
                         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                         onClick={() => setLightboxIdx(null)}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="mars-dialog-title"
                         style={{
                             position: 'fixed', inset: 0, zIndex: 9000,
                             background: 'rgba(0,0,0,0.94)', backdropFilter: 'blur(16px)',
@@ -312,11 +325,11 @@ export default function MarsPage() {
                         <motion.div initial={{ scale: 0.88 }} animate={{ scale: 1 }} exit={{ scale: 0.88 }}
                             onClick={e => e.stopPropagation()}
                             style={{ maxWidth: 880, width: '100%', borderRadius: '1.25rem', overflow: 'hidden', border: `1px solid ${MARS_GALLERY[lightboxIdx].color}30` }}>
-                            <img src={MARS_GALLERY[lightboxIdx].src} alt={MARS_GALLERY[lightboxIdx].title}
-                                style={{ width: '100%', display: 'block', maxHeight: '65vh', objectFit: 'contain', background: '#000' }} />
+                            <Image src={MARS_GALLERY[lightboxIdx].src} alt={MARS_GALLERY[lightboxIdx].title} width={1400} height={900}
+                                style={{ width: '100%', height: 'auto', display: 'block', maxHeight: '65vh', objectFit: 'contain', background: '#000' }} />
                             <div style={{ padding: '1rem 1.5rem', background: '#080816', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
                                 <div>
-                                    <div style={{ color: MARS_GALLERY[lightboxIdx].color, fontWeight: 700, fontFamily: 'Outfit' }}>{MARS_GALLERY[lightboxIdx].title}</div>
+                                    <h2 id="mars-dialog-title" style={{ color: MARS_GALLERY[lightboxIdx].color, fontWeight: 700, fontFamily: 'Outfit' }}>{MARS_GALLERY[lightboxIdx].title}</h2>
                                     <div style={{ color: '#64748b', fontSize: '0.8rem', marginTop: 2 }}>{MARS_GALLERY[lightboxIdx].desc}</div>
                                     <div style={{ color: '#334155', fontSize: '0.7rem', marginTop: 3 }}>Rover {MARS_GALLERY[lightboxIdx].rover} · {MARS_GALLERY[lightboxIdx].camera} · Sol {MARS_GALLERY[lightboxIdx].sol}</div>
                                 </div>
@@ -339,10 +352,10 @@ export default function MarsPage() {
             {/* ── ROVER HISTORY ── */}
             <div className="divider" />
             <h2 className="section-title" style={{ color: '#e2e8f0' }}>🤖 Tous les rovers martiens</h2>
-            <p style={{ color: '#64748b', fontSize: '0.85rem', marginBottom: '1.5rem', marginTop: '-0.5rem' }}>
+            <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginBottom: '1.5rem', marginTop: '-0.5rem' }}>
                 Cinq rovers se sont posés sur Mars depuis 1997. Deux sont encore actifs aujourd&apos;hui.
             </p>
-            <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))' }}>
+            <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))' }}>
                 {ROVERS_DETAIL.map((r, i) => (
                     <motion.div key={r.name} className="card" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }}
                         style={{ padding: '1.25rem', border: `1px solid ${r.color}20`, position: 'relative', overflow: 'hidden' }}>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 
 interface Meteorite {
@@ -119,7 +119,7 @@ const STATIC_METEORITES: Meteorite[] = [
 ]
 
 export default function MeteoritesPage() {
-    const [meteorites, setMeteorites] = useState<Meteorite[]>(STATIC_METEORITES)
+    const meteorites = STATIC_METEORITES
     const loading = false
     const [search, setSearch] = useState('')
     const [sortBy, setSortBy] = useState<'mass' | 'year'>('mass')
@@ -249,6 +249,8 @@ export default function MeteoritesPage() {
                 ) : (
                     <div style={{ position: 'relative', background: '#030314' }}>
                         <svg
+                            role="img"
+                            aria-label={`Carte mondiale de ${classFiltered.length} météorites recensées`}
                             viewBox={`0 0 ${W} ${H}`}
                             width="100%"
                             style={{ display: 'block', cursor: 'crosshair' }}
@@ -327,7 +329,7 @@ export default function MeteoritesPage() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div className="card" style={{ padding: '1.25rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-                        <h3 className="section-title" style={{ color: '#e2e8f0', fontSize: '0.95rem', marginBottom: 0 }}>🏆 Top météorites</h3>
+                        <h2 className="section-title" style={{ color: '#e2e8f0', fontSize: '0.95rem', marginBottom: 0 }}>🏆 Top météorites</h2>
                         <div style={{ display: 'flex', gap: '0.375rem' }}>
                             {(['mass', 'year'] as const).map(s => (
                                 <button key={s} onClick={() => setSortBy(s)} style={{
@@ -345,10 +347,11 @@ export default function MeteoritesPage() {
                         <input
                             type="text" value={search} onChange={e => setSearch(e.target.value)}
                             placeholder="Rechercher par nom ou classe…"
+                            aria-label="Rechercher une météorite par nom ou classe"
                             style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '0.5rem', padding: '0.4rem 0.75rem', color: '#e2e8f0', fontSize: '0.75rem', outline: 'none' }}
                         />
                     </div>
-                    <div style={{ maxHeight: 320, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                    <div tabIndex={0} aria-label="Liste filtrée des météorites" style={{ maxHeight: 320, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                         {filtered.map((m, i) => (
                             <div key={m.id || i} style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', padding: '0.5rem 0.625rem', borderRadius: '0.5rem', background: 'rgba(255,255,255,0.03)', cursor: 'pointer' }}
                                 onMouseEnter={() => setHovered(m)} onMouseLeave={() => setHovered(null)}>
@@ -367,7 +370,7 @@ export default function MeteoritesPage() {
 
                 {/* Classes */}
                 <div className="card" style={{ padding: '1.25rem' }}>
-                    <h3 className="section-title" style={{ color: '#e2e8f0', fontSize: '0.95rem' }}>📊 Répartition par classe</h3>
+                    <h2 className="section-title" style={{ color: '#e2e8f0', fontSize: '0.95rem' }}>📊 Répartition par classe</h2>
                     {stats && (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                             {Object.entries(stats.byClass)

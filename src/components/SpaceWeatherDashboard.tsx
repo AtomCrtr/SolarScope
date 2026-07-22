@@ -17,11 +17,6 @@ interface MagneticField {
     lon: number
 }
 
-interface XrayData {
-    flux: number   // W/m²
-    flareClass: string  // A, B, C, M, X
-}
-
 /* ─── Helpers ─── */
 function getFlareClass(flux: number): { label: string; color: string; bg: string; danger: string } {
     if (flux >= 1e-4) return { label: 'X', color: '#ef4444', bg: 'rgba(239,68,68,0.12)', danger: 'Éruption extrême — blackout radio mondial' }
@@ -53,7 +48,7 @@ function Gauge({ value, min, max, color, unit, label }: { value: number; min: nu
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
             <div style={{ fontSize: '0.65rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</div>
             <div style={{ position: 'relative', width: 88, height: 88 }}>
-                <svg width="88" height="88" style={{ transform: 'rotate(-90deg)' }}>
+                <svg aria-hidden="true" width="88" height="88" style={{ transform: 'rotate(-90deg)' }}>
                     <circle cx="44" cy="44" r="36" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
                     <motion.circle cx="44" cy="44" r="36" fill="none" stroke={color} strokeWidth="8"
                         strokeDasharray={`${2 * Math.PI * 36}`}
@@ -111,7 +106,6 @@ function BzBar({ bz, bt }: { bz: number; bt: number }) {
 function XraySparkline({ history }: { history: number[] }) {
     if (!history.length) return null
     const max = Math.max(...history, 1e-8)
-    const min = Math.min(...history)
     const w = 320, h = 60
     const points = history.map((v, i) => {
         const x = (i / (history.length - 1)) * w
@@ -134,7 +128,7 @@ function XraySparkline({ history }: { history: number[] }) {
                 </div>
             </div>
             <div style={{ background: 'rgba(255,255,255,0.02)', borderRadius: '0.5rem', padding: '0.5rem', overflow: 'hidden' }}>
-                <svg width="100%" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" style={{ display: 'block', height: 60 }}>
+                <svg role="img" aria-label="Évolution des rayons X solaires sur six heures" width="100%" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" style={{ display: 'block', height: 60 }}>
                     {/* Grid lines */}
                     {[1e-8, 1e-7, 1e-6, 1e-5, 1e-4].map((v, i) => {
                         const logV = Math.log10(v)
@@ -193,7 +187,7 @@ function SOHOPanel() {
             ) : (
                 <div style={{ position: 'relative', borderRadius: '0.75rem', overflow: 'hidden', background: '#000' }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={`${src}?t=${Date.now()}`} alt="SOHO Coronagraph LASCO" onError={() => setImgErr(true)}
+                    <img src={src} alt="SOHO Coronagraph LASCO" onError={() => setImgErr(true)}
                         style={{ width: '100%', display: 'block', borderRadius: '0.75rem' }} />
                     <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.6)', borderRadius: 99, padding: '2px 10px', fontSize: '0.65rem', color: '#f59e0b' }}>
                         Mis à jour toutes les 15min · NASA/ESA SOHO
@@ -211,7 +205,6 @@ function SOHOPanel() {
 export default function SpaceWeatherDashboard() {
     const [wind, setWind] = useState<SolarWind | null>(null)
     const [mag, setMag] = useState<MagneticField | null>(null)
-    const [xray, setXray] = useState<XrayData | null>(null)
     const [xrayHistory, setXrayHistory] = useState<number[]>([])
     const [loading, setLoading] = useState(true)
     const [lastUpdate, setLastUpdate] = useState<string>('')
@@ -251,9 +244,6 @@ export default function SpaceWeatherDashboard() {
             const sampled = xrayData.filter((_, i) => i % 4 === 0)
             const fluxHistory = sampled.map(d => d.flux)
             setXrayHistory(fluxHistory)
-            const lastFlux = xrayData[xrayData.length - 1]?.flux || 1e-9
-            const fc = getFlareClass(lastFlux)
-            setXray({ flux: lastFlux, flareClass: fc.label })
 
             setLastUpdate(new Date().toLocaleTimeString('fr-FR'))
             setLoading(false)
@@ -264,9 +254,12 @@ export default function SpaceWeatherDashboard() {
     }
 
     useEffect(() => {
-        fetchAll()
+        const initialFetch = window.setTimeout(fetchAll, 0)
         intervalRef.current = setInterval(fetchAll, 60_000) // refresh every minute
-        return () => { if (intervalRef.current) clearInterval(intervalRef.current) }
+        return () => {
+            clearTimeout(initialFetch)
+            if (intervalRef.current) clearInterval(intervalRef.current)
+        }
     }, [])
 
     const windStatus = wind ? getWindStatus(wind.speed) : null

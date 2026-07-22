@@ -45,6 +45,7 @@ const SOURCES = [
     { name: 'ESA / JWST', url: 'https://webbtelescope.org', desc: 'Images du télescope Webb' },
     { name: 'The Space Devs', url: 'https://thespacedevs.com', desc: 'Prochains lancements' },
     { name: 'NASA Open Data', url: 'https://data.nasa.gov', desc: 'Catalogue public & archives' },
+    { name: 'People in Space', url: 'https://corquaid.github.io/international-space-station-APIs/', desc: 'Équipages actuellement en orbite' },
 ]
 
 export default function Footer() {
@@ -81,7 +82,7 @@ export default function Footer() {
                                 WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
                             }}>SolarScope</span>
                         </div>
-                        <p style={{ color: '#475569', fontSize: '0.8rem', lineHeight: 1.7, maxWidth: 240, marginBottom: '1rem' }}>
+                        <p style={{ color: '#94a3b8', fontSize: '0.8rem', lineHeight: 1.7, maxWidth: 240, marginBottom: '1rem' }}>
                             Explorer l&apos;Univers avec des données scientifiques réelles. Conçu pour les curieux, les élèves et les passionnés d&apos;astronomie.
                         </p>
                         {/* Social / contact */}
@@ -95,10 +96,10 @@ export default function Footer() {
                                     display: 'flex', alignItems: 'center', gap: '0.3rem',
                                     padding: '4px 10px', borderRadius: 99, textDecoration: 'none',
                                     background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)',
-                                    color: '#64748b', fontSize: '0.72rem', fontWeight: 600, transition: 'all 0.15s',
+                                    color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, transition: 'all 0.15s',
                                 }}
                                     onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#c4b5fd'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(196,181,253,0.25)' }}
-                                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = '#64748b'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.07)' }}>
+                                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = '#94a3b8'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.07)' }}>
                                     {s.icon} {s.label}
                                 </a>
                             ))}
@@ -114,11 +115,11 @@ export default function Footer() {
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem' }}>
                                 {group.links.map(link => (
                                     <Link key={link.href} href={link.href} style={{
-                                        color: '#475569', fontSize: '0.8rem', textDecoration: 'none',
+                                        color: '#94a3b8', fontSize: '0.8rem', textDecoration: 'none',
                                         transition: 'color 0.15s',
                                     }}
                                         onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = '#c4b5fd')}
-                                        onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = '#475569')}>
+                                        onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = '#94a3b8')}>
                                         {link.title}
                                     </Link>
                                 ))}
@@ -129,7 +130,7 @@ export default function Footer() {
 
                 {/* Data sources */}
                 <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1.5rem', marginBottom: '1.5rem' }}>
-                    <div style={{ color: '#334155', fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>
+                    <div style={{ color: '#94a3b8', fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>
                         📡 Sources de données
                     </div>
                     <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
@@ -142,8 +143,8 @@ export default function Footer() {
                             }}
                                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(99,102,241,0.06)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(99,102,241,0.2)' }}
                                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.02)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.05)' }}>
-                                <span style={{ color: '#64748b', fontSize: '0.72rem', fontWeight: 700 }}>{s.name}</span>
-                                <span style={{ color: '#334155', fontSize: '0.62rem' }}>{s.desc}</span>
+                                <span style={{ color: '#cbd5e1', fontSize: '0.72rem', fontWeight: 700 }}>{s.name}</span>
+                                <span style={{ color: '#94a3b8', fontSize: '0.7rem' }}>{s.desc}</span>
                             </a>
                         ))}
                     </div>
@@ -151,13 +152,13 @@ export default function Footer() {
 
                 {/* Bottom bar */}
                 <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
-                    <p style={{ color: '#1e293b', fontSize: '0.72rem' }}>
+                    <p style={{ color: '#94a3b8', fontSize: '0.72rem' }}>
                         © {year} SolarScope · Données scientifiques NASA, ESA, NOAA · Éducatif & non commercial
                     </p>
                     <div style={{ display: 'flex', gap: '1rem' }}>
-                        {['Confidentialité', 'À propos', 'Contact'].map(l => (
-                            <span key={l} style={{ color: '#1e293b', fontSize: '0.72rem', cursor: 'pointer' }}>{l}</span>
-                        ))}
+                        <Link href="/confidentialite" style={{ color: '#94a3b8', fontSize: '0.72rem' }}>Confidentialité</Link>
+                        <Link href="/#explorer" style={{ color: '#94a3b8', fontSize: '0.72rem' }}>À propos</Link>
+                        <a href="https://github.com/AtomCrtr/SolarScope" target="_blank" rel="noopener noreferrer" style={{ color: '#94a3b8', fontSize: '0.72rem' }}>Contact</a>
                     </div>
                 </div>
             </div>

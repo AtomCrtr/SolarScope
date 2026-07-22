@@ -1,4 +1,5 @@
 import { getNasaApiKey } from '@/lib/space-data'
+import Image from 'next/image'
 
 async function getApod() {
     try {
@@ -44,7 +45,7 @@ export default async function ApodPage() {
                     <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', minHeight: 360 }} className="max-md:grid-cols-1">
                         <div style={{ position: 'relative', overflow: 'hidden', minHeight: 320 }}>
                             {hero.media_type === 'image'
-                                ? <img src={hero.url} alt={hero.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                                ? <Image src={hero.url} alt={hero.title} fill priority sizes="(max-width: 768px) 100vw, 55vw" style={{ objectFit: 'cover', display: 'block' }} />
                                 : <div style={{ background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', minHeight: 320, fontSize: '2rem' }}>🎬 Vidéo</div>
                             }
                         </div>
@@ -85,7 +86,7 @@ export default async function ApodPage() {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {gallery.map((p: Record<string, string>, i: number) => (
                     <div key={i} className="card" style={{ overflow: 'hidden', padding: 0 }}>
-                        <img src={p.url} alt={p.title} style={{ width: '100%', height: '160px', objectFit: 'cover' }} />
+                        <Image src={p.url} alt={p.title} width={600} height={400} sizes="(max-width: 768px) 50vw, 25vw" style={{ width: '100%', height: '160px', objectFit: 'cover' }} />
                         <div style={{ padding: '0.75rem' }}>
                             <p style={{ color: '#e2e8f0', fontSize: '0.78rem', fontWeight: 600, lineHeight: 1.4 }}>{p.title?.slice(0, 50)}{p.title?.length > 50 ? '…' : ''}</p>
                             <p style={{ color: '#64748b', fontSize: '0.72rem', marginTop: '0.3rem' }}>📅 {p.date}</p>

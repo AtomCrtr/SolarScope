@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 
 interface ISSPos {
@@ -27,14 +27,12 @@ export default function ISSGlobe({ issPos }: { issPos: ISSPos | null }) {
         renderer: THREE.WebGLRenderer
         scene: THREE.Scene
         camera: THREE.PerspectiveCamera
-        earth: THREE.Mesh
         issMarker: THREE.Group
         trail: THREE.Line
         trailPositions: THREE.Vector3[]
         animId: number
         isDragging: boolean
         previousMousePosition: { x: number; y: number }
-        earthGroup: THREE.Group
     } | null>(null)
 
     useEffect(() => {
@@ -146,7 +144,7 @@ export default function ISSGlobe({ issPos }: { issPos: ISSPos | null }) {
             requestAnimationFrame(loop)
         })
 
-        sceneRef.current = { renderer, scene, camera, earth, issMarker, trail, trailPositions, animId, isDragging, previousMousePosition, earthGroup }
+        sceneRef.current = { renderer, scene, camera, issMarker, trail, trailPositions, animId, isDragging, previousMousePosition }
 
         return () => {
             cancelAnimationFrame(animId)
@@ -161,7 +159,7 @@ export default function ISSGlobe({ issPos }: { issPos: ISSPos | null }) {
     // Update ISS position when it changes
     useEffect(() => {
         if (!sceneRef.current || !issPos) return
-        const { issMarker, trail, trailPositions, earthGroup } = sceneRef.current
+        const { issMarker, trail, trailPositions } = sceneRef.current
 
         const pos = latLngToVec3(issPos.latitude, issPos.longitude, 1.14)
         // Position in local space of earthGroup

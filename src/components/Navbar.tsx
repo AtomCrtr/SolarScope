@@ -52,9 +52,6 @@ const NAV_GROUPS = [
     },
 ]
 
-// Flat list of all pages for "active" group detection
-const ALL_PAGES = NAV_GROUPS.flatMap(g => g.pages)
-
 export default function Navbar({ themeToggle }: { themeToggle?: React.ReactNode }) {
     const pathname = usePathname()
     const [openGroup, setOpenGroup] = useState<string | null>(null)
@@ -62,6 +59,8 @@ export default function Navbar({ themeToggle }: { themeToggle?: React.ReactNode 
     const [mobileGroup, setMobileGroup] = useState<string | null>(null)
     const [scrolled, setScrolled] = useState(false)
     const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+    const mobileButtonRef = useRef<HTMLButtonElement>(null)
+    const mobileMenuRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 12)
@@ -70,7 +69,29 @@ export default function Navbar({ themeToggle }: { themeToggle?: React.ReactNode 
     }, [])
 
     // Close dropdown when navigating
-    useEffect(() => { setOpenGroup(null); setMobileOpen(false) }, [pathname])
+    useEffect(() => {
+        const frame = requestAnimationFrame(() => {
+            setOpenGroup(null)
+            setMobileOpen(false)
+        })
+        return () => cancelAnimationFrame(frame)
+    }, [pathname])
+
+    useEffect(() => {
+        if (!mobileOpen) return
+        const frame = requestAnimationFrame(() => mobileMenuRef.current?.querySelector<HTMLAnchorElement>('a')?.focus())
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                setMobileOpen(false)
+                mobileButtonRef.current?.focus()
+            }
+        }
+        document.addEventListener('keydown', onKeyDown)
+        return () => {
+            cancelAnimationFrame(frame)
+            document.removeEventListener('keydown', onKeyDown)
+        }
+    }, [mobileOpen])
 
     const handleMouseEnter = (id: string) => {
         if (closeTimer.current) clearTimeout(closeTimer.current)
@@ -246,9 +267,11 @@ export default function Navbar({ themeToggle }: { themeToggle?: React.ReactNode 
                         {themeToggle}
                         {/* Mobile hamburger — Tailwind md:hidden hides it on ≥768px */}
                         <button
+                            ref={mobileButtonRef}
                             onClick={() => setMobileOpen(!mobileOpen)}
-                            aria-label="Menu"
+                            aria-label={mobileOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
                             aria-expanded={mobileOpen}
+                            aria-controls="mobile-navigation"
                             type="button"
                             className="md:hidden"
                             style={{
@@ -277,6 +300,8 @@ export default function Navbar({ themeToggle }: { themeToggle?: React.ReactNode 
             <AnimatePresence>
                 {mobileOpen && (
                     <motion.div
+                        ref={mobileMenuRef}
+                        id="mobile-navigation"
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}

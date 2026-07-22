@@ -94,11 +94,11 @@ export default function SolarSystem2D() {
                 {/* Full view */}
                 <div style={{ background: 'rgba(0,0,16,0.95)', borderRadius: '1rem', border: '1px solid rgba(255,255,255,0.06)', overflow: 'hidden', position: 'relative' }}>
                     <div style={{ position: 'absolute', top: 8, left: 12, color: '#334155', fontSize: '0.62rem' }}>Système complet</div>
-                    <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ display: 'block' }}>
+                    <svg role="img" aria-label="Position calculée des planètes dans le système solaire" width="100%" viewBox={`0 0 ${W} ${H}`} style={{ display: 'block' }}>
                         {/* Stars BG */}
                         {Array.from({ length: 100 }, (_, i) => (
                             <circle key={i} cx={Math.sin(i * 137.5) * W / 2 + cx} cy={Math.cos(i * 137.5) * H / 2 + cy}
-                                r={Math.random() < 0.3 ? 0.8 : 0.4} fill="white" opacity={0.3 + Math.random() * 0.5} />
+                                r={i % 10 < 3 ? 0.8 : 0.4} fill="white" opacity={0.3 + ((i * 37) % 50) / 100} />
                         ))}
                         {/* Orbits */}
                         {PLANET_ELEMENTS.map(p => (
@@ -133,7 +133,7 @@ export default function SolarSystem2D() {
                 {/* Inner planets zoom */}
                 <div style={{ background: 'rgba(0,0,16,0.95)', borderRadius: '1rem', border: '1px solid rgba(255,255,255,0.06)', overflow: 'hidden', position: 'relative' }}>
                     <div style={{ position: 'absolute', top: 8, left: 12, color: '#334155', fontSize: '0.62rem' }}>Planètes intérieures (zoom)</div>
-                    <svg width="100%" viewBox="0 0 400 400" style={{ display: 'block' }}>
+                    <svg role="img" aria-label="Position calculée des quatre planètes intérieures" width="100%" viewBox="0 0 400 400" style={{ display: 'block' }}>
                         {[0.387, 0.723, 1.0, 1.524].map((a, i) => (
                             <circle key={i} cx={200} cy={200} r={a * 145} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="0.8" />
                         ))}

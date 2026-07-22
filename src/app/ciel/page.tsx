@@ -13,20 +13,24 @@ export default function CielPage() {
     useEffect(() => {
         if (!navigator.geolocation) {
             // Default to Paris
-            setLat(48.8566)
-            setLng(2.3522)
-            setCity('Paris (défaut)')
-            setGeoLoading(false)
+            queueMicrotask(() => {
+                setLat(48.8566)
+                setLng(2.3522)
+                setCity('Paris (défaut)')
+                setGeoLoading(false)
+            })
             return
         }
         navigator.geolocation.getCurrentPosition(
             async pos => {
                 const { latitude, longitude } = pos.coords
-                setLat(latitude)
-                setLng(longitude)
+                const coarseLatitude = Number(latitude.toFixed(2))
+                const coarseLongitude = Number(longitude.toFixed(2))
+                setLat(coarseLatitude)
+                setLng(coarseLongitude)
                 // Reverse geocoding via free API
                 try {
-                    const r = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`)
+                    const r = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${coarseLatitude}&lon=${coarseLongitude}&format=json`)
                     const d = await r.json()
                     setCity(d.address?.city || d.address?.town || d.address?.village || 'Votre position')
                 } catch {
@@ -45,17 +49,15 @@ export default function CielPage() {
         )
     }, [])
 
-    // Build Stellarium URL with lat/lng for local star position
-    const stellariumUrl = lat && lng
-        ? `https://stellarium-web.org/?date=${encodeURIComponent(new Date().toISOString())}&lat=${lat.toFixed(4)}&lng=${lng.toFixed(4)}&fov=120`
-        : null
+    // Two decimal places are sufficient for sky orientation and avoid sharing
+    // the visitor's exact location with third-party services.
+    const approximateLat = lat === null ? null : Number(lat.toFixed(2))
+    const approximateLng = lng === null ? null : Number(lng.toFixed(2))
 
-    const PLANETS_TONIGHT = [
-        { name: 'Jupiter', symbol: '♃', visibility: 'Visible toute la nuit', color: '#f59e0b', desc: 'La plus brillante des planètes ce mois.' },
-        { name: 'Vénus', symbol: '♀', visibility: 'Visible à l\'Ouest au coucher du soleil', color: '#e2e8f0', desc: 'L\'étoile du Berger — très brillante à l\'horizon.' },
-        { name: 'Saturne', symbol: '♄', visibility: 'En conjonction ce mois', color: '#fbbf24', desc: 'Ses anneaux visibles au télescope.' },
-        { name: 'Mars', symbol: '♂', visibility: 'Visible à l\'Est en début de nuit', color: '#ef4444', desc: 'La Planète Rouge bien reconnaissable.' },
-    ]
+    // Build Stellarium URL with coarse coordinates and the current instant.
+    const stellariumUrl = lat !== null && lng !== null
+        ? `https://stellarium-web.org/?date=${encodeURIComponent(new Date().toISOString())}&lat=${approximateLat}&lng=${approximateLng}&fov=120`
+        : null
 
     return (
         <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
@@ -81,13 +83,13 @@ export default function CielPage() {
                     ) : (
                         <>
                             <span style={{ color: '#e2e8f0', fontWeight: 600, fontSize: '0.85rem' }}>{city}</span>
-                            {lat && lng && (
-                                <span style={{ color: '#475569', fontSize: '0.72rem', marginLeft: '0.5rem' }}>{lat.toFixed(4)}°N, {lng.toFixed(4)}°E</span>
+                            {lat !== null && lng !== null && (
+                                <span style={{ color: '#64748b', fontSize: '0.72rem', marginLeft: '0.5rem' }}>zone approximative · {approximateLat}°, {approximateLng}°</span>
                             )}
                         </>
                     )}
                 </div>
-                {lat && lng && (
+                {lat !== null && lng !== null && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                         <span className="pulse-dot" style={{ background: '#38bdf8', boxShadow: '0 0 6px #38bdf8' }} />
                         <span style={{ color: '#38bdf8', fontSize: '0.7rem', fontWeight: 600 }}>Ciel temps réel</span>
@@ -110,7 +112,8 @@ export default function CielPage() {
                         src={stellariumUrl}
                         style={{ width: '100%', height: 580, border: 'none', display: 'block', background: '#000' }}
                         title="Carte du ciel Stellarium"
-                        allow="geolocation"
+                        referrerPolicy="strict-origin-when-cross-origin"
+                        sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-popups"
                     />
                 ) : (
                     <div style={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b' }}>
@@ -122,22 +125,22 @@ export default function CielPage() {
                 )}
             </div>
 
-            {/* Planets tonight */}
-            <h2 className="section-title" style={{ color: '#e2e8f0' }}>🪐 Planètes visibles ce mois-ci</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '0.75rem', marginBottom: '2rem' }}>
-                {PLANETS_TONIGHT.map(p => (
-                    <div key={p.name} className="card" style={{ padding: '1rem', border: `1px solid ${p.color}25` }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '0.5rem' }}>
-                            <span style={{ fontSize: '1.6rem', color: p.color }}>{p.symbol}</span>
-                            <h3 style={{ color: p.color, fontWeight: 700, fontFamily: 'Outfit, sans-serif' }}>{p.name}</h3>
-                        </div>
-                        <div style={{ color: '#38bdf8', fontSize: '0.72rem', fontWeight: 600, marginBottom: '0.375rem' }}>
-                            👁️ {p.visibility}
-                        </div>
-                        <p style={{ color: '#64748b', fontSize: '0.78rem', lineHeight: 1.6 }}>{p.desc}</p>
-                    </div>
-                ))}
-            </div>
+            <section className="card" style={{ padding: '1.25rem', marginBottom: '2rem' }}>
+                <h2 className="section-title" style={{ color: '#e2e8f0' }}>🪐 Que peut-on réellement voir ?</h2>
+                <p style={{ color: 'var(--text-subtle)', lineHeight: 1.7, marginBottom: '1rem' }}>
+                    La carte ci-dessus calcule le ciel à l’instant présent pour votre zone approximative. La visibilité
+                    réelle dépend aussi de l’heure, de la météo et de la pollution lumineuse. SolarScope ne présente
+                    plus de liste mensuelle figée comme une donnée « en direct ».
+                </p>
+                <a
+                    href="https://science.nasa.gov/skywatching/whats-up/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-secondary"
+                >
+                    Consulter le guide mensuel officiel de la NASA ↗
+                </a>
+            </section>
 
             {/* Tips */}
             <div className="card" style={{ padding: '1.25rem' }}>

@@ -161,6 +161,8 @@ interface Sun3DProps {
 export default function Sun3D({ height = 480 }: Sun3DProps) {
     return (
         <Canvas
+            role="img"
+            aria-label="Représentation interactive du Soleil en trois dimensions"
             style={{ height, background: 'transparent' }}
             camera={{ position: [0, 0, 7.5], fov: 40 }}
             gl={{ antialias: true, alpha: true }}

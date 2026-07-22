@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
+import Image from 'next/image'
 
 const Sun3D = dynamic(() => import('@/components/Sun3D'), { ssr: false })
 const SpaceWeatherDashboard = dynamic(() => import('@/components/SpaceWeatherDashboard'), { ssr: false })
@@ -72,7 +73,7 @@ export default function SoleilPage() {
                             <motion.div key={img.src} className="card" style={{ overflow: 'hidden', padding: 0 }}
                                 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.1 }}>
                                 <div style={{ position: 'relative' }}>
-                                    <img src={img.src} alt={img.label} style={{ width: '100%', height: 120, objectFit: 'cover', display: 'block' }} />
+                                    <Image src={img.src} alt={img.label} width={512} height={512} unoptimized style={{ width: '100%', height: 120, objectFit: 'cover', display: 'block' }} />
                                     <div style={{ position: 'absolute', top: 6, right: 6, background: 'rgba(0,0,0,0.7)', borderRadius: 4, padding: '1px 6px', fontSize: '0.65rem', color: '#fbbf24', fontWeight: 600 }}>{img.wavelength}</div>
                                 </div>
                                 <div style={{ padding: '0.6rem' }}>
@@ -124,12 +125,12 @@ export default function SoleilPage() {
                     <div>
                         <p style={{ color: '#94a3b8', lineHeight: 1.8, fontSize: '0.875rem', marginBottom: '1rem' }}>
                             Une <strong style={{ color: '#f97316' }}>CME</strong> est une gigantesque bulle de plasma et de champ magnétique éjectée
-                            par le Soleil à des vitesses allant de <strong style={{ color: '#fbbf24' }}>250 à 3 000 km/s</strong>. Lorsqu'elle
+                            par le Soleil à des vitesses allant de <strong style={{ color: '#fbbf24' }}>250 à 3 000 km/s</strong>. Lorsqu’elle
                             atteint la Terre (en 1 à 3 jours), elle peut provoquer des tempêtes géomagnétiques.
                         </p>
                         <p style={{ color: '#94a3b8', lineHeight: 1.8, fontSize: '0.875rem' }}>
-                            L'événement le plus puissant jamais enregistré est la <strong style={{ color: '#ef4444' }}>Tempête de Carrington
-                                (1859)</strong> — si elle se reproduisait aujourd'hui, elle détruirait la majorité des satellites et provoquerait
+                            L’événement le plus puissant jamais enregistré est la <strong style={{ color: '#ef4444' }}>Tempête de Carrington
+                                (1859)</strong> — si elle se reproduisait aujourd’hui, elle détruirait la majorité des satellites et provoquerait
                             des pannes électriques mondiales pendant des mois.
                         </p>
                     </div>

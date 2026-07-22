@@ -56,10 +56,21 @@ export default function SolarBotWidget() {
     const [loading, setLoading] = useState(false)
     const [pulse, setPulse] = useState(true)
     const bottomRef = useRef<HTMLDivElement>(null)
+    const inputRef = useRef<HTMLInputElement>(null)
 
     useEffect(() => {
-        if (open) { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }); setPulse(false) }
+        if (open) bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
     }, [messages, open])
+
+    useEffect(() => {
+        if (!open) return
+        inputRef.current?.focus()
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') setOpen(false)
+        }
+        document.addEventListener('keydown', onKeyDown)
+        return () => document.removeEventListener('keydown', onKeyDown)
+    }, [open])
 
     const send = async (text?: string) => {
         const q = (text || input).trim()
@@ -99,7 +110,10 @@ export default function SolarBotWidget() {
                 <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => setOpen(!open)}
+                    onClick={() => {
+                        setOpen(!open)
+                        if (!open) setPulse(false)
+                    }}
                     style={{
                         width: 58, height: 58, borderRadius: '50%',
                         background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
@@ -108,7 +122,9 @@ export default function SolarBotWidget() {
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         position: 'relative',
                     }}
-                    aria-label="SolarBot"
+                    aria-label={open ? 'Fermer SolarBot' : 'Ouvrir SolarBot'}
+                    aria-expanded={open}
+                    aria-controls="solarbot-dialog"
                 >
                     {open ? '✕' : '🤖'}
                     {pulse && !open && (
@@ -125,6 +141,9 @@ export default function SolarBotWidget() {
             <AnimatePresence>
                 {open && (
                     <motion.div
+                        id="solarbot-dialog"
+                        role="dialog"
+                        aria-label="Discussion avec SolarBot"
                         initial={{ opacity: 0, y: 20, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -161,11 +180,11 @@ export default function SolarBotWidget() {
                                     En ligne · Propulsé par Gemini
                                 </div>
                             </div>
-                            <button onClick={() => setMessages([messages[0]])} title="Effacer" style={{ background: 'none', border: 'none', color: '#475569', cursor: 'pointer', fontSize: '0.8rem', padding: '4px' }}>🗑</button>
+                            <button onClick={() => setMessages([messages[0]])} aria-label="Effacer la conversation" title="Effacer" style={{ background: 'none', border: 'none', color: '#475569', cursor: 'pointer', fontSize: '0.8rem', padding: '4px' }}>🗑</button>
                         </div>
 
                         {/* Messages */}
-                        <div style={{ flex: 1, overflowY: 'auto', padding: '0.875rem', display: 'flex', flexDirection: 'column', gap: '0.625rem', maxHeight: 280 }}>
+                        <div aria-live="polite" aria-busy={loading} style={{ flex: 1, overflowY: 'auto', padding: '0.875rem', display: 'flex', flexDirection: 'column', gap: '0.625rem', maxHeight: 280 }}>
                             {messages.map((msg, i) => (
                                 <div key={i} style={{ display: 'flex', gap: '0.5rem', justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
                                     {msg.role === 'bot' && (
@@ -207,10 +226,13 @@ export default function SolarBotWidget() {
                         {/* Input area */}
                         <div style={{ padding: '0.625rem', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', gap: '0.5rem' }}>
                             <input
+                                ref={inputRef}
                                 value={input}
                                 onChange={e => setInput(e.target.value)}
                                 onKeyDown={e => e.key === 'Enter' && send()}
                                 placeholder="Ta question sur l'espace..."
+                                aria-label="Question pour SolarBot"
+                                maxLength={1000}
                                 disabled={loading}
                                 style={{
                                     flex: 1, padding: '0.5rem 0.75rem', borderRadius: 10, fontSize: '0.82rem',
@@ -218,7 +240,7 @@ export default function SolarBotWidget() {
                                     color: '#e2e8f0', outline: 'none',
                                 }}
                             />
-                            <button onClick={() => send()} disabled={loading || !input.trim()} style={{
+                            <button aria-label="Envoyer la question" onClick={() => send()} disabled={loading || !input.trim()} style={{
                                 width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
                                 border: 'none', cursor: 'pointer', fontSize: '0.9rem', opacity: loading || !input.trim() ? 0.5 : 1,
                             }}>🚀</button>

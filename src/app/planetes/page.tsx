@@ -182,8 +182,8 @@ export default function PlanetesPage() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.25rem' }} className="max-sm:grid-cols-1">
                     {[{ v: comp1, set: setComp1 }, { v: comp2, set: setComp2 }].map((c, ci) => (
                         <div key={ci}>
-                            <label style={{ color: '#94a3b8', fontSize: '0.78rem', marginBottom: '0.3rem', display: 'block' }}>Planète {ci + 1}</label>
-                            <select value={c.v} onChange={e => c.set(parseInt(e.target.value))} style={{
+                            <label htmlFor={`planet-compare-${ci}`} style={{ color: '#94a3b8', fontSize: '0.78rem', marginBottom: '0.3rem', display: 'block' }}>Planète {ci + 1}</label>
+                            <select id={`planet-compare-${ci}`} value={c.v} onChange={e => c.set(parseInt(e.target.value))} style={{
                                 width: '100%', padding: '0.5rem 0.75rem', borderRadius: 9, fontSize: '0.85rem',
                                 background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
                                 color: '#e2e8f0', outline: 'none',
@@ -260,15 +260,20 @@ export default function PlanetesPage() {
                     <thead>
                         <tr style={{ background: 'rgba(0,0,0,0.3)', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
                             {['Planète', 'Type', 'Rayon (km)', 'Gravité', 'Temp (K)', 'Densité', 'Dist. ☀️', 'Lunes', 'Orbite'].map(h => (
-                                <th key={h} style={{ padding: '0.675rem 0.875rem', textAlign: 'left', color: '#64748b', fontWeight: 600, whiteSpace: 'nowrap' }}>{h}</th>
+                                <th key={h} style={{ padding: '0.675rem 0.875rem', textAlign: 'left', color: '#94a3b8', fontWeight: 600, whiteSpace: 'nowrap' }}>{h}</th>
                             ))}
                         </tr>
                     </thead>
                     <tbody>
                         {PLANETS.map((pl, i) => (
-                            <tr key={pl.name} onClick={() => setSelected(i)} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', cursor: 'pointer', background: selected === i ? `${pl.color}08` : 'transparent', transition: 'background 0.2s' }}>
+                            <tr key={pl.name} tabIndex={0} onClick={() => setSelected(i)} onKeyDown={event => {
+                                if (event.key === 'Enter' || event.key === ' ') {
+                                    event.preventDefault()
+                                    setSelected(i)
+                                }
+                            }} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', cursor: 'pointer', background: selected === i ? `${pl.color}08` : 'transparent', transition: 'background 0.2s' }}>
                                 <td style={{ padding: '0.625rem 0.875rem', whiteSpace: 'nowrap' }}><span style={{ color: pl.color, fontWeight: 700 }}>{pl.emoji} {pl.name}</span></td>
-                                <td style={{ padding: '0.625rem 0.875rem', color: '#64748b' }}>{pl.type}</td>
+                                <td style={{ padding: '0.625rem 0.875rem', color: '#94a3b8' }}>{pl.type}</td>
                                 <td style={{ padding: '0.625rem 0.875rem', color: '#e2e8f0' }}>{pl.meanRadius.toLocaleString('fr-FR')}</td>
                                 <td style={{ padding: '0.625rem 0.875rem', color: '#e2e8f0' }}>{pl.gravity}</td>
                                 <td style={{ padding: '0.625rem 0.875rem', color: '#e2e8f0' }}>{pl.avgTemp}</td>

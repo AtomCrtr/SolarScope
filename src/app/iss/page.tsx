@@ -39,7 +39,6 @@ export default function ISSPage() {
     const [issPos, setIssPos] = useState<ISSPos | null>(null)
     const [astronauts, setAstronauts] = useState<Astronaut[]>([])
     const [nextLaunch, setNextLaunch] = useState<LaunchInfo | null>(null)
-    const [history, setHistory] = useState<{ lat: number; lng: number; time: number }[]>([])
 
     // ── Fetch ISS position every 2 seconds ──
     useEffect(() => {
@@ -49,10 +48,6 @@ export default function ISSPage() {
                 if (!r.ok) return
                 const d: ISSPos = await r.json()
                 setIssPos(d)
-                setHistory(prev => {
-                    const next = [...prev, { lat: d.latitude, lng: d.longitude, time: d.timestamp }]
-                    return next.slice(-20)
-                })
             } catch { /* silent */ }
         }
         fetchISS()
@@ -141,9 +136,9 @@ export default function ISSPage() {
                     <div className="card" style={{ padding: '1.25rem', flex: 1 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
                             <span style={{ fontSize: '1.3rem' }}>👨‍🚀</span>
-                            <h3 style={{ color: '#e2e8f0', fontWeight: 700, fontFamily: 'Outfit, sans-serif' }}>
+                            <h2 style={{ color: '#e2e8f0', fontWeight: 700, fontFamily: 'Outfit, sans-serif' }}>
                                 Équipage actuel
-                            </h3>
+                            </h2>
                             <span style={{ marginLeft: 'auto', background: 'rgba(16,185,129,0.12)', color: '#10b981', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 99, padding: '2px 8px', fontSize: '0.68rem', fontWeight: 700 }}>
                                 {issOnISS.length} pers.
                             </span>

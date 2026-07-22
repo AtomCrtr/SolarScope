@@ -40,6 +40,7 @@ const TYPE_COLORS: Record<string, string> = {
 const ALL_TYPES = ['Satellite', 'Vol habité', 'Sonde', 'Télescope', 'Rover', 'Station']
 
 export default function MissionsPage() {
+    const [renderedAt] = useState(() => Date.now())
     const [typeFilter, setTypeFilter] = useState<string[]>(ALL_TYPES)
     const [statutFilter, setStatutFilter] = useState<'Toutes' | 'Active' | 'Terminée'>('Toutes')
     const [launches, setLaunches] = useState<UpcomingLaunch[]>([])
@@ -114,10 +115,12 @@ export default function MissionsPage() {
                     <div style={{ display: 'flex', gap: '0.75rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
                         {launches.map((l, i) => {
                             const d = new Date(l.net)
-                            const daysUntil = Math.floor((d.getTime() - Date.now()) / 86400000)
+                            const daysUntil = Math.floor((d.getTime() - renderedAt) / 86400000)
                             return (
                                 <motion.div key={l.id} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }}
                                     className="card" style={{ flexShrink: 0, width: 280, padding: '1.1rem', position: 'relative', overflow: 'hidden' }}>
+                                    {/* External launch providers use changing image hosts; keep this decorative background unoptimized. */}
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
                                     {l.image && <img src={l.image} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.08 }} />}
                                     <div style={{ position: 'relative' }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
@@ -145,7 +148,7 @@ export default function MissionsPage() {
                 <div style={{ overflowX: 'auto', paddingBottom: '0.5rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 0, minWidth: 700, position: 'relative' }}>
                         <div style={{ position: 'absolute', height: 2, background: 'rgba(255,255,255,0.1)', left: 0, right: 0, top: '50%', transform: 'translateY(-50%)', zIndex: 0 }} />
-                        {MISSIONS.map((m, i) => (
+                        {MISSIONS.map(m => (
                             <div key={m.name} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', zIndex: 1 }}>
                                 <div style={{ fontSize: '0.65rem', color: '#64748b', marginBottom: '0.25rem', whiteSpace: 'nowrap' }}>{m.annee}</div>
                                 <div title={m.name} style={{

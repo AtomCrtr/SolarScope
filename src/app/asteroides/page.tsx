@@ -47,21 +47,7 @@ export default function AsteroidsPage() {
                 return r.json()
             })
             .then(data => {
-                const list: Asteroid[] = []
-                Object.values(data.near_earth_objects || {}).forEach((day: unknown) => {
-                    (day as unknown[]).forEach((neo: unknown) => {
-                        const n = neo as { id: string; name: string; close_approach_data: { close_approach_date: string; miss_distance: { kilometers: string } }[]; estimated_diameter: { meters: { estimated_diameter_min: number } }; is_potentially_hazardous_asteroid: boolean }
-                        const ca = n.close_approach_data?.[0]
-                        list.push({
-                            id: n.id, name: n.name,
-                            date: ca?.close_approach_date || '',
-                            distKm: parseFloat(ca?.miss_distance?.kilometers || '0').toFixed(0),
-                            diamMin: Math.round(n.estimated_diameter?.meters?.estimated_diameter_min || 0),
-                            dangerous: n.is_potentially_hazardous_asteroid,
-                        })
-                    })
-                })
-                list.sort((a, b) => parseFloat(a.distKm) - parseFloat(b.distKm))
+                const list = Array.isArray(data.asteroids) ? data.asteroids : []
                 setAsteroids(list.slice(0, 20))
                 setUpdatedAt(data.updatedAt || null)
                 setLoading(false)

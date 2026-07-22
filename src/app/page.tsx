@@ -51,13 +51,10 @@ function martianSolsSince(date: string) {
 }
 
 function useCountdown(target: string | undefined) {
-  const [remaining, setRemaining] = useState<number | null>(null)
+  const [remaining, setRemaining] = useState<number | null>(() => target ? Math.max(0, new Date(target).getTime() - Date.now()) : null)
 
   useEffect(() => {
-    if (!target) {
-      setRemaining(null)
-      return
-    }
+    if (!target) return
 
     const targetTime = new Date(target).getTime()
     const tick = () => setRemaining(Math.max(0, targetTime - Date.now()))
@@ -66,7 +63,7 @@ function useCountdown(target: string | undefined) {
     return () => clearInterval(interval)
   }, [target])
 
-  return remaining
+  return target ? remaining : null
 }
 
 function formatCountdown(ms: number | null) {

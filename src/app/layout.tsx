@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import './globals.css'
 import Navbar from '@/components/Navbar'
 import StarField from '@/components/StarField'
@@ -6,26 +7,24 @@ import SolarBotWidget from '@/components/SolarBotWidget'
 import Footer from '@/components/Footer'
 import Breadcrumb from '@/components/Breadcrumb'
 import ThemeToggle from '@/components/ThemeToggle'
-
-const BASE_URL = 'https://solarscope.vercel.app'
+import { DEFAULT_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: {
     default: 'SolarScope 🔭 — Explorer l\'Univers',
     template: '%s · SolarScope',
   },
-  description:
-    'Découvre l\'espace avec SolarScope ! Planètes en 3D, Mars, astéroïdes, télescope Webb, ISS en direct et bien plus — données NASA en temps réel.',
+  description: DEFAULT_DESCRIPTION,
   keywords: 'espace, planètes, NASA, astéroïdes, Mars, univers, astronomie, JWST, Webb, ISS, aurores, météorites',
   authors: [{ name: 'SolarScope' }],
   creator: 'SolarScope',
-  metadataBase: new URL(BASE_URL),
+  metadataBase: new URL(SITE_URL),
   alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
-    url: BASE_URL,
-    siteName: 'SolarScope',
+    url: SITE_URL,
+    siteName: SITE_NAME,
     title: 'SolarScope 🔭 — Explorer l\'Univers avec la NASA',
     description: 'Planètes en 3D, positions réelles J2000, télescope Webb, ISS live, aurores boréales, météorites… données NASA en temps réel pour tous.',
   },
@@ -44,16 +43,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700;800;900&display=swap"
-          rel="stylesheet"
+        <Script src="/theme-init.js" strategy="beforeInteractive" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: SITE_NAME,
+              url: SITE_URL,
+              inLanguage: 'fr-FR',
+              description: DEFAULT_DESCRIPTION,
+            }).replace(/</g, '\\u003c'),
+          }}
         />
-        {/* Theme script — runs before render to avoid FOUC */}
-        <script dangerouslySetInnerHTML={{
-          __html: `(function(){var t=localStorage.getItem('solarscope-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();`
-        }} />
       </head>
       <body>
         <StarField />
