@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import KidsGuide from '@/components/KidsGuide'
 
 export default function CielPage() {
     const [lat, setLat] = useState<number | null>(null)
@@ -73,6 +74,8 @@ export default function CielPage() {
                     Qu&apos;est-ce qu&apos;on voit <strong style={{ color: '#38bdf8' }}>ce soir</strong> depuis chez toi ? Explore les étoiles, planètes et constellations visibles en ce moment.
                 </p>
             </motion.div>
+
+            <KidsGuide topic="ciel" />
 
             {/* Location banner */}
             <div className="card" style={{ padding: '0.875rem 1.25rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>

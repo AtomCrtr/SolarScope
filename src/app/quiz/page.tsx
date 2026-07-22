@@ -2,18 +2,19 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import KidsGuide from '@/components/KidsGuide'
 
 const QUIZ_BANK_DEBUTANT = [
     { question: 'Quelle est la plus grande planète du Système solaire ?', options: ['🪐 Saturne', '🟠 Jupiter', '🔵 Neptune', '🟦 Uranus'], answer: '🟠 Jupiter', explication: 'Jupiter est tellement grande qu\'elle pourrait contenir 1 300 Terres !', emoji: '🌍' },
     { question: 'Quelle planète est la plus chaude ?', options: ['⚫ Mercure', '🟡 Vénus', '🔴 Mars', '🟠 Jupiter'], answer: '🟡 Vénus', explication: 'Son atmosphère épaisse piège la chaleur comme une serre géante !', emoji: '🌡️' },
     { question: 'Combien de lunes a Mars ?', options: ['0️⃣ Zéro', '1️⃣ Une', '2️⃣ Deux', '5️⃣ Cinq'], answer: '2️⃣ Deux', explication: 'Phobos (la peur) et Deimos (la terreur) — de petites lunes rocheuses !', emoji: '🌙' },
-    { question: 'Quelle planète a les plus grands anneaux ?', options: ['🟠 Jupiter', '🔵 Uranus', '🪐 Saturne', '🔵 Neptune'], answer: '🪐 Saturne', explication: 'Les anneaux de Saturne ont 282 000 km de large — mais seulement 30 m d\'épaisseur !', emoji: '💍' },
+    { question: 'Quelle planète a les plus grands anneaux ?', options: ['🟠 Jupiter', '🔵 Uranus', '🪐 Saturne', '🔵 Neptune'], answer: '🪐 Saturne', explication: 'Les anneaux de Saturne s’étendent sur environ 282 000 km, mais leur partie principale ne fait souvent qu’une dizaine de mètres d’épaisseur !', emoji: '💍' },
     { question: 'Le Soleil est une étoile ?', options: ['✔️ Oui', '❌ Non', '🤷 On ne sait pas'], answer: '✔️ Oui', explication: 'Le Soleil est une étoile de type naine jaune, comme des milliards d\'autres dans l\'Univers !', emoji: '☀️' },
     { question: 'Combien de planètes dans le Système solaire ?', options: ['7️ 7', '8️ 8', '9️ 9', '🔟 12'], answer: '8️ 8', explication: 'Mercure, Vénus, Terre, Mars, Jupiter, Saturne, Uranus et Neptune !', emoji: '🪐' },
 ]
 
 const QUIZ_BANK_EXPLORATEUR = [
-    { question: "Qu'est-ce qu'une étoile filante ?", options: ['⭐ Une étoile qui tombe', '🩨 Un morceau de roche qui brûle', '🛰️ Un satellite', '🪐 Une planète lointaine'], answer: '🩨 Un morceau de roche qui brûle', explication: "Des roches qui brûlent en entrant dans l'atmosphère — pas du tout des étoiles !", emoji: '☄️' },
+    { question: "Qu'est-ce qu'une étoile filante ?", options: ['⭐ Une étoile qui tombe', '☄️ Un petit objet qui chauffe dans l’air', '🛰️ Un satellite', '🪐 Une planète lointaine'], answer: '☄️ Un petit objet qui chauffe dans l’air', explication: "Un petit objet spatial chauffe et perd de la matière en traversant l’atmosphère : la traînée lumineuse est un météore.", emoji: '☄️' },
     { question: 'Combien de temps met la lumière du Soleil pour arriver sur Terre ?', options: ['⚡ 8 secondes', '⏱️ 8 minutes', '🕐 8 heures', '📅 8 jours'], answer: '⏱️ 8 minutes', explication: 'La lumière voyage à 300 000 km/s et le Soleil est à 150 millions de km !', emoji: '☀️' },
     { question: 'Quel est le plus grand volcan du système solaire ?', options: ["L'Etna", '🏔️ Olympus Mons', '⛰️ Le Mauna Kea', '💨 Le Vésuve'], answer: '🏔️ Olympus Mons', explication: 'Olympus Mons sur Mars culmine à 21 km, soit 3 fois l\'Everest !', emoji: '🌋' },
     { question: 'De quoi sont faits les anneaux de Saturne ?', options: ['💨 De gaz', '🧣 De glace et de roche', '🌫️ De poussière', '🔩 De métal'], answer: '🧣 De glace et de roche', explication: 'Des milliards de morceaux, du grain de sable à la taille d\'une maison !', emoji: '🪐' },
@@ -22,9 +23,9 @@ const QUIZ_BANK_EXPLORATEUR = [
 ]
 
 const QUIZ_BANK_EXPERT = [
-    { question: 'Qu\'est-ce que la "singularité" d\'un trou noir ?', options: ['🌀 La zone d\'accrétion', '🟥 Le point central de densité infinie', '🌟 L\'horizon des événements', '💥 L\'explosion initiale'], answer: '🟥 Le point central de densité infinie', explication: 'La singularité est un point mathématique où les lois de la physique cessent de fonctionner !', emoji: '⚫' },
-    { question: 'Qu\'est-ce que la radiation de Hawking ?', options: ['🌟 Une radiation cosémique de fond', '🟥 La radiation émise par les trous noirs', '📅 Les rayons gamma d\'une supernova', '🔴 Les émissions de Mars'], answer: '🟥 La radiation émise par les trous noirs', explication: 'Stephen Hawking a prédit que les trous noirs émettent de la radiation thermique et s\'évaporent !', emoji: '⬅️' },
-    { question: 'Quelle est la période de rotation de synodique de Jupiter ?', options: ['📅 398 jours', '📅 780 jours', '📅 116 jours', '📅 687 jours'], answer: '📅 398 jours', explication: 'La période synodique est l\'intervalle entre deux oppositions de Jupiter vu depuis la Terre !', emoji: '🪐' },
+    { question: 'Dans nos modèles, que signale la singularité d\'un trou noir ?', options: ['🌀 Une tempête', '🟥 Une limite de nos équations', '🌟 Une nouvelle étoile', '💥 Une explosion'], answer: '🟥 Une limite de nos équations', explication: 'La relativité générale prédit des valeurs infinies. Cela indique surtout que notre modèle ne suffit plus à décrire cette région.', emoji: '⚫' },
+    { question: 'Qu\'est-ce que le rayonnement de Hawking ?', options: ['🌟 Le fond cosmologique', '🟥 Un rayonnement prédit autour des trous noirs', '📅 Les rayons d\'une supernova', '🔴 La lumière de Mars'], answer: '🟥 Un rayonnement prédit autour des trous noirs', explication: 'Stephen Hawking a prédit que des effets quantiques permettent aux trous noirs de perdre très lentement de l\'énergie.', emoji: '⬅️' },
+    { question: 'Environ combien de temps sépare deux oppositions de Jupiter vues depuis la Terre ?', options: ['📅 398 jours', '📅 780 jours', '📅 116 jours', '📅 687 jours'], answer: '📅 398 jours', explication: 'Cette durée s\'appelle la période synodique de Jupiter. Une opposition se produit quand Jupiter apparaît à l\'opposé du Soleil dans notre ciel.', emoji: '🪐' },
     { question: 'Quelle est la température au cœur du Soleil ?', options: ['🔥 6 000°C', '🔥 150 000°C', '🔥 15 millions °C', '🔥 1 milliard °C'], answer: '🔥 15 millions °C', explication: 'La fusion nucléaire nécessite une température colossale de 15 millions de degrés au cœur !', emoji: '☀️' },
     { question: 'Qu\'est-ce que le décalage vers le rouge (redshift) ?', options: ['🟥 La couleur de Mars', '🌌 L\'allongement de longueur d\'onde d\'une source qui s\'éloigne', '💥 L\'énergie libérée par une supernova', '🔭 L\'effet de la gravité sur la lumière'], answer: '🌌 L\'allongement de longueur d\'onde d\'une source qui s\'éloigne', explication: 'L\'Univers est en expansion : plus une galaxie est loin, plus son écart vers le rouge est grand (loi de Hubble) !', emoji: '🌌' },
 ]
@@ -37,11 +38,11 @@ const LEVELS = [
 
 
 const ANECDOTES = [
-    { emoji: '🪐', title: 'Saturne flotte !', text: 'Saturne est la seule planète moins dense que l\'eau. Elle flotterait dans une piscine géante !' },
-    { emoji: '⏰', title: 'Un jour sur Vénus', text: 'Un jour sur Vénus dure plus longtemps qu\'une année entière sur Vénus. Le temps s\'y écoule à l\'envers !' },
+    { emoji: '🪐', title: 'Saturne est très légère', text: 'Sa densité moyenne est plus faible que celle de l’eau. Dans une piscine imaginaire assez grande, Saturne flotterait.' },
+    { emoji: '⏰', title: 'Un jour sur Vénus', text: 'Vénus tourne si lentement qu’une rotation dure plus longtemps que son année. Elle tourne aussi dans le sens opposé à la plupart des planètes.' },
     { emoji: '👣', title: 'Empreintes éternelles', text: 'Les empreintes des astronautes sur la Lune sont toujours là. Sans vent ni pluie, elles dureront des millions d\'années.' },
     { emoji: '🌋', title: 'Le plus grand volcan', text: 'Olympus Mons sur Mars = 21 km de haut, soit 3 fois l\'Everest !' },
-    { emoji: '💎', title: 'Pluie de diamants', text: 'Sur Neptune, la pression extrême transforme le carbone en diamants... qui tombent comme de la pluie !' },
+    { emoji: '💎', title: 'Pluie de diamants ?', text: 'Des expériences et des modèles suggèrent que du carbone pourrait former des diamants très loin sous les nuages de Neptune.' },
     { emoji: '🌊', title: 'Océan caché', text: 'Europe (lune de Jupiter) cache un océan sous sa glace, peut-être plus grand que tous les océans terrestres !' },
     { emoji: '💧', title: 'Mars était bleue', text: 'Il y a des milliards d\'années, Mars avait des rivières et peut-être un océan entier.' },
     { emoji: '⚖️', title: 'Le Soleil perd du poids', text: 'Le Soleil perd 4 millions de tonnes par seconde... mais il lui reste du carburant pour 5 milliards d\'années !' },
@@ -95,6 +96,8 @@ export default function QuizPage() {
                 </h1>
                 <p className="page-subtitle">Vidéos, quiz, anecdotes et événements célestes pour les jeunes explorateurs !</p>
             </motion.div>
+
+            <KidsGuide topic="quiz" />
 
             {/* Tab bar */}
             <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '2rem' }}>

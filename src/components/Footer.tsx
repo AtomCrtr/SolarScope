@@ -83,7 +83,7 @@ export default function Footer() {
                             }}>SolarScope</span>
                         </div>
                         <p style={{ color: '#94a3b8', fontSize: '0.8rem', lineHeight: 1.7, maxWidth: 240, marginBottom: '1rem' }}>
-                            Explorer l&apos;Univers avec des données scientifiques réelles. Conçu pour les curieux, les élèves et les passionnés d&apos;astronomie.
+                            Comprendre l&apos;espace avec des mots simples, des missions courtes et des sources scientifiques. Conçu d&apos;abord pour les enfants de 8 à 12 ans.
                         </p>
                         {/* Social / contact */}
                         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>

@@ -3,23 +3,24 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
+import KidsGuide from '@/components/KidsGuide'
 
 const SpaceXSection = dynamic(() => import('@/components/SpaceXSection'), { ssr: false })
 
 const MISSIONS = [
     { name: 'Spoutnik 1', annee: 1957, pays: 'URSS', type: 'Satellite', statut: 'Terminée', emoji: '📡', color: '#94a3b8', description: "Le tout premier satellite artificiel ! Il a fait 'bip bip' pendant 21 jours autour de la Terre.", fun: "Spoutnik signifie 'compagnon de voyage' en russe." },
     { name: 'Vostok 1 (Gagarine)', annee: 1961, pays: 'URSS', type: 'Vol habité', statut: 'Terminée', emoji: '👨‍🚀', color: '#6366f1', description: "Youri Gagarine devient le premier humain dans l'espace ! Son vol a duré 108 minutes.", fun: "Gagarine a dit 'Поехали !' (C'est parti !) au décollage." },
-    { name: 'Apollo 11', annee: 1969, pays: 'USA', type: 'Vol habité', statut: 'Terminée', emoji: '🌙', color: '#6366f1', description: "Neil Armstrong et Buzz Aldrin marchent sur la Lune. 'Un petit pas pour l'homme, un bond de géant pour l'humanité.'", fun: "Armstrong a failli ne pas atterrir : il restait 25 secondes de carburant !" },
+    { name: 'Apollo 11', annee: 1969, pays: 'USA', type: 'Vol habité', statut: 'Terminée', emoji: '🌙', color: '#6366f1', description: "Neil Armstrong et Buzz Aldrin deviennent les premiers humains à marcher sur la Lune.", fun: "Armstrong a piloté la fin de la descente pour éviter une zone couverte de rochers." },
     { name: 'Voyager 1', annee: 1977, pays: 'USA', type: 'Sonde', statut: 'Active', emoji: '🛸', color: '#f59e0b', description: "La sonde la plus lointaine de l'humanité. Elle est maintenant dans l'espace interstellaire, à plus de 24 milliards de km !", fun: "Voyager 1 emporte un disque d'or avec des sons de la Terre, au cas où des extraterrestres le trouveraient." },
-    { name: 'Hubble', annee: 1990, pays: 'USA/ESA', type: 'Télescope', statut: 'Active', emoji: '🔭', color: '#10b981', description: "Le télescope spatial qui a révolutionné notre vision de l'Univers. Il a photographié des galaxies à 13 milliards d'années-lumière.", fun: "Hubble fait le tour de la Terre en 97 minutes, à 547 km d'altitude." },
+    { name: 'Hubble', annee: 1990, pays: 'USA/ESA', type: 'Télescope', statut: 'Active', emoji: '🔭', color: '#10b981', description: "Le télescope spatial qui a transformé notre vision de l’Univers. Il observe des étoiles, des nébuleuses et des galaxies très lointaines.", fun: "Hubble tourne autour de la Terre en environ 95 minutes." },
     { name: 'ISS', annee: 1998, pays: 'International', type: 'Station', statut: 'Active', emoji: '🛰️', color: '#3b82f6', description: "Un laboratoire de la taille d'un terrain de football qui orbite à 400 km. Des astronautes y vivent en permanence depuis 2000.", fun: "L'ISS est visible à l'œil nu ! Elle ressemble à une étoile brillante qui se déplace." },
-    { name: 'Curiosity (Mars)', annee: 2012, pays: 'USA', type: 'Rover', statut: 'Active', emoji: '🤖', color: '#ef4444', description: "Un rover de la taille d'une voiture qui explore le cratère Gale sur Mars. Il a découvert que Mars avait eu des conditions favorables à la vie.", fun: "Curiosity se chante 'Joyeux Anniversaire' chaque année, tout seul sur Mars !" },
+    { name: 'Curiosity (Mars)', annee: 2012, pays: 'USA', type: 'Rover', statut: 'Active', emoji: '🤖', color: '#ef4444', description: "Un rover de la taille d'une voiture qui explore le cratère Gale sur Mars. Il a découvert que cet endroit avait autrefois pu convenir à de minuscules formes de vie.", fun: "Pour son premier anniversaire sur Mars, son instrument SAM a joué une fois la mélodie de “Joyeux anniversaire”." },
     { name: 'Rosetta / Philae', annee: 2014, pays: 'ESA', type: 'Sonde', statut: 'Terminée', emoji: '☄️', color: '#f59e0b', description: "Première sonde à se mettre en orbite autour d'une comète et à y poser un atterrisseur (Philae).", fun: "Le voyage a duré 10 ans pour atteindre la comète Tchouri !" },
     { name: 'New Horizons', annee: 2015, pays: 'USA', type: 'Sonde', statut: 'Active', emoji: '🛸', color: '#f59e0b', description: "Première sonde à survoler Pluton ! Elle a révélé un monde avec des montagnes de glace et un cœur géant.", fun: "New Horizons contient une partie des cendres de Clyde Tombaugh, le découvreur de Pluton." },
     { name: 'James Webb (JWST)', annee: 2021, pays: 'USA/ESA/CSA', type: 'Télescope', statut: 'Active', emoji: '🔭', color: '#10b981', description: "Le plus puissant télescope spatial jamais construit. Il observe l'Univers en infrarouge et voit les premières galaxies nées après le Big Bang.", fun: "Son miroir fait 6.5 mètres de diamètre, mais si poli que la surface n'a que 25 nanomètres d'irrégularités." },
-    { name: 'Perseverance (Mars)', annee: 2021, pays: 'USA', type: 'Rover', statut: 'Active', emoji: '🤖', color: '#ef4444', description: "Le dernier rover martien, accompagné d'Ingenuity, le premier hélicoptère à voler sur une autre planète !", fun: "Le nom 'Perseverance' a été choisi par un élève de 7ème lors d'un concours." },
+    { name: 'Perseverance (Mars)', annee: 2021, pays: 'USA', type: 'Rover', statut: 'Active', emoji: '🤖', color: '#ef4444', description: "Le rover explore le cratère Jezero et conserve des échantillons de roche. Il avait apporté Ingenuity, le premier hélicoptère à voler sur une autre planète.", fun: "Ingenuity a terminé sa mission en 2024 après 72 vols, bien plus que les cinq prévus." },
     { name: 'Artemis I', annee: 2022, pays: 'USA', type: 'Vol habité', statut: 'Terminée', emoji: '🚀', color: '#6366f1', description: "Premier vol du programme Artemis. La capsule Orion a fait le tour de la Lune sans équipage.", fun: "Cette mission a validé le lanceur SLS et le vaisseau Orion avant le premier vol habité." },
-    { name: 'JUICE', annee: 2023, pays: 'ESA', type: 'Sonde', statut: 'Active', emoji: '🛸', color: '#f59e0b', description: "Mission vers Jupiter et ses lunes glacées (Europe, Ganymède, Callisto) pour chercher des océans et de la vie.", fun: "JUICE arrivera près de Jupiter en 2031, après 8 ans de voyage !" },
+    { name: 'JUICE', annee: 2023, pays: 'ESA', type: 'Sonde', statut: 'Active', emoji: '🛸', color: '#f59e0b', description: "Mission vers Jupiter et ses lunes glacées Europe, Ganymède et Callisto pour étudier leurs océans possibles et les conditions favorables à la vie.", fun: "JUICE doit arriver près de Jupiter en 2031, après environ huit ans de voyage." },
     { name: 'Artemis II', annee: 2026, pays: 'USA/CSA', type: 'Vol habité', statut: 'Terminée', emoji: '🚀', color: '#6366f1', description: "Premier vol habité du programme Artemis. Orion a emmené quatre astronautes autour de la Lune du 1er au 10 avril 2026.", fun: "L'équipage a dépassé le record de distance d'Apollo 13 avant de revenir dans le Pacifique." },
 ]
 
@@ -73,12 +74,14 @@ export default function MissionsPage() {
                 <h1 className="page-title" style={{ background: 'linear-gradient(135deg, #c7d2fe, #6366f1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
                     Missions Spatiales
                 </h1>
-                <p className="page-subtitle">De Spoutnik à Artemis : 70 ans d&apos;aventures humaines dans l&apos;espace !</p>
+                <p className="page-subtitle">De Spoutnik à Artemis : près de 70 ans d&apos;aventures humaines dans l&apos;espace !</p>
             </motion.div>
+
+            <KidsGuide topic="missions" />
 
             {/* Intro */}
             <div className="card" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
-                <h2 className="section-title" style={{ color: '#a5b4fc' }}>🌌 70 ans d&apos;exploration spatiale</h2>
+                <h2 className="section-title" style={{ color: '#a5b4fc' }}>🌌 Près de 70 ans d&apos;exploration spatiale</h2>
                 <p style={{ color: '#94a3b8', lineHeight: 1.8, fontSize: '0.875rem' }}>
                     Depuis le premier satellite <strong style={{ color: '#e2e8f0' }}>Spoutnik</strong> en 1957, l&apos;humanité n&apos;a jamais cessé d&apos;explorer l&apos;espace.
                     Des premiers pas sur la Lune aux rovers sur Mars, en passant par les télescopes qui voient les premières lumières de l&apos;Univers,
@@ -104,7 +107,7 @@ export default function MissionsPage() {
             {/* ── Upcoming Launches ── */}
             <div style={{ marginBottom: '2rem' }}>
                 <h2 className="section-title" style={{ color: '#e2e8f0' }}>🚀 Prochains lancements</h2>
-                <p style={{ color: '#475569', fontSize: '0.8rem', marginBottom: '1rem', marginTop: '-0.5rem' }}>Données en direct via The Space Devs</p>
+                <p style={{ color: '#94a3b8', fontSize: '0.8rem', marginBottom: '1rem', marginTop: '-0.5rem' }}>Données en direct via The Space Devs</p>
                 {launchLoading ? (
                     <div style={{ display: 'flex', gap: '0.75rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
                         {[...Array(3)].map((_, i) => <div key={i} style={{ flexShrink: 0, width: 260, height: 120, borderRadius: '0.875rem', background: 'rgba(255,255,255,0.04)' }} />)}
@@ -145,7 +148,7 @@ export default function MissionsPage() {
 
             <div className="card" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
                 <h2 className="section-title" style={{ color: '#e2e8f0' }}>📅 Timeline chronologique</h2>
-                <div style={{ overflowX: 'auto', paddingBottom: '0.5rem' }}>
+                <div style={{ overflowX: 'auto', paddingBottom: '0.5rem' }} tabIndex={0} role="region" aria-label="Frise chronologique défilante des missions spatiales">
                     <div style={{ display: 'flex', alignItems: 'center', gap: 0, minWidth: 700, position: 'relative' }}>
                         <div style={{ position: 'absolute', height: 2, background: 'rgba(255,255,255,0.1)', left: 0, right: 0, top: '50%', transform: 'translateY(-50%)', zIndex: 0 }} />
                         {MISSIONS.map(m => (
@@ -180,20 +183,20 @@ export default function MissionsPage() {
             <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1.5rem', alignItems: 'center' }}>
                 <div style={{ display: 'flex', gap: '0.375rem', flexWrap: 'wrap' }}>
                     {ALL_TYPES.map(t => (
-                        <button key={t} onClick={() => setTypeFilter(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])} style={{
+                        <button key={t} aria-pressed={typeFilter.includes(t)} onClick={() => setTypeFilter(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])} style={{
                             padding: '0.35rem 0.75rem', borderRadius: 999, fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer',
                             background: typeFilter.includes(t) ? `${TYPE_COLORS[t]}15` : 'rgba(255,255,255,0.04)',
-                            color: typeFilter.includes(t) ? TYPE_COLORS[t] : '#64748b',
+                            color: typeFilter.includes(t) ? '#e2e8f0' : '#a8b3c7',
                             border: `1px solid ${typeFilter.includes(t) ? TYPE_COLORS[t] + '40' : 'rgba(255,255,255,0.07)'}`,
                         }}>{t}</button>
                     ))}
                 </div>
                 <div style={{ display: 'flex', gap: '0.375rem' }}>
                     {(['Toutes', 'Active', 'Terminée'] as const).map(s => (
-                        <button key={s} onClick={() => setStatutFilter(s)} style={{
+                        <button key={s} aria-pressed={statutFilter === s} onClick={() => setStatutFilter(s)} style={{
                             padding: '0.35rem 0.75rem', borderRadius: 999, fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer',
                             background: statutFilter === s ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,0.04)',
-                            color: statutFilter === s ? '#a5b4fc' : '#64748b',
+                            color: statutFilter === s ? '#c7d2fe' : '#a8b3c7',
                             border: statutFilter === s ? '1px solid rgba(99,102,241,0.35)' : '1px solid rgba(255,255,255,0.07)',
                         }}>{s === 'Active' ? '🟢 Actives' : s === 'Terminée' ? '⚫ Terminées' : '📋 Toutes'}</button>
                     ))}
@@ -201,7 +204,7 @@ export default function MissionsPage() {
             </div>
 
             {/* Mission cards */}
-            <p style={{ color: '#64748b', fontSize: '0.8rem', marginBottom: '1rem' }}>{filtered.length} mission{filtered.length > 1 ? 's' : ''}</p>
+            <p style={{ color: '#94a3b8', fontSize: '0.8rem', marginBottom: '1rem' }}>{filtered.length} mission{filtered.length > 1 ? 's' : ''}</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {filtered.map(m => (
                     <motion.div key={m.name} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="card" style={{ padding: '1.25rem', borderLeft: `4px solid ${TYPE_COLORS[m.type]}` }}>

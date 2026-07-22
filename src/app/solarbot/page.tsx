@@ -2,6 +2,7 @@
 
 import { Fragment, useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import KidsGuide from '@/components/KidsGuide'
 
 interface Message {
     role: 'user' | 'bot'
@@ -62,7 +63,7 @@ function FormattedText({ text }: { text: string }) {
 
 export default function SolarBotPage() {
     const [messages, setMessages] = useState<Message[]>([
-        { role: 'bot', text: '👋 Bonjour ! Je suis **SolarBot**, ton assistant spatial ! 🚀\n\nPose-moi n\'importe quelle question sur l\'espace, les planètes, les étoiles, les trous noirs... Je suis là pour tout expliquer de façon simple et amusante ! 🌟', time: 'maintenant' }
+        { role: 'bot', text: '👋 Bonjour ! Je suis **SolarBot**, ton compagnon spatial. 🚀\n\nPose une question à la fois et je l\'expliquerai avec des mots simples. Je peux parfois me tromper : vérifie les faits importants et ne partage jamais ton nom complet, ton adresse ou ton école.', time: 'maintenant' }
     ])
     const [input, setInput] = useState('')
     const [loading, setLoading] = useState(false)
@@ -105,8 +106,10 @@ export default function SolarBotPage() {
                 <h1 className="page-title" style={{ background: 'linear-gradient(135deg, #e9d5ff, #8b5cf6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
                     SolarBot
                 </h1>
-                <p className="page-subtitle">Ton assistant spatial IA — questions, anecdotes et histoires sur l&apos;Univers !</p>
+                <p className="page-subtitle">Pose une question et demande une explication courte, une comparaison ou une histoire clairement annoncée.</p>
             </motion.div>
+
+            <KidsGuide topic="solarbot" />
 
             {/* Tabs */}
             <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', marginBottom: '2rem' }}>

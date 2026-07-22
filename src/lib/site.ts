@@ -10,7 +10,7 @@ export const SITE_URL = (
 
 export const SITE_NAME = 'SolarScope'
 export const DEFAULT_DESCRIPTION =
-  "Explore l’espace avec des visualisations interactives et des données issues de la NASA, de la NOAA et de partenaires scientifiques reconnus."
+  "SolarScope explique l’espace aux enfants de 8 à 12 ans avec des missions, des images interactives et des données scientifiques vérifiées."
 
 export function createPageMetadata(
   title: string,

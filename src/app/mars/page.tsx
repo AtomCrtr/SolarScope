@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
+import KidsGuide from '@/components/KidsGuide'
 
 const Planet3D = dynamic(() => import('@/components/Planet3D'), { ssr: false })
 const RoverViewer3D = dynamic(() => import('@/components/RoverViewer3D'), { ssr: false })
@@ -162,7 +163,7 @@ export default function MarsPage() {
                         Mars
                     </h1>
                     <p style={{ color: '#94a3b8', fontSize: '1.05rem', lineHeight: 1.75, maxWidth: 440, marginBottom: '1.5rem' }}>
-                        La Planète Rouge — à <strong style={{ color: '#f87171' }}>227,9 millions de km</strong> de la Terre. Quatre rovers actifs et une dizaine d&apos;orbiteurs y collectent des données en ce moment même.
+                        Mars est la quatrième planète autour du Soleil. Deux rovers de la NASA y roulent encore et plusieurs engins l&apos;observent depuis l&apos;espace.
                     </p>
                     {/* Active rover selector */}
                     <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
@@ -206,6 +207,8 @@ export default function MarsPage() {
                     </div>
                 </motion.div>
             </div>
+
+            <KidsGuide topic="mars" />
 
             {/* ── STATS ── */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.65rem', marginBottom: '2.5rem' }} className="max-sm:grid-cols-2">

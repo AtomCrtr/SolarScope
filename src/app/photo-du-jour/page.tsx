@@ -1,5 +1,6 @@
 import { getNasaApiKey } from '@/lib/space-data'
 import Image from 'next/image'
+import KidsGuide from '@/components/KidsGuide'
 
 async function getApod() {
     try {
@@ -36,8 +37,10 @@ export default async function ApodPage() {
                 <h1 className="page-title" style={{ background: 'linear-gradient(135deg, #a5f3fc, #06b6d4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
                     Photo du Jour
                 </h1>
-                <p className="page-subtitle">Chaque jour la NASA choisit l&apos;image astronomique la plus spectaculaire</p>
+                <p className="page-subtitle">Observe une image choisie par la NASA, puis découvre ce qu&apos;elle raconte.</p>
             </div>
+
+            <KidsGuide topic="photo-du-jour" />
 
             {/* Hero image */}
             {hero && (

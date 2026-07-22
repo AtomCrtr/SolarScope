@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og'
 
-export const alt = 'SolarScope — L’espace, rendu lisible'
+export const alt = 'SolarScope — L’espace expliqué aux enfants'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -20,13 +20,13 @@ export default function OpenGraphImage() {
           SolarScope
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div style={{ color: '#9ca8ff', fontSize: 22, letterSpacing: 5, textTransform: 'uppercase' }}>Observatoire numérique</div>
+          <div style={{ color: '#9ca8ff', fontSize: 22, letterSpacing: 5, textTransform: 'uppercase' }}>Pour les 8–12 ans</div>
           <div style={{ display: 'flex', flexDirection: 'column', marginTop: 18, fontSize: 82, lineHeight: 0.95, fontWeight: 800, letterSpacing: -4 }}>
             <span>L’espace,</span>
-            <span>rendu lisible.</span>
+            <span>enfin facile.</span>
           </div>
         </div>
-        <div style={{ color: '#8a96ad', fontSize: 21 }}>NASA · NOAA · IPAC · Données scientifiques actualisées</div>
+        <div style={{ color: '#8a96ad', fontSize: 21 }}>Missions courtes · Lecture audio · Sources scientifiques</div>
       </div>
     ),
     size,

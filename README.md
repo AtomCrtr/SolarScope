@@ -1,17 +1,20 @@
 # 🔭 SolarScope
 
-SolarScope est un observatoire spatial pédagogique en français : visualisations 3D, suivi de l’ISS, météo solaire, objets proches de la Terre, missions et publications scientifiques.
+SolarScope explique le Système solaire et l’exploration spatiale aux enfants de 8 à 12 ans. Chaque parcours commence par une question simple, une comparaison concrète, trois idées à retenir et un niveau facultatif pour aller plus loin.
 
 Production : [solar-scope.vercel.app](https://solar-scope.vercel.app)
 
 ## Fonctionnalités
 
+- Quatorze parcours pédagogiques adaptés aux 8–12 ans, avec glossaire et petit défi.
+- Lecture audio locale des explications essentielles depuis le navigateur.
+- Deux niveaux de lecture : une synthèse simple, puis les données scientifiques détaillées.
 - Système solaire et rovers en 3D avec Three.js.
 - ISS, équipages et prochains lancements.
 - Activité solaire NOAA, images NASA SDO/SOHO et indice Kp.
 - Astéroïdes NeoWs, exoplanètes, APOD et actualités NASA.
 - Galerie JWST, archive pédagogique des météorites et quiz.
-- SolarBot avec Gemini 2.5 Flash Lite, limitation de débit et réponses locales de secours.
+- SolarBot avec consignes adaptées aux enfants, avertissement sur ses limites, limitation de débit et réponses locales de secours.
 - Métadonnées par page, Open Graph, sitemap, robots et manifeste PWA.
 - Mode clair/sombre, navigation clavier et prise en charge de `prefers-reduced-motion`.
 
@@ -63,7 +66,7 @@ npm run build
 npm run test:a11y
 ```
 
-Les mêmes vérifications sont exécutées par GitHub Actions à chaque push et pull request. Dependabot regroupe les mises à jour hebdomadaires. Les tests d’accessibilité utilisent Playwright et axe sur des vues ordinateur et mobile.
+Les mêmes vérifications sont exécutées par GitHub Actions à chaque push et pull request. Dependabot regroupe les mises à jour hebdomadaires. Les tests d’accessibilité utilisent Playwright et axe sur toutes les pages pédagogiques, en vues ordinateur et mobile. Des tests éditoriaux vérifient aussi la longueur des résumés, la présence des trois idées à retenir et la simplicité des définitions.
 
 ## Déploiement Vercel
 

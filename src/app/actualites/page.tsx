@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import type { NewsArticle } from '@/lib/space-data'
+import KidsGuide from '@/components/KidsGuide'
 
 const CATEGORY_COLORS: Record<string, string> = {
   Mars: '#f87171',
@@ -68,9 +69,11 @@ export default function ActualitesPage() {
         <div className="badge">📰 PUBLICATIONS OFFICIELLES</div>
         <h1 className="page-title gradient-text-blue">Actualités spatiales</h1>
         <p className="page-subtitle">
-          Le fil récemment publié par la NASA, sans titres artificiels ni dates figées.
+          Les nouvelles publiées par la NASA, avec leur date et leur source pour pouvoir les vérifier.
         </p>
       </motion.header>
+
+      <KidsGuide topic="actualites" />
 
       <div className="card" style={{ padding: '1rem 1.25rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
@@ -104,7 +107,7 @@ export default function ActualitesPage() {
           />
           <span aria-hidden="true" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>⌕</span>
         </label>
-        <span style={{ color: 'var(--text-muted)', fontSize: '0.72rem', textAlign: 'right' }}>
+        <span style={{ color: 'var(--text-muted)', fontSize: '0.72rem', textAlign: 'right' }} aria-live="polite">
           {loading ? 'Chargement…' : `${filtered.length} publication${filtered.length > 1 ? 's' : ''}`}
         </span>
       </div>
@@ -132,7 +135,7 @@ export default function ActualitesPage() {
       </div>
 
       {loading && (
-        <div className="grid-3" aria-label="Chargement des actualités">
+        <div className="grid-3" role="status" aria-label="Chargement des actualités" aria-busy="true">
           {[0, 1, 2, 3, 4, 5].map(index => <div key={index} className="skeleton-card" style={{ height: 240 }} />)}
         </div>
       )}

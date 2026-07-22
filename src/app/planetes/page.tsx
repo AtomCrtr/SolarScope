@@ -3,6 +3,7 @@
 import { useState, Suspense, lazy } from 'react'
 import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
+import KidsGuide from '@/components/KidsGuide'
 
 const Planet3D = lazy(() => import('@/components/Planet3D'))
 const SolarSystem2D = dynamic(() => import('@/components/SolarSystem2D'), { ssr: false })
@@ -12,8 +13,8 @@ const PLANETS = [
     { name: 'Vénus', emoji: '♀', texture: '/textures/venus.jpg', color: '#f59e0b', type: 'Rocheuse', gravity: 8.87, meanRadius: 6051.8, avgTemp: 737, density: 5.24, distSun: 108.2, moons: 0, orbit: 225, atmosphere: '#f59e0b', description: 'La plus chaude ! Son atmosphère de CO2 piège la chaleur. Le Soleil s\'y lève à l\'Ouest.', fun: 'Vénus tourne à l\'envers par rapport aux autres planètes !' },
     { name: 'Terre', emoji: '🌍', texture: '/textures/earth.jpg', color: '#3b82f6', type: 'Rocheuse', gravity: 9.81, meanRadius: 6371.0, avgTemp: 288, density: 5.51, distSun: 149.6, moons: 1, orbit: 365, atmosphere: '#3b82f6', description: 'Notre maison ! Seule planète connue à abriter la vie. 71% de sa surface est de l\'eau.', fun: 'La Terre est la seule planète non nommée d\'après un dieu romain.' },
     { name: 'Mars', emoji: '♂', texture: '/textures/mars.jpg', color: '#ef4444', type: 'Rocheuse', gravity: 3.72, meanRadius: 3389.5, avgTemp: 210, density: 3.93, distSun: 227.9, moons: 2, orbit: 687, atmosphere: '#ef444430', description: 'La planète rouge. Des rovers l\'explorent. Olympus Mons est le plus grand volcan du système solaire (21 km).', fun: 'Mars a le plus grand canyon du système solaire : Valles Marineris, 4 000 km de long !' },
-    { name: 'Jupiter', emoji: '♃', texture: '/textures/jupiter.jpg', color: '#f97316', type: 'Géante gazeuse', gravity: 24.79, meanRadius: 69911, avgTemp: 165, density: 1.33, distSun: 778.5, moons: 95, orbit: 4333, atmosphere: '#f97316', description: 'La géante gazeuse ! Sa Grande Tache Rouge est une tempête plus grande que la Terre depuis 350 ans.', fun: 'Jupiter protège la Terre en capturant les astéroïdes dans son champ gravitationnel.' },
-    { name: 'Saturne', emoji: '♄', texture: '/textures/saturn.jpg', color: '#eab308', type: 'Géante gazeuse', gravity: 10.44, meanRadius: 58232, avgTemp: 134, density: 0.69, distSun: 1434, moons: 146, orbit: 10759, atmosphere: '#eab308', hasRings: true, description: 'Célèbre pour ses anneaux faits de milliards de morceaux de glace et roche. Elle flotterait sur l\'eau !', fun: 'Les anneaux de Saturne ont 282 000 km de large mais seulement 30 m d\'épaisseur !' },
+    { name: 'Jupiter', emoji: '♃', texture: '/textures/jupiter.jpg', color: '#f97316', type: 'Géante gazeuse', gravity: 24.79, meanRadius: 69911, avgTemp: 165, density: 1.33, distSun: 778.5, moons: 101, orbit: 4333, atmosphere: '#f97316', description: 'La plus grande planète ! Sa Grande Tache Rouge est une immense tempête observée depuis très longtemps.', fun: 'La gravité de Jupiter peut éloigner certains petits objets, mais aussi modifier leur route vers l’intérieur du Système solaire.' },
+    { name: 'Saturne', emoji: '♄', texture: '/textures/saturn.jpg', color: '#eab308', type: 'Géante gazeuse', gravity: 10.44, meanRadius: 58232, avgTemp: 134, density: 0.69, distSun: 1434, moons: 274, orbit: 10759, atmosphere: '#eab308', hasRings: true, description: 'Célèbre pour ses anneaux faits de milliards de morceaux de glace et de roche. C’est la planète qui possède le plus de lunes connues.', fun: 'Les anneaux s’étendent sur environ 282 000 km, mais ne mesurent souvent qu’une dizaine de mètres d’épaisseur !' },
     { name: 'Uranus', emoji: '♅', texture: null, color: '#67e8f9', type: 'Géante de glace', gravity: 8.69, meanRadius: 25362, avgTemp: 76, density: 1.27, distSun: 2871, moons: 28, orbit: 30687, atmosphere: '#67e8f9', description: 'La planète qui \'roule\' sur le côté. Découverte en 1781. Il y pleut peut-être des diamants.', fun: 'Uranus a une inclinaison de 98° — elle tourne sur le côté comme une toupie !' },
     { name: 'Neptune', emoji: '♆', texture: '/textures/neptune.jpg', color: '#6366f1', type: 'Géante de glace', gravity: 11.15, meanRadius: 24622, avgTemp: 72, density: 1.64, distSun: 4495, moons: 16, orbit: 60190, atmosphere: '#6366f1', description: 'La plus lointaine et la plus venteuse. Vents à 2 100 km/h ! Découverte en 1846 grâce aux maths.', fun: 'Neptune a été découverte mathématiquement avant même d\'être observée !' },
 ]
@@ -35,8 +36,10 @@ export default function PlanetesPage() {
                 <h1 className="page-title" style={{ background: 'linear-gradient(135deg, #c7d2fe, #6366f1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
                     Planètes & Lunes
                 </h1>
-                <p className="page-subtitle">Explorez les 8 planètes en 3D avec les textures officielles de la NASA</p>
+                <p className="page-subtitle">Observe, fais tourner et compare les huit mondes qui voyagent autour du Soleil.</p>
             </motion.div>
+
+            <KidsGuide topic="planetes" />
 
             {/* Planet selector */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.625rem', marginBottom: '2rem' }} className="max-sm:grid-cols-2">

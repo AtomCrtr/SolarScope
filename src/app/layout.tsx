@@ -11,11 +11,11 @@ import { DEFAULT_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: {
-    default: 'SolarScope 🔭 — Explorer l\'Univers',
+    default: 'SolarScope 🔭 — L’espace expliqué aux enfants',
     template: '%s · SolarScope',
   },
   description: DEFAULT_DESCRIPTION,
-  keywords: 'espace, planètes, NASA, astéroïdes, Mars, univers, astronomie, JWST, Webb, ISS, aurores, météorites',
+  keywords: 'espace enfants, astronomie enfants, planètes, NASA, système solaire, Mars, univers, JWST, ISS, quiz espace',
   authors: [{ name: 'SolarScope' }],
   creator: 'SolarScope',
   metadataBase: new URL(SITE_URL),
@@ -25,13 +25,13 @@ export const metadata: Metadata = {
     locale: 'fr_FR',
     url: SITE_URL,
     siteName: SITE_NAME,
-    title: 'SolarScope 🔭 — Explorer l\'Univers avec la NASA',
-    description: 'Planètes en 3D, positions réelles J2000, télescope Webb, ISS live, aurores boréales, météorites… données NASA en temps réel pour tous.',
+    title: 'SolarScope 🔭 — L’espace expliqué aux enfants',
+    description: DEFAULT_DESCRIPTION,
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'SolarScope 🔭 — Explorer l\'Univers',
-    description: 'Planètes, Mars, JWST, ISS et données NASA en direct.',
+    title: 'SolarScope 🔭 — L’espace expliqué aux enfants',
+    description: DEFAULT_DESCRIPTION,
   },
   icons: {
     icon: '/favicon.ico',

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import KidsGuide from '@/components/KidsGuide'
 
 const FAMOUS_ASTEROIDS = [
     { name: 'Bennu', size: '490 m', danger: true, color: '#ef4444', description: "L'astéroïde le plus étudié. La sonde OSIRIS-REx en a ramené des échantillons sur Terre en 2023 ! Il a 1 chance sur 2 700 d'impacter la Terre en 2182.", fun: 'Bennu fait un tour sur lui-même en 4h 17min et projette des cailloux dans l\'espace comme un petit volcan !' },
@@ -69,8 +70,10 @@ export default function AsteroidsPage() {
                 <h1 className="page-title" style={{ background: 'linear-gradient(135deg, #fde68a, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
                     Astéroïdes
                 </h1>
-                <p className="page-subtitle">Surveillance des objets géants croisant l&apos;orbite terrestre</p>
+                <p className="page-subtitle">Découvre les roches spatiales que la NASA surveille près de notre planète.</p>
             </motion.div>
+
+            <KidsGuide topic="asteroides" />
 
             {/* Explainer */}
             <div className="card" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
@@ -209,7 +212,7 @@ export default function AsteroidsPage() {
                         { label: 'Mission DART', url: 'https://dart.jhuapl.edu/', desc: 'Le programme de défense planétaire' },
                     ].map(l => (
                         <li key={l.label}>
-                            <a href={l.url} target="_blank" rel="noopener noreferrer" style={{ color: '#a78bfa' }}>{l.label}</a>
+                            <a href={l.url} target="_blank" rel="noopener noreferrer" style={{ color: '#c4b5fd', textDecoration: 'underline', textUnderlineOffset: 3 }}>{l.label}</a>
                             <span style={{ color: '#475569' }}> — {l.desc}</span>
                         </li>
                     ))}

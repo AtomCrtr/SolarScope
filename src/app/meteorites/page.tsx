@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
+import KidsGuide from '@/components/KidsGuide'
 
 interface Meteorite {
     name: string
@@ -176,9 +177,11 @@ export default function MeteoritesPage() {
                     Carte des Météorites
                 </h1>
                 <p className="page-subtitle">
-                    Un échantillon cartographié du catalogue historique « Meteorite Landings ». Chaque point représente une roche venue de l&apos;espace.
+                    Chaque point montre une pierre venue de l&apos;espace et retrouvée sur Terre.
                 </p>
             </motion.div>
+
+            <KidsGuide topic="meteorites" />
 
             {/* Stats */}
             {stats && (

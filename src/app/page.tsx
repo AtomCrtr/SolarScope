@@ -42,6 +42,13 @@ const CATEGORIES = [
   },
 ]
 
+const KIDS_MISSIONS = [
+  { emoji: '🪐', title: 'Rencontre les 8 planètes', question: 'Pourquoi sont-elles si différentes ?', href: '/planetes', duration: '7 min', color: '#818cf8' },
+  { emoji: '🔴', title: 'Enquête sur Mars', question: 'D’où vient sa couleur rouge ?', href: '/mars', duration: '6 min', color: '#f87171' },
+  { emoji: '☄️', title: 'Surveille les astéroïdes', question: 'Sont-ils vraiment dangereux ?', href: '/asteroides', duration: '8 min', color: '#fb923c' },
+  { emoji: '🛰️', title: 'Rejoins l’ISS', question: 'Pourquoi les astronautes flottent-ils ?', href: '/iss', duration: '6 min', color: '#38bdf8' },
+]
+
 function daysSince(date: string) {
   return Math.floor((Date.now() - new Date(date).getTime()) / 86_400_000)
 }
@@ -136,19 +143,19 @@ export default function HomePage() {
         >
           <div className="home-eyebrow">
             <span className={activeSources > 0 ? 'live-orb' : 'live-orb is-loading'} />
-            Observatoire numérique · {formatFreshness(data?.updatedAt)}
+            POUR LES 8–12 ANS · {formatFreshness(data?.updatedAt)}
           </div>
           <h1 className="home-title">
             L’espace,<br />
-            <span>rendu lisible.</span>
+            <span>enfin facile à comprendre.</span>
           </h1>
           <p className="home-intro">
-            Explorez l’Univers à partir de données scientifiques réelles, mises en contexte dans une interface
-            claire, immersive et accessible à tous les curieux.
+            Choisis une mission, observe de vrais phénomènes spatiaux et découvre leur explication avec des mots simples.
+            Tu peux écouter les leçons et ouvrir les détails seulement quand tu en as envie.
           </p>
           <div className="home-actions">
-            <Link href="/planetes" className="btn-primary">Commencer l’exploration <span aria-hidden="true">→</span></Link>
-            <Link href="/actualites" className="btn-ghost">Voir les dernières données</Link>
+            <a href="#missions-enfants" className="btn-primary">Choisir ma mission <span aria-hidden="true">→</span></a>
+            <Link href="/quiz" className="btn-ghost">Tester mes connaissances</Link>
           </div>
           <div className="source-health" aria-live="polite">
             <span>{dataError ? 'Sources momentanément indisponibles' : `${activeSources}/4 flux connectés`}</span>
@@ -171,6 +178,35 @@ export default function HomePage() {
             <span>Glissez pour explorer</span>
           </div>
         </motion.div>
+      </section>
+
+      <section id="missions-enfants" className="container kids-missions" aria-labelledby="kids-missions-title">
+        <header className="kids-missions-heading">
+          <div>
+            <span className="section-kicker">COMMENCE ICI</span>
+            <h2 id="kids-missions-title">Choisis ta première mission.</h2>
+          </div>
+          <p>Chaque mission commence par une question, utilise une image ou une expérience, puis résume trois idées importantes.</p>
+        </header>
+        <div className="kids-mission-grid">
+          {KIDS_MISSIONS.map((mission, index) => (
+            <motion.article
+              key={mission.href}
+              className="kids-mission-card"
+              style={{ '--mission-color': mission.color } as React.CSSProperties}
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 + index * 0.06 }}
+            >
+              <div className="kids-mission-meta"><span>{mission.emoji}</span><span>⏱ {mission.duration}</span></div>
+              <h3>{mission.title}</h3>
+              <p>{mission.question}</p>
+              <Link href={mission.href} aria-label={`Commencer : ${mission.title}`}>
+                Commencer <span aria-hidden="true">→</span>
+              </Link>
+            </motion.article>
+          ))}
+        </div>
       </section>
 
       <section className="container home-data-band" aria-label="Indicateurs spatiaux">

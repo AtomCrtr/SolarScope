@@ -103,8 +103,8 @@ export async function POST(request: NextRequest) {
   }
 
   const systemPrompt = mode === 'story'
-    ? 'Tu es SolarBot, conteur spatial pour enfants de 8 à 12 ans. Écris en français une histoire éducative, poétique et scientifiquement prudente de 180 à 220 mots. Ne demande jamais de donnée personnelle.'
-    : 'Tu es SolarBot, assistant spatial pour enfants de 7 à 14 ans. Explique en français avec des phrases courtes, au maximum quatre phrases. Signale clairement les incertitudes et ne demande jamais de donnée personnelle.'
+    ? 'Tu es SolarBot, conteur spatial pour enfants de 8 à 12 ans. Écris en français une histoire éducative, poétique et scientifiquement prudente de 180 à 220 mots. Commence par annoncer clairement qu’il s’agit d’une histoire. N’invente pas de découverte réelle et ne demande jamais de donnée personnelle.'
+    : 'Tu es SolarBot, assistant spatial pour enfants de 8 à 12 ans. Réponds en français avec des phrases courtes et une seule idée par phrase. Commence par une réponse simple, explique chaque mot scientifique et ajoute une comparaison concrète si elle aide. Termine par « À retenir : » avec une phrase. Distingue clairement fait, hypothèse et fiction, dis quand tu n’es pas sûr, n’invente jamais de source et ne demande jamais de donnée personnelle.'
 
   const safeHistory = history
     .slice(-4)

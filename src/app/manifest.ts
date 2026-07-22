@@ -2,9 +2,9 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'SolarScope — Explorer l’Univers',
+    name: 'SolarScope — L’espace expliqué aux enfants',
     short_name: 'SolarScope',
-    description: 'Exploration spatiale interactive et données scientifiques actualisées.',
+    description: 'Des missions simples pour comprendre l’espace de 8 à 12 ans.',
     start_url: '/',
     display: 'standalone',
     background_color: '#060614',

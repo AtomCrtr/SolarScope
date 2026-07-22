@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
+import KidsGuide from '@/components/KidsGuide'
 
 const Sun3D = dynamic(() => import('@/components/Sun3D'), { ssr: false })
 const SpaceWeatherDashboard = dynamic(() => import('@/components/SpaceWeatherDashboard'), { ssr: false })
@@ -57,6 +58,8 @@ export default function SoleilPage() {
                 <p className="page-subtitle">Notre étoile — à 150 millions de km, source de toute vie sur Terre</p>
             </motion.div>
 
+            <KidsGuide topic="soleil" />
+
             {/* ── 3D SUN + SDO ── */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', alignItems: 'center', marginBottom: '3rem' }}
                 className="max-md:grid-cols-1">
@@ -83,7 +86,7 @@ export default function SoleilPage() {
                             </motion.div>
                         ))}
                     </div>
-                    <p style={{ color: '#64748b', fontSize: '0.7rem', marginTop: '0.5rem', textAlign: 'right' }}>
+                    <p style={{ color: '#94a3b8', fontSize: '0.7rem', marginTop: '0.5rem', textAlign: 'right' }}>
                         ⟳ Source : NASA Solar Dynamics Observatory — mise à jour toutes les 15 min
                     </p>
                 </div>

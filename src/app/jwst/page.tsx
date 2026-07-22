@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
+import KidsGuide from '@/components/KidsGuide'
 
 interface WebbImage {
   nasa_id: string
@@ -117,9 +118,11 @@ export default function JWSTPage() {
           Télescope Webb
         </h1>
         <p className="page-subtitle">
-          Le télescope spatial le plus puissant jamais construit. Lancé le 25 décembre 2021, il observe l&apos;Univers en <strong style={{ color: '#a5b4fc' }}>infrarouge</strong> et voit jusqu&apos;aux premières lumières du cosmos.
+          Un immense œil dans l&apos;espace qui capte une lumière invisible et observe des galaxies très anciennes.
         </p>
       </motion.div>
+
+      <KidsGuide topic="jwst" />
 
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.625rem', marginBottom: '2.5rem' }} className="max-sm:grid-cols-2">

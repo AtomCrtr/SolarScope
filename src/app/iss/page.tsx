@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
 import type { DashboardData } from '@/lib/space-data'
+import KidsGuide from '@/components/KidsGuide'
 
 const ISSGlobe = dynamic(() => import('@/components/ISSGlobe'), { ssr: false })
 
@@ -96,6 +97,8 @@ export default function ISSPage() {
                     La Station Spatiale Internationale se déplace à <strong style={{ color: '#60a5fa' }}>28 000 km/h</strong> — elle fait le tour de la Terre en 92 minutes !
                 </p>
             </motion.div>
+
+            <KidsGuide topic="iss" />
 
             {/* ISS Stats */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem', marginBottom: '2rem' }} className="max-sm:grid-cols-2">
