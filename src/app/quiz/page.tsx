@@ -57,12 +57,12 @@ const OBSERVATION_RESOURCES = [
 ]
 
 const VIDEOS = [
-    { title: 'Paxi — Le Système Solaire (ESA)', url: 'https://www.youtube.com/watch?v=shQJd3oGYn8', emoji: '🌍', age: '5-10 ans', description: 'L\'animation officielle de l\'Agence Spatiale Européenne pour découvrir les planètes !' },
-    { title: 'Le Système Solaire CM1‑CM2 — Maître Lucas', url: 'https://www.youtube.com/watch?v=jdInvnIkwIk', emoji: '🌟', age: '7-12 ans', description: 'Cours complet sur les 8 planètes, le Soleil et les satellites naturels.' },
-    { title: 'Les Étoiles — National Geographic France', url: 'https://www.youtube.com/watch?v=CDy6kEEClK0', emoji: '★', age: '8-14 ans', description: 'Documentaire de qualité sur la naissance, la vie et la mort des étoiles.' },
-    { title: 'L’Espace pour les enfants — Les étoiles 🚀', url: 'https://www.youtube.com/watch?v=q_03QQmiR9Y', emoji: '🔭', age: '6-12 ans', description: 'Voyage à travers les étoiles et l’Univers, expliqué simplement pour les ados.' },
-    { title: 'James Webb — Les premières images révolutionnaires (NASA)', url: 'https://www.youtube.com/watch?v=1C_zuHf6lP4', emoji: '🔭', age: '8-14 ans', description: 'Une sélection officielle d’images qui ont changé notre vision de l’Univers.' },
-    { title: 'Mission Perseverance sur Mars (NASA)', url: 'https://www.youtube.com/watch?v=5qqsMjy8Rx0', emoji: '🔴', age: '6-12 ans', description: 'La NASA explore Mars avec son rover et son hélicoptère Ingenuity.' },
+    { title: 'Paxi — Le Système Solaire (ESA)', url: 'https://www.youtube.com/watch?v=shQJd3oGYn8', fallback: 'https://spaceplace.nasa.gov/menu/solar-system/', fallbackLabel: 'Découvrir le Système solaire avec la NASA', emoji: '🌍', age: '5-10 ans', description: 'L\'animation officielle de l\'Agence Spatiale Européenne pour découvrir les planètes !' },
+    { title: 'Le Système Solaire CM1‑CM2 — Maître Lucas', url: 'https://www.youtube.com/watch?v=jdInvnIkwIk', fallback: 'https://science.nasa.gov/solar-system/', fallbackLabel: 'Lire le guide NASA du Système solaire', emoji: '🌟', age: '7-12 ans', description: 'Cours complet sur les 8 planètes, le Soleil et les satellites naturels.' },
+    { title: 'Les Étoiles — National Geographic France', url: 'https://www.youtube.com/watch?v=CDy6kEEClK0', fallback: 'https://science.nasa.gov/universe/stars/', fallbackLabel: 'Explorer les étoiles avec la NASA', emoji: '★', age: '8-14 ans', description: 'Documentaire de qualité sur la naissance, la vie et la mort des étoiles.' },
+    { title: 'L’Espace pour les enfants — Les étoiles 🚀', url: 'https://www.youtube.com/watch?v=q_03QQmiR9Y', fallback: 'https://spaceplace.nasa.gov/', fallbackLabel: 'Découvrir l’espace avec NASA Space Place', emoji: '🔭', age: '6-12 ans', description: 'Voyage à travers les étoiles et l’Univers, expliqué simplement pour les ados.' },
+    { title: 'James Webb — Les premières images révolutionnaires (NASA)', url: 'https://www.youtube.com/watch?v=1C_zuHf6lP4', fallback: 'https://science.nasa.gov/mission/webb/', fallbackLabel: 'Voir la mission Webb sur le site NASA', emoji: '🔭', age: '8-14 ans', description: 'Une sélection officielle d’images qui ont changé notre vision de l’Univers.' },
+    { title: 'Mission Perseverance sur Mars (NASA)', url: 'https://www.youtube.com/watch?v=5qqsMjy8Rx0', fallback: 'https://science.nasa.gov/mission/mars-2020-perseverance/', fallbackLabel: 'Suivre Perseverance avec la NASA', emoji: '🔴', age: '6-12 ans', description: 'La NASA explore Mars avec son rover et son hélicoptère Ingenuity.' },
 ]
 
 function shuffle<T>(arr: T[]): T[] { return [...arr].sort(() => Math.random() - 0.5) }
@@ -244,6 +244,7 @@ export default function QuizPage() {
                                 <span style={{ fontSize: '0.72rem', color: '#a78bfa', background: 'rgba(167,139,250,0.1)', padding: '2px 10px', borderRadius: 999 }}>{v.age}</span>
                                 <br /><br />
                                 <a href={v.url} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ textDecoration: 'none', display: 'inline-flex' }}>▶ Regarder sur YouTube</a>
+                                <a href={v.fallback} target="_blank" rel="noopener noreferrer" className="video-fallback">Si la vidéo est indisponible : {v.fallbackLabel} ↗</a>
                             </div>
                         ))}
                     </div>

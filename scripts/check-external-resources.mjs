@@ -14,9 +14,21 @@ async function collectFiles(directory) {
 }
 
 const youtubeIds = new Set()
+const fallbackUrls = new Set()
 for (const file of await collectFiles(sourceRoot)) {
   const source = await readFile(file, 'utf8')
   for (const match of source.matchAll(/https:\/\/www\.youtube\.com\/watch\?v=([A-Za-z0-9_-]+)/g)) youtubeIds.add(match[1])
+  for (const match of source.matchAll(/fallback:\s*'([^']+)'/g)) fallbackUrls.add(match[1])
+}
+
+for (const url of fallbackUrls) {
+  try {
+    const response = await fetch(url, { redirect: 'follow', signal: AbortSignal.timeout(20_000) })
+    if (!response.ok) throw new Error(`HTTP ${response.status}`)
+    console.log(`Fallback OK ${new URL(url).hostname}`)
+  } catch (error) {
+    failures.push(`Fallback ${url}: ${error instanceof Error ? error.message : 'unknown error'}`)
+  }
 }
 
 const failures = []
@@ -39,7 +51,7 @@ try {
   failures.push(`Health endpoint: ${error instanceof Error ? error.message : 'unknown error'}`)
 }
 
-console.log(`Checked ${youtubeIds.size} unique YouTube resource(s).`)
+console.log(`Checked ${youtubeIds.size} unique YouTube resource(s) and ${fallbackUrls.size} fallback resource(s).`)
 if (failures.length) {
   console.error(failures.join('\n'))
   process.exit(1)

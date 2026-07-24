@@ -20,7 +20,9 @@ export default function KidsGuide({ topic }: KidsGuideProps) {
   const locale = useSiteLocale()
   const lesson = locale === 'en' ? ENGLISH_GUIDES[topic] || LEARNING_TOPICS[topic] : LEARNING_TOPICS[topic]
   const [speaking, setSpeaking] = useState(false)
+  const [juniorMode, setJuniorMode] = useState(false)
   const titleId = `kids-guide-${topic}`
+  const visibleTakeaways = juniorMode ? lesson.takeaways.slice(0, 2) : lesson.takeaways
 
   const spokenText = useMemo(() => [
     lesson.question,
@@ -59,17 +61,17 @@ export default function KidsGuide({ topic }: KidsGuideProps) {
     <section className="kids-guide" aria-labelledby={titleId} data-learning-guide={topic}>
       <div className="kids-guide-heading">
         <div>
-          <span className="kids-guide-label">🧭 {lesson.label} · {locale === 'en' ? 'AGES 8–12' : '8–12 ANS'}</span>
+          <span className="kids-guide-label">🧭 {lesson.label} · {locale === 'en' ? (juniorMode ? 'AGES 6–8' : 'AGES 8–12') : (juniorMode ? '6–8 ANS' : '8–12 ANS')}</span>
           <h2 id={titleId}>{lesson.question}</h2>
         </div>
-        <button
-          type="button"
-          className="kids-listen-button"
-          aria-pressed={speaking}
-          onClick={toggleSpeech}
-        >
-          {speaking ? (locale === 'en' ? '■ Stop' : '■ Arrêter') : (locale === 'en' ? '🔊 Listen' : '🔊 Écouter')}
-        </button>
+        <div className="kids-guide-actions">
+          <button type="button" className="kids-mode-button" aria-pressed={juniorMode} onClick={() => setJuniorMode(value => !value)}>
+            {juniorMode ? (locale === 'en' ? '🚀 Full version' : '🚀 Version complète') : (locale === 'en' ? '🧒 Ages 6–8' : '🧒 Mode 6–8 ans')}
+          </button>
+          <button type="button" className="kids-listen-button" aria-pressed={speaking} onClick={toggleSpeech}>
+            {speaking ? (locale === 'en' ? '■ Stop' : '■ Arrêter') : (locale === 'en' ? '🔊 Listen' : '🔊 Écouter')}
+          </button>
+        </div>
       </div>
 
       <p className="kids-guide-summary">{lesson.summary}</p>
@@ -80,27 +82,27 @@ export default function KidsGuide({ topic }: KidsGuideProps) {
       </div>
 
       <div className="kids-takeaways">
-        <h3>{locale === 'en' ? '3 ideas to remember' : 'Les 3 idées à retenir'}</h3>
+        <h3>{juniorMode ? (locale === 'en' ? '2 quick ideas' : '2 idées rapides') : (locale === 'en' ? '3 ideas to remember' : 'Les 3 idées à retenir')}</h3>
         <ol>
-          {lesson.takeaways.map((takeaway, index) => (
+          {visibleTakeaways.map((takeaway, index) => (
             <li key={takeaway}><span>{index + 1}</span><p>{takeaway}</p></li>
           ))}
         </ol>
       </div>
 
-      <div className="kids-glossary" aria-label={locale === 'en' ? 'Useful words' : 'Mots utiles'}>
+      {!juniorMode && <div className="kids-glossary" aria-label={locale === 'en' ? 'Useful words' : 'Mots utiles'}>
         {lesson.glossary.map(item => (
           <div key={item.term}>
             <strong>{item.term}</strong>
             <span>{item.definition}</span>
           </div>
         ))}
-      </div>
+      </div>}
 
-      <details className="kids-deep-dive">
+      {!juniorMode && <details className="kids-deep-dive">
         <summary>{locale === 'en' ? '🔭 I want to go further' : '🔭 Je veux aller plus loin'}</summary>
         <p>{lesson.deepDive}</p>
-      </details>
+      </details>}
 
       <div className="kids-challenge">
         <span aria-hidden="true">🎯</span>

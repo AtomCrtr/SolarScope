@@ -18,7 +18,7 @@ const learningRoutes = [
   '/solarbot',
 ]
 
-const routes = ['/', ...learningRoutes, '/confidentialite']
+const routes = ['/', ...learningRoutes, '/passeport', '/parents-enseignants', '/confidentialite']
 
 for (const route of routes) {
   test(`${route} has no serious automated accessibility violation`, async ({ page }) => {
@@ -46,6 +46,25 @@ test('the homepage does not overflow on a 320 px viewport', async ({ page }) => 
   await page.goto('/', { waitUntil: 'domcontentloaded' })
   const widths = await page.evaluate(() => ({ client: document.documentElement.clientWidth, scroll: document.documentElement.scrollWidth }))
   expect(widths.scroll).toBeLessThanOrEqual(widths.client + 1)
+})
+
+test('parent guide badges keep their spacing and produce a visual artifact', async ({ page }, testInfo) => {
+  await page.goto('/parents-enseignants', { waitUntil: 'domcontentloaded' })
+  const cards = page.locator('.parent-guide')
+  await expect(cards).toHaveCount(4)
+
+  for (let index = 0; index < await cards.count(); index += 1) {
+    const badges = cards.nth(index).locator(':scope > div > span')
+    const first = await badges.nth(0).boundingBox()
+    const second = await badges.nth(1).boundingBox()
+    expect(first).not.toBeNull()
+    expect(second).not.toBeNull()
+    if (first && second && Math.abs(first.y - second.y) < 2) {
+      expect(first.x + first.width + 2).toBeLessThanOrEqual(second.x)
+    }
+  }
+
+  await page.screenshot({ path: testInfo.outputPath('parents-guide-layout.png'), fullPage: true })
 })
 
 const dashboardFixture = {
