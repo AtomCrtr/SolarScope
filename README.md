@@ -1,95 +1,145 @@
 # 🔭 SolarScope
 
-SolarScope explique le Système solaire et l’exploration spatiale aux enfants de 8 à 12 ans. Chaque parcours commence par une question simple, une comparaison concrète, trois idées à retenir et un niveau facultatif pour aller plus loin.
+**SolarScope rend le Système solaire et l’exploration spatiale compréhensibles pour les enfants de 8 à 12 ans.**
 
-Production : [solar-scope.vercel.app](https://solar-scope.vercel.app)
+Chaque parcours part d’une question simple, utilise une comparaison concrète, puis donne trois idées à retenir. Le français est la langue éditoriale de référence ; l’accueil et la navigation disposent aussi d’une entrée en anglais.
 
-## Fonctionnalités
+🌐 **Site en production :** [solar-scope.vercel.app](https://solar-scope.vercel.app)
 
-- Quatorze parcours pédagogiques adaptés aux 8–12 ans, avec glossaire et petit défi.
-- Lecture audio locale des explications essentielles depuis le navigateur.
-- Deux niveaux de lecture : une synthèse simple, puis les données scientifiques détaillées.
-- Système solaire et rovers en 3D avec Three.js.
-- ISS, équipages et prochains lancements.
-- Activité solaire NOAA et images NASA SDO/SOHO.
-- Astéroïdes NeoWs, exoplanètes, APOD et actualités NASA.
-- Galerie JWST, archive pédagogique des météorites et quiz.
-- SolarBot avec consignes adaptées aux enfants, avertissement sur ses limites, limitation de débit et réponses locales de secours.
-- Métadonnées par page, Open Graph, sitemap, robots et manifeste PWA.
-- Mode clair/sombre, navigation clavier et prise en charge de `prefers-reduced-motion`.
+## Aperçu
 
-## Sources et fraîcheur des données
+- Parcours sur le Soleil, les planètes, Mars, l’ISS, les missions, Webb, les astéroïdes et bien plus.
+- Données spatiales issues de sources scientifiques identifiées : NASA, ESA, NOAA, IPAC et The Space Devs.
+- Explications courtes adaptées aux enfants, lecture audio locale et quiz.
+- Globe terrestre interactif et expériences 3D construites avec Three.js.
+- SolarBot avec réponse de secours locale, protection de la vie privée et limitation des abus.
+- Thème clair/sombre, navigation clavier, prise en charge de `prefers-reduced-motion` et métadonnées SEO/PWA.
 
-Les routes serveur valident les réponses externes et conservent la dernière réponse en cache pendant une durée adaptée :
+## Langues
 
-| Données | Source | Cache |
-|---|---|---:|
-| Tableau de bord et équipages | NASA/IPAC, NASA NeoWs, People in Space | 15 à 60 min |
-| Position de l’ISS | Where The ISS At, via `/api/iss-position` | 5 s |
-| Vent solaire, champ magnétique et rayons X | NOAA SWPC, via `/api/space-weather` | 60 s |
-| Lancements | The Space Devs | 15 min |
-| Actualités | Flux RSS NASA | 30 min |
-| Astéroïdes et éruptions | NASA NeoWs / DONKI | 60 min |
-| Photo du jour | NASA APOD | 60 min |
+| Zone | Français | English |
+|---|---:|---:|
+| Navigation | ✅ Référence | ✅ |
+| Accueil | ✅ Référence | ✅ |
+| Parcours pédagogiques détaillés | ✅ | En cours |
 
-Les caches se renouvellent à la demande. Un cron Vercel quotidien appelle aussi `/api/refresh` afin de préchauffer les sources même sans visite. `/api/health` contrôle séparément les compteurs, les lancements, la position ISS, le vent solaire et les rayons X, sans révéler de secret. La page Météorites utilise un échantillon embarqué de l’ancienne archive NASA et l’indique explicitement.
+Le sélecteur **FR / EN** mémorise le choix dans le navigateur. La priorité éditoriale est volontairement donnée au français : une traduction complète doit préserver le niveau de langue enfant et l’exactitude scientifique, pas seulement traduire mot à mot.
 
-## Développement local
+## Démarrage rapide
 
-Prérequis : Node.js 20.9 ou plus récent.
+**Pré-requis :** Node.js 20.9 ou plus récent et npm.
 
 ```bash
 git clone https://github.com/AtomCrtr/SolarScope.git
 cd SolarScope
 npm install
-cp .env.example .env.local
+```
+
+Créez ensuite le fichier de configuration locale :
+
+```powershell
+Copy-Item .env.example .env.local
 npm run dev
 ```
 
-Variables disponibles :
+Ouvrez ensuite [http://localhost:3000](http://localhost:3000).
 
-```env
-NEXT_PUBLIC_SITE_URL=https://solar-scope.vercel.app
-NASA_API_KEY=DEMO_KEY
-GEMINI_API_KEY=
-GEMINI_MODEL=gemini-2.5-flash-lite
-UPSTASH_REDIS_REST_URL=
-UPSTASH_REDIS_REST_TOKEN=
-KV_REST_API_URL=
-KV_REST_API_TOKEN=
-CRON_SECRET=
-```
+## Variables d’environnement
 
-`NASA_API_KEY=DEMO_KEY` convient au développement avec un quota réduit. Sans clé Gemini, SolarBot reste fonctionnel avec ses réponses éducatives locales. `CRON_SECRET` doit être une valeur longue et aléatoire ; Vercel l’envoie automatiquement au cron dans l’en-tête `Authorization`.
+Copiez `.env.example` vers `.env.local`. Ne publiez jamais ce fichier ni une clé dans le navigateur.
 
-Les routes publiques Gemini et SDO utilisent Upstash Redis pour partager leurs quotas entre toutes les fonctions Vercel. Connecter l’intégration gratuite **Upstash for Redis** au projet Vercel, en région `fra1`. Elle ajoute généralement `KV_REST_API_URL` et `KV_REST_API_TOKEN` ; les noms Upstash standards sont aussi acceptés. Sans ces variables, les routes refusent les requêtes en production plutôt que d’utiliser un quota local contournable.
+| Variable | Requise en production | Rôle |
+|---|---:|---|
+| `NEXT_PUBLIC_SITE_URL` | Oui | URL publique canonique, sans slash final. |
+| `NASA_API_KEY` | Recommandée | Quotas NASA plus confortables que `DEMO_KEY`. |
+| `GEMINI_API_KEY` | Non | Active les réponses IA de SolarBot ; sans clé, le mode éducatif local reste disponible. |
+| `GEMINI_MODEL` | Non | Modèle Gemini, par défaut `gemini-2.5-flash-lite`. |
+| `CRON_SECRET` | Oui | Protège la route de rafraîchissement planifiée. |
+| `KV_REST_API_URL` / `KV_REST_API_TOKEN` | Oui | Variables injectées par l’intégration Vercel Upstash Redis. |
+| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | Alternative | Noms Upstash standards également pris en charge. |
 
-## Contrôles qualité
+`NASA_API_KEY=DEMO_KEY` suffit pour le développement, avec un quota réduit.
+
+## Sécurité et protection des enfants
+
+- Les routes Gemini et SDO utilisent un quota partagé Redis : il s’applique à toutes les fonctions Vercel, pas seulement à une instance.
+- Sans Redis en production, les routes protégées refusent la requête plutôt que de laisser un quota local contournable.
+- SolarBot limite la taille réelle du flux de requête, y compris lorsqu’il n’y a pas d’en-tête `Content-Length`.
+- Les signaux usuels de données personnelles (e-mail, téléphone, adresse, école…) sont bloqués avant tout envoi vers Gemini.
+- Une consigne visible rappelle aux enfants de ne pas partager leurs informations personnelles.
+
+> La détection de données personnelles est une protection complémentaire ; elle ne remplace pas l’accompagnement d’un adulte.
+
+## Données et fraîcheur
+
+Les routes serveur valident les réponses externes et les mettent en cache.
+
+| Données | Source | Cache indicatif |
+|---|---|---:|
+| Tableau de bord et équipages | NASA/IPAC, NASA NeoWs, People in Space | 15 à 60 min |
+| Position de l’ISS | Where The ISS At, via `/api/iss-position` | 5 s |
+| Météo spatiale | NOAA SWPC, via `/api/space-weather` | 60 s |
+| Lancements | The Space Devs | 15 min |
+| Actualités | Flux RSS NASA | 30 min |
+| Astéroïdes et éruptions | NASA NeoWs / DONKI | 60 min |
+| Photo du jour | NASA APOD | 60 min |
+
+Un cron Vercel quotidien appelle `/api/refresh` pour préchauffer les données. `/api/health` permet de vérifier les principaux flux sans exposer de secret.
+
+## Ressources vidéo
+
+Les vidéos YouTube sont choisies en priorité chez NASA, ESA ou des créateurs éducatifs identifiés. Elles doivent être revues régulièrement : une vidéo peut devenir privée, supprimée ou géobloquée sans préavis.
+
+Lors de la dernière vérification, les 10 liens YouTube uniques du projet étaient accessibles. Les liens sont déclarés dans les pages `asteroides`, `exoplanetes` et `quiz`.
+
+## Commandes utiles
 
 ```bash
-npm run lint
-npm run typecheck
-npm test
-npm run build
-npm run test:a11y
+npm run dev        # développement local
+npm run lint       # règles ESLint
+npm run typecheck  # vérification TypeScript
+npm test           # tests unitaires Vitest
+npm run build      # build de production Next.js
+npm run check      # lint + types + tests + build
+npm run test:a11y  # audit Playwright + axe
 ```
 
-Les mêmes vérifications sont exécutées par GitHub Actions à chaque push et pull request. Dependabot regroupe les mises à jour hebdomadaires. Les tests d’accessibilité utilisent Playwright et axe sur toutes les pages pédagogiques, en vues ordinateur et mobile. Des tests éditoriaux vérifient aussi la longueur des résumés, la présence des trois idées à retenir et la simplicité des définitions.
+Si Playwright n’a pas encore ses navigateurs localement :
 
-## Déploiement Vercel
+```bash
+npx playwright install
+```
 
-1. Importer `AtomCrtr/SolarScope` dans Vercel.
-2. Déclarer `NEXT_PUBLIC_SITE_URL`, `NASA_API_KEY`, `GEMINI_API_KEY`, `CRON_SECRET` et l’intégration Upstash Redis pour l’environnement Production.
-3. Conserver la branche de production sur `main`.
-
-Chaque push sur `main` déclenche alors automatiquement un nouveau déploiement. `vercel.json` déclare le rafraîchissement planifié des données.
+GitHub Actions exécute les contrôles essentiels à chaque push et pull request. Dependabot regroupe les mises à jour de dépendances.
 
 ## Architecture
 
-- Next.js 16 App Router, React 19 et TypeScript.
-- CSS global/Tailwind CSS 4 et Framer Motion.
-- Three.js 0.185, React Three Fiber et Drei.
-- Routes serveur sécurisées pour les fournisseurs externes et Gemini.
-- Vercel pour l’hébergement, les fonctions et le cron.
+```text
+src/
+├── app/          Pages App Router et routes API
+├── components/   Interface, 3D, navigation et SolarBot
+└── lib/          Données externes, cache, sécurité et quotas
+public/           Textures, images et ressources statiques
+tests/unit/       Tests de contenu, données et sécurité
+```
 
-Les mentions de source restent affichées dans le pied de page. Consultez aussi la [politique de confidentialité](https://solar-scope.vercel.app/confidentialite).
+Principales briques : Next.js 16, React 19, TypeScript, Tailwind CSS 4, Framer Motion, Three.js, React Three Fiber, Upstash Redis et Vercel.
+
+## Déploiement Vercel
+
+1. Importez `AtomCrtr/SolarScope` dans Vercel.
+2. Ajoutez `NEXT_PUBLIC_SITE_URL`, `NASA_API_KEY`, `GEMINI_API_KEY` (facultative) et `CRON_SECRET`.
+3. Connectez l’intégration gratuite **Upstash for Redis** au projet : elle crée normalement `KV_REST_API_URL` et `KV_REST_API_TOKEN` pour Production et Preview.
+4. Gardez `main` comme branche de production.
+
+Chaque push sur `main` déclenche automatiquement un déploiement. Le cron défini dans `vercel.json` assure le rafraîchissement planifié.
+
+## Pistes d’amélioration
+
+1. Traduire les parcours prioritaires en anglais avec relecture pédagogique, en commençant par Planètes, Mars, ISS et Quiz.
+2. Ajouter une vérification planifiée des liens YouTube et des sources externes, avec un rapport ouvrable avant qu’un lien mort soit affiché.
+3. Ajouter des tests visuels de l’accueil aux largeurs 1280 px et 1920 px pour éviter le retour d’un titre ou d’un globe mal cadré.
+4. Proposer un espace parent/enseignant : objectif de chaque parcours, durée, vocabulaire et prolongements hors écran.
+5. Mesurer anonymement les parcours réellement terminés afin d’améliorer les explications les moins comprises, sans collecter de données enfant.
+
+Consultez aussi la [politique de confidentialité](https://solar-scope.vercel.app/confidentialite).
