@@ -332,15 +332,19 @@ video {
 .passport-mission.is-complete { border-color: rgba(52, 211, 153, 0.45); background: rgba(16, 185, 129, 0.08); }
 .passport-score { font-weight: 800; color: #a5b4fc !important; }
 .passport-reset { display: block; margin: 1.1rem auto 0; border: 0; background: transparent; color: var(--text-subtle); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.parent-page .card {
+  background: linear-gradient(135deg, rgba(21, 20, 52, 0.94), rgba(16, 16, 40, 0.92));
+  isolation: isolate;
+}
 .parent-intro { max-width: 860px; margin: 0 auto 1.5rem; }
 .parent-intro h2, .parent-section-title { color: var(--text); font-size: 1.3rem; margin-bottom: 0.85rem; }
 .parent-intro ol { padding-left: 1.25rem; }
 .parent-guide-card { padding: 1.15rem; }
 .parent-guide-card h2 { color: var(--text); font-size: 1.05rem; }
 .parent-guide-card p { color: var(--text-subtle); margin-top: 0.35rem; font-size: 0.9rem; }
-.parent-guide { padding: 1.15rem; }
-.parent-guide > div { display: flex; gap: 0.5rem; }
-.parent-guide > div span { padding: 0.15rem 0.5rem; border-radius: 999px; color: #c4b5fd; background: rgba(139,92,246,0.15); font-size: 0.72rem; font-weight: 800; }
+.parent-guide { min-height: 184px; padding: 1.15rem; }
+.parent-guide > div { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.parent-guide > div span { padding: 0.18rem 0.55rem; border-radius: 999px; color: #ddd6fe; background: #2a1d5f; border: 1px solid rgba(167, 139, 250, 0.25); font-size: 0.72rem; font-weight: 800; white-space: nowrap; }
 .parent-guide h3 { margin-top: 0.7rem; color: var(--text); }
 .parent-guide p { margin-top: 0.5rem; color: var(--text-subtle); font-size: 0.88rem; }
 
@@ -934,6 +938,7 @@ video {
   .home-earth { display: none; }
   .home-data-band { grid-template-columns: 1fr; }
   .passport-grid, .parent-guide-grid { grid-template-columns: 1fr; }
+  .parent-guide { min-height: 0; }
   .home-kpi,
   .home-kpi:first-child,
   .home-kpi:nth-child(2),
