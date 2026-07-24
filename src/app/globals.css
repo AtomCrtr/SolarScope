@@ -555,14 +555,14 @@ video {
 .home-hero {
   min-height: min(760px, calc(100vh - var(--navbar-h)));
   display: grid;
-  grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr);
+  grid-template-columns: minmax(0, 1fr) minmax(380px, 0.88fr);
   align-items: center;
-  gap: clamp(2rem, 5vw, 6rem);
+  gap: clamp(2rem, 4vw, 4.5rem);
   padding-top: clamp(3rem, 7vw, 6rem);
   padding-bottom: clamp(3rem, 7vw, 5rem);
 }
 
-.home-hero-copy { position: relative; z-index: 2; }
+.home-hero-copy { position: relative; z-index: 2; min-width: 0; max-width: 620px; }
 
 .home-eyebrow,
 .section-kicker {
@@ -596,13 +596,14 @@ video {
 }
 
 .home-title {
-  max-width: 680px;
+  max-width: min(100%, 600px);
   color: #f8fafc;
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(3.6rem, 7.4vw, 7rem);
+  font-size: clamp(3.25rem, 6.45vw, 6.25rem);
   font-weight: 800;
   line-height: 0.88;
   letter-spacing: -0.065em;
+  overflow-wrap: anywhere;
 }
 
 .home-title span {
@@ -638,6 +639,8 @@ video {
 
 .home-earth {
   position: relative;
+  min-width: 0;
+  width: 100%;
   height: 600px;
   display: flex;
   align-items: center;
@@ -786,7 +789,7 @@ video {
 .data-manifesto p { color: #8190a7; font-size: 0.85rem; line-height: 1.8; }
 .data-manifesto a { color: #c7d2fe; font-size: 0.76rem; font-weight: 750; text-decoration: none; white-space: nowrap; }
 
-@media (max-width: 980px) {
+@media (max-width: 1100px) {
   .home-hero { grid-template-columns: 1fr; min-height: auto; text-align: center; }
   .home-hero-copy { display: flex; flex-direction: column; align-items: center; }
   .home-title { max-width: 800px; }

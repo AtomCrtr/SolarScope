@@ -183,6 +183,10 @@ export default function SolarBotWidget() {
                             <button onClick={() => setMessages([messages[0]])} aria-label="Effacer la conversation" title="Effacer" style={{ background: 'none', border: 'none', color: '#475569', cursor: 'pointer', fontSize: '0.8rem', padding: '4px' }}>🗑</button>
                         </div>
 
+                        <p id="solarbot-privacy-tip" style={{ padding: '0.55rem 0.875rem', color: '#bfdbfe', background: 'rgba(14,165,233,0.08)', borderBottom: '1px solid rgba(125,211,252,0.14)', fontSize: '0.7rem', lineHeight: 1.45 }}>
+                            <span aria-hidden="true">🔒 </span>Garde ton nom, ton école, ton adresse, ton téléphone et ton e-mail pour toi.
+                        </p>
+
                         {/* Messages */}
                         <div aria-live="polite" aria-busy={loading} style={{ flex: 1, overflowY: 'auto', padding: '0.875rem', display: 'flex', flexDirection: 'column', gap: '0.625rem', maxHeight: 280 }}>
                             {messages.map((msg, i) => (
@@ -232,6 +236,7 @@ export default function SolarBotWidget() {
                                 onKeyDown={e => e.key === 'Enter' && send()}
                                 placeholder="Ta question sur l'espace..."
                                 aria-label="Question pour SolarBot"
+                                aria-describedby="solarbot-privacy-tip"
                                 maxLength={1000}
                                 disabled={loading}
                                 style={{

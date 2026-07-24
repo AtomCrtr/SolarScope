@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { checkRateLimit } from '@/lib/rate-limit'
+import { checkDistributedRateLimit } from '@/lib/rate-limit'
+import { readJsonBody } from '@/lib/request-body'
+import { solarBotContentIsSafe, SOLARBOT_PRIVACY_REMINDER } from '@/lib/solarbot-safety'
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite'
@@ -62,12 +64,17 @@ async function requestGemini(payload: unknown): Promise<Response> {
 }
 
 export async function POST(request: NextRequest) {
-  const contentLength = Number(request.headers.get('content-length') || 0)
-  if (contentLength > MAX_BODY_BYTES) {
-    return NextResponse.json({ error: 'Requête trop volumineuse.' }, { status: 413 })
+  const rateLimit = await checkDistributedRateLimit(`gemini:${clientIdentifier(request)}`, {
+    namespace: 'gemini',
+    limit: 8,
+    windowSeconds: 60,
+  })
+  if (rateLimit.unavailable) {
+    return NextResponse.json(
+      { error: 'SolarBot se protège un instant. Réessaie bientôt.' },
+      { status: 503, headers: { 'Cache-Control': 'no-store' } },
+    )
   }
-
-  const rateLimit = checkRateLimit(`gemini:${clientIdentifier(request)}`)
   if (!rateLimit.allowed) {
     return NextResponse.json(
       { error: 'Trop de questions rapprochées. Réessaie dans un instant.' },
@@ -82,25 +89,21 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  const body = await request.json().catch(() => null)
-  if (!body || typeof body !== 'object' || Array.isArray(body)) {
+  const body = await readJsonBody(request, MAX_BODY_BYTES)
+  if (body.kind === 'too-large') {
+    return NextResponse.json({ error: 'Requête trop volumineuse.' }, { status: 413 })
+  }
+  if (body.kind !== 'ok' || !body.value || typeof body.value !== 'object' || Array.isArray(body.value)) {
     return NextResponse.json({ error: 'Corps de requête invalide.' }, { status: 400 })
   }
 
-  const record = body as Record<string, unknown>
+  const record = body.value as Record<string, unknown>
   const question = typeof record.question === 'string' ? record.question.trim() : ''
   const mode: GeminiMode = record.mode === 'story' ? 'story' : 'chat'
   const history = Array.isArray(record.history) ? record.history : []
 
   if (!question) return NextResponse.json({ error: 'Question vide.' }, { status: 400 })
   if (question.length > 1_000) return NextResponse.json({ error: 'Question trop longue.' }, { status: 400 })
-
-  if (!GEMINI_API_KEY) {
-    return NextResponse.json(
-      { text: fallbackAnswer(question, mode), degraded: true },
-      { headers: { 'Cache-Control': 'no-store' } },
-    )
-  }
 
   const systemPrompt = mode === 'story'
     ? 'Tu es SolarBot, conteur spatial pour enfants de 8 à 12 ans. Écris en français une histoire éducative, poétique et scientifiquement prudente de 180 à 220 mots. Commence par annoncer clairement qu’il s’agit d’une histoire. N’invente pas de découverte réelle et ne demande jamais de donnée personnelle.'
@@ -115,12 +118,26 @@ export async function POST(request: NextRequest) {
     })
     .map((message) => ({
       role: message.role === 'user' ? 'user' : 'model',
-      parts: [{ text: message.text.slice(0, 600) }],
+      text: message.text.slice(0, 600),
     }))
+
+  if (!solarBotContentIsSafe(question, safeHistory)) {
+    return NextResponse.json({ error: SOLARBOT_PRIVACY_REMINDER }, { status: 400 })
+  }
+
+  if (!GEMINI_API_KEY) {
+    return NextResponse.json(
+      { text: fallbackAnswer(question, mode), degraded: true },
+      { headers: { 'Cache-Control': 'no-store' } },
+    )
+  }
 
   const payload = {
     systemInstruction: { parts: [{ text: systemPrompt }] },
-    contents: [...safeHistory, { role: 'user', parts: [{ text: question }] }],
+    contents: [
+      ...safeHistory.map((message) => ({ role: message.role, parts: [{ text: message.text }] })),
+      { role: 'user', parts: [{ text: question }] },
+    ],
     generationConfig: {
       temperature: mode === 'story' ? 0.85 : 0.65,
       maxOutputTokens: mode === 'story' ? 700 : 300,

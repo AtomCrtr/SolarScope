@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { checkRateLimit } from '@/lib/rate-limit'
+import { checkDistributedRateLimit } from '@/lib/rate-limit'
 
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024
 const ALLOWED_SOURCES = [
@@ -29,7 +29,12 @@ function parseAllowedUrl(value: string) {
 export async function GET(req: NextRequest) {
     const forwardedFor = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
     const clientId = forwardedFor || req.headers.get('x-real-ip') || 'unknown'
-    const rate = checkRateLimit(`sdo:${clientId}`, 30, 60_000)
+    const rate = await checkDistributedRateLimit(`sdo:${clientId}`, {
+        namespace: 'sdo',
+        limit: 30,
+        windowSeconds: 60,
+    })
+    if (rate.unavailable) return errorResponse('Protection temporairement indisponible', 503)
     if (!rate.allowed) {
         return errorResponse('Trop de requêtes', 429, { 'Retry-After': String(rate.retryAfter) })
     }

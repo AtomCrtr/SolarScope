@@ -53,10 +53,16 @@ NEXT_PUBLIC_SITE_URL=https://solar-scope.vercel.app
 NASA_API_KEY=DEMO_KEY
 GEMINI_API_KEY=
 GEMINI_MODEL=gemini-2.5-flash-lite
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
+KV_REST_API_URL=
+KV_REST_API_TOKEN=
 CRON_SECRET=
 ```
 
 `NASA_API_KEY=DEMO_KEY` convient au développement avec un quota réduit. Sans clé Gemini, SolarBot reste fonctionnel avec ses réponses éducatives locales. `CRON_SECRET` doit être une valeur longue et aléatoire ; Vercel l’envoie automatiquement au cron dans l’en-tête `Authorization`.
+
+Les routes publiques Gemini et SDO utilisent Upstash Redis pour partager leurs quotas entre toutes les fonctions Vercel. Connecter l’intégration gratuite **Upstash for Redis** au projet Vercel, en région `fra1`. Elle ajoute généralement `KV_REST_API_URL` et `KV_REST_API_TOKEN` ; les noms Upstash standards sont aussi acceptés. Sans ces variables, les routes refusent les requêtes en production plutôt que d’utiliser un quota local contournable.
 
 ## Contrôles qualité
 
@@ -73,7 +79,7 @@ Les mêmes vérifications sont exécutées par GitHub Actions à chaque push et 
 ## Déploiement Vercel
 
 1. Importer `AtomCrtr/SolarScope` dans Vercel.
-2. Déclarer `NEXT_PUBLIC_SITE_URL`, `NASA_API_KEY`, `GEMINI_API_KEY` et `CRON_SECRET` pour l’environnement Production.
+2. Déclarer `NEXT_PUBLIC_SITE_URL`, `NASA_API_KEY`, `GEMINI_API_KEY`, `CRON_SECRET` et l’intégration Upstash Redis pour l’environnement Production.
 3. Conserver la branche de production sur `main`.
 
 Chaque push sur `main` déclenche alors automatiquement un nouveau déploiement. `vercel.json` déclare le rafraîchissement planifié des données.
