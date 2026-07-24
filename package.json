@@ -13,13 +13,14 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:a11y": "playwright test",
+    "check:external": "node scripts/check-external-resources.mjs",
     "check": "npm run lint && npm run typecheck && npm test && npm run build"
   },
   "dependencies": {
-    "@upstash/ratelimit": "2.0.8",
-    "@upstash/redis": "1.38.0",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",
+    "@upstash/ratelimit": "2.0.8",
+    "@upstash/redis": "1.38.0",
     "framer-motion": "^12.42.2",
     "next": "16.2.11",
     "react": "19.2.8",

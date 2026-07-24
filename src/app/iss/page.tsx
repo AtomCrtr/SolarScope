@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
 import type { DashboardData, IssPosition } from '@/lib/space-data'
 import KidsGuide from '@/components/KidsGuide'
+import DataSourceNote from '@/components/DataSourceNote'
 
 const ISSGlobe = dynamic(() => import('@/components/ISSGlobe'), { ssr: false })
 
@@ -108,6 +109,7 @@ export default function ISSPage() {
             </motion.div>
 
             <KidsGuide topic="iss" />
+            <DataSourceNote source="NASA / Human Spaceflight" href="https://www.nasa.gov/international-space-station/" refreshed="Position mise à jour par le site ; les repères restent affichés si le flux est indisponible" />
 
             {/* ISS Stats */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem', marginBottom: '2rem' }} className="max-sm:grid-cols-2">

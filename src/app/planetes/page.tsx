@@ -4,6 +4,7 @@ import { useState, Suspense, lazy } from 'react'
 import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
 import KidsGuide from '@/components/KidsGuide'
+import DataSourceNote from '@/components/DataSourceNote'
 
 const Planet3D = lazy(() => import('@/components/Planet3D'))
 const SolarSystem2D = dynamic(() => import('@/components/SolarSystem2D'), { ssr: false })
@@ -40,6 +41,7 @@ export default function PlanetesPage() {
             </motion.div>
 
             <KidsGuide topic="planetes" />
+            <DataSourceNote source="NASA Planetary Fact Sheet" href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/" refreshed="Valeurs moyennes, pas une météo en direct" />
 
             {/* Planet selector */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.625rem', marginBottom: '2rem' }} className="max-sm:grid-cols-2">

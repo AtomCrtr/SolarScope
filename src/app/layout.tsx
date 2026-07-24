@@ -7,6 +7,7 @@ import SolarBotWidget from '@/components/SolarBotWidget'
 import Footer from '@/components/Footer'
 import Breadcrumb from '@/components/Breadcrumb'
 import ThemeToggle from '@/components/ThemeToggle'
+import ProgressTracker from '@/components/ProgressTracker'
 import { DEFAULT_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/site'
 
 export const metadata: Metadata = {
@@ -59,6 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        <ProgressTracker />
         <StarField />
         <Navbar themeToggle={<ThemeToggle />} />
         {/* Breadcrumb — auto-hides on homepage */}

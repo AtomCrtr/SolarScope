@@ -34,6 +34,8 @@ const FOOTER_GROUPS = [
         links: [
             { title: 'Actualités spatiales', href: '/actualites' },
             { title: 'Quiz spatial', href: '/quiz' },
+            { title: 'Passeport spatial', href: '/passeport' },
+            { title: 'Parents & enseignants', href: '/parents-enseignants' },
         ],
     },
 ]

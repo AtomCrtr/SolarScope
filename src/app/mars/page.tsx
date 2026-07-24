@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import KidsGuide from '@/components/KidsGuide'
+import DataSourceNote from '@/components/DataSourceNote'
 
 const Planet3D = dynamic(() => import('@/components/Planet3D'), { ssr: false })
 const RoverViewer3D = dynamic(() => import('@/components/RoverViewer3D'), { ssr: false })
@@ -209,6 +210,7 @@ export default function MarsPage() {
             </div>
 
             <KidsGuide topic="mars" />
+            <DataSourceNote source="NASA Mars Exploration Program" href="https://science.nasa.gov/mars/" refreshed="Faits de référence ; l’état des missions est indiqué sur la page" />
 
             {/* ── STATS ── */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.65rem', marginBottom: '2.5rem' }} className="max-sm:grid-cols-2">

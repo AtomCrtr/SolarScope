@@ -26,7 +26,10 @@ const GROUPS = [
     },
     {
         id: 'decouverte', label: 'Découverte', href: null,
-        pages: [{ href: '/actualites', title: 'Actualités' }, { href: '/quiz', title: 'Quiz' }],
+        pages: [
+            { href: '/actualites', title: 'Actualités' }, { href: '/quiz', title: 'Quiz' },
+            { href: '/passeport', title: 'Passeport spatial' }, { href: '/parents-enseignants', title: 'Parents & enseignants' },
+        ],
     },
 ]
 

@@ -14,6 +14,8 @@ const routes = [
   '/missions',
   '/photo-du-jour',
   '/planetes',
+  '/passeport',
+  '/parents-enseignants',
   '/quiz',
   '/solarbot',
   '/soleil',

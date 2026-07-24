@@ -49,6 +49,8 @@ const NAV_GROUPS = [
         pages: [
             { icon: '📰', title: 'Actualités', href: '/actualites', desc: 'Publications officielles NASA actualisées' },
             { icon: '🎮', title: 'Quiz spatial', href: '/quiz', desc: 'Teste tes connaissances sur l\'Univers !' },
+            { icon: '🚀', title: 'Passeport spatial', href: '/passeport', desc: 'Tes missions, sur cet appareil seulement' },
+            { icon: '👨‍👩‍👧‍👦', title: 'Parents & enseignants', href: '/parents-enseignants', desc: 'Repères pour accompagner une mission' },
         ],
     },
 ]
@@ -85,6 +87,8 @@ const NAV_EN: Record<string, { label: string; pages: Record<string, { title: str
         pages: {
             '/actualites': { title: 'News', desc: 'Updated official NASA stories' },
             '/quiz': { title: 'Space quiz', desc: 'Test what you know about the Universe!' },
+            '/passeport': { title: 'Space passport', desc: 'Your missions, kept on this device only' },
+            '/parents-enseignants': { title: 'Parents & teachers', desc: 'Helpful guides for every mission' },
         },
     },
 }

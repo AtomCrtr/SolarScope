@@ -1,0 +1,23 @@
+name: External resources
+
+on:
+  schedule:
+    - cron: '23 7 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check YouTube resources and production health
+        run: node scripts/check-external-resources.mjs
+        env:
+          SITE_URL: https://solar-scope.vercel.app

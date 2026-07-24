@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import KidsGuide from '@/components/KidsGuide'
+import { recordQuizScore } from '@/lib/local-progress'
 
 const QUIZ_BANK_DEBUTANT = [
     { question: 'Quelle est la plus grande planète du Système solaire ?', options: ['🪐 Saturne', '🟠 Jupiter', '🔵 Neptune', '🟦 Uranus'], answer: '🟠 Jupiter', explication: 'Jupiter est tellement grande qu\'elle pourrait contenir 1 300 Terres !', emoji: '🌍' },
@@ -84,6 +85,10 @@ export default function QuizPage() {
     const totalAnswered = Object.keys(answers).length
     const totalCorrect = Object.entries(answers).filter(([i, a]) => a === questions[parseInt(i)].answer).length
     const finished = totalAnswered === questions.length
+
+    useEffect(() => {
+        if (finished) recordQuizScore(Math.round(totalCorrect / questions.length * 100))
+    }, [finished, questions.length, totalCorrect])
 
     const reset = () => { setQuestions(shuffle(currentLevel?.bank ?? QUIZ_BANK_DEBUTANT)); setLevel(null); setAnswers({}) }
 
