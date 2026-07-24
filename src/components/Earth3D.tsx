@@ -83,8 +83,8 @@ export default function Earth3D({ height = 520, autoRotate = true, showControls 
         <Canvas
             role="img"
             aria-label="Globe terrestre interactif en trois dimensions"
-            style={{ height, background: 'transparent' }}
-            camera={{ position: [0, 0.8, 6.2], fov: 42 }}
+            style={{ width: '100%', height, display: 'block', background: 'transparent' }}
+            camera={{ position: [0, 0.55, 7.6], fov: 40 }}
             gl={{ antialias: true, alpha: true }}
         >
             <Suspense fallback={null}>

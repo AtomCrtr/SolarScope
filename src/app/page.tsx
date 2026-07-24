@@ -5,8 +5,30 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useEffect, useMemo, useState } from 'react'
 import type { DashboardData } from '@/lib/space-data'
+import { useSiteLocale } from '@/components/LanguageToggle'
 
 const Earth3D = dynamic(() => import('@/components/Earth3D'), { ssr: false })
+
+const HOME_COPY = {
+  fr: {
+    title: ['L’espace,', 'enfin facile', 'à comprendre.'],
+    intro: 'Choisis une mission, observe de vrais phénomènes spatiaux et découvre leur explication avec des mots simples. Tu peux écouter les leçons et ouvrir les détails seulement quand tu en as envie.',
+    chooseMission: 'Choisir ma mission', testKnowledge: 'Tester mes connaissances', sourcesUnavailable: 'Sources momentanément indisponibles', sourcesConnected: 'flux connectés',
+    missionKicker: 'COMMENCE ICI', missionTitle: 'Choisis ta première mission.', missionText: 'Chaque mission commence par une question, utilise une image ou une expérience, puis résume trois idées importantes.',
+    exploreKicker: 'CARTE D’EXPLORATION', exploreTitle: 'Choisissez votre trajectoire.', exploreText: 'Quatre portes d’entrée, de notre voisinage planétaire jusqu’aux confins observables.',
+    trustKicker: 'DONNÉES DE CONFIANCE', trustTitle: 'Pas de chiffres décoratifs.', trustText: 'Les indicateurs volatils sont récupérés côté serveur, mis en cache avec une durée explicite et accompagnés de leur source. Lorsqu’un service ne répond pas, SolarScope l’indique au lieu d’inventer une valeur de remplacement.', trustAction: 'Consulter les publications NASA',
+    launch: 'PROCHAIN DÉPART', earthCaption: 'TERRE · MODÈLE INTERACTIF', earthAction: 'Glissez pour explorer',
+  },
+  en: {
+    title: ['Space,', 'made easy', 'to understand.'],
+    intro: 'Choose a mission, watch real space phenomena, and discover simple explanations. You can listen to lessons and open the details only when you want to.',
+    chooseMission: 'Choose a mission', testKnowledge: 'Test my knowledge', sourcesUnavailable: 'Sources are temporarily unavailable', sourcesConnected: 'live sources connected',
+    missionKicker: 'START HERE', missionTitle: 'Choose your first mission.', missionText: 'Each mission starts with a question, uses an image or an activity, then sums up three important ideas.',
+    exploreKicker: 'EXPLORATION MAP', exploreTitle: 'Choose your route.', exploreText: 'Four ways in, from our planetary neighbourhood to the farthest observable space.',
+    trustKicker: 'TRUSTED DATA', trustTitle: 'No decorative numbers.', trustText: 'Changing indicators are fetched on the server, cached for a clear duration, and shown with their source. If a service does not respond, SolarScope says so instead of inventing a replacement value.', trustAction: 'Browse NASA updates',
+    launch: 'NEXT LAUNCH', earthCaption: 'EARTH · INTERACTIVE MODEL', earthAction: 'Drag to explore',
+  },
+} as const
 
 const CATEGORIES = [
   {
@@ -82,18 +104,21 @@ function formatCountdown(ms: number | null) {
   return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`
 }
 
-function formatFreshness(value: string | undefined) {
-  if (!value) return 'Connexion aux sources…'
-  return `Sources vérifiées à ${new Date(value).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`
+function formatFreshness(value: string | undefined, locale: 'fr' | 'en') {
+  if (!value) return locale === 'fr' ? 'Connexion aux sources…' : 'Connecting to sources…'
+  const time = new Date(value).toLocaleTimeString(locale === 'fr' ? 'fr-FR' : 'en-US', { hour: '2-digit', minute: '2-digit' })
+  return locale === 'fr' ? `Sources vérifiées à ${time}` : `Sources checked at ${time}`
 }
 
-function formatRemoteKpi(value: number | null | undefined, available: boolean | undefined, loading: boolean) {
+function formatRemoteKpi(value: number | null | undefined, available: boolean | undefined, loading: boolean, locale: 'fr' | 'en') {
   if (loading) return '…'
-  if (!available || value === null || value === undefined) return 'Indisponible'
-  return value.toLocaleString('fr-FR')
+  if (!available || value === null || value === undefined) return locale === 'fr' ? 'Indisponible' : 'Unavailable'
+  return value.toLocaleString(locale === 'fr' ? 'fr-FR' : 'en-US')
 }
 
 export default function HomePage() {
+  const locale = useSiteLocale()
+  const copy = HOME_COPY[locale]
   const [data, setData] = useState<DashboardData | null>(null)
   const [dataError, setDataError] = useState(false)
 
@@ -122,15 +147,15 @@ export default function HomePage() {
 
   const kpis = [
     {
-      value: formatRemoteKpi(data?.exoplanetCount, data?.sources.exoplanets, dashboardLoading),
+      value: formatRemoteKpi(data?.exoplanetCount, data?.sources.exoplanets, dashboardLoading, locale),
       label: 'exoplanètes confirmées', source: 'NASA Exoplanet Archive', color: '#c084fc', live: data?.sources.exoplanets,
     },
     {
-      value: formatRemoteKpi(data?.nearEarthObjectCount, data?.sources.asteroids, dashboardLoading),
+      value: formatRemoteKpi(data?.nearEarthObjectCount, data?.sources.asteroids, dashboardLoading, locale),
       label: 'objets proches catalogués', source: 'NASA NeoWs', color: '#fb923c', live: data?.sources.asteroids,
     },
     {
-      value: formatRemoteKpi(issCrew, data?.sources.crew, dashboardLoading),
+      value: formatRemoteKpi(issCrew, data?.sources.crew, dashboardLoading, locale),
       label: 'personnes à bord de l’ISS', source: 'People in Space', color: '#38bdf8', live: data?.sources.crew,
     },
     {
@@ -150,22 +175,22 @@ export default function HomePage() {
         >
           <div className="home-eyebrow">
             <span className={activeSources > 0 ? 'live-orb' : 'live-orb is-loading'} />
-            POUR LES 8–12 ANS · {formatFreshness(data?.updatedAt)}
+            {locale === 'fr' ? 'POUR LES 8–12 ANS' : 'FOR AGES 8–12'} · {formatFreshness(data?.updatedAt, locale)}
           </div>
           <h1 className="home-title">
-            L’espace,<br />
-            <span>enfin facile à comprendre.</span>
+            <span className="home-title-lead">{copy.title[0]}</span>
+            <span>{copy.title[1]}</span>
+            <span>{copy.title[2]}</span>
           </h1>
           <p className="home-intro">
-            Choisis une mission, observe de vrais phénomènes spatiaux et découvre leur explication avec des mots simples.
-            Tu peux écouter les leçons et ouvrir les détails seulement quand tu en as envie.
+            {copy.intro}
           </p>
           <div className="home-actions">
-            <a href="#missions-enfants" className="btn-primary">Choisir ma mission <span aria-hidden="true">→</span></a>
-            <Link href="/quiz" className="btn-ghost">Tester mes connaissances</Link>
+            <a href="#missions-enfants" className="btn-primary">{copy.chooseMission} <span aria-hidden="true">→</span></a>
+            <Link href="/quiz" className="btn-ghost">{copy.testKnowledge}</Link>
           </div>
           <div className="source-health" aria-live="polite">
-            <span>{dataError ? 'Sources momentanément indisponibles' : `${activeSources}/4 flux connectés`}</span>
+            <span>{dataError ? copy.sourcesUnavailable : `${activeSources}/4 ${copy.sourcesConnected}`}</span>
             <span className="source-health-line" />
             <span>NASA · IPAC · People in Space · The Space Devs</span>
           </div>
@@ -179,10 +204,10 @@ export default function HomePage() {
         >
           <div className="earth-orbit earth-orbit-one" />
           <div className="earth-orbit earth-orbit-two" />
-          <Earth3D height={560} />
+          <Earth3D height="100%" />
           <div className="earth-caption">
-            <span>TERRE · MODÈLE INTERACTIF</span>
-            <span>Glissez pour explorer</span>
+            <span>{copy.earthCaption}</span>
+            <span>{copy.earthAction}</span>
           </div>
         </motion.div>
       </section>
@@ -190,10 +215,10 @@ export default function HomePage() {
       <section id="missions-enfants" className="container kids-missions" aria-labelledby="kids-missions-title">
         <header className="kids-missions-heading">
           <div>
-            <span className="section-kicker">COMMENCE ICI</span>
-            <h2 id="kids-missions-title">Choisis ta première mission.</h2>
+            <span className="section-kicker">{copy.missionKicker}</span>
+            <h2 id="kids-missions-title">{copy.missionTitle}</h2>
           </div>
-          <p>Chaque mission commence par une question, utilise une image ou une expérience, puis résume trois idées importantes.</p>
+          <p>{copy.missionText}</p>
         </header>
         <div className="kids-mission-grid">
           {KIDS_MISSIONS.map((mission, index) => (
@@ -238,7 +263,7 @@ export default function HomePage() {
 
       {data?.nextLaunch && (
         <section className="container launch-brief">
-          <div className="launch-brief-label"><span>PROCHAIN DÉPART</span><span className="live-orb" /></div>
+          <div className="launch-brief-label"><span>{copy.launch}</span><span className="live-orb" /></div>
           <div className="launch-brief-main">
             <div>
               <h2>{data.nextLaunch.name}</h2>
@@ -256,10 +281,10 @@ export default function HomePage() {
       <section className="container home-explore">
         <header className="home-section-heading">
           <div>
-            <span className="section-kicker">CARTE D’EXPLORATION</span>
-            <h2>Choisissez votre trajectoire.</h2>
+            <span className="section-kicker">{copy.exploreKicker}</span>
+            <h2>{copy.exploreTitle}</h2>
           </div>
-          <p>Quatre portes d’entrée, de notre voisinage planétaire jusqu’aux confins observables.</p>
+          <p>{copy.exploreText}</p>
         </header>
 
         <div className="home-category-grid">
@@ -290,15 +315,13 @@ export default function HomePage() {
 
       <section className="container data-manifesto">
         <div>
-          <span className="section-kicker">DONNÉES DE CONFIANCE</span>
-          <h2>Pas de chiffres décoratifs.</h2>
+          <span className="section-kicker">{copy.trustKicker}</span>
+          <h2>{copy.trustTitle}</h2>
         </div>
         <p>
-          Les indicateurs volatils sont désormais récupérés côté serveur, mis en cache avec une durée explicite
-          et accompagnés de leur source. Lorsqu’un service ne répond pas, SolarScope l’indique au lieu d’inventer
-          une valeur de remplacement.
+          {copy.trustText}
         </p>
-        <Link href="/actualites">Consulter les publications NASA <span aria-hidden="true">→</span></Link>
+        <Link href="/actualites">{copy.trustAction} <span aria-hidden="true">→</span></Link>
       </section>
     </>
   )

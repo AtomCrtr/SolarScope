@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, useRef } from 'react'
+import LanguageToggle, { useSiteLocale } from '@/components/LanguageToggle'
 
 /* ─────────────────────────────────────────────
    Navigation structure — 5 logical categories
@@ -52,8 +53,45 @@ const NAV_GROUPS = [
     },
 ]
 
+const NAV_EN: Record<string, { label: string; pages: Record<string, { title: string; desc: string }> }> = {
+    systeme: {
+        label: '🌞 Solar System',
+        pages: {
+            '/soleil': { title: 'The Sun', desc: 'Space weather, flares and SDO data' },
+            '/planetes': { title: 'Planets', desc: 'The 8 planets in 3D + J2000 positions' },
+            '/mars': { title: 'Mars', desc: 'Curiosity and Perseverance rover photos' },
+            '/asteroides': { title: 'Asteroids', desc: 'Near-Earth objects — NASA database' },
+            '/meteorites': { title: 'Meteorites', desc: 'Historic catalogue on an interactive map' },
+        },
+    },
+    exploration: {
+        label: '🚀 Exploration',
+        pages: {
+            '/iss': { title: 'ISS Tracker', desc: 'Live position of the Space Station' },
+            '/missions': { title: 'Missions', desc: 'From Sputnik to Artemis — 70 years of history' },
+        },
+    },
+    observation: {
+        label: '🔭 Observation',
+        pages: {
+            '/jwst': { title: 'Webb Telescope', desc: 'A gallery of remarkable JWST images' },
+            '/ciel': { title: 'Tonight’s sky', desc: 'A sky map for your location' },
+            '/photo-du-jour': { title: 'Picture of the Day', desc: 'NASA’s image, selected every day' },
+            '/exoplanetes': { title: 'Exoplanets', desc: 'NASA’s catalogue of confirmed worlds' },
+        },
+    },
+    decouverte: {
+        label: '🎓 Discover',
+        pages: {
+            '/actualites': { title: 'News', desc: 'Updated official NASA stories' },
+            '/quiz': { title: 'Space quiz', desc: 'Test what you know about the Universe!' },
+        },
+    },
+}
+
 export default function Navbar({ themeToggle }: { themeToggle?: React.ReactNode }) {
     const pathname = usePathname()
+    const locale = useSiteLocale()
     const [openGroup, setOpenGroup] = useState<string | null>(null)
     const [mobileOpen, setMobileOpen] = useState(false)
     const [mobileGroup, setMobileGroup] = useState<string | null>(null)
@@ -102,7 +140,14 @@ export default function Navbar({ themeToggle }: { themeToggle?: React.ReactNode 
     }
 
     // Which group contains the current page?
-    const activeGroup = NAV_GROUPS.find(g => g.pages.some(p => pathname.startsWith(p.href)))?.id
+    const navGroups = locale === 'en'
+        ? NAV_GROUPS.map(group => ({
+            ...group,
+            label: NAV_EN[group.id].label,
+            pages: group.pages.map(page => ({ ...page, ...NAV_EN[group.id].pages[page.href] })),
+        }))
+        : NAV_GROUPS
+    const activeGroup = navGroups.find(g => g.pages.some(p => pathname.startsWith(p.href)))?.id
 
     return (
         <motion.header
@@ -156,11 +201,11 @@ export default function Navbar({ themeToggle }: { themeToggle?: React.ReactNode 
                             border: `1px solid ${pathname === '/' ? 'rgba(139,92,246,0.3)' : 'transparent'}`,
                             transition: 'all 0.15s',
                         }}>
-                            <span>🏠</span><span>Accueil</span>
+                            <span>🏠</span><span>{locale === 'fr' ? 'Accueil' : 'Home'}</span>
                         </Link>
 
                         {/* Category groups */}
-                        {NAV_GROUPS.map(group => {
+                        {navGroups.map(group => {
                             const isOpen = openGroup === group.id
                             const isActive = activeGroup === group.id
                             return (
@@ -264,6 +309,7 @@ export default function Navbar({ themeToggle }: { themeToggle?: React.ReactNode 
 
                     {/* ── Right slot: theme toggle (always) + mobile hamburger (hidden on desktop) ── */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
+                        <LanguageToggle />
                         {themeToggle}
                         {/* Mobile hamburger — Tailwind md:hidden hides it on ≥768px */}
                         <button
@@ -325,11 +371,11 @@ export default function Navbar({ themeToggle }: { themeToggle?: React.ReactNode 
                                 color: pathname === '/' ? '#c4b5fd' : '#94a3b8',
                                 fontSize: '0.82rem', fontWeight: 600, marginBottom: '0.375rem',
                             }}>
-                                <span style={{ fontSize: '1.1rem' }}>🏠</span> Accueil
+                                <span style={{ fontSize: '1.1rem' }}>🏠</span> {locale === 'fr' ? 'Accueil' : 'Home'}
                             </Link>
 
                             {/* Category groups */}
-                            {NAV_GROUPS.map(group => {
+                            {navGroups.map(group => {
                                 const isGroupOpen = mobileGroup === group.id
                                 const isActive = activeGroup === group.id
                                 return (

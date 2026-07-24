@@ -23,7 +23,7 @@ const DETECTION_METHODS = [
 const VIDEOS = [
     { title: 'Paxi — Le Système Solaire (ESA en français)', url: 'https://www.youtube.com/watch?v=shQJd3oGYn8', description: 'L\'animation de l\'Agence Spatiale Européenne pour comprendre notre voisinage galactique.', age: '5-10 ans' },
     { title: 'Les étoiles — National Geographic France', url: 'https://www.youtube.com/watch?v=CDy6kEEClK0', description: 'Comment naissent et meurent les étoiles, les soleils qui abritent peut-être d\'autres mondes.', age: '8-14 ans' },
-    { title: 'James Webb — Premières images de l\'Univers (NASA)', url: 'https://www.youtube.com/watch?v=nmMRMIE_asw', description: 'Les historiques premières images du James Webb : galaxies, nébuleuses et atmosphères d\'exoplanètes.', age: '10-14 ans' },
+    { title: 'James Webb — Premières images de l’Univers (NASA)', url: 'https://www.youtube.com/watch?v=1C_zuHf6lP4', description: 'Une sélection officielle des premières images du James Webb : galaxies, nébuleuses et mondes lointains.', age: '10-14 ans' },
     { title: 'DART : La NASA dévie un astéroïde (NASA)', url: 'https://www.youtube.com/watch?v=4RA8Tfa6Sck', description: 'Défense planétaire : comment protéger notre planète des impacts d\'astéroïdes.', age: '8-14 ans' },
 ]
 

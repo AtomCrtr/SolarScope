@@ -15,9 +15,9 @@ const FAMOUS_ASTEROIDS = [
 
 const VIDEOS = [
     { title: 'DART : la NASA dévie un astéroïde', url: 'https://www.youtube.com/watch?v=4RA8Tfa6Sck', description: 'La mission historique DART qui a percuté l\'astéroïde Dimorphos en 2022.', age: '8-14 ans' },
-    { title: "C'est pas Sorcier — Les météorites", url: 'https://www.youtube.com/watch?v=4nCMi4hiYTw', description: 'Fred et Jamy expliquent les astéroïdes, météorites et comètes.', age: '7-14 ans' },
+    { title: 'Journée des astéroïdes — ESA', url: 'https://www.youtube.com/watch?v=SJLzZC2dVpg', description: 'Une vidéo de l’Agence spatiale européenne pour comprendre les astéroïdes et la façon dont les scientifiques les surveillent.', age: '8-14 ans' },
     { title: 'L\'astéroïde qui a tué les dinosaures', url: 'https://www.youtube.com/watch?v=dFCbJmgeHmA', description: 'Il y a 66 millions d\'années, un astéroïde de 10 km a changé l\'histoire de la Terre.', age: '8-14 ans' },
-    { title: 'OSIRIS-REx : rapporter un morceau d\'astéroïde', url: 'https://www.youtube.com/watch?v=bPUbaqxFnBg', description: 'Comment la sonde a collecté des échantillons de Bennu et les a ramenés sur Terre.', age: '10-14 ans' },
+    { title: 'OSIRIS-REx : retour de Bennu — NASA Goddard', url: 'https://www.youtube.com/watch?v=O8R2hsoIgTc', description: 'La fin du voyage de la sonde qui a rapporté des échantillons de l’astéroïde Bennu sur Terre.', age: '10-14 ans' },
 ]
 
 const SIZE_COMPARISONS = [

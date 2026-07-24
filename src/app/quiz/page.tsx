@@ -60,7 +60,7 @@ const VIDEOS = [
     { title: 'Le Système Solaire CM1‑CM2 — Maître Lucas', url: 'https://www.youtube.com/watch?v=jdInvnIkwIk', emoji: '🌟', age: '7-12 ans', description: 'Cours complet sur les 8 planètes, le Soleil et les satellites naturels.' },
     { title: 'Les Étoiles — National Geographic France', url: 'https://www.youtube.com/watch?v=CDy6kEEClK0', emoji: '★', age: '8-14 ans', description: 'Documentaire de qualité sur la naissance, la vie et la mort des étoiles.' },
     { title: 'L’Espace pour les enfants — Les étoiles 🚀', url: 'https://www.youtube.com/watch?v=q_03QQmiR9Y', emoji: '🔭', age: '6-12 ans', description: 'Voyage à travers les étoiles et l’Univers, expliqué simplement pour les ados.' },
-    { title: 'James Webb — Les premières images révolutionnaires (NASA)', url: 'https://www.youtube.com/watch?v=nmMRMIE_asw', emoji: '🔭', age: '8-14 ans', description: 'Les images qui ont changé notre vision de l\'Univers — en direct de la NASA.' },
+    { title: 'James Webb — Les premières images révolutionnaires (NASA)', url: 'https://www.youtube.com/watch?v=1C_zuHf6lP4', emoji: '🔭', age: '8-14 ans', description: 'Une sélection officielle d’images qui ont changé notre vision de l’Univers.' },
     { title: 'Mission Perseverance sur Mars (NASA)', url: 'https://www.youtube.com/watch?v=5qqsMjy8Rx0', emoji: '🔴', age: '6-12 ans', description: 'La NASA explore Mars avec son rover et son hélicoptère Ingenuity.' },
 ]
 
