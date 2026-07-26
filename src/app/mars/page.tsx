@@ -1,11 +1,14 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import KidsGuide from '@/components/learning/KidsGuide'
 import DataSourceNote from '@/components/learning/DataSourceNote'
+import MarsMission from '@/components/learning/MarsMission'
+import { SCIENTIFIC_SOURCES } from '@/lib/data/source-registry'
+import { MARS_DATA_CHECKED_ON, MARS_DATA_DISCLAIMER, MARS_FACTS, MARS_ROVER_MISSIONS, type MarsRoverId } from '@/lib/content/mars-data'
 
 const Planet3D = dynamic(() => import('@/components/space/Planet3D'), { ssr: false })
 const RoverViewer3D = dynamic(() => import('@/components/space/RoverViewer3D'), { ssr: false })
@@ -13,17 +16,6 @@ const RoverViewer3D = dynamic(() => import('@/components/space/RoverViewer3D'), 
 
 
 /* ─────────────────────────────────────────── DATA ── */
-const FACTS = [
-    { emoji: '🌡️', val: '-63°C', label: 'Temp. moyenne' },
-    { emoji: '📏', val: '6 792 km', label: 'Diamètre' },
-    { emoji: '🌙', val: '2 lunes', label: 'Phobos & Deimos' },
-    { emoji: '📅', val: '687 jours', label: 'Durée orbite' },
-    { emoji: '⚖️', val: '3.72 m/s²', label: 'Gravité' },
-    { emoji: '🏔️', val: '21 km', label: 'Olympus Mons' },
-    { emoji: '🕐', val: '24h 37', label: 'Journée martienne' },
-    { emoji: '☀️', val: '227.9 Mkm', label: 'Distance au Soleil' },
-]
-
 const ROVERS_DETAIL = [
     {
         name: 'Sojourner', agency: 'NASA / JPL', active: false, key: null,
@@ -52,7 +44,7 @@ const ROVERS_DETAIL = [
     {
         name: 'Curiosity', agency: 'NASA / JPL', active: true, key: 'curiosity',
         launch: '26 nov. 2011', land: '6 août 2012', area: 'Cratère Gale / Mont Sharp', color: '#ef4444',
-        mass: '899 kg', distance: '+29 km', duration: '4 200+ sols',
+        mass: '899 kg', distance: 'plus de 37 km', duration: 'sol 4 955 (juil. 2026)',
         emoji: '🤖',
         desc: 'Laboratoire mobile de la taille d\'une voiture. Explore le Cratère Gale depuis 2012 et grimpe le Mont Sharp. A confirmé que Mars était habitable par le passé.',
         achievements: ['Confirmation de conditions habitables passées', 'Détection de molécules organiques', 'Analyse de matière organique complexe', 'Mesure continue du rayonnement martien', 'Découverte de méthane saisonnier'],
@@ -60,10 +52,10 @@ const ROVERS_DETAIL = [
     {
         name: 'Perseverance', agency: 'NASA / JPL', active: true, key: 'perseverance',
         launch: '30 juil. 2020', land: '18 fév. 2021', area: 'Cratère Jezero', color: '#8b5cf6',
-        mass: '1 025 kg', distance: '+25 km', duration: '1 400+ sols',
+        mass: '1 025 kg', distance: '42,2 km', duration: 'sol 1 890 (juin 2026)',
         emoji: '🚀',
-        desc: 'Plus sophistiqué que jamais. Cherche des signes de vie ancienne dans un ancien delta de rivière. A déployé Ingenuity, le premier hélicoptère extraterrestre.',
-        achievements: ['Déploiement d\'Ingenuity (1er hélicoptère extraterrestre)', 'Production d\'oxygène avec MOXIE', 'Collecte de 23+ carottes de roches', 'Enregistrement des sons martiens', 'Analyse de dépôts lacustres du Cratère Jezero'],
+        desc: 'Laboratoire roulant qui cherche des traces d’ancienne vie dans un ancien delta de rivière. Il a transporté Ingenuity, le premier hélicoptère à voler sur une autre planète.',
+        achievements: ['Ingenuity : 72 vols, mission terminée en 2024', 'Production d\'oxygène avec MOXIE', 'Collecte de carottes de roches', 'Enregistrement des sons martiens', 'Analyse de dépôts lacustres du Cratère Jezero'],
     },
 ]
 
@@ -80,7 +72,7 @@ const MARS_TIMELINE = [
     { year: '2021', flag: '🇺🇸', event: 'Perseverance + Ingenuity', detail: 'Premier hélicoptère extraterrestre. Production d\'O₂. Collecte d\'échantillons pour retour.' },
     { year: '2022', flag: '🇦🇪', event: 'Hope Probe — Orbiteur', detail: 'Premier orbiteur des Émirats Arabes Unis. Cartographie de la météo martienne en 3D.' },
     { year: '2021', flag: '🇨🇳', event: 'Tianwen-1 + Zhurong', detail: 'Premières missions chinoises complètes : orbiteur + atterrisseur + rover.' },
-    { year: 'À confirmer', flag: '🌍', event: '🔮 Mars Sample Return', detail: 'La NASA réévalue l’architecture, le calendrier et le coût du retour des échantillons. Aucune date de retour n’est actuellement confirmée.' },
+    { year: '2026', flag: '🌍', event: '🔮 Mars Sample Return', detail: 'La NASA étudie encore plusieurs options pour rapporter les échantillons. Le calendrier définitif n’est pas confirmé.' },
 ]
 
 
@@ -138,17 +130,42 @@ const MARS_GALLERY = [
 ]
 
 export default function MarsPage() {
-    const [activeRover, setActiveRover] = useState<'curiosity' | 'perseverance'>('curiosity')
+    const [activeRover, setActiveRover] = useState<MarsRoverId>('curiosity')
     const [lightboxIdx, setLightboxIdx] = useState<number | null>(null)
+    const lightboxCloseRef = useRef<HTMLButtonElement>(null)
+    const lightboxPanelRef = useRef<HTMLDivElement>(null)
+    const lightboxTriggerRef = useRef<HTMLElement | null>(null)
     const activeRoverDetail = ROVERS_DETAIL.find(r => r.key === activeRover)!
+    const activeMission = MARS_ROVER_MISSIONS[activeRover]
 
     useEffect(() => {
         if (lightboxIdx === null) return
         const onKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'Escape') setLightboxIdx(null)
+            if (event.key === 'Escape') {
+                event.preventDefault()
+                setLightboxIdx(null)
+                return
+            }
+            if (event.key === 'Tab') {
+                const focusable = Array.from(lightboxPanelRef.current?.querySelectorAll<HTMLElement>('a[href], button:not([disabled])') ?? [])
+                if (!focusable.length) return
+                const first = focusable[0]
+                const last = focusable[focusable.length - 1]
+                if (event.shiftKey && document.activeElement === first) {
+                    event.preventDefault()
+                    last.focus()
+                } else if (!event.shiftKey && document.activeElement === last) {
+                    event.preventDefault()
+                    first.focus()
+                }
+            }
         }
         document.addEventListener('keydown', onKeyDown)
-        return () => document.removeEventListener('keydown', onKeyDown)
+        requestAnimationFrame(() => lightboxCloseRef.current?.focus())
+        return () => {
+            document.removeEventListener('keydown', onKeyDown)
+            lightboxTriggerRef.current?.focus()
+        }
     }, [lightboxIdx])
 
     return (
@@ -158,7 +175,7 @@ export default function MarsPage() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', alignItems: 'center', marginBottom: '2.5rem' }} className="max-sm:grid-cols-1">
                 <motion.div initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }}>
                     <div className="badge" style={{ background: 'rgba(239,68,68,0.12)', color: '#f87171', borderColor: 'rgba(239,68,68,0.25)' }}>
-                        🤖 ROVERS NASA — EN DIRECT
+                        🤖 ROVERS NASA — MISSIONS VÉRIFIÉES
                     </div>
                     <h1 className="page-title" style={{ background: 'linear-gradient(135deg, #fca5a5, #ef4444, #b91c1c)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
                         Mars
@@ -167,9 +184,9 @@ export default function MarsPage() {
                         Mars est la quatrième planète autour du Soleil. Deux rovers de la NASA y roulent encore et plusieurs engins l&apos;observent depuis l&apos;espace.
                     </p>
                     {/* Active rover selector */}
-                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }} role="tablist" aria-label="Choisir un rover">
                         {ACTIVE_ROVERS.map(r => (
-                            <button key={r.key} onClick={() => setActiveRover(r.key as 'curiosity' | 'perseverance')} style={{
+                            <button key={r.key} type="button" role="tab" aria-selected={activeRover === r.key} onClick={() => setActiveRover(r.key as MarsRoverId)} style={{
                                 padding: '0.5rem 1.1rem', borderRadius: 99, fontSize: '0.82rem', fontWeight: 700,
                                 cursor: 'pointer', border: `2px solid ${activeRover === r.key ? r.color : 'rgba(255,255,255,0.1)'}`,
                                 background: activeRover === r.key ? `${r.color}18` : 'transparent',
@@ -189,32 +206,39 @@ export default function MarsPage() {
                             border: '1px solid rgba(239,68,68,0.15)',
                             boxShadow: '0 0 60px rgba(239,68,68,0.08)',
                         }}>
-                            <Planet3D textureUrl="/textures/mars.jpg" size={2.1} rotationSpeed={0.002} atmosphereColor="#ef4444" />
+                            <Planet3D textureUrl="/textures/mars.jpg" size={2.1} rotationSpeed={0.002} atmosphereColor="#ef4444" label="Mars" />
                         </div>
                         <div style={{
                             position: 'absolute', bottom: 12, left: 0, right: 0, textAlign: 'center',
                             color: '#475569', fontSize: '0.65rem', letterSpacing: '0.05em',
                         }}>🖱 Maintenir & glisser pour explorer</div>
-                        {/* Live badge */}
                         <div style={{
                             position: 'absolute', top: 14, right: 14,
                             background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)',
                             border: '1px solid rgba(239,68,68,0.3)', borderRadius: 99,
                             padding: '4px 10px', display: 'flex', alignItems: 'center', gap: 5,
                         }}>
-                            <span className="pulse-dot" style={{ width: 6, height: 6 }} />
-                            <span style={{ color: '#f87171', fontSize: '0.68rem', fontWeight: 700 }}>NASA · En direct</span>
+                            <span aria-hidden="true">●</span>
+                            <span style={{ color: '#f87171', fontSize: '0.68rem', fontWeight: 700 }}>NASA · vérifié le 26/07/2026</span>
                         </div>
                     </div>
                 </motion.div>
             </div>
 
             <KidsGuide topic="mars" />
-            <DataSourceNote source="NASA Mars Exploration Program" href="https://science.nasa.gov/mars/" refreshed="Faits de référence ; l’état des missions est indiqué sur la page" />
+            <DataSourceNote
+                source={SCIENTIFIC_SOURCES.marsRovers.label}
+                href={SCIENTIFIC_SOURCES.marsRovers.href}
+                refreshed="Données de référence et état des missions : elles ne sont pas suivies en direct."
+                checkedOn={MARS_DATA_CHECKED_ON}
+                cadence="reference"
+            />
+
+            <MarsMission rover={activeMission} onChooseRover={setActiveRover} />
 
             {/* ── STATS ── */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.65rem', marginBottom: '2.5rem' }} className="max-sm:grid-cols-2">
-                {FACTS.map((s, i) => (
+                {MARS_FACTS.map((s, i) => (
                     <motion.div key={s.label} className="stat-card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
                         <div style={{ fontSize: '1.4rem' }}>{s.emoji}</div>
                         <div className="stat-value" style={{ color: '#f87171', fontSize: '1.05rem' }}>{s.val}</div>
@@ -222,6 +246,12 @@ export default function MarsPage() {
                     </motion.div>
                 ))}
             </div>
+            <p style={{ color: '#94a3b8', fontSize: '0.72rem', lineHeight: 1.55, marginTop: '-1.85rem', marginBottom: '2.5rem' }}>
+                {MARS_DATA_DISCLAIMER}{' '}
+                <a href={SCIENTIFIC_SOURCES.marsFacts.href} target="_blank" rel="noopener noreferrer" style={{ color: '#fca5a5', textDecoration: 'underline', textUnderlineOffset: 3 }}>
+                    Voir la fiche NASA
+                </a>
+            </p>
 
             {/* ── ACTIVE ROVER DETAIL ── */}
             <div className="divider" />
@@ -230,8 +260,8 @@ export default function MarsPage() {
                     {activeRoverDetail.emoji} Rover {activeRoverDetail.name}
                 </h2>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <span className="pulse-dot" />
-                    <span style={{ color: '#10b981', fontSize: '0.75rem', fontWeight: 700 }}>Actif · {activeRoverDetail.area}</span>
+                    <span aria-hidden="true" style={{ color: '#10b981' }}>●</span>
+                    <span style={{ color: '#10b981', fontSize: '0.75rem', fontWeight: 700 }}>Mission en cours · {activeRoverDetail.area} · vérifié le 26/07/2026</span>
                 </div>
             </div>
 
@@ -272,10 +302,12 @@ export default function MarsPage() {
             {/* ── 3D ROVER VIEWER ── */}
             <div style={{ marginBottom: '2.5rem' }}>
                 <h2 className="section-title" style={{ color: '#e2e8f0', marginBottom: '0.5rem' }}>
-                    🛸 Maquette 3D — {activeRoverDetail.name}
+                    {activeRover === 'perseverance' ? '🛸 Modèle 3D' : '📷 Vue NASA'} — {activeRoverDetail.name}
                 </h2>
                 <p style={{ color: '#94a3b8', fontSize: '0.72rem', marginBottom: '1rem' }}>
-                    Modèle 3D officiel NASA · Faites pivoter avec la souris
+                    {activeRover === 'perseverance'
+                        ? 'Modèle 3D manipulable : utilise la souris ou le doigt pour le faire pivoter.'
+                        : 'Image NASA/JPL de Curiosity : elle ne se manipule pas comme un modèle 3D.'}
                 </p>
                 <RoverViewer3D rover={activeRover} height={360} />
             </div>
@@ -289,10 +321,13 @@ export default function MarsPage() {
                     {MARS_GALLERY.map((photo, i) => (
                         <motion.button type="button" aria-label={`Agrandir ${photo.title}`} key={i}
                             initial={{ opacity: 0, scale: 0.94 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.03 }}
-                            onClick={() => setLightboxIdx(i)}
+                            onClick={event => {
+                                lightboxTriggerRef.current = event.currentTarget
+                                setLightboxIdx(i)
+                            }}
                             style={{ cursor: 'pointer', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)', position: 'relative', padding: 0, textAlign: 'left', background: 'transparent' }}
                             whileHover={{ scale: 1.04, borderColor: `${photo.color}50` }}>
-                            <Image src={photo.src} alt={photo.title} width={640} height={400}
+                            <Image src={photo.src} alt={photo.title} width={640} height={400} sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 300px" quality={75}
                                 style={{ width: '100%', height: 160, objectFit: 'cover', display: 'block', background: 'rgba(0,0,0,0.5)' }}
                                 onError={e => {
                                     const image = e.currentTarget
@@ -322,20 +357,21 @@ export default function MarsPage() {
                         role="dialog"
                         aria-modal="true"
                         aria-labelledby="mars-dialog-title"
+                        aria-describedby="mars-dialog-description"
                         style={{
                             position: 'fixed', inset: 0, zIndex: 9000,
                             background: 'rgba(0,0,0,0.94)', backdropFilter: 'blur(16px)',
                             display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem',
                         }}>
-                        <motion.div initial={{ scale: 0.88 }} animate={{ scale: 1 }} exit={{ scale: 0.88 }}
+                        <motion.div ref={lightboxPanelRef} initial={{ scale: 0.88 }} animate={{ scale: 1 }} exit={{ scale: 0.88 }}
                             onClick={e => e.stopPropagation()}
                             style={{ maxWidth: 880, width: '100%', borderRadius: '1.25rem', overflow: 'hidden', border: `1px solid ${MARS_GALLERY[lightboxIdx].color}30` }}>
-                            <Image src={MARS_GALLERY[lightboxIdx].src} alt={MARS_GALLERY[lightboxIdx].title} width={1400} height={900}
+                            <Image src={MARS_GALLERY[lightboxIdx].src} alt={MARS_GALLERY[lightboxIdx].title} width={1400} height={900} sizes="(max-width: 920px) 100vw, 880px" quality={80}
                                 style={{ width: '100%', height: 'auto', display: 'block', maxHeight: '65vh', objectFit: 'contain', background: '#000' }} />
                             <div style={{ padding: '1rem 1.5rem', background: '#080816', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
                                 <div>
                                     <h2 id="mars-dialog-title" style={{ color: MARS_GALLERY[lightboxIdx].color, fontWeight: 700, fontFamily: 'Outfit' }}>{MARS_GALLERY[lightboxIdx].title}</h2>
-                                    <div style={{ color: '#64748b', fontSize: '0.8rem', marginTop: 2 }}>{MARS_GALLERY[lightboxIdx].desc}</div>
+                                    <div id="mars-dialog-description" style={{ color: '#64748b', fontSize: '0.8rem', marginTop: 2 }}>{MARS_GALLERY[lightboxIdx].desc}</div>
                                     <div style={{ color: '#334155', fontSize: '0.7rem', marginTop: 3 }}>Rover {MARS_GALLERY[lightboxIdx].rover} · {MARS_GALLERY[lightboxIdx].camera} · Sol {MARS_GALLERY[lightboxIdx].sol}</div>
                                 </div>
                                 <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -343,7 +379,7 @@ export default function MarsPage() {
                                         style={{ padding: '0.5rem 1rem', borderRadius: 99, background: `${MARS_GALLERY[lightboxIdx].color}15`, border: `1px solid ${MARS_GALLERY[lightboxIdx].color}35`, color: MARS_GALLERY[lightboxIdx].color, fontSize: '0.8rem', textDecoration: 'none', fontWeight: 600 }}>
                                         ↗ Pleine résolution
                                     </a>
-                                    <button onClick={() => setLightboxIdx(null)}
+                                    <button ref={lightboxCloseRef} type="button" onClick={() => setLightboxIdx(null)}
                                         style={{ padding: '0.5rem 1rem', borderRadius: 99, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8', fontSize: '0.8rem', cursor: 'pointer' }}>
                                         ✕ Fermer
                                     </button>
@@ -356,9 +392,9 @@ export default function MarsPage() {
 
             {/* ── ROVER HISTORY ── */}
             <div className="divider" />
-            <h2 className="section-title" style={{ color: '#e2e8f0' }}>🤖 Tous les rovers martiens</h2>
+            <h2 className="section-title" style={{ color: '#e2e8f0' }}>🤖 Rovers de la NASA présentés ici</h2>
             <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginBottom: '1.5rem', marginTop: '-0.5rem' }}>
-                Cinq rovers se sont posés sur Mars depuis 1997. Deux sont encore actifs aujourd&apos;hui.
+                Ces cinq rovers de la NASA racontent l’histoire de l’exploration martienne. Curiosity et Perseverance sont des missions en cours ; leur état est daté ci-dessus.
             </p>
             <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))' }}>
                 {ROVERS_DETAIL.map((r, i) => (

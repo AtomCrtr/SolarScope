@@ -63,6 +63,25 @@ test('the planet explorer stays inside a phone viewport', async ({ page }) => {
   expect(widths.scroll).toBeLessThanOrEqual(widths.client + 1)
 })
 
+test('the Mars mission exposes a short rover journey and keeps its gallery dialog keyboard-friendly', async ({ page }) => {
+  await page.goto('/mars', { waitUntil: 'domcontentloaded' })
+  const mission = page.locator('[data-mars-mission]')
+  await expect(mission).toBeVisible()
+  await expect(mission.locator('.mars-mission-steps > li')).toHaveCount(3)
+  await mission.getByRole('button', { name: /Perseverance/ }).click()
+  await expect(mission.getByText('Chercher des traces d’une ancienne vie microbienne')).toBeVisible()
+  await mission.getByRole('button', { name: 'Ouvrir l’indice' }).click()
+  await expect(mission.getByText('Perseverance explore d’anciens paysages')).toBeVisible()
+
+  const galleryButton = page.getByRole('button', { name: /Agrandir/ }).first()
+  await galleryButton.click()
+  const dialog = page.getByRole('dialog')
+  await expect(dialog).toBeVisible()
+  await page.keyboard.press('Escape')
+  await expect(dialog).toBeHidden()
+  await expect(galleryButton).toBeFocused()
+})
+
 test('the homepage does not overflow on a 320 px viewport', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 700 })
   await page.goto('/', { waitUntil: 'domcontentloaded' })

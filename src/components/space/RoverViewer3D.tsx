@@ -1,13 +1,13 @@
 'use client'
 
-import { Suspense, useMemo, useRef, useState } from 'react'
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useGLTF, OrbitControls, Html } from '@react-three/drei'
 import Image from 'next/image'
 import * as THREE from 'three'
 
 /* ─── Rover 3D mesh (only for Perseverance GLB) ─── */
-function RoverMesh({ url }: { url: string }) {
+function RoverMesh({ url, reduceMotion }: { url: string; reduceMotion: boolean }) {
     const { scene } = useGLTF(url)
     const groupRef = useRef<THREE.Group>(null)
 
@@ -26,7 +26,7 @@ function RoverMesh({ url }: { url: string }) {
     }, [scene])
 
     useFrame(() => {
-        if (groupRef.current) groupRef.current.rotation.y += 0.004
+        if (groupRef.current && !reduceMotion) groupRef.current.rotation.y += 0.004
     })
 
     return (
@@ -49,16 +49,16 @@ function CanvasLoader() {
 }
 
 /* ─── Perseverance 3D Canvas ─── */
-function PerseveranceCanvas({ height }: { height: number }) {
+function PerseveranceCanvas({ height, reduceMotion }: { height: number; reduceMotion: boolean }) {
     return (
         <div style={{ height, width: '100%' }}>
-            <Canvas role="img" aria-label="Modèle interactif en trois dimensions du rover Perseverance" camera={{ position: [6, 3, 6], fov: 40 }} gl={{ antialias: true, alpha: true }}>
+            <Canvas role="img" aria-label="Modèle interactif en trois dimensions du rover Perseverance" camera={{ position: [6, 3, 6], fov: 40 }} gl={{ antialias: true, alpha: true }} dpr={[1, 1.5]} frameloop={reduceMotion ? 'demand' : 'always'}>
                 <ambientLight intensity={0.5} />
                 <directionalLight position={[10, 8, 5]} intensity={2} color="#fff5e0" />
                 <directionalLight position={[-6, 4, -4]} intensity={0.5} color="#6688ff" />
                 <pointLight position={[0, -6, 0]} intensity={0.25} color="#330000" />
                 <Suspense fallback={<CanvasLoader />}>
-                    <RoverMesh url="/models/perseverance.glb" />
+                    <RoverMesh url="/models/perseverance.glb" reduceMotion={reduceMotion} />
                 </Suspense>
                 <OrbitControls
                     enableZoom={true}
@@ -115,6 +115,15 @@ const ROVER_META = {
 export default function RoverViewer3D({ rover, height = 340 }: RoverViewer3DProps) {
     const meta = ROVER_META[rover]
     const [glbError, setGlbError] = useState(false)
+    const [reduceMotion, setReduceMotion] = useState(false)
+
+    useEffect(() => {
+        const media = window.matchMedia('(prefers-reduced-motion: reduce)')
+        const sync = () => setReduceMotion(media.matches)
+        sync()
+        media.addEventListener('change', sync)
+        return () => media.removeEventListener('change', sync)
+    }, [])
 
     return (
         <div style={{
@@ -141,7 +150,7 @@ export default function RoverViewer3D({ rover, height = 340 }: RoverViewer3DProp
             {/* Content */}
             {rover === 'perseverance' && !glbError ? (
                 <div onError={() => setGlbError(true)}>
-                    <PerseveranceCanvas height={height} />
+                    <PerseveranceCanvas height={height} reduceMotion={reduceMotion} />
                 </div>
             ) : (
                 <CuriosityDisplay height={height} />
@@ -150,7 +159,7 @@ export default function RoverViewer3D({ rover, height = 340 }: RoverViewer3DProp
             {/* Controls hint for 3D */}
             {rover === 'perseverance' && !glbError && (
                 <div style={{ position: 'absolute', bottom: 8, right: 12, fontSize: '0.6rem', color: '#334155', pointerEvents: 'none' }}>
-                    🖱 Clic + glisser · Scroll zoomer
+                    🖱 Clic + glisser · Scroll pour zoomer
                 </div>
             )}
         </div>
