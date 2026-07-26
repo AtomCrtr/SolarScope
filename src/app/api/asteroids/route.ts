@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getAsteroidFeed } from '@/lib/space-data'
+import { getAsteroidFeed } from '@/lib/data/space-data'
 
 export async function GET() {
   try {

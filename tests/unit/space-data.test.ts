@@ -5,7 +5,7 @@ import {
   parseSolarWindPayload,
   parseXrayPayload,
   stationForCraft,
-} from '../../src/lib/space-data'
+} from '../../src/lib/data/space-data'
 
 describe('space data normalization', () => {
   it('maps crew vehicles to their current space station', () => {

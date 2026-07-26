@@ -1,6 +1,6 @@
-import { getNasaApiKey } from '@/lib/space-data'
+import { getNasaApiKey } from '@/lib/data/space-data'
 import Image from 'next/image'
-import KidsGuide from '@/components/KidsGuide'
+import KidsGuide from '@/components/learning/KidsGuide'
 
 async function getApod() {
     try {

@@ -1,14 +1,14 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
 import './globals.css'
-import Navbar from '@/components/Navbar'
-import StarField from '@/components/StarField'
-import SolarBotWidget from '@/components/SolarBotWidget'
-import Footer from '@/components/Footer'
-import Breadcrumb from '@/components/Breadcrumb'
-import ThemeToggle from '@/components/ThemeToggle'
-import ProgressTracker from '@/components/ProgressTracker'
-import { DEFAULT_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/site'
+import Navbar from '@/components/layout/Navbar'
+import StarField from '@/components/layout/StarField'
+import SolarBotWidget from '@/components/assistant/SolarBotWidget'
+import Footer from '@/components/layout/Footer'
+import Breadcrumb from '@/components/layout/Breadcrumb'
+import ThemeToggle from '@/components/layout/ThemeToggle'
+import ProgressTracker from '@/components/learning/ProgressTracker'
+import { DEFAULT_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/config/site'
 
 export const metadata: Metadata = {
   title: {
@@ -63,11 +63,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ProgressTracker />
         <StarField />
         <Navbar themeToggle={<ThemeToggle />} />
-        {/* Breadcrumb — auto-hides on homepage */}
-        <div style={{ position: 'relative', zIndex: 10, maxWidth: 'var(--max-w)', margin: '0 auto', padding: '0.5rem 2rem 0' }}>
-          <Breadcrumb />
-        </div>
         <main className="relative z-10" style={{ paddingTop: 'calc(var(--navbar-h) + 0.25rem)', minHeight: '100vh' }}>
+          {/* Breadcrumb — auto-hides on homepage and clears the fixed navbar. */}
+          <div style={{ maxWidth: 'var(--max-w)', margin: '0 auto', padding: '0.5rem var(--section-px) 0' }}>
+            <Breadcrumb />
+          </div>
           {children}
         </main>
         <Footer />

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getSpaceWeatherData } from '@/lib/space-data'
+import { getSpaceWeatherData } from '@/lib/data/space-data'
 
 export async function GET() {
   const data = await getSpaceWeatherData()

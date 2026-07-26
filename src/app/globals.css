@@ -308,7 +308,14 @@ video {
   font-weight: 800;
 }
 
-.source-note a { color: #a5b4fc; text-underline-offset: 3px; }
+.source-note a {
+  color: #c4b5fd;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+.source-note a:hover { color: #ddd6fe; }
 .source-note p { margin: 0; }
 
 .passport-grid, .parent-guide-grid {
@@ -580,6 +587,7 @@ video {
   .kids-listen-button { width: 100%; justify-content: center; }
   .kids-takeaways ol,
   .kids-glossary { grid-template-columns: 1fr; }
+  .kids-guide { background: linear-gradient(145deg, #0b1730, #06061a); }
 }
 
 /* ─── DIVIDER ─── */
@@ -679,7 +687,7 @@ video {
 
 /* ─── 2026 HOME EXPERIENCE ─── */
 .home-hero {
-  min-height: min(720px, calc(100vh - var(--navbar-h)));
+  min-height: max(720px, calc(100svh - var(--navbar-h)));
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(420px, 0.95fr);
   align-items: center;
@@ -722,7 +730,7 @@ video {
 }
 
 .home-title {
-  max-width: 100%;
+  max-width: min(100%, 780px);
   color: #f8fafc;
   font-family: 'Outfit', sans-serif;
   font-size: clamp(3.1rem, 5.35vw, 5.55rem);
@@ -733,7 +741,8 @@ video {
 
 .home-title span {
   display: block;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
   background: linear-gradient(105deg, #b9c2ff 0%, #8b7cf6 48%, #38bdf8 100%);
   background-clip: text;
   -webkit-background-clip: text;
@@ -974,6 +983,24 @@ video {
   .home-title {
     font-size: clamp(2.6rem, 14vw, 3.3rem);
     overflow-wrap: anywhere;
+  }
+}
+
+/* Keep the assistant available without covering a lesson on a phone. */
+@media (max-width: 720px) {
+  .solarbot-launcher {
+    right: max(0.75rem, env(safe-area-inset-right)) !important;
+    bottom: max(0.75rem, env(safe-area-inset-bottom)) !important;
+  }
+  .solarbot-tip { display: none !important; }
+  .solarbot-toggle {
+    width: 48px !important;
+    height: 48px !important;
+    font-size: 1.3rem !important;
+  }
+  .solarbot-dialog {
+    right: max(0.75rem, env(safe-area-inset-right)) !important;
+    bottom: max(4.5rem, calc(env(safe-area-inset-bottom) + 3.75rem)) !important;
   }
 }
 

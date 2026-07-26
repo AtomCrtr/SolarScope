@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getIssPosition } from '@/lib/space-data'
+import { getIssPosition } from '@/lib/data/space-data'
 
 export async function GET() {
   try {

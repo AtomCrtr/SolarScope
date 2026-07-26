@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
-import KidsGuide from '@/components/KidsGuide'
+import KidsGuide from '@/components/learning/KidsGuide'
 
 interface WebbImage {
   nasa_id: string

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import SpacePassport from '@/components/SpacePassport'
+import SpacePassport from '@/components/learning/SpacePassport'
 
 export const metadata: Metadata = { title: 'Mon passeport spatial', description: 'Les missions découvertes sur SolarScope, enregistrées uniquement sur cet appareil.' }
 

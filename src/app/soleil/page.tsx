@@ -3,10 +3,10 @@
 import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
-import KidsGuide from '@/components/KidsGuide'
+import KidsGuide from '@/components/learning/KidsGuide'
 
-const Sun3D = dynamic(() => import('@/components/Sun3D'), { ssr: false })
-const SpaceWeatherDashboard = dynamic(() => import('@/components/SpaceWeatherDashboard'), { ssr: false })
+const Sun3D = dynamic(() => import('@/components/space/Sun3D'), { ssr: false })
+const SpaceWeatherDashboard = dynamic(() => import('@/components/space/SpaceWeatherDashboard'), { ssr: false })
 
 
 /* ── Data ── */

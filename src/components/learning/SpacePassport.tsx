@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { clearLocalProgress, PROGRESS_EVENT, readLocalProgress, type LocalProgress, type MissionId } from '@/lib/local-progress'
+import { clearLocalProgress, PROGRESS_EVENT, readLocalProgress, type LocalProgress, type MissionId } from '@/lib/client/local-progress'
 
 const MISSIONS: Array<{ id: MissionId; emoji: string; title: string; href: string; text: string }> = [
   { id: 'planetes', emoji: '🪐', title: 'Planètes', href: '/planetes', text: 'Compare les mondes autour du Soleil.' },

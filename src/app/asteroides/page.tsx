@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import KidsGuide from '@/components/KidsGuide'
+import KidsGuide from '@/components/learning/KidsGuide'
 
 const FAMOUS_ASTEROIDS = [
     { name: 'Bennu', size: '490 m', danger: true, color: '#ef4444', description: "L'astéroïde le plus étudié. La sonde OSIRIS-REx en a ramené des échantillons sur Terre en 2023 ! Il a 1 chance sur 2 700 d'impacter la Terre en 2182.", fun: 'Bennu fait un tour sur lui-même en 4h 17min et projette des cailloux dans l\'espace comme un petit volcan !' },

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { createPageMetadata } from '@/lib/site'
+import { createPageMetadata } from '@/lib/config/site'
 
 export const metadata = createPageMetadata(
   'Page introuvable',

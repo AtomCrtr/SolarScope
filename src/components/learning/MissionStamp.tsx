@@ -1,8 +1,8 @@
 'use client'
 
 import { useSyncExternalStore } from 'react'
-import { completeMission, PROGRESS_EVENT, readLocalProgress, type MissionId } from '@/lib/local-progress'
-import { useSiteLocale } from '@/components/LanguageToggle'
+import { completeMission, PROGRESS_EVENT, readLocalProgress, type MissionId } from '@/lib/client/local-progress'
+import { useSiteLocale } from '@/components/layout/LanguageToggle'
 
 export default function MissionStamp({ mission }: { mission: MissionId }) {
   const locale = useSiteLocale()

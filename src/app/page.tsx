@@ -4,10 +4,10 @@ import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useEffect, useMemo, useState } from 'react'
-import type { DashboardData } from '@/lib/space-data'
-import { useSiteLocale } from '@/components/LanguageToggle'
+import type { DashboardData } from '@/lib/data/space-data'
+import { useSiteLocale } from '@/components/layout/LanguageToggle'
 
-const Earth3D = dynamic(() => import('@/components/Earth3D'), { ssr: false })
+const Earth3D = dynamic(() => import('@/components/space/Earth3D'), { ssr: false })
 
 const HOME_COPY = {
   fr: {

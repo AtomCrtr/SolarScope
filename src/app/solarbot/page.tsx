@@ -2,7 +2,7 @@
 
 import { Fragment, useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import KidsGuide from '@/components/KidsGuide'
+import KidsGuide from '@/components/learning/KidsGuide'
 
 interface Message {
     role: 'user' | 'bot'

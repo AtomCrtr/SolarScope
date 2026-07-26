@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { LEARNING_TOPICS } from '../../src/lib/learning-content'
+import { LEARNING_TOPICS } from '../../src/lib/content/learning-content'
 
 const wordCount = (text: string) => text.trim().split(/\s+/).filter(Boolean).length
 

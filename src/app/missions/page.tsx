@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
-import KidsGuide from '@/components/KidsGuide'
+import KidsGuide from '@/components/learning/KidsGuide'
 
-const SpaceXSection = dynamic(() => import('@/components/SpaceXSection'), { ssr: false })
+const SpaceXSection = dynamic(() => import('@/components/space/SpaceXSection'), { ssr: false })
 
 const MISSIONS = [
     { name: 'Spoutnik 1', annee: 1957, pays: 'URSS', type: 'Satellite', statut: 'Terminée', emoji: '📡', color: '#94a3b8', description: "Le tout premier satellite artificiel ! Il a fait 'bip bip' pendant 21 jours autour de la Terre.", fun: "Spoutnik signifie 'compagnon de voyage' en russe." },

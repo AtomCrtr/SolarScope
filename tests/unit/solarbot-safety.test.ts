@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { containsSensitivePersonalInformation, solarBotContentIsSafe } from '../../src/lib/solarbot-safety'
+import { containsSensitivePersonalInformation, solarBotContentIsSafe } from '../../src/lib/security/solarbot-safety'
 
 describe('solarbot privacy guard', () => {
   it.each([

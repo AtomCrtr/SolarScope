@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { checkDistributedRateLimit } from '@/lib/rate-limit'
+import { checkDistributedRateLimit } from '@/lib/security/rate-limit'
 
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024
 const ALLOWED_SOURCES = [

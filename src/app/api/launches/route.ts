@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getUpcomingLaunches } from '@/lib/space-data'
+import { getUpcomingLaunches } from '@/lib/data/space-data'
 
 export async function GET(request: NextRequest) {
   const requestedLimit = Number(request.nextUrl.searchParams.get('limit') || 8)

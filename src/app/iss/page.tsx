@@ -3,11 +3,11 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
-import type { DashboardData, IssPosition } from '@/lib/space-data'
-import KidsGuide from '@/components/KidsGuide'
-import DataSourceNote from '@/components/DataSourceNote'
+import type { DashboardData, IssPosition } from '@/lib/data/space-data'
+import KidsGuide from '@/components/learning/KidsGuide'
+import DataSourceNote from '@/components/learning/DataSourceNote'
 
-const ISSGlobe = dynamic(() => import('@/components/ISSGlobe'), { ssr: false })
+const ISSGlobe = dynamic(() => import('@/components/space/ISSGlobe'), { ssr: false })
 
 interface LaunchInfo {
     name: string

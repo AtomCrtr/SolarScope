@@ -117,11 +117,19 @@ GitHub Actions exécute les contrôles essentiels à chaque push et pull request
 ```text
 src/
 ├── app/          Pages App Router et routes API
-├── components/   Interface, 3D, navigation et SolarBot
+├── components/
+│   ├── assistant/ SolarBot
+│   ├── layout/    Navigation, thème et décor global
+│   ├── learning/  Guides, missions et passeport
+│   └── space/     Visualisations 2D/3D et tableaux de bord
 └── lib/          Données externes, cache, sécurité et quotas
 public/           Textures, images et ressources statiques
-tests/unit/       Tests de contenu, données et sécurité
+tests/            Tests unitaires et parcours Playwright
+scripts/          Contrôles de ressources externes
+docs/             Architecture et décisions de conception
 ```
+
+Les conventions de rangement et le détail des domaines sont dans [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). L’audit design le plus récent est disponible dans [docs/DESIGN_AUDIT_2026-07-26.md](docs/DESIGN_AUDIT_2026-07-26.md).
 
 Principales briques : Next.js 16, React 19, TypeScript, Tailwind CSS 4, Framer Motion, Three.js, React Three Fiber, Upstash Redis et Vercel.
 
@@ -136,10 +144,9 @@ Chaque push sur `main` déclenche automatiquement un déploiement. Le cron défi
 
 ## Pistes d’amélioration
 
-1. Traduire les parcours prioritaires en anglais avec relecture pédagogique, en commençant par Planètes, Mars, ISS et Quiz.
-2. Ajouter une vérification planifiée des liens YouTube et des sources externes, avec un rapport ouvrable avant qu’un lien mort soit affiché.
-3. Ajouter des tests visuels de l’accueil aux largeurs 1280 px et 1920 px pour éviter le retour d’un titre ou d’un globe mal cadré.
-4. Proposer un espace parent/enseignant : objectif de chaque parcours, durée, vocabulaire et prolongements hors écran.
-5. Mesurer anonymement les parcours réellement terminés afin d’améliorer les explications les moins comprises, sans collecter de données enfant.
+1. Ajouter des captures Playwright de référence à 1280 px, 1600 px et 390 px après validation humaine, afin de comparer automatiquement les futures interfaces.
+2. Tester le parcours 6–8 ans avec des enfants et des adultes afin d’ajuster le vocabulaire, les boutons et l’emplacement de SolarBot.
+3. Compléter la provenance de chaque statistique fixe par une date de vérification et un lien source.
+4. Étendre progressivement la traduction anglaise avec une relecture pédagogique native.
 
 Consultez aussi la [politique de confidentialité](https://solar-scope.vercel.app/confidentialite).

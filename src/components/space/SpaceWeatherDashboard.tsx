@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import type { MagneticField, SolarWind, SpaceWeatherData } from '@/lib/space-data'
+import type { MagneticField, SolarWind, SpaceWeatherData } from '@/lib/data/space-data'
 
 /* ─── Helpers ─── */
 function getFlareClass(flux: number): { label: string; color: string; bg: string; danger: string } {

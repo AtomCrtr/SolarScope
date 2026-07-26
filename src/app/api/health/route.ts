@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getDashboardData, getIssPosition, getSpaceWeatherData } from '@/lib/space-data'
+import { getDashboardData, getIssPosition, getSpaceWeatherData } from '@/lib/data/space-data'
 
 export const dynamic = 'force-dynamic'
 

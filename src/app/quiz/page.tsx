@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import KidsGuide from '@/components/KidsGuide'
-import { recordQuizScore } from '@/lib/local-progress'
+import KidsGuide from '@/components/learning/KidsGuide'
+import { recordQuizScore } from '@/lib/client/local-progress'
 
 const QUIZ_BANK_DEBUTANT = [
     { question: 'Quelle est la plus grande planète du Système solaire ?', options: ['🪐 Saturne', '🟠 Jupiter', '🔵 Neptune', '🟦 Uranus'], answer: '🟠 Jupiter', explication: 'Jupiter est tellement grande qu\'elle pourrait contenir 1 300 Terres !', emoji: '🌍' },

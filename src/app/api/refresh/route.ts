@@ -9,7 +9,7 @@ import {
   getSpaceWeatherData,
   getUpcomingLaunches,
   SPACE_CACHE_TAGS,
-} from '@/lib/space-data'
+} from '@/lib/data/space-data'
 
 export const dynamic = 'force-dynamic'
 

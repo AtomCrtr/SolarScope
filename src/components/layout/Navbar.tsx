@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, useRef } from 'react'
-import LanguageToggle, { useSiteLocale } from '@/components/LanguageToggle'
+import LanguageToggle, { useSiteLocale } from '@/components/layout/LanguageToggle'
 
 /* ─────────────────────────────────────────────
    Navigation structure — 5 logical categories

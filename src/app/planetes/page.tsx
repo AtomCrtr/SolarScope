@@ -3,11 +3,11 @@
 import { useState, Suspense, lazy } from 'react'
 import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
-import KidsGuide from '@/components/KidsGuide'
-import DataSourceNote from '@/components/DataSourceNote'
+import KidsGuide from '@/components/learning/KidsGuide'
+import DataSourceNote from '@/components/learning/DataSourceNote'
 
-const Planet3D = lazy(() => import('@/components/Planet3D'))
-const SolarSystem2D = dynamic(() => import('@/components/SolarSystem2D'), { ssr: false })
+const Planet3D = lazy(() => import('@/components/space/Planet3D'))
+const SolarSystem2D = dynamic(() => import('@/components/space/SolarSystem2D'), { ssr: false })
 
 const PLANETS = [
     { name: 'Mercure', emoji: '☿', texture: null, color: '#94a3b8', type: 'Rocheuse', gravity: 3.7, meanRadius: 2439.7, avgTemp: 440, density: 5.43, distSun: 57.9, moons: 0, orbit: 88, atmosphere: false, description: 'La plus petite et la plus proche du Soleil. Pas d\'atmosphère, températures extrêmes.', fun: 'Un jour sur Mercure dure 176 jours terrestres !' },

@@ -1,9 +1,9 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { LEARNING_TOPICS, type LearningTopic, type LearningTopicId } from '@/lib/learning-content'
-import MissionStamp from '@/components/MissionStamp'
-import { useSiteLocale } from '@/components/LanguageToggle'
+import { LEARNING_TOPICS, type LearningTopic, type LearningTopicId } from '@/lib/content/learning-content'
+import MissionStamp from '@/components/learning/MissionStamp'
+import { useSiteLocale } from '@/components/layout/LanguageToggle'
 
 type KidsGuideProps = {
   topic: LearningTopicId

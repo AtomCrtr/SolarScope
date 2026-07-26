@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
-import { type MissionId, visitMission } from '@/lib/local-progress'
+import { type MissionId, visitMission } from '@/lib/client/local-progress'
 
 const PATH_TO_MISSION: Record<string, MissionId> = {
   '/planetes': 'planetes',

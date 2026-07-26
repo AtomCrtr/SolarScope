@@ -4,11 +4,11 @@ import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
-import KidsGuide from '@/components/KidsGuide'
-import DataSourceNote from '@/components/DataSourceNote'
+import KidsGuide from '@/components/learning/KidsGuide'
+import DataSourceNote from '@/components/learning/DataSourceNote'
 
-const Planet3D = dynamic(() => import('@/components/Planet3D'), { ssr: false })
-const RoverViewer3D = dynamic(() => import('@/components/RoverViewer3D'), { ssr: false })
+const Planet3D = dynamic(() => import('@/components/space/Planet3D'), { ssr: false })
+const RoverViewer3D = dynamic(() => import('@/components/space/RoverViewer3D'), { ssr: false })
 
 
 

@@ -87,10 +87,10 @@ export default function SolarBotWidget() {
     return (
         <>
             {/* Floating bubble button */}
-            <div style={{ position: 'fixed', bottom: '1.5rem', right: '1.5rem', zIndex: 1000 }}>
+            <div className="solarbot-launcher" style={{ position: 'fixed', bottom: '1.5rem', right: '1.5rem', zIndex: 1000 }}>
                 <AnimatePresence>
                     {!open && pulse && (
-                        <motion.div
+                        <motion.div className="solarbot-tip"
                             initial={{ scale: 0, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0, opacity: 0 }}
@@ -107,7 +107,7 @@ export default function SolarBotWidget() {
                     )}
                 </AnimatePresence>
 
-                <motion.button
+                <motion.button className="solarbot-toggle"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => {
@@ -140,7 +140,7 @@ export default function SolarBotWidget() {
             {/* Chat panel */}
             <AnimatePresence>
                 {open && (
-                    <motion.div
+                    <motion.div className="solarbot-dialog"
                         id="solarbot-dialog"
                         role="dialog"
                         aria-label="Discussion avec SolarBot"

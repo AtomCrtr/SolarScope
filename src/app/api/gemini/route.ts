@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { checkDistributedRateLimit } from '@/lib/rate-limit'
-import { readJsonBody } from '@/lib/request-body'
-import { solarBotContentIsSafe, SOLARBOT_PRIVACY_REMINDER } from '@/lib/solarbot-safety'
+import { checkDistributedRateLimit } from '@/lib/security/rate-limit'
+import { readJsonBody } from '@/lib/security/request-body'
+import { solarBotContentIsSafe, SOLARBOT_PRIVACY_REMINDER } from '@/lib/security/solarbot-safety'
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite'

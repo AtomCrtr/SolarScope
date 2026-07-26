@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createPageMetadata, SITE_URL } from '../../src/lib/site'
+import { createPageMetadata, SITE_URL } from '../../src/lib/config/site'
 
 describe('site metadata', () => {
   it('uses the current production domain', () => {

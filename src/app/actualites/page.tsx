@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
-import type { NewsArticle } from '@/lib/space-data'
-import KidsGuide from '@/components/KidsGuide'
+import type { NewsArticle } from '@/lib/data/space-data'
+import KidsGuide from '@/components/learning/KidsGuide'
 
 const CATEGORY_COLORS: Record<string, string> = {
   Mars: '#f87171',

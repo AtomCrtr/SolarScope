@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { readJsonBody } from '../../src/lib/request-body'
+import { readJsonBody } from '../../src/lib/security/request-body'
 
 describe('readJsonBody', () => {
   it('refuses an oversized chunked body without Content-Length', async () => {
