@@ -1,21 +1,30 @@
 # 🔭 SolarScope
 
-**SolarScope rend le Système solaire et l’exploration spatiale compréhensibles pour les enfants de 8 à 12 ans.**
+**SolarScope est un site gratuit qui aide les enfants de 8 à 12 ans à comprendre l’espace, en français.**
 
-Chaque parcours part d’une question simple, utilise une comparaison concrète, puis donne trois idées à retenir. Le français est la langue éditoriale de référence ; l’accueil et la navigation disposent aussi d’une entrée en anglais.
+🌐 **Essayer le site :** [solar-scope.vercel.app](https://solar-scope.vercel.app)
 
-🌐 **Site en production :** [solar-scope.vercel.app](https://solar-scope.vercel.app)
+## Le projet en deux minutes
 
-## Aperçu
+L’espace peut sembler immense et compliqué. SolarScope le rend plus simple : l’enfant choisit un sujet, découvre une idée importante avec des mots faciles, puis répond à une petite question ou réalise un défi.
 
-- Parcours sur le Soleil, les planètes, Mars, l’ISS, les missions, Webb, les astéroïdes et bien plus.
-- Données spatiales issues de sources scientifiques identifiées : NASA, ESA, NOAA, IPAC et The Space Devs.
-- Explications courtes adaptées aux enfants, lecture audio locale et quiz.
-- Globe terrestre interactif et expériences 3D construites avec Three.js.
-- Explorateur des huit planètes : rotation au clavier ou au doigt, comparaison avec la Terre, une idée à la fois et mini-défi de fin.
-- Missions express de cinq minutes, recommandation de niveau au quiz et fiches parents imprimables.
-- SolarBot avec réponse de secours locale, protection de la vie privée et limitation des abus.
-- Thème clair/sombre, navigation clavier, prise en charge de `prefers-reduced-motion` et métadonnées SEO/PWA.
+Le site parle du Soleil, des planètes, de Mars, de l’ISS, des fusées, de Webb, des astéroïdes et du ciel. Les informations scientifiques viennent de sources reconnues, comme la NASA, l’ESA et la NOAA.
+
+## Ce que l’on peut faire
+
+- Explorer les huit planètes avec un globe à tourner, une comparaison avec la Terre et un mini-défi.
+- Suivre des missions courtes : lire, observer, essayer et raconter ce que l’on a appris.
+- Écouter les explications, répondre à des quiz et conserver ses progrès dans un passeport local.
+- Consulter des fiches simples pour les parents et les enseignants, avec une version imprimable.
+- Vérifier d’où viennent les chiffres grâce à la page [Données et sources](https://solar-scope.vercel.app/sources).
+
+## Pour les enfants, avec les adultes
+
+SolarScope ne demande pas de compte enfant et ne crée pas de profil. Le français est la langue principale ; une partie de la navigation et de l’accueil existe également en anglais. Les parents et les enseignants peuvent accompagner une mission, mais chaque activité est pensée pour rester simple à utiliser seul.
+
+## En bref pour les personnes qui contribuent
+
+Le projet est une application Next.js. Il privilégie des explications adaptées aux enfants, des données sourcées, la navigation au clavier et un affichage confortable sur mobile.
 
 ## Langues
 
