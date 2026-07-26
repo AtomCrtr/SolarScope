@@ -756,6 +756,14 @@ video {
   -webkit-text-fill-color: currentColor;
 }
 
+@media (min-width: 1101px) {
+  .home-title {
+    font-size: clamp(3rem, 4.9vw, 5.1rem);
+  }
+
+  .home-title span { white-space: nowrap; }
+}
+
 .home-intro {
   max-width: 600px;
   margin: 1.8rem 0 2rem;
