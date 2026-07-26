@@ -12,6 +12,8 @@ Chaque parcours part d’une question simple, utilise une comparaison concrète,
 - Données spatiales issues de sources scientifiques identifiées : NASA, ESA, NOAA, IPAC et The Space Devs.
 - Explications courtes adaptées aux enfants, lecture audio locale et quiz.
 - Globe terrestre interactif et expériences 3D construites avec Three.js.
+- Explorateur des huit planètes : rotation au clavier ou au doigt, comparaison avec la Terre, une idée à la fois et mini-défi de fin.
+- Missions express de cinq minutes, recommandation de niveau au quiz et fiches parents imprimables.
 - SolarBot avec réponse de secours locale, protection de la vie privée et limitation des abus.
 - Thème clair/sombre, navigation clavier, prise en charge de `prefers-reduced-motion` et métadonnées SEO/PWA.
 
@@ -74,6 +76,8 @@ Copiez `.env.example` vers `.env.local`. Ne publiez jamais ce fichier ni une cl�
 
 Les routes serveur valident les réponses externes et les mettent en cache.
 
+Les chiffres de référence et les flux en direct sont distingués dans le registre `src/lib/data/source-registry.ts`. La page [/sources](/sources) indique la source, le type de donnée et la date de vérification. Une valeur indisponible reste signalée comme indisponible : SolarScope ne la remplace jamais par une estimation silencieuse.
+
 | Données | Source | Cache indicatif |
 |---|---|---:|
 | Tableau de bord et équipages | NASA/IPAC, NASA NeoWs, People in Space | 15 à 60 min |
@@ -130,6 +134,7 @@ docs/             Architecture et décisions de conception
 ```
 
 Les conventions de rangement et le détail des domaines sont dans [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). L’audit design le plus récent est disponible dans [docs/DESIGN_AUDIT_2026-07-26.md](docs/DESIGN_AUDIT_2026-07-26.md).
+Les principes pour les contenus enfant et les données scientifiques sont documentés dans [docs/LEARNING_AND_DATA.md](docs/LEARNING_AND_DATA.md).
 
 Principales briques : Next.js 16, React 19, TypeScript, Tailwind CSS 4, Framer Motion, Three.js, React Three Fiber, Upstash Redis et Vercel.
 

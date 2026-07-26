@@ -85,6 +85,19 @@ export default function QuizPage() {
     const totalAnswered = Object.keys(answers).length
     const totalCorrect = Object.entries(answers).filter(([i, a]) => a === questions[parseInt(i)].answer).length
     const finished = totalAnswered === questions.length
+    const currentLevelIndex = LEVELS.findIndex(item => item.id === currentLevel?.id)
+    const suggestedLevel = !finished || !currentLevel ? null
+        : totalCorrect >= Math.ceil(questions.length * 0.8) && currentLevelIndex < LEVELS.length - 1
+            ? LEVELS[currentLevelIndex + 1]
+            : totalCorrect <= Math.floor(questions.length / 2) && currentLevelIndex > 0
+                ? LEVELS[currentLevelIndex - 1]
+                : currentLevel
+    const suggestionText = !currentLevel || !suggestedLevel ? ''
+        : suggestedLevel.id === currentLevel.id
+            ? 'Refais ce niveau : tu vas consolider tes découvertes !'
+            : suggestedLevel.id === LEVELS[currentLevelIndex + 1]?.id
+                ? `Prêt pour le niveau ${suggestedLevel.label.split(' ').slice(1).join(' ')} ?`
+                : `Essaie le niveau ${suggestedLevel.label.split(' ').slice(1).join(' ')} pour reprendre confiance.`
 
     useEffect(() => {
         if (finished) recordQuizScore(Math.round(totalCorrect / questions.length * 100))
@@ -168,6 +181,12 @@ export default function QuizPage() {
                                     <div style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: '0.25rem' }}>
                                         {totalCorrect === questions.length ? 'Parfait ! Tu es un expert de l\'espace ! 🌟' : totalCorrect >= Math.ceil(questions.length * 0.8) ? 'Excellent travail ! Tu maîtrises bien l\'astronomie !' : 'Continue à explorer, tu y arriveras !'}
                                     </div>
+                                    {suggestedLevel && <div className="adaptive-quiz-next" data-adaptive-quiz>
+                                        <p>{suggestionText}</p>
+                                        <button type="button" onClick={() => startLevel(suggestedLevel.id)}>
+                                            {suggestedLevel.id === currentLevel!.id ? '🔁 Refaire ce niveau' : `🚀 Essayer ${suggestedLevel.label}`}
+                                        </button>
+                                    </div>}
                                 </div>
                             )}
 

@@ -109,6 +109,18 @@ export default function KidsGuide({ topic }: KidsGuideProps) {
         <p><strong>{locale === 'en' ? 'Your turn:' : 'À toi de jouer :'}</strong> {lesson.challenge}</p>
       </div>
 
+      <div className="kids-quick-mission" data-quick-mission>
+        <div>
+          <span aria-hidden="true">⏱️</span>
+          <h3>{locale === 'en' ? '5-minute mission' : 'Mission express · 5 min'}</h3>
+        </div>
+        <ol>
+          <li>{locale === 'en' ? 'Read the big question.' : 'Lis la grande question.'}</li>
+          <li>{locale === 'en' ? 'Try one action or comparison.' : 'Essaie une action ou une comparaison.'}</li>
+          <li>{locale === 'en' ? 'Tell someone one thing you discovered.' : 'Raconte une chose que tu as découverte.'}</li>
+        </ol>
+      </div>
+
       {(topic === 'planetes' || topic === 'mars' || topic === 'iss') && <MissionStamp mission={topic} />}
     </section>
   )

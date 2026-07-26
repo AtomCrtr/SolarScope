@@ -11,6 +11,9 @@ interface Planet3DProps {
     ringColor?: string          // ring tint
     atmosphereColor?: string    // outer glow color hex string
     bgAlpha?: number            // canvas bg alpha
+    label?: string              // accessible planet name
+    fallbackColor?: string      // visible color if a texture cannot load
+    onTextureError?: () => void
 }
 
 export default function Planet3D({
@@ -21,6 +24,9 @@ export default function Planet3D({
     ringColor = '#c8a96e',
     atmosphereColor,
     bgAlpha = 0,
+    label = 'planète',
+    fallbackColor = '#64748b',
+    onTextureError,
 }: Planet3DProps) {
     const mountRef = useRef<HTMLDivElement>(null)
 
@@ -33,9 +39,11 @@ export default function Planet3D({
 
         // Renderer
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
-        renderer.setPixelRatio(window.devicePixelRatio)
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75))
         renderer.setSize(w, h)
         renderer.setClearColor(0x000000, bgAlpha)
+        renderer.domElement.tabIndex = 0
+        renderer.domElement.setAttribute('aria-label', `Modèle 3D de ${label}. Utilise les flèches pour le tourner.`)
         el.appendChild(renderer.domElement)
 
         // Scene
@@ -52,11 +60,24 @@ export default function Planet3D({
 
         // Texture
         const loader = new THREE.TextureLoader()
-        const tex = loader.load(textureUrl)
+        const mat = new THREE.MeshPhongMaterial({ color: new THREE.Color(fallbackColor), shininess: 8 })
+        const tex = loader.load(
+            textureUrl,
+            (loadedTexture) => {
+                mat.map = loadedTexture
+                mat.needsUpdate = true
+            },
+            undefined,
+            () => {
+                mat.map = null
+                mat.needsUpdate = true
+                onTextureError?.()
+            },
+        )
+        mat.map = tex
 
         // Planet
-        const geo = new THREE.SphereGeometry(size, 64, 64)
-        const mat = new THREE.MeshPhongMaterial({ map: tex, shininess: 8 })
+        const geo = new THREE.SphereGeometry(size, 48, 48)
         const planet = new THREE.Mesh(geo, mat)
         scene.add(planet)
 
@@ -109,6 +130,16 @@ export default function Planet3D({
             prevX = clientX; prevY = clientY
         }
         const onUp = () => { isDragging = false }
+        const onKeyDown = (event: KeyboardEvent) => {
+            const step = event.shiftKey ? 0.32 : 0.12
+            if (event.key === 'ArrowLeft') planet.rotation.y -= step
+            else if (event.key === 'ArrowRight') planet.rotation.y += step
+            else if (event.key === 'ArrowUp') planet.rotation.x -= step
+            else if (event.key === 'ArrowDown') planet.rotation.x += step
+            else if (event.key === 'Home') planet.rotation.set(0, 0, 0)
+            else return
+            event.preventDefault()
+        }
 
         renderer.domElement.addEventListener('mousedown', onDown)
         renderer.domElement.addEventListener('mousemove', onMove)
@@ -116,12 +147,14 @@ export default function Planet3D({
         renderer.domElement.addEventListener('touchstart', onDown, { passive: true })
         renderer.domElement.addEventListener('touchmove', onMove, { passive: true })
         renderer.domElement.addEventListener('touchend', onUp)
+        renderer.domElement.addEventListener('keydown', onKeyDown)
 
         // Animate
         let animId: number
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
         const animate = () => {
             animId = requestAnimationFrame(animate)
-            if (!isDragging) planet.rotation.y += rotationSpeed
+            if (!isDragging && !reduceMotion) planet.rotation.y += rotationSpeed
             renderer.render(scene, camera)
         }
         animate()
@@ -139,10 +172,20 @@ export default function Planet3D({
         return () => {
             cancelAnimationFrame(animId)
             ro.disconnect()
+            renderer.domElement.removeEventListener('mousedown', onDown)
+            renderer.domElement.removeEventListener('mousemove', onMove)
+            renderer.domElement.removeEventListener('mouseup', onUp)
+            renderer.domElement.removeEventListener('touchstart', onDown)
+            renderer.domElement.removeEventListener('touchmove', onMove)
+            renderer.domElement.removeEventListener('touchend', onUp)
+            renderer.domElement.removeEventListener('keydown', onKeyDown)
+            geo.dispose()
+            mat.dispose()
+            tex.dispose()
             renderer.dispose()
             if (el.contains(renderer.domElement)) el.removeChild(renderer.domElement)
         }
-    }, [textureUrl, size, rotationSpeed, hasRings, ringColor, atmosphereColor, bgAlpha])
+    }, [textureUrl, size, rotationSpeed, hasRings, ringColor, atmosphereColor, bgAlpha, label, fallbackColor, onTextureError])
 
     return <div ref={mountRef} style={{ width: '100%', height: '100%', cursor: 'grab' }} />
 }

@@ -18,7 +18,7 @@ const learningRoutes = [
   '/solarbot',
 ]
 
-const routes = ['/', ...learningRoutes, '/passeport', '/parents-enseignants', '/confidentialite']
+const routes = ['/', ...learningRoutes, '/passeport', '/parents-enseignants', '/sources', '/confidentialite']
 
 for (const route of routes) {
   test(`${route} has no serious automated accessibility violation`, async ({ page }) => {
@@ -38,7 +38,29 @@ test('every learning route starts with the child-friendly guide', async ({ page 
     await expect(guide, `${route} should expose its learning guide`).toBeVisible()
     await expect(guide.locator('.kids-listen-button')).toBeVisible()
     await expect(guide.locator('.kids-takeaways li')).toHaveCount(3)
+    await expect(guide.locator('[data-quick-mission] li')).toHaveCount(3)
   }
+})
+
+test('the planet explorer offers a short accessible interaction and a comparison', async ({ page }) => {
+  await page.goto('/planetes', { waitUntil: 'domcontentloaded' })
+  const explorer = page.locator('[data-planet-explorer]')
+  await expect(explorer).toBeVisible()
+  await expect(explorer.locator('.planet-explorer-selector button')).toHaveCount(8)
+
+  await explorer.getByRole('button', { name: 'Jupiter' }).click()
+  await expect(explorer.getByText('Jupiter', { exact: true }).first()).toBeVisible()
+  await explorer.getByRole('button', { name: /Comparer avec la Terre/ }).click()
+  await expect(explorer.getByText('Jupiter comparée à la Terre')).toBeVisible()
+  await explorer.getByRole('button', { name: 'Jupiter', exact: true }).last().click()
+  await expect(explorer.getByText('Bravo !')).toBeVisible()
+})
+
+test('the planet explorer stays inside a phone viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 393, height: 851 })
+  await page.goto('/planetes', { waitUntil: 'domcontentloaded' })
+  const widths = await page.evaluate(() => ({ client: document.documentElement.clientWidth, scroll: document.documentElement.scrollWidth }))
+  expect(widths.scroll).toBeLessThanOrEqual(widths.client + 1)
 })
 
 test('the homepage does not overflow on a 320 px viewport', async ({ page }) => {

@@ -19,6 +19,7 @@ const routes = [
   '/quiz',
   '/solarbot',
   '/soleil',
+  '/sources',
   '/confidentialite',
 ]
 

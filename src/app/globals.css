@@ -356,6 +356,17 @@ video {
 .parent-guide p { margin-top: 0.5rem; color: var(--text-subtle); font-size: 0.88rem; }
 .parent-guide-link { display: inline-flex; align-items: center; gap: 0.35rem; min-height: 38px; margin-top: 0.85rem; color: #c4b5fd; font-size: 0.82rem; font-weight: 800; text-decoration: none; }
 .parent-guide-link:hover { color: #e9d5ff; text-decoration: underline; text-underline-offset: 3px; }
+.parent-guide-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.parent-print-button { min-height: 40px; padding: 0.45rem 0.7rem; border: 1px solid rgba(125, 211, 252, 0.35); border-radius: 0.65rem; color: #e0f2fe; background: rgba(14, 165, 233, 0.12); cursor: pointer; font: inherit; font-size: 0.75rem; font-weight: 800; }
+.parent-print-button:hover { background: rgba(14, 165, 233, 0.2); }
+.sources-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.source-card { padding: 1.15rem; }
+.source-card h3 { margin: 0.7rem 0 0.45rem; color: var(--text); font-size: 1.02rem; }
+.source-card p { color: var(--text-subtle); font-size: 0.85rem; line-height: 1.55; }
+.source-card a { display: inline-block; margin-top: 0.7rem; color: #c4b5fd; font-size: 0.8rem; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
+.source-kind { display: inline-flex; padding: 0.2rem 0.5rem; border: 1px solid rgba(129, 140, 248, 0.35); border-radius: 999px; color: #ddd6fe; background: rgba(99, 102, 241, 0.14); font-size: 0.68rem; font-weight: 800; }
+.source-kind.is-live { border-color: rgba(52, 211, 153, 0.35); color: #bbf7d0; background: rgba(16, 185, 129, 0.12); }
+.source-checked { margin: 0.7rem 0 0; color: #94a3b8 !important; font-size: 0.74rem !important; }
 
 .kids-guide-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.55rem; }
 .kids-mode-button { min-height: 44px; padding: 0.65rem 0.8rem; border: 1px solid rgba(167, 139, 250, 0.36); border-radius: 0.75rem; color: #ede9fe; background: rgba(139, 92, 246, 0.12); font-weight: 750; cursor: pointer; }
@@ -561,6 +572,12 @@ video {
 
 .kids-deep-dive p { padding: 0 0.9rem 0.9rem; color: #cbd5e1; line-height: 1.7; }
 .kids-challenge { background: rgba(52, 211, 153, 0.08); border-color: rgba(52, 211, 153, 0.18); }
+.kids-quick-mission { margin-top: 1rem; padding: 0.85rem 1rem; border: 1px solid rgba(251, 191, 36, 0.22); border-radius: 0.9rem; background: rgba(251, 191, 36, 0.07); }
+.kids-quick-mission > div { display: flex; align-items: center; gap: 0.55rem; }
+.kids-quick-mission h3 { margin: 0; color: #fde68a; font: 800 0.95rem/1.3 'Outfit', sans-serif; }
+.kids-quick-mission ol { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.55rem; margin: 0.7rem 0 0; padding: 0; list-style: none; counter-reset: quick-mission; }
+.kids-quick-mission li { display: flex; align-items: flex-start; gap: 0.45rem; color: #e2e8f0; font-size: 0.78rem; line-height: 1.45; counter-increment: quick-mission; }
+.kids-quick-mission li::before { display: grid; width: 20px; height: 20px; flex: 0 0 auto; place-items: center; border-radius: 50%; color: #422006; background: #fcd34d; content: counter(quick-mission); font-size: 0.68rem; font-weight: 900; }
 
 [data-theme="light"] .kids-guide {
   background:
@@ -573,6 +590,8 @@ video {
 [data-theme="light"] .kids-guide h2,
 [data-theme="light"] .kids-takeaways h3 { color: #0f172a; }
 [data-theme="light"] .kids-guide-summary { color: #1e3a5f; }
+[data-theme="light"] .kids-quick-mission { background: #fffbeb; border-color: #fcd34d; }
+[data-theme="light"] .kids-quick-mission li { color: #334155; }
 [data-theme="light"] .kids-analogy,
 [data-theme="light"] .kids-challenge,
 [data-theme="light"] .kids-takeaways li,
@@ -586,7 +605,8 @@ video {
   .kids-guide-actions button { flex: 1 1 160px; }
   .kids-listen-button { width: 100%; justify-content: center; }
   .kids-takeaways ol,
-  .kids-glossary { grid-template-columns: 1fr; }
+  .kids-glossary,
+  .kids-quick-mission ol { grid-template-columns: 1fr; }
   .kids-guide { background: linear-gradient(145deg, #0b1730, #06061a); }
 }
 
@@ -1010,6 +1030,123 @@ video {
     right: max(0.75rem, env(safe-area-inset-right)) !important;
     bottom: max(4.5rem, calc(env(safe-area-inset-bottom) + 3.75rem)) !important;
   }
+}
+
+/* Planet explorer: short, guided interactions for young learners. */
+.planet-explorer {
+  margin: 1.5rem 0 2rem;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border: 1px solid rgba(129, 140, 248, 0.35);
+  border-radius: 1.25rem;
+  background: linear-gradient(145deg, rgba(30, 27, 75, 0.88), rgba(10, 16, 37, 0.94));
+  box-shadow: 0 18px 55px rgba(2, 6, 23, 0.28);
+}
+
+.planet-explorer-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.1rem;
+}
+
+.planet-explorer-kicker {
+  display: block;
+  color: #c4b5fd;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.planet-explorer h2,
+.planet-explorer h3 { font-family: 'Outfit', sans-serif; }
+.planet-explorer-heading h2 { margin: 0.35rem 0; color: #f8fafc; font-size: clamp(1.25rem, 2.2vw, 1.65rem); }
+.planet-explorer-heading p { max-width: 680px; margin: 0; color: #a8b5c9; font-size: 0.88rem; line-height: 1.55; }
+.planet-explorer-progress { flex: 0 0 auto; padding: 0.45rem 0.7rem; border: 1px solid rgba(167, 139, 250, 0.3); border-radius: 999px; color: #ddd6fe; background: rgba(124, 58, 237, 0.12); font-size: 0.7rem; font-weight: 750; }
+
+.planet-explorer-selector { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 0.45rem; margin-bottom: 1rem; }
+.planet-explorer-selector button { min-height: 54px; padding: 0.4rem; border: 1px solid rgba(148, 163, 184, 0.18); border-radius: 0.75rem; color: #a8b5c9; background: rgba(15, 23, 42, 0.55); cursor: pointer; font: inherit; font-size: 0.7rem; font-weight: 700; transition: transform 160ms ease, border-color 160ms ease, background 160ms ease; }
+.planet-explorer-selector button:hover { transform: translateY(-2px); border-color: var(--planet-color); }
+.planet-explorer-selector button.is-selected { border-color: var(--planet-color); color: var(--planet-color); background: color-mix(in srgb, var(--planet-color) 14%, #10152e); box-shadow: 0 0 20px color-mix(in srgb, var(--planet-color) 22%, transparent); }
+.planet-explorer-selector button span { display: block; }
+.planet-explorer-selector button span:first-child { margin-bottom: 0.1rem; font-size: 1.1rem; }
+
+.planet-explorer-main { display: grid; grid-template-columns: minmax(240px, 0.85fr) minmax(0, 1.15fr); gap: 1rem; align-items: stretch; }
+.planet-explorer-viewer, .planet-explorer-story, .planet-explorer-challenge { border: 1px solid rgba(148, 163, 184, 0.14); border-radius: 1rem; background: rgba(2, 6, 23, 0.42); }
+.planet-explorer-model { position: relative; height: clamp(240px, 26vw, 330px); min-height: 240px; overflow: hidden; border-radius: 1rem 1rem 0 0; background: radial-gradient(circle at 50% 46%, rgba(67, 56, 202, 0.16), rgba(2, 6, 23, 0.9) 72%); }
+.planet-explorer-loading, .planet-explorer-fallback { display: grid; width: 100%; height: 100%; min-height: 280px; place-items: center; color: #cbd5e1; font-weight: 700; }
+.planet-explorer-fallback span { font-size: clamp(5rem, 12vw, 8rem); }
+.planet-explorer-viewer-footer { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; padding: 0.6rem 0.75rem; color: #94a3b8; font-size: 0.7rem; }
+.planet-explorer-viewer-footer button, .planet-explorer-compare-toggle { border: 1px solid rgba(129, 140, 248, 0.4); border-radius: 0.55rem; color: #ddd6fe; background: rgba(99, 102, 241, 0.12); cursor: pointer; font: inherit; font-weight: 750; }
+.planet-explorer-viewer-footer button { flex: 0 0 auto; min-height: 34px; padding: 0.4rem 0.6rem; font-size: 0.68rem; }
+
+.planet-explorer-story { padding: 1rem; }
+.planet-explorer-name { display: flex; align-items: center; gap: 0.65rem; }
+.planet-explorer-name > span { font-size: 2.1rem; }
+.planet-explorer-name h3 { margin: 0; font-size: 1.45rem; line-height: 1; }
+.planet-explorer-name p { margin: 0.25rem 0 0; color: #a8b5c9; font-size: 0.75rem; }
+.planet-explorer-description { margin: 0.85rem 0; color: #d8e0ee; font-size: 0.88rem; line-height: 1.6; }
+.planet-explorer-focuses { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.45rem; }
+.planet-explorer-focuses button { min-height: 42px; padding: 0.45rem 0.55rem; border: 1px solid rgba(148, 163, 184, 0.16); border-radius: 0.65rem; color: #cbd5e1; background: rgba(30, 41, 59, 0.45); cursor: pointer; font: inherit; font-size: 0.73rem; font-weight: 700; text-align: left; }
+.planet-explorer-focuses button[aria-selected="true"] { border-color: #818cf8; color: #ede9fe; background: rgba(99, 102, 241, 0.2); }
+.planet-explorer-focus-card { display: flex; gap: 0.55rem; min-height: 72px; margin-top: 0.7rem; padding: 0.7rem; border-left: 3px solid #818cf8; border-radius: 0 0.65rem 0.65rem 0; background: rgba(129, 140, 248, 0.1); }
+.planet-explorer-focus-card > span { font-size: 1.15rem; }
+.planet-explorer-focus-card p, .planet-explorer-fun-fact p { margin: 0; color: #d8e0ee; font-size: 0.8rem; line-height: 1.55; }
+.planet-explorer-fun-fact { display: flex; gap: 0.55rem; margin: 0.7rem 0; padding: 0.7rem; border: 1px solid rgba(251, 191, 36, 0.22); border-radius: 0.7rem; background: rgba(251, 191, 36, 0.06); }
+.planet-explorer-fun-fact strong { color: #fcd34d; }
+.planet-explorer-compare-toggle { min-height: 38px; padding: 0.45rem 0.7rem; font-size: 0.75rem; }
+
+.planet-explorer-comparison { display: flex; align-items: center; gap: 1rem; margin-top: 1rem; padding: 1rem; border: 1px dashed rgba(96, 165, 250, 0.45); border-radius: 0.9rem; background: rgba(14, 116, 144, 0.1); }
+.planet-explorer-scale { display: flex; align-items: flex-end; justify-content: center; min-width: 170px; height: 140px; gap: 0.75rem; }
+.planet-explorer-earth, .planet-explorer-other { display: block; flex: 0 0 auto; border: 2px solid rgba(255, 255, 255, 0.62); border-radius: 50%; box-shadow: inset -8px -8px 16px rgba(2, 6, 23, 0.35); }
+.planet-explorer-earth { width: 48px; height: 48px; background: #38bdf8; }
+.planet-explorer-comparison h3 { margin: 0 0 0.3rem; color: #e0f2fe; font-size: 1rem; }
+.planet-explorer-comparison p { margin: 0; color: #cbd5e1; font-size: 0.82rem; line-height: 1.55; }
+.planet-explorer-comparison strong { color: #7dd3fc; font-size: 1rem; }
+.planet-explorer-comparison small { display: block; margin-top: 0.45rem; color: #94a3b8; font-size: 0.68rem; line-height: 1.4; }
+
+.planet-explorer-challenge { margin-top: 1rem; padding: 1rem; }
+.planet-explorer-challenge h3 { margin: 0.35rem 0 0; color: #f8fafc; font-size: 1rem; }
+.planet-explorer-choices { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem; }
+.planet-explorer-choices button { min-height: 40px; padding: 0.45rem 0.75rem; border: 1px solid rgba(148, 163, 184, 0.22); border-radius: 0.65rem; color: #e2e8f0; background: rgba(30, 41, 59, 0.55); cursor: pointer; font: inherit; font-size: 0.78rem; font-weight: 700; }
+.planet-explorer-choices button:hover:not(:disabled) { border-color: #a5b4fc; background: rgba(99, 102, 241, 0.17); }
+.planet-explorer-choices button:disabled { cursor: default; opacity: 0.6; }
+.planet-explorer-choices button.is-correct { border-color: #34d399; color: #bbf7d0; background: rgba(16, 185, 129, 0.16); opacity: 1; }
+.planet-explorer-choices button.is-wrong { border-color: #fb7185; color: #fecdd3; background: rgba(244, 63, 94, 0.14); opacity: 1; }
+.planet-explorer-challenge > p { margin: 0.8rem 0 0; font-size: 0.8rem; line-height: 1.55; }
+.planet-explorer-challenge > p.is-correct { color: #bbf7d0; }
+.planet-explorer-challenge > p.is-wrong { color: #fecdd3; }
+.planet-details-heading { max-width: 52rem; margin: 3.5rem 0 1.15rem; }
+.planet-details-heading > span { color: #a5b4fc; font-size: 0.72rem; font-weight: 850; letter-spacing: 0.12em; }
+.planet-details-heading h2 { margin: 0.35rem 0; font-size: clamp(1.45rem, 3vw, 2.15rem); }
+.planet-details-heading p { margin: 0; color: #b7c3db; line-height: 1.65; }
+
+.adaptive-quiz-next { max-width: 460px; margin: 1rem auto 0; padding: 0.8rem; border: 1px solid rgba(129, 140, 248, 0.34); border-radius: 0.8rem; background: rgba(99, 102, 241, 0.1); }
+.adaptive-quiz-next p { margin: 0 0 0.65rem; color: #dbeafe; font-size: 0.82rem; }
+.adaptive-quiz-next button { min-height: 40px; padding: 0.45rem 0.75rem; border: 0; border-radius: 0.6rem; color: white; background: linear-gradient(135deg, #6366f1, #8b5cf6); cursor: pointer; font: inherit; font-size: 0.78rem; font-weight: 800; }
+
+@media (max-width: 720px) {
+  .planet-explorer { padding: 0.85rem; }
+  .planet-explorer-heading { display: block; }
+  .planet-explorer-progress { display: inline-block; margin-top: 0.65rem; }
+  .planet-explorer-selector { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .planet-explorer-main { grid-template-columns: 1fr; }
+  .planet-explorer-model, .planet-explorer-loading, .planet-explorer-fallback { min-height: 240px; }
+  .planet-explorer-comparison { align-items: flex-start; flex-direction: column; }
+  .planet-explorer-scale { width: 100%; min-width: 0; height: 118px; }
+  .parent-guide-heading { align-items: flex-start; flex-direction: column; gap: 0.4rem; }
+  .sources-grid { grid-template-columns: 1fr; }
+}
+
+@media print {
+  @page { margin: 14mm; }
+  body { color: #0f172a !important; background: white !important; }
+  nav, footer, canvas, .star-field, .solarbot-launcher, .solarbot-dialog, .parent-print-button, .parent-guide-link { display: none !important; }
+  main { padding: 0 !important; }
+  .parent-page { max-width: none !important; color: #0f172a !important; }
+  .parent-page .page-title, .parent-page h2, .parent-page h3, .parent-page p, .parent-page li { color: #0f172a !important; }
+  .parent-page .card, .parent-page .parent-intro { break-inside: avoid; border: 1px solid #cbd5e1 !important; background: white !important; box-shadow: none !important; }
+  .parent-guide-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {

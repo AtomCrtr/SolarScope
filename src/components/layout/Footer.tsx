@@ -159,6 +159,7 @@ export default function Footer() {
                     </p>
                     <div style={{ display: 'flex', gap: '1rem' }}>
                         <Link href="/confidentialite" style={{ color: '#94a3b8', fontSize: '0.72rem' }}>Confidentialité</Link>
+                        <Link href="/sources" style={{ color: '#94a3b8', fontSize: '0.72rem' }}>Données & sources</Link>
                         <Link href="/#explorer" style={{ color: '#94a3b8', fontSize: '0.72rem' }}>À propos</Link>
                         <a href="https://github.com/AtomCrtr/SolarScope" target="_blank" rel="noopener noreferrer" style={{ color: '#94a3b8', fontSize: '0.72rem' }}>Contact</a>
                     </div>

@@ -5,6 +5,8 @@ import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
 import KidsGuide from '@/components/learning/KidsGuide'
 import DataSourceNote from '@/components/learning/DataSourceNote'
+import PlanetExplorer from '@/components/space/PlanetExplorer'
+import { SCIENTIFIC_SOURCES } from '@/lib/data/source-registry'
 
 const Planet3D = lazy(() => import('@/components/space/Planet3D'))
 const SolarSystem2D = dynamic(() => import('@/components/space/SolarSystem2D'), { ssr: false })
@@ -41,9 +43,23 @@ export default function PlanetesPage() {
             </motion.div>
 
             <KidsGuide topic="planetes" />
-            <DataSourceNote source="NASA Planetary Fact Sheet" href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/" refreshed="Valeurs moyennes, pas une météo en direct" />
+            <DataSourceNote
+                source={SCIENTIFIC_SOURCES.planetaryFacts.label}
+                href={SCIENTIFIC_SOURCES.planetaryFacts.href}
+                refreshed={SCIENTIFIC_SOURCES.planetaryFacts.childNote}
+                checkedOn={SCIENTIFIC_SOURCES.planetaryFacts.checkedOn}
+                cadence={SCIENTIFIC_SOURCES.planetaryFacts.cadence}
+            />
 
-            {/* Planet selector */}
+            <PlanetExplorer />
+
+            <section className="planet-details-heading" aria-labelledby="planet-details-title">
+                <span>POUR ALLER PLUS LOIN</span>
+                <h2 id="planet-details-title">Les chiffres détaillés des planètes</h2>
+                <p>Tu veux comparer davantage ? Choisis une planète ci-dessous pour voir ses données et son modèle en détail.</p>
+            </section>
+
+            {/* Detailed planet data */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.625rem', marginBottom: '2rem' }} className="max-sm:grid-cols-2">
                 {PLANETS.map((pl, i) => (
                     <button key={pl.name} onClick={() => setSelected(i)} style={{
