@@ -4,11 +4,14 @@
 
 - Source visuelle principale : `C:\Users\FEILD~1.LAP\AppData\Local\Temp\codex-clipboard-cc86b563-78f9-4990-a0eb-f0c42151e769.png`
 - Signalement utilisateur avant correction : `C:\Users\FEILD~1.LAP\AppData\Local\Temp\codex-clipboard-ddce478b-f9cb-49e0-adfa-e4f9f81c2d10.png`
+- Signalement focalisé sur le carnet : `C:\Users\FEILD~1.LAP\AppData\Local\Temp\codex-clipboard-b79f792f-62cd-4997-a32d-c221eb9de48c.png`
 - Implémentation desktop finale : `C:\Users\feild.LAPTOP-6K4PVO3F\.codex\visualizations\2026\07\21\019f8618-38b1-7cb3-a318-1cee136d59b3\solarscope-home-navbar-text-desktop-final.png`
 - Comparaison avec la cible : `C:\Users\feild.LAPTOP-6K4PVO3F\.codex\visualizations\2026\07\21\019f8618-38b1-7cb3-a318-1cee136d59b3\solarscope-home-navbar-text-target-comparison.png`
 - Validation grande largeur : `C:\Users\feild.LAPTOP-6K4PVO3F\.codex\visualizations\2026\07\21\019f8618-38b1-7cb3-a318-1cee136d59b3\solarscope-home-navbar-text-wide-final.png`
 - Comparaison avant/après grande largeur : `C:\Users\feild.LAPTOP-6K4PVO3F\.codex\visualizations\2026\07\21\019f8618-38b1-7cb3-a318-1cee136d59b3\solarscope-home-navbar-text-before-after.png`
 - Validation mobile : `C:\Users\feild.LAPTOP-6K4PVO3F\.codex\visualizations\2026\07\21\019f8618-38b1-7cb3-a318-1cee136d59b3\solarscope-home-navbar-text-mobile-final.png`
+- Validation focalisée du carnet : `C:\Users\feild.LAPTOP-6K4PVO3F\.codex\visualizations\2026\07\21\019f8618-38b1-7cb3-a318-1cee136d59b3\solarscope-home-mission-text-aligned-focus-final.png`
+- Comparaison focalisée avant/après : `C:\Users\feild.LAPTOP-6K4PVO3F\.codex\visualizations\2026\07\21\019f8618-38b1-7cb3-a318-1cee136d59b3\solarscope-home-mission-text-focus-before-after-final.png`
 - Viewports : 1487 × 1058, 2048 × 1174, 1280 × 900, 393 × 851 et 320 × 700 CSS px ; DPR 1 pour les captures finales.
 - La cible et la capture desktop finale mesurent chacune 1487 × 1058 px. Elles ont été comparées à leur taille native, sans normalisation de densité.
 - État : accueil FR, thème sombre, parcours `6–12 ans`.
@@ -29,6 +32,11 @@
   - Correction : largeur maximale réduite de 305 px à 250 px.
   - Résultat : le texte reste entièrement dans la colonne gauche du carnet.
 
+- [P2 résolu] La colonne de mission était visuellement posée sur la spirale.
+  - Preuve : dans la capture focalisée, le badge, le titre, les métadonnées, le paragraphe et le bouton commençaient au même niveau horizontal que les anneaux.
+  - Correction : retrait gauche du bloc porté de 9,5 % à 14 % et taille maximale du titre ajustée à 2,2 rem pour conserver une marge avec la photo.
+  - Résultat : les cinq éléments partagent toujours le même axe, avec un espace visible après la spirale et avant la photographie.
+
 - [P3 accepté] La barre de navigation complète diffère de la maquette initiale, qui utilisait un simple bouton de connexion. Cette différence est volontaire et demandée par l’utilisateur afin de préserver l’accès aux pages du site.
 - [P3 accepté] Les tranches d’âge restent `6–12 ans` et `12+ ans`, conformément au public demandé.
 
@@ -47,6 +55,7 @@
 - Menu mobile ouvrable ; le lien `Accueil` est visible dans le panneau.
 - Bascule `12+ ans` fonctionnelle.
 - Aucun débordement horizontal à 2048, 1280 et 320 px.
+- Sur mobile, le positionnement repasse correctement à `left: 0` dans le flux vertical.
 - Aucune erreur de console ni exception JavaScript dans le build de production.
 - Lint, TypeScript, 23 tests unitaires et build Next.js validés.
 
@@ -61,6 +70,9 @@
 4. [P1/P2] Navigation supprimée et titre sur trois lignes à grande largeur.
    - Correction : restauration de la barre complète, plafond typographique corrigé et paragraphe du carnet resserré.
    - Preuve post-fix : captures desktop, grande largeur et comparaison avant/après listées ci-dessus.
+5. [P2] Colonne de mission superposée à la spirale du carnet.
+   - Correction : déplacement du bloc complet à 14 % et légère réduction optique du titre.
+   - Preuve post-fix : comparaison focalisée avant/après ; aucun élément textuel ne touche désormais la spirale ou la photo.
 
 ## Checklist
 
@@ -68,6 +80,7 @@
 - [x] Vérifier les menus déroulants desktop et le menu mobile.
 - [x] Replacer le titre sur deux lignes.
 - [x] Éviter le chevauchement du texte de mission.
+- [x] Aligner tout le contenu de mission sur un axe dégagé de la spirale.
 - [x] Vérifier desktop, grande largeur, tablette et mobile.
 - [x] Valider tous les contrôles techniques.
 
