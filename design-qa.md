@@ -1,48 +1,64 @@
-# Design QA — accueil parcours par âge
+# Design QA — accueil « carnet spatial »
 
-## Cible de comparaison
+## Cible et preuves
 
-- Source visuelle : `C:\Users\feild.LAPTOP-6K4PVO3F\.codex\generated_images\019f8618-38b1-7cb3-a318-1cee136d59b3\exec-69c86a93-38c6-4136-bf6f-3c840113a7d5.png`
-- Implémentation desktop : `C:\Users\feild.LAPTOP-6K4PVO3F\.codex\visualizations\2026\07\21\019f8618-38b1-7cb3-a318-1cee136d59b3\solarscope-home-redesign-desktop.png`
-- Comparaison côte à côte : `C:\Users\feild.LAPTOP-6K4PVO3F\.codex\visualizations\2026\07\21\019f8618-38b1-7cb3-a318-1cee136d59b3\solarscope-home-design-qa-comparison.png`
-- Implémentation mobile : `C:\Users\feild.LAPTOP-6K4PVO3F\.codex\visualizations\2026\07\21\019f8618-38b1-7cb3-a318-1cee136d59b3\solarscope-home-redesign-mobile.png`
-- Viewport desktop : 1440 × 1024 CSS px, DPR 1 ; les deux vues ont été normalisées à 1440 × 1024 px avant comparaison.
-- Viewport mobile : 393 × 851 CSS px, DPR 1 ; état `12+ ans` actif.
+- Source visuelle : `C:\Users\feild.LAPTOP-6K4PVO3F\AppData\Local\Temp\codex-clipboard-cc86b563-78f9-4990-a0eb-f0c42151e769.png`
+- Implémentation desktop : `C:\Users\feild.LAPTOP-6K4PVO3F\.codex\visualizations\2026\07\21\019f8618-38b1-7cb3-a318-1cee136d59b3\solarscope-home-notebook-desktop-production.png`
+- Comparaison côte à côte : `C:\Users\feild.LAPTOP-6K4PVO3F\.codex\visualizations\2026\07\21\019f8618-38b1-7cb3-a318-1cee136d59b3\solarscope-home-notebook-comparison-production.png`
+- Implémentation mobile : `C:\Users\feild.LAPTOP-6K4PVO3F\.codex\visualizations\2026\07\21\019f8618-38b1-7cb3-a318-1cee136d59b3\solarscope-home-notebook-mobile-production.png`
+- Viewport desktop : 1487 × 1058 CSS px, DPR 1.
+- Pixels source et implémentation : 1487 × 1058 px chacune. Aucune normalisation de densité n’a été nécessaire ; les deux vues ont été placées côte à côte à leur taille native.
+- Viewport mobile : 393 × 851 CSS px, DPR 1.
+- État : accueil FR, thème sombre, parcours `6–12 ans` actif sur desktop et mobile.
 
-## État et interactions vérifiés
+## Comparaison
 
-- Accueil FR, thème sombre, données de démonstration du tableau de bord.
-- Bascule `6–12 ans` / `12+ ans`, mission mise en avant, cartes de parcours, passeport local.
-- Le choix `12+ ans` survit à un rechargement de page.
-- Mobile : largeur de contenu 393 px pour une largeur de viewport de 393 px (aucun débordement horizontal).
+La comparaison plein écran montre la même composition principale que la référence : introduction à gauche, choix d’âge centré, grand carnet de mission, quatre parcours illustrés, passeport latéral et bandeau d’observation. Les tailles des régions, leurs alignements et leur ordre de lecture sont désormais cohérents avec la cible.
+
+Une comparaison focalisée supplémentaire n’était pas nécessaire : à 1487 × 1058 px, le titre, les contrôles, le contenu du carnet, les cartes et le passeport sont tous lisibles dans la vue combinée.
 
 ## Findings
 
-- [P1 résolu] Le titre de l’introduction était tronqué sur grand écran.
-  - Evidence : la première capture rendue coupait les fins de lignes à cause du `white-space: nowrap` hérité.
-  - Fix : la règle spécifique à `.home-launchpad-copy .home-title span` autorise désormais le retour à la ligne ; la taille du titre est calibrée pour la colonne de gauche.
-  - Preuve post-fix : capture desktop et comparaison côte à côte ci-dessus ; toutes les lignes sont lisibles.
-
-- [Accepté] La cible illustre un carnet dessiné avec spirale, autocollants et typographie manuscrite. L’implémentation conserve son principe — choix d’âge, mission du jour, parcours et passeport visibles en une vue — dans le système visuel SolarScope existant et avec les vraies images déjà fournies par le projet. Ce n’est pas un écart actionnable : reproduire les ornements de la maquette avec du CSS ou des faux visuels dégraderait la qualité des ressources.
+- Aucun écart P0, P1 ou P2 ne reste actionnable.
+- [P3 accepté] La référence ajoute Saturne et deux annotations manuscrites décoratives sur la droite. Leur absence ne change ni la hiérarchie, ni la compréhension, ni les interactions.
+- [P3 accepté] L’en-tête conserve les commandes réelles FR/EN et thème du produit au lieu du bouton de connexion fictif de la référence.
+- [P3 accepté] Les tranches d’âge sont `6–12 ans` et `12+ ans`, conformément au public demandé, au lieu de `8–10 ans` et `10–12 ans` dans la référence.
 
 ## Surfaces de fidélité
 
-- **Typographie** : hiérarchie forte et lisible, avec Outfit cohérent avec SolarScope ; les retours à la ligne sont contrôlés sur desktop et mobile.
-- **Rythme et mise en page** : une zone de lancement en deux colonnes, une carte de mission centrale, les parcours et la progression restent visibles au premier écran desktop. La pile mobile garde une lecture verticale sans débordement.
-- **Couleurs** : fond spatial sombre, violet comme couleur d’action, contrastes clairs pour les CTA et les informations de progression.
-- **Images** : Mars, Saturne, Lune, Terre et Perseverance sont des images réelles déjà versionnées dans le produit, recadrées avec `object-fit: cover`.
-- **Contenu** : le français est la langue principale ; les libellés distinguent clairement `6–12 ans` et `12+ ans` et les missions changent réellement avec le choix.
+- **Typographie** : association d’une écriture manuscrite pour les notes et le carnet avec une fonte ronde, très lisible, pour les titres et contrôles. Aucun titre n’est tronqué.
+- **Rythme et mise en page** : les grandes régions suivent la grille et la hauteur du premier écran de la référence ; les cartes, le passeport et le bandeau restent visibles sans superposition.
+- **Couleurs** : fond bleu nuit, accents violet/rose, contrastes blancs et gris bleuté conformes à la direction artistique de la cible.
+- **Images** : six ressources « carnet spatial » dédiées ont été générées, optimisées en WebP et utilisées avec un cadrage cohérent. Les photos spatiales restent nettes et les éléments décoratifs ne sont pas recréés avec de faux SVG ou des formes CSS.
+- **Contenu** : français prioritaire, mission enfant compréhensible, quatre vrais parcours et progression locale reliée au passeport.
 
-## Checklist d’implémentation
+## Historique des itérations
 
-- [x] Ajouter les deux parcours d’âge persistants.
-- [x] Associer une mission et des parcours concrets à chaque âge.
-- [x] Relier la progression au passeport local existant.
-- [x] Corriger le titre tronqué desktop.
-- [x] Vérifier l’absence de débordement mobile et la persistance du choix.
+1. [P1 résolu] La première version reprenait la structure mais restait visuellement trop éloignée de la référence.
+   - Correction : remplacement par une composition complète « carnet spatial », ajout des six ressources dédiées et refonte de la grille.
+   - Preuve post-fix : `solarscope-home-notebook-comparison-production.png`.
+2. [P2 résolu] La première comparaison côte à côte plaçait le carnet et les cartes environ 120 px trop bas, ce qui masquait le bandeau inférieur.
+   - Correction : suppression de la marge supérieure excessive, recalibrage du padding de la grille et de la position du passeport.
+   - Preuve post-fix : les cartes commencent au même niveau que la cible et le bandeau est visible dans la capture finale.
+3. [P2 résolu] Après ce recalage, l’introduction de gauche était environ 48 px trop haute.
+   - Correction : décalage visuel via `top`, compatible avec l’animation Framer Motion qui définit sa propre propriété `transform`.
+   - Preuve post-fix : la note, le titre et le carnet décoratif de gauche sont alignés avec la référence dans la comparaison finale.
 
-## Follow-up polish
+## Interactions et contrôles
 
-- [P3] Si une future direction artistique illustrée est retenue, commander ou générer un jeu complet d’assets « carnet spatial » cohérent plutôt que de mélanger des éléments dessinés isolés.
+- Quatre cartes de parcours sont rendues.
+- La bascule `12+ ans` change réellement la mission et reste active après rechargement.
+- À 320 px, largeur du document = largeur du viewport (320 px) : aucun débordement horizontal.
+- Build de production contrôlé dans un navigateur réel, sans overlay Next.js.
+- Aucune erreur de console ni exception JavaScript. Les deux requêtes `/api/dashboard` annulées correspondent aux rechargements volontaires du test.
+
+## Checklist
+
+- [x] Reproduire la composition principale de la référence.
+- [x] Conserver les parcours `6–12 ans` et `12+ ans`.
+- [x] Relier les CTA aux vraies pages du site.
+- [x] Préserver le passeport et la progression locale.
+- [x] Vérifier desktop, mobile, persistance et absence de débordement.
+- [x] Valider lint, TypeScript, tests unitaires et build de production.
 
 **Final result: passed**

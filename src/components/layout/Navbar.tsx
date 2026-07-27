@@ -155,13 +155,14 @@ export default function Navbar({ themeToggle }: { themeToggle?: React.ReactNode 
 
     return (
         <motion.header
+            className={pathname === '/' ? 'site-header site-header-home' : 'site-header'}
             initial={{ y: -80, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
             style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200, height: 'var(--navbar-h)' }}
         >
             {/* Frosted glass bar */}
-            <div style={{
+            <div className="site-navbar-surface" style={{
                 height: '100%',
                 background: scrolled ? 'rgba(2,2,14,0.88)' : 'rgba(2,2,14,0.65)',
                 backdropFilter: 'saturate(180%) blur(36px)',
@@ -169,7 +170,7 @@ export default function Navbar({ themeToggle }: { themeToggle?: React.ReactNode 
                 borderBottom: scrolled ? '1px solid rgba(255,255,255,0.09)' : '1px solid rgba(255,255,255,0.04)',
                 transition: 'background 0.4s, border-color 0.4s',
             }}>
-                <div style={{
+                <div className="site-navbar-inner" style={{
                     height: '100%', maxWidth: 'var(--max-w)', margin: '0 auto',
                     padding: '0 2rem', display: 'flex', alignItems: 'center',
                     justifyContent: 'space-between', gap: '1.5rem',
@@ -193,7 +194,7 @@ export default function Navbar({ themeToggle }: { themeToggle?: React.ReactNode 
                     </Link>
 
                     {/* ── Desktop nav — grouped dropdowns ── */}
-                    <nav className="max-md:hidden" style={{ display: 'flex', alignItems: 'center', gap: '2px', flex: 1, justifyContent: 'center' }}>
+                    <nav className="site-desktop-nav max-md:hidden" style={{ display: 'flex', alignItems: 'center', gap: '2px', flex: 1, justifyContent: 'center' }}>
 
                         {/* Accueil pill */}
                         <Link href="/" style={{
@@ -312,7 +313,7 @@ export default function Navbar({ themeToggle }: { themeToggle?: React.ReactNode 
                     </nav>
 
                     {/* ── Right slot: theme toggle (always) + mobile hamburger (hidden on desktop) ── */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
+                    <div className="site-navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
                         <LanguageToggle />
                         {themeToggle}
                         {/* Mobile hamburger — Tailwind md:hidden hides it on ≥768px */}

@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useEffect, useMemo, useState } from 'react'
@@ -95,12 +96,6 @@ function formatCountdown(ms: number | null) {
   return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`
 }
 
-function formatFreshness(value: string | undefined, locale: 'fr' | 'en') {
-  if (!value) return locale === 'fr' ? 'Connexion aux sources…' : 'Connecting to sources…'
-  const time = new Date(value).toLocaleTimeString(locale === 'fr' ? 'fr-FR' : 'en-US', { hour: '2-digit', minute: '2-digit' })
-  return locale === 'fr' ? `Sources vérifiées à ${time}` : `Sources checked at ${time}`
-}
-
 function formatRemoteKpi(value: number | null | undefined, available: boolean | undefined, loading: boolean, locale: 'fr' | 'en') {
   if (loading) return '…'
   if (!available || value === null || value === undefined) return locale === 'fr' ? 'Indisponible' : 'Unavailable'
@@ -157,19 +152,15 @@ export default function HomePage() {
 
   return (
     <>
-      <section className="home-launchpad container">
+      <section className="home-storyboard container">
         <motion.div
-          className="home-launchpad-copy"
+          className="home-story-intro"
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="home-eyebrow">
-            <span className={activeSources > 0 ? 'live-orb' : 'live-orb is-loading'} />
-            {locale === 'fr' ? 'POUR LES CURIEUX DE 6 À 12+ ANS' : 'FOR CURIOUS MINDS AGED 6 TO 12+'} · {formatFreshness(data?.updatedAt, locale)}
-          </div>
+          <span className="home-story-note">{copy.title[0]}</span>
           <h1 className="home-title">
-            <span className="home-title-lead">{copy.title[0]}</span>
             <span>{copy.title[1]}</span>
             <span>{copy.title[2]}</span>
           </h1>
@@ -181,14 +172,16 @@ export default function HomePage() {
             <span className="source-health-line" />
             <span>NASA · IPAC · People in Space · The Space Devs</span>
           </div>
+          <Image
+            src="/home/discovery-notebook.webp"
+            alt=""
+            width={480}
+            height={480}
+            className="home-discovery-notebook"
+            priority
+          />
         </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <HomeMissionBoard locale={locale} />
-        </motion.div>
+        <HomeMissionBoard locale={locale} />
       </section>
 
       <section className="container home-data-band" aria-label="Indicateurs spatiaux">

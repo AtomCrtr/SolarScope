@@ -93,14 +93,15 @@ test('the homepage remembers the 12+ route and shows its appropriate mission', a
   await page.goto('/', { waitUntil: 'domcontentloaded' })
   const board = page.locator('.home-mission-board')
 
-  await expect(board.getByText('Pourquoi Mars est-elle rouge ?', { exact: true })).toBeVisible()
+  await expect(board.getByText('Pourquoi le ciel est-il bleu ?', { exact: true })).toBeVisible()
+  await expect(board.locator('.home-path-card')).toHaveCount(4)
   const twelvePlus = board.getByRole('button', { name: '12+ ans', exact: true })
   await twelvePlus.click()
   await expect(twelvePlus).toHaveAttribute('aria-pressed', 'true')
-  await expect(board.getByText('Comment découvre-t-on une exoplanète ?', { exact: true })).toBeVisible()
+  await expect(board.getByText('Comment la lumière révèle-t-elle l’Univers ?', { exact: true })).toBeVisible()
 
   await page.reload({ waitUntil: 'domcontentloaded' })
-  await expect(page.locator('.home-mission-board').getByText('Comment découvre-t-on une exoplanète ?', { exact: true })).toBeVisible()
+  await expect(page.locator('.home-mission-board').getByText('Comment la lumière révèle-t-elle l’Univers ?', { exact: true })).toBeVisible()
 })
 
 test('parent guide badges keep their spacing and produce a visual artifact', async ({ page }, testInfo) => {
