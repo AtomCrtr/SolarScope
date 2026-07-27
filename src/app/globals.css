@@ -1007,7 +1007,7 @@ video {
   margin-bottom: 1.5rem;
   color: #fff;
   font-family: "Arial Rounded MT Bold", "Trebuchet MS", sans-serif;
-  font-size: clamp(2.4rem, 2.65vw, 2.85rem);
+  font-size: clamp(2.35rem, 2.65vw, 2.55rem);
   font-weight: 900;
   line-height: 1.03;
   letter-spacing: -0.05em;
@@ -1123,7 +1123,7 @@ video {
   letter-spacing: -0.04em;
 }
 
-.home-featured-copy p { max-width: 305px; margin: 0.8rem 0; color: #d3d9e8; font-size: 0.82rem; line-height: 1.55; }
+.home-featured-copy p { max-width: 250px; margin: 0.8rem 0; color: #d3d9e8; font-size: 0.82rem; line-height: 1.55; }
 .home-featured-meta { display: flex; flex-wrap: wrap; gap: 0.45rem; }
 .home-featured-meta span { padding: 0.3rem 0.5rem; border: 1px solid rgba(196, 181, 253, 0.38); border-radius: 999px; color: #ddd6fe; background: rgba(21, 19, 55, 0.72); font-size: 0.66rem; font-weight: 750; }
 .home-featured-action { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; margin-top: auto; padding: 0.75rem 1.25rem; border-radius: 999px; color: #fff; background: #7c3aed; box-shadow: 0 12px 30px rgba(124, 58, 237, 0.42); font-size: 0.82rem; font-weight: 850; text-decoration: none; }
@@ -1208,9 +1208,6 @@ video {
 body:has(.home-storyboard) .solarbot-launcher { display: none; }
 body:has(.home-storyboard) main > div:first-child { display: none; }
 body:has(.home-storyboard) { background: #03040d; }
-.site-header-home .site-navbar-surface { background: transparent !important; border-bottom-color: transparent !important; backdrop-filter: none !important; }
-.site-header-home .site-navbar-inner { max-width: none !important; padding-right: clamp(1.25rem, 3vw, 3rem) !important; padding-left: clamp(1.25rem, 3vw, 3rem) !important; }
-.site-header-home .site-desktop-nav { display: none !important; }
 
 @media (max-width: 1100px) {
   .home-storyboard.container { grid-template-columns: 1fr; grid-template-rows: auto; max-width: 980px; margin-top: 0; }
