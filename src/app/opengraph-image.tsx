@@ -20,7 +20,7 @@ export default function OpenGraphImage() {
           SolarScope
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div style={{ color: '#9ca8ff', fontSize: 22, letterSpacing: 5, textTransform: 'uppercase' }}>Pour les 8–12 ans</div>
+          <div style={{ color: '#9ca8ff', fontSize: 22, letterSpacing: 5, textTransform: 'uppercase' }}>Pour les curieux de 6 à 12+ ans</div>
           <div style={{ display: 'flex', flexDirection: 'column', marginTop: 18, fontSize: 82, lineHeight: 0.95, fontWeight: 800, letterSpacing: -4 }}>
             <span>L’espace,</span>
             <span>enfin facile.</span>

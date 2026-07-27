@@ -89,6 +89,20 @@ test('the homepage does not overflow on a 320 px viewport', async ({ page }) => 
   expect(widths.scroll).toBeLessThanOrEqual(widths.client + 1)
 })
 
+test('the homepage remembers the 12+ route and shows its appropriate mission', async ({ page }) => {
+  await page.goto('/', { waitUntil: 'domcontentloaded' })
+  const board = page.locator('.home-mission-board')
+
+  await expect(board.getByText('Pourquoi Mars est-elle rouge ?', { exact: true })).toBeVisible()
+  const twelvePlus = board.getByRole('button', { name: '12+ ans', exact: true })
+  await twelvePlus.click()
+  await expect(twelvePlus).toHaveAttribute('aria-pressed', 'true')
+  await expect(board.getByText('Comment découvre-t-on une exoplanète ?', { exact: true })).toBeVisible()
+
+  await page.reload({ waitUntil: 'domcontentloaded' })
+  await expect(page.locator('.home-mission-board').getByText('Comment découvre-t-on une exoplanète ?', { exact: true })).toBeVisible()
+})
+
 test('parent guide badges keep their spacing and produce a visual artifact', async ({ page }, testInfo) => {
   await page.goto('/parents-enseignants', { waitUntil: 'domcontentloaded' })
   const cards = page.locator('.parent-guide')

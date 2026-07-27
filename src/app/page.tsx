@@ -1,32 +1,30 @@
 'use client'
 
-import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useEffect, useMemo, useState } from 'react'
 import type { DashboardData } from '@/lib/data/space-data'
+import HomeMissionBoard from '@/components/learning/HomeMissionBoard'
 import { useSiteLocale } from '@/components/layout/LanguageToggle'
-
-const Earth3D = dynamic(() => import('@/components/space/Earth3D'), { ssr: false })
 
 const HOME_COPY = {
   fr: {
-    title: ['L’espace,', 'enfin facile', 'à comprendre.'],
-    intro: 'Choisis une mission, observe de vrais phénomènes spatiaux et découvre leur explication avec des mots simples. Tu peux écouter les leçons et ouvrir les détails seulement quand tu en as envie.',
-    chooseMission: 'Choisir ma mission', testKnowledge: 'Tester mes connaissances', sourcesUnavailable: 'Sources momentanément indisponibles', sourcesConnected: 'flux connectés',
+    title: ['Bonjour explorateur !', 'Choisis ta mission', 'et décolle pour l’espace.'],
+    intro: 'Apprends, observe et comprends l’Univers avec des missions courtes, des vraies images et des mots simples.',
+    sourcesUnavailable: 'Sources momentanément indisponibles', sourcesConnected: 'flux connectés',
     missionKicker: 'COMMENCE ICI', missionTitle: 'Choisis ta première mission.', missionText: 'Chaque mission commence par une question, utilise une image ou une expérience, puis résume trois idées importantes.',
     exploreKicker: 'CARTE D’EXPLORATION', exploreTitle: 'Choisissez votre trajectoire.', exploreText: 'Quatre portes d’entrée, de notre voisinage planétaire jusqu’aux confins observables.',
     trustKicker: 'DONNÉES DE CONFIANCE', trustTitle: 'Pas de chiffres décoratifs.', trustText: 'Les indicateurs volatils sont récupérés côté serveur, mis en cache avec une durée explicite et accompagnés de leur source. Lorsqu’un service ne répond pas, SolarScope l’indique au lieu d’inventer une valeur de remplacement.', trustAction: 'Consulter les publications NASA',
-    launch: 'PROCHAIN DÉPART', earthCaption: 'TERRE · MODÈLE INTERACTIF', earthAction: 'Glissez pour explorer',
+    launch: 'PROCHAIN DÉPART',
   },
   en: {
-    title: ['Space,', 'made easy', 'to understand.'],
-    intro: 'Choose a mission, watch real space phenomena, and discover simple explanations. You can listen to lessons and open the details only when you want to.',
-    chooseMission: 'Choose a mission', testKnowledge: 'Test my knowledge', sourcesUnavailable: 'Sources are temporarily unavailable', sourcesConnected: 'live sources connected',
+    title: ['Hello explorer!', 'Choose a mission', 'and launch into space.'],
+    intro: 'Learn, observe and understand the Universe through short missions, real images and simple words.',
+    sourcesUnavailable: 'Sources are temporarily unavailable', sourcesConnected: 'live sources connected',
     missionKicker: 'START HERE', missionTitle: 'Choose your first mission.', missionText: 'Each mission starts with a question, uses an image or an activity, then sums up three important ideas.',
     exploreKicker: 'EXPLORATION MAP', exploreTitle: 'Choose your route.', exploreText: 'Four ways in, from our planetary neighbourhood to the farthest observable space.',
     trustKicker: 'TRUSTED DATA', trustTitle: 'No decorative numbers.', trustText: 'Changing indicators are fetched on the server, cached for a clear duration, and shown with their source. If a service does not respond, SolarScope says so instead of inventing a replacement value.', trustAction: 'Browse NASA updates',
-    launch: 'NEXT LAUNCH', earthCaption: 'EARTH · INTERACTIVE MODEL', earthAction: 'Drag to explore',
+    launch: 'NEXT LAUNCH',
   },
 } as const
 
@@ -62,13 +60,6 @@ const CATEGORIES = [
     color: '#34d399',
     pages: [{ title: 'Actualités', href: '/actualites' }, { title: 'Quiz spatial', href: '/quiz' }],
   },
-]
-
-const KIDS_MISSIONS = [
-  { emoji: '🪐', title: 'Rencontre les 8 planètes', question: 'Pourquoi sont-elles si différentes ?', href: '/planetes', duration: '7 min', color: '#818cf8' },
-  { emoji: '🔴', title: 'Enquête sur Mars', question: 'D’où vient sa couleur rouge ?', href: '/mars', duration: '6 min', color: '#f87171' },
-  { emoji: '☄️', title: 'Surveille les astéroïdes', question: 'Sont-ils vraiment dangereux ?', href: '/asteroides', duration: '8 min', color: '#fb923c' },
-  { emoji: '🛰️', title: 'Rejoins l’ISS', question: 'Pourquoi les astronautes flottent-ils ?', href: '/iss', duration: '6 min', color: '#38bdf8' },
 ]
 
 function daysSince(date: string) {
@@ -166,16 +157,16 @@ export default function HomePage() {
 
   return (
     <>
-      <section className="home-hero container">
+      <section className="home-launchpad container">
         <motion.div
-          className="home-hero-copy"
+          className="home-launchpad-copy"
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
         >
           <div className="home-eyebrow">
             <span className={activeSources > 0 ? 'live-orb' : 'live-orb is-loading'} />
-            {locale === 'fr' ? 'POUR LES 8–12 ANS' : 'FOR AGES 8–12'} · {formatFreshness(data?.updatedAt, locale)}
+            {locale === 'fr' ? 'POUR LES CURIEUX DE 6 À 12+ ANS' : 'FOR CURIOUS MINDS AGED 6 TO 12+'} · {formatFreshness(data?.updatedAt, locale)}
           </div>
           <h1 className="home-title">
             <span className="home-title-lead">{copy.title[0]}</span>
@@ -185,60 +176,19 @@ export default function HomePage() {
           <p className="home-intro">
             {copy.intro}
           </p>
-          <div className="home-actions">
-            <a href="#missions-enfants" className="btn-primary">{copy.chooseMission} <span aria-hidden="true">→</span></a>
-            <Link href="/quiz" className="btn-ghost">{copy.testKnowledge}</Link>
-          </div>
           <div className="source-health" aria-live="polite">
             <span>{dataError ? copy.sourcesUnavailable : `${activeSources}/4 ${copy.sourcesConnected}`}</span>
             <span className="source-health-line" />
             <span>NASA · IPAC · People in Space · The Space Devs</span>
           </div>
         </motion.div>
-
         <motion.div
-          className="home-earth"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="earth-orbit earth-orbit-one" />
-          <div className="earth-orbit earth-orbit-two" />
-          <Earth3D height="100%" />
-          <div className="earth-caption">
-            <span>{copy.earthCaption}</span>
-            <span>{copy.earthAction}</span>
-          </div>
+          <HomeMissionBoard locale={locale} />
         </motion.div>
-      </section>
-
-      <section id="missions-enfants" className="container kids-missions" aria-labelledby="kids-missions-title">
-        <header className="kids-missions-heading">
-          <div>
-            <span className="section-kicker">{copy.missionKicker}</span>
-            <h2 id="kids-missions-title">{copy.missionTitle}</h2>
-          </div>
-          <p>{copy.missionText}</p>
-        </header>
-        <div className="kids-mission-grid">
-          {KIDS_MISSIONS.map((mission, index) => (
-            <motion.article
-              key={mission.href}
-              className="kids-mission-card"
-              style={{ '--mission-color': mission.color } as React.CSSProperties}
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 + index * 0.06 }}
-            >
-              <div className="kids-mission-meta"><span>{mission.emoji}</span><span>⏱ {mission.duration}</span></div>
-              <h3>{mission.title}</h3>
-              <p>{mission.question}</p>
-              <Link href={mission.href} aria-label={`Commencer : ${mission.title}`}>
-                Commencer <span aria-hidden="true">→</span>
-              </Link>
-            </motion.article>
-          ))}
-        </div>
       </section>
 
       <section className="container home-data-band" aria-label="Indicateurs spatiaux">
