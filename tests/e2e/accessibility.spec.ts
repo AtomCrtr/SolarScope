@@ -89,6 +89,23 @@ test('the homepage does not overflow on a 320 px viewport', async ({ page }) => 
   expect(widths.scroll).toBeLessThanOrEqual(widths.client + 1)
 })
 
+test('the homepage keeps its learning paths visible in a short desktop viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 1580, height: 850 })
+  await page.goto('/', { waitUntil: 'domcontentloaded' })
+
+  const notebook = await page.locator('.home-featured-notebook').boundingBox()
+  const routes = await page.locator('.home-routes-section').boundingBox()
+  const firstPath = await page.locator('.home-path-card').first().boundingBox()
+
+  expect(notebook).not.toBeNull()
+  expect(routes).not.toBeNull()
+  expect(firstPath).not.toBeNull()
+  if (notebook && routes && firstPath) {
+    expect(routes.y).toBeGreaterThanOrEqual(notebook.y + notebook.height - 1)
+    expect(firstPath.y).toBeLessThan(850)
+  }
+})
+
 test('the homepage remembers the 12+ route and shows its appropriate mission', async ({ page }) => {
   await page.goto('/', { waitUntil: 'domcontentloaded' })
   const board = page.locator('.home-mission-board')
