@@ -243,41 +243,43 @@ export default function HomeMissionBoard({ locale }: HomeMissionBoardProps) {
         </div>
       </div>
 
-      <div className="home-board-bottom">
+      <section className="home-routes-section" aria-labelledby="home-routes-title">
         <div className="home-route-heading">
-          <span className="home-board-kicker">{copy.routeTitle}</span>
+          <h2 id="home-routes-title" className="home-board-kicker">{copy.routeTitle}</h2>
           <p>{copy.routeText}</p>
         </div>
-        <div className="home-path-grid">
-          {copy.paths.map(path => (
-            <Link key={path.href} href={path.href} className="home-path-card" onClick={() => markVisited(path.missionId)}>
-              <Image src={path.image} alt={path.imageAlt} width={420} height={236} sizes="(max-width: 700px) 100vw, 280px" />
-              <span>{path.duration}</span>
-              <div>
-                <strong>{path.title}</strong>
-                <small>{path.description}</small>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
+        <div className="home-routes-layout">
+          <div className="home-path-grid">
+            {copy.paths.map(path => (
+              <Link key={path.href} href={path.href} className="home-path-card" onClick={() => markVisited(path.missionId)}>
+                <Image src={path.image} alt={path.imageAlt} width={420} height={236} sizes="(max-width: 700px) 100vw, 280px" />
+                <span>{path.duration}</span>
+                <div>
+                  <strong>{path.title}</strong>
+                  <small>{path.description}</small>
+                </div>
+              </Link>
+            ))}
+          </div>
 
-      <aside className="home-passport-callout" aria-label={copy.progress}>
-        <span className="home-passport-title">{copy.progress}</span>
-        <p>{copy.progressText}</p>
-        <Image src="/home/passport.webp" alt="" width={320} height={320} className="home-passport-image" priority />
-        <div className="home-passport-count"><strong>{completedCount}</strong><span>/ {MISSION_IDS.length} missions</span></div>
-        <div className="home-progress-track" aria-hidden="true"><span style={{ width: `${percent}%` }} /></div>
-        <Link href="/passeport">{copy.passport}</Link>
-      </aside>
+          <aside className="home-passport-callout" aria-label={copy.progress}>
+            <span className="home-passport-title">{copy.progress}</span>
+            <p>{copy.progressText}</p>
+            <Image src="/home/passport.webp" alt="" width={320} height={320} className="home-passport-image" priority />
+            <div className="home-passport-count"><strong>{completedCount}</strong><span>/ {MISSION_IDS.length} missions</span></div>
+            <div className="home-progress-track" aria-hidden="true"><span style={{ width: `${percent}%` }} /></div>
+            <Link href="/passeport">{copy.passport}</Link>
+          </aside>
 
-      <div className="home-discovery-banner">
-        <div>
-          <strong>{copy.bannerTitle}</strong>
-          <span>{copy.bannerText}</span>
+          <div className="home-discovery-banner">
+            <div>
+              <strong>{copy.bannerTitle}</strong>
+              <span>{copy.bannerText}</span>
+            </div>
+            <Link href={audience === 'kids' ? '/ciel' : '/exoplanetes'}>{copy.bannerAction}</Link>
+          </div>
         </div>
-        <Link href={audience === 'kids' ? '/ciel' : '/exoplanetes'}>{copy.bannerAction}</Link>
-      </div>
+      </section>
     </section>
   )
 }

@@ -173,7 +173,7 @@ export default function HomePage() {
             <span>NASA · IPAC · People in Space · The Space Devs</span>
           </div>
           <Image
-            src="/home/discovery-notebook.webp"
+            src="/home/discovery-notebook-cutout.png"
             alt=""
             width={480}
             height={480}
