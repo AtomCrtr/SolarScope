@@ -94,16 +94,46 @@ test('the homepage keeps its learning paths visible in a short desktop viewport'
   await page.goto('/', { waitUntil: 'domcontentloaded' })
 
   const notebook = await page.locator('.home-featured-notebook').boundingBox()
+  const missionAction = await page.locator('.home-featured-action').boundingBox()
   const routes = await page.locator('.home-routes-section').boundingBox()
   const firstPath = await page.locator('.home-path-card').first().boundingBox()
 
   expect(notebook).not.toBeNull()
+  expect(missionAction).not.toBeNull()
   expect(routes).not.toBeNull()
   expect(firstPath).not.toBeNull()
-  if (notebook && routes && firstPath) {
+  if (notebook && missionAction && routes && firstPath) {
+    expect(missionAction.y + missionAction.height).toBeLessThan(notebook.y + notebook.height - 24)
     expect(routes.y).toBeGreaterThanOrEqual(notebook.y + notebook.height - 1)
     expect(firstPath.y).toBeLessThan(850)
   }
+})
+
+test('English is presented as a complete home-page preview and a limited lesson translation', async ({ page }) => {
+  await page.goto('/', { waitUntil: 'domcontentloaded' })
+  const english = page.getByRole('button', { name: 'EN preview' })
+  await english.click()
+
+  await expect(page.locator('.home-category-card').filter({ hasText: 'Solar System' })).toBeVisible()
+  await expect(page.getByText(/Data sources/)).toBeVisible()
+
+  await page.goto('/planetes', { waitUntil: 'domcontentloaded' })
+  await expect(page.getByText('English preview', { exact: true })).toBeVisible()
+  await expect(page.getByText('This detailed lesson is currently available in French.')).toBeVisible()
+})
+
+test('SolarBot displays the official sources returned with an answer', async ({ page }) => {
+  await page.route('**/api/gemini', route => route.fulfill({ json: {
+    text: 'Les étoiles produisent leur lumière grâce à la fusion nucléaire.',
+    sources: [{ id: 'nasa-stars', label: 'NASA Science — Stars', href: 'https://science.nasa.gov/universe/stars/', organization: 'NASA' }],
+  } }))
+  await page.goto('/solarbot', { waitUntil: 'domcontentloaded' })
+  await page.getByRole('textbox', { name: 'Question pour SolarBot' }).fill('Pourquoi les étoiles brillent-elles ?')
+  await page.getByRole('button', { name: 'Envoyer la question' }).click()
+
+  const source = page.getByRole('link', { name: /NASA Science — Stars/ })
+  await expect(source).toBeVisible()
+  await expect(source).toHaveAttribute('href', 'https://science.nasa.gov/universe/stars/')
 })
 
 test('the homepage remembers the 12+ route and shows its appropriate mission', async ({ page }) => {

@@ -3,12 +3,17 @@
 import { Fragment, useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import KidsGuide from '@/components/learning/KidsGuide'
+import SolarBotSourceLinks from '@/components/assistant/SolarBotSourceLinks'
+import type { PublicSolarBotSource } from '@/lib/content/solarbot-sources'
 
 interface Message {
     role: 'user' | 'bot'
     text: string
     time: string
+    sources?: PublicSolarBotSource[]
 }
+
+type SolarBotAnswer = { text: string; sources: PublicSolarBotSource[] }
 
 const QUICK_QUESTIONS = [
     'Pourquoi les étoiles brillent-elles ?',
@@ -29,7 +34,7 @@ const STORY_THEMES = [
     { emoji: '🌊', label: 'Mission sur Europe', prompt: 'Raconte l\'histoire d\'une mission pour explorer l\'océan sous la glace d\'Europe (lune de Jupiter). Maximum 200 mots, pour enfants de 8-12 ans. En français.' },
 ]
 
-async function askSolarBot(question: string, history: Message[], mode: 'chat' | 'story' = 'chat'): Promise<string> {
+async function askSolarBot(question: string, history: Message[], mode: 'chat' | 'story' = 'chat'): Promise<SolarBotAnswer> {
     try {
         const res = await fetch('/api/gemini', {
             method: 'POST',
@@ -37,10 +42,13 @@ async function askSolarBot(question: string, history: Message[], mode: 'chat' | 
             body: JSON.stringify({ question, history, mode }),
         })
         const data = await res.json()
-        if (!res.ok) return data.error ?? '🤖 SolarBot réfléchit encore... Réessaie !'
-        return data.text ?? '🤖 SolarBot réfléchit encore... Réessaie !'
+        if (!res.ok) return { text: data.error ?? '🤖 SolarBot réfléchit encore... Réessaie !', sources: [] }
+        return {
+            text: data.text ?? '🤖 SolarBot réfléchit encore... Réessaie !',
+            sources: Array.isArray(data.sources) ? data.sources : [],
+        }
     } catch {
-        return '🌐 Erreur de connexion. Vérifie ta connexion Internet et réessaie.'
+        return { text: '🌐 Erreur de connexion. Vérifie ta connexion Internet et réessaie.', sources: [] }
     }
 }
 
@@ -69,6 +77,7 @@ export default function SolarBotPage() {
     const [loading, setLoading] = useState(false)
     const [tab, setTab] = useState<'chat' | 'story'>('chat')
     const [story, setStory] = useState('')
+    const [storySources, setStorySources] = useState<PublicSolarBotSource[]>([])
     const [storyLoading, setStoryLoading] = useState(false)
     const [selectedTheme, setSelectedTheme] = useState(0)
     const bottomRef = useRef<HTMLDivElement>(null)
@@ -86,14 +95,15 @@ export default function SolarBotPage() {
         setMessages(prev => [...prev, userMsg])
         setLoading(true)
         const answer = await askSolarBot(q, messages)
-        setMessages(prev => [...prev, { role: 'bot', text: answer, time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }])
+        setMessages(prev => [...prev, { role: 'bot', text: answer.text, sources: answer.sources, time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }])
         setLoading(false)
     }
 
     const generateStory = async () => {
         setStoryLoading(true)
         const answer = await askSolarBot(STORY_THEMES[selectedTheme].prompt, [], 'story')
-        setStory(answer)
+        setStory(answer.text)
+        setStorySources(answer.sources)
         setStoryLoading(false)
     }
 
@@ -147,7 +157,7 @@ export default function SolarBotPage() {
                                     <motion.div key={i}
                                         initial={{ opacity: 0, y: 10, scale: 0.96 }}
                                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                                        style={{ display: 'flex', flexDirection: msg.role === 'user' ? 'row-reverse' : 'row', gap: '0.75rem', alignItems: 'flex-end' }}>
+                                        style={{ display: 'flex', flexDirection: msg.role === 'user' ? 'row-reverse' : 'row', gap: '0.75rem', alignItems: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
                                         <div style={{
                                             width: 36, height: 36, borderRadius: '50%', flexShrink: 0,
                                             background: msg.role === 'bot' ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'linear-gradient(135deg, #0f172a, #1e293b)',
@@ -163,6 +173,7 @@ export default function SolarBotPage() {
                                                 border: msg.role === 'bot' ? '1px solid rgba(255,255,255,0.07)' : 'none',
                                                 color: '#e2e8f0', fontSize: '0.88rem', lineHeight: 1.7,
                                             }}><FormattedText text={msg.text} /></div>
+                                            {msg.role === 'bot' && <SolarBotSourceLinks sources={msg.sources} />}
                                             <div style={{ fontSize: '0.68rem', color: '#475569', marginTop: '0.25rem', textAlign: msg.role === 'user' ? 'right' : 'left' }}>{msg.time}</div>
                                         </div>
                                     </motion.div>
@@ -249,6 +260,7 @@ export default function SolarBotPage() {
                                         {STORY_THEMES[selectedTheme].emoji} {STORY_THEMES[selectedTheme].label}
                                     </div>
                                     <div style={{ color: '#cbd5e1', lineHeight: 1.85, fontSize: '0.9rem' }}><FormattedText text={story} /></div>
+                                    <SolarBotSourceLinks sources={storySources} />
                                 </motion.div>
                             )}
                         </div>

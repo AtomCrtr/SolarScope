@@ -8,6 +8,7 @@ import Footer from '@/components/layout/Footer'
 import Breadcrumb from '@/components/layout/Breadcrumb'
 import ThemeToggle from '@/components/layout/ThemeToggle'
 import ProgressTracker from '@/components/learning/ProgressTracker'
+import LanguageAvailabilityNotice from '@/components/layout/LanguageAvailabilityNotice'
 import { DEFAULT_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/config/site'
 
 export const metadata: Metadata = {
@@ -68,6 +69,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div style={{ maxWidth: 'var(--max-w)', margin: '0 auto', padding: '0.5rem var(--section-px) 0' }}>
             <Breadcrumb />
           </div>
+          <LanguageAvailabilityNotice />
           {children}
         </main>
         <Footer />

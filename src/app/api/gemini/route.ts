@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { checkDistributedRateLimit } from '@/lib/security/rate-limit'
 import { readJsonBody } from '@/lib/security/request-body'
 import { solarBotContentIsSafe, SOLARBOT_PRIVACY_REMINDER } from '@/lib/security/solarbot-safety'
+import { formatSolarBotSourceContext, selectSolarBotSources, toPublicSolarBotSources } from '@/lib/content/solarbot-sources'
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite'
@@ -125,15 +126,25 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: SOLARBOT_PRIVACY_REMINDER }, { status: 400 })
   }
 
+  const selectedSources = selectSolarBotSources(question)
+  const publicSources = toPublicSolarBotSources(selectedSources)
+  const sourceContext = formatSolarBotSourceContext(selectedSources)
+
+  const groundedPrompt = `${systemPrompt}
+
+Appuie les faits astronomiques de ta réponse sur les repères officiels ci-dessous. Ne prétends pas avoir consulté d’autres pages. Si ces repères ne suffisent pas pour répondre avec confiance, dis-le simplement au lieu d’inventer. Les liens seront affichés séparément sous ta réponse.
+
+${sourceContext}`
+
   if (!GEMINI_API_KEY) {
     return NextResponse.json(
-      { text: fallbackAnswer(question, mode), degraded: true },
+      { text: fallbackAnswer(question, mode), degraded: true, sources: publicSources },
       { headers: { 'Cache-Control': 'no-store' } },
     )
   }
 
   const payload = {
-    systemInstruction: { parts: [{ text: systemPrompt }] },
+    systemInstruction: { parts: [{ text: groundedPrompt }] },
     contents: [
       ...safeHistory.map((message) => ({ role: message.role, parts: [{ text: message.text }] })),
       { role: 'user', parts: [{ text: question }] },
@@ -154,7 +165,7 @@ export async function POST(request: NextRequest) {
     const response = await requestGemini(payload)
     if (!response.ok) {
       return NextResponse.json(
-        { text: fallbackAnswer(question, mode), degraded: true },
+        { text: fallbackAnswer(question, mode), degraded: true, sources: publicSources },
         { headers: { 'Cache-Control': 'no-store', 'X-SolarBot-Mode': 'fallback' } },
       )
     }
@@ -165,7 +176,7 @@ export async function POST(request: NextRequest) {
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
 
     return NextResponse.json(
-      { text: text || fallbackAnswer(question, mode), degraded: !text },
+      { text: text || fallbackAnswer(question, mode), degraded: !text, sources: publicSources },
       {
         headers: {
           'Cache-Control': 'no-store',
@@ -175,7 +186,7 @@ export async function POST(request: NextRequest) {
     )
   } catch {
     return NextResponse.json(
-      { text: fallbackAnswer(question, mode), degraded: true },
+      { text: fallbackAnswer(question, mode), degraded: true, sources: publicSources },
       { headers: { 'Cache-Control': 'no-store', 'X-SolarBot-Mode': 'fallback' } },
     )
   }

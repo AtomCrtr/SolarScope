@@ -17,6 +17,8 @@ const HOME_COPY = {
     exploreKicker: 'CARTE D’EXPLORATION', exploreTitle: 'Choisissez votre trajectoire.', exploreText: 'Quatre portes d’entrée, de notre voisinage planétaire jusqu’aux confins observables.',
     trustKicker: 'DONNÉES DE CONFIANCE', trustTitle: 'Pas de chiffres décoratifs.', trustText: 'Les indicateurs volatils sont récupérés côté serveur, mis en cache avec une durée explicite et accompagnés de leur source. Lorsqu’un service ne répond pas, SolarScope l’indique au lieu d’inventer une valeur de remplacement.', trustAction: 'Consulter les publications NASA',
     launch: 'PROCHAIN DÉPART',
+    dataBandLabel: 'Indicateurs spatiaux', live: 'EN DIRECT', missionsLinkLabel: 'Voir les missions',
+    kpis: { exoplanets: 'exoplanètes confirmées', asteroids: 'objets proches catalogués', crew: 'personnes à bord de l’ISS', perseverance: 'sols de Perseverance', perseveranceSince: 'Depuis le 18 février 2021' },
   },
   en: {
     title: ['Hello explorer!', 'Choose a mission', 'and launch into space.'],
@@ -26,6 +28,8 @@ const HOME_COPY = {
     exploreKicker: 'EXPLORATION MAP', exploreTitle: 'Choose your route.', exploreText: 'Four ways in, from our planetary neighbourhood to the farthest observable space.',
     trustKicker: 'TRUSTED DATA', trustTitle: 'No decorative numbers.', trustText: 'Changing indicators are fetched on the server, cached for a clear duration, and shown with their source. If a service does not respond, SolarScope says so instead of inventing a replacement value.', trustAction: 'Browse NASA updates',
     launch: 'NEXT LAUNCH',
+    dataBandLabel: 'Space indicators', live: 'LIVE', missionsLinkLabel: 'View missions',
+    kpis: { exoplanets: 'confirmed exoplanets', asteroids: 'catalogued near-Earth objects', crew: 'people aboard the ISS', perseverance: 'Perseverance sols', perseveranceSince: 'Since February 18, 2021' },
   },
 } as const
 
@@ -63,6 +67,29 @@ const CATEGORIES = [
   },
 ]
 
+const CATEGORY_EN: Record<string, { title: string; desc: string; pages: Record<string, string> }> = {
+  '01': {
+    title: 'Solar System',
+    desc: 'Observe the Sun, compare the planets and follow objects crossing our cosmic neighbourhood.',
+    pages: { '/soleil': 'Sun', '/planetes': 'Planets', '/mars': 'Mars', '/asteroides': 'Asteroids', '/meteorites': 'Meteorites' },
+  },
+  '02': {
+    title: 'Human exploration',
+    desc: 'Follow the ISS almost live and explore the missions shaping space exploration.',
+    pages: { '/iss': 'ISS Tracker', '/missions': 'Missions' },
+  },
+  '03': {
+    title: 'Deep Universe',
+    desc: 'Discover Webb, exoplanets and the sky visible from your location.',
+    pages: { '/jwst': 'Webb', '/ciel': 'Tonight’s sky', '/photo-du-jour': 'Picture of the Day', '/exoplanetes': 'Exoplanets' },
+  },
+  '04': {
+    title: 'Learn',
+    desc: 'Read the latest official stories and test what you know.',
+    pages: { '/actualites': 'News', '/quiz': 'Space quiz' },
+  },
+}
+
 function daysSince(date: string) {
   return Math.floor((Date.now() - new Date(date).getTime()) / 86_400_000)
 }
@@ -87,12 +114,12 @@ function useCountdown(target: string | undefined) {
   return target ? remaining : null
 }
 
-function formatCountdown(ms: number | null) {
+function formatCountdown(ms: number | null, locale: 'fr' | 'en') {
   if (ms === null) return '—'
   const days = Math.floor(ms / 86_400_000)
   const hours = Math.floor((ms % 86_400_000) / 3_600_000)
   const minutes = Math.floor((ms % 3_600_000) / 60_000)
-  if (days > 0) return `${days} j ${hours} h ${minutes} min`
+  if (days > 0) return locale === 'fr' ? `${days} j ${hours} h ${minutes} min` : `${days}d ${hours}h ${minutes}m`
   return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`
 }
 
@@ -130,23 +157,31 @@ export default function HomePage() {
   )
   const dashboardLoading = data === null && !dataError
   const issCrew = data?.crew.filter(member => member.station === 'ISS').length ?? null
+  const categories = locale === 'en'
+    ? CATEGORIES.map(category => ({
+        ...category,
+        title: CATEGORY_EN[category.number].title,
+        desc: CATEGORY_EN[category.number].desc,
+        pages: category.pages.map(page => ({ ...page, title: CATEGORY_EN[category.number].pages[page.href] })),
+      }))
+    : CATEGORIES
 
   const kpis = [
     {
       value: formatRemoteKpi(data?.exoplanetCount, data?.sources.exoplanets, dashboardLoading, locale),
-      label: 'exoplanètes confirmées', source: 'NASA Exoplanet Archive', color: '#c084fc', live: data?.sources.exoplanets,
+      label: copy.kpis.exoplanets, source: 'NASA Exoplanet Archive', color: '#c084fc', live: data?.sources.exoplanets,
     },
     {
       value: formatRemoteKpi(data?.nearEarthObjectCount, data?.sources.asteroids, dashboardLoading, locale),
-      label: 'objets proches catalogués', source: 'NASA NeoWs', color: '#fb923c', live: data?.sources.asteroids,
+      label: copy.kpis.asteroids, source: 'NASA NeoWs', color: '#fb923c', live: data?.sources.asteroids,
     },
     {
       value: formatRemoteKpi(issCrew, data?.sources.crew, dashboardLoading, locale),
-      label: 'personnes à bord de l’ISS', source: 'People in Space', color: '#38bdf8', live: data?.sources.crew,
+      label: copy.kpis.crew, source: 'People in Space', color: '#38bdf8', live: data?.sources.crew,
     },
     {
-      value: martianSolsSince('2021-02-18').toLocaleString('fr-FR'),
-      label: 'sols de Perseverance', source: 'Depuis le 18 février 2021', color: '#f87171', live: false,
+      value: martianSolsSince('2021-02-18').toLocaleString(locale === 'fr' ? 'fr-FR' : 'en-US'),
+      label: copy.kpis.perseverance, source: copy.kpis.perseveranceSince, color: '#f87171', live: false,
     },
   ]
 
@@ -184,7 +219,7 @@ export default function HomePage() {
         <HomeMissionBoard locale={locale} />
       </section>
 
-      <section className="container home-data-band" aria-label="Indicateurs spatiaux">
+      <section className="container home-data-band" aria-label={copy.dataBandLabel}>
         {kpis.map((kpi, index) => (
           <motion.article
             key={kpi.label}
@@ -195,9 +230,9 @@ export default function HomePage() {
           >
             <div className="home-kpi-topline">
               <span>0{index + 1}</span>
-              {kpi.live && <span className="data-live">EN DIRECT</span>}
+              {kpi.live && <span className="data-live">{copy.live}</span>}
             </div>
-            <strong className={kpi.value === 'Indisponible' ? 'is-unavailable' : undefined} style={{ color: kpi.color }}>{kpi.value}</strong>
+            <strong className={kpi.value === 'Indisponible' || kpi.value === 'Unavailable' ? 'is-unavailable' : undefined} style={{ color: kpi.color }}>{kpi.value}</strong>
             <span className="home-kpi-label">{kpi.label}</span>
             <small>{kpi.source}</small>
           </motion.article>
@@ -213,10 +248,10 @@ export default function HomePage() {
               <p>{data.nextLaunch.agency} · {data.nextLaunch.rocket}</p>
             </div>
             <div className="launch-countdown">
-              <strong>{formatCountdown(countdown)}</strong>
-              <span>{new Date(data.nextLaunch.net).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+              <strong>{formatCountdown(countdown, locale)}</strong>
+              <span>{new Date(data.nextLaunch.net).toLocaleDateString(locale === 'fr' ? 'fr-FR' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
             </div>
-            <Link href="/missions" aria-label="Voir les missions">→</Link>
+            <Link href="/missions" aria-label={copy.missionsLinkLabel}>→</Link>
           </div>
         </section>
       )}
@@ -231,7 +266,7 @@ export default function HomePage() {
         </header>
 
         <div className="home-category-grid">
-          {CATEGORIES.map((category, index) => (
+          {categories.map((category, index) => (
             <motion.article
               key={category.title}
               className="home-category-card"

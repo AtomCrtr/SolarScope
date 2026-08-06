@@ -2,6 +2,7 @@ import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 
 const sourceRoot = path.resolve('src/app')
+const solarBotSourcesFile = path.resolve('src/lib/content/solarbot-sources.ts')
 const siteUrl = (process.env.SITE_URL || 'https://solar-scope.vercel.app').replace(/\/$/, '')
 
 async function collectFiles(directory) {
@@ -15,11 +16,16 @@ async function collectFiles(directory) {
 
 const youtubeIds = new Set()
 const fallbackUrls = new Set()
+const solarBotSourceUrls = new Set()
+const failures = []
 for (const file of await collectFiles(sourceRoot)) {
   const source = await readFile(file, 'utf8')
   for (const match of source.matchAll(/https:\/\/www\.youtube\.com\/watch\?v=([A-Za-z0-9_-]+)/g)) youtubeIds.add(match[1])
   for (const match of source.matchAll(/fallback:\s*'([^']+)'/g)) fallbackUrls.add(match[1])
 }
+
+const solarBotSourceCode = await readFile(solarBotSourcesFile, 'utf8')
+for (const match of solarBotSourceCode.matchAll(/href:\s*'(https:\/\/[^']+)'/g)) solarBotSourceUrls.add(match[1])
 
 for (const url of fallbackUrls) {
   try {
@@ -31,7 +37,6 @@ for (const url of fallbackUrls) {
   }
 }
 
-const failures = []
 for (const id of youtubeIds) {
   const url = `https://www.youtube.com/oembed?url=${encodeURIComponent(`https://www.youtube.com/watch?v=${id}`)}&format=json`
   try {
@@ -43,6 +48,20 @@ for (const id of youtubeIds) {
   }
 }
 
+for (const url of solarBotSourceUrls) {
+  try {
+    const response = await fetch(url, {
+      redirect: 'follow',
+      headers: { 'User-Agent': 'SolarScope scientific source checker' },
+      signal: AbortSignal.timeout(20_000),
+    })
+    if (!response.ok) throw new Error(`HTTP ${response.status}`)
+    console.log(`SolarBot OK ${new URL(url).hostname}${new URL(url).pathname}`)
+  } catch (error) {
+    failures.push(`SolarBot source ${url}: ${error instanceof Error ? error.message : 'unknown error'}`)
+  }
+}
+
 try {
   const response = await fetch(`${siteUrl}/api/health`, { signal: AbortSignal.timeout(20_000) })
   if (!response.ok) throw new Error(`HTTP ${response.status}`)
@@ -51,7 +70,7 @@ try {
   failures.push(`Health endpoint: ${error instanceof Error ? error.message : 'unknown error'}`)
 }
 
-console.log(`Checked ${youtubeIds.size} unique YouTube resource(s) and ${fallbackUrls.size} fallback resource(s).`)
+console.log(`Checked ${youtubeIds.size} unique YouTube resource(s), ${fallbackUrls.size} fallback resource(s) and ${solarBotSourceUrls.size} SolarBot source(s).`)
 if (failures.length) {
   console.error(failures.join('\n'))
   process.exit(1)

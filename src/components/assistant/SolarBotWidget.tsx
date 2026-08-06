@@ -2,11 +2,16 @@
 
 import { Fragment, useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import SolarBotSourceLinks from '@/components/assistant/SolarBotSourceLinks'
+import type { PublicSolarBotSource } from '@/lib/content/solarbot-sources'
 
 interface Message {
     role: 'user' | 'bot'
     text: string
+    sources?: PublicSolarBotSource[]
 }
+
+type SolarBotAnswer = { text: string; sources: PublicSolarBotSource[] }
 
 const QUICK_QUESTIONS = [
     'Pourquoi les étoiles brillent ?',
@@ -15,7 +20,7 @@ const QUICK_QUESTIONS = [
     'Combien de planètes ?',
 ]
 
-async function askSolarBot(question: string, history: Message[]): Promise<string> {
+async function askSolarBot(question: string, history: Message[]): Promise<SolarBotAnswer> {
     try {
         const res = await fetch('/api/gemini', {
             method: 'POST',
@@ -23,10 +28,10 @@ async function askSolarBot(question: string, history: Message[]): Promise<string
             body: JSON.stringify({ question, history }),
         })
         const data = await res.json()
-        if (!res.ok) return data.error ?? '🤖 Réessaie !'
-        return data.text ?? '🤖 Réessaie !'
+        if (!res.ok) return { text: data.error ?? '🤖 Réessaie !', sources: [] }
+        return { text: data.text ?? '🤖 Réessaie !', sources: Array.isArray(data.sources) ? data.sources : [] }
     } catch {
-        return '🌐 Erreur de connexion. Réessaie !'
+        return { text: '🌐 Erreur de connexion. Réessaie !', sources: [] }
     }
 }
 
@@ -80,7 +85,7 @@ export default function SolarBotWidget() {
         setMessages(prev => [...prev, userMsg])
         setLoading(true)
         const answer = await askSolarBot(q, messages)
-        setMessages(prev => [...prev, { role: 'bot', text: answer }])
+        setMessages(prev => [...prev, { role: 'bot', text: answer.text, sources: answer.sources }])
         setLoading(false)
     }
 
@@ -194,13 +199,16 @@ export default function SolarBotWidget() {
                                     {msg.role === 'bot' && (
                                         <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', flexShrink: 0 }}>🤖</div>
                                     )}
-                                    <div style={{
-                                        maxWidth: '80%', padding: '0.5rem 0.75rem',
-                                        borderRadius: msg.role === 'user' ? '1rem 1rem 0 1rem' : '1rem 1rem 1rem 0',
-                                        background: msg.role === 'user' ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'rgba(255,255,255,0.06)',
-                                        border: msg.role === 'bot' ? '1px solid rgba(255,255,255,0.06)' : 'none',
-                                        color: '#e2e8f0', fontSize: '0.82rem', lineHeight: 1.65,
-                                    }}><FormattedText text={msg.text} /></div>
+                                    <div style={{ maxWidth: '80%' }}>
+                                        <div style={{
+                                            padding: '0.5rem 0.75rem',
+                                            borderRadius: msg.role === 'user' ? '1rem 1rem 0 1rem' : '1rem 1rem 1rem 0',
+                                            background: msg.role === 'user' ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'rgba(255,255,255,0.06)',
+                                            border: msg.role === 'bot' ? '1px solid rgba(255,255,255,0.06)' : 'none',
+                                            color: '#e2e8f0', fontSize: '0.82rem', lineHeight: 1.65,
+                                        }}><FormattedText text={msg.text} /></div>
+                                        {msg.role === 'bot' && <SolarBotSourceLinks sources={msg.sources} compact />}
+                                    </div>
                                 </div>
                             ))}
                             {loading && (

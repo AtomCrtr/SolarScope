@@ -15,7 +15,11 @@ export function useSiteLocale(): SiteLocale {
   const [locale, setLocale] = useState<SiteLocale>('fr')
 
   useEffect(() => {
-    const update = () => setLocale(readLocale())
+    const update = () => {
+      const nextLocale = readLocale()
+      setLocale(nextLocale)
+      document.documentElement.lang = nextLocale
+    }
     update()
     window.addEventListener(LOCALE_EVENT, update)
     return () => window.removeEventListener(LOCALE_EVENT, update)
@@ -38,8 +42,8 @@ export default function LanguageToggle() {
       <button type="button" aria-pressed={locale === 'fr'} onClick={() => setLocale('fr')} title="Français">
         FR
       </button>
-      <button type="button" aria-pressed={locale === 'en'} onClick={() => setLocale('en')} title="English">
-        EN
+      <button type="button" aria-pressed={locale === 'en'} onClick={() => setLocale('en')} title="English preview — detailed lessons remain in French">
+        <span>EN</span><span className="locale-preview-mark" aria-hidden="true">β</span><span className="sr-only"> preview</span>
       </button>
     </div>
   )

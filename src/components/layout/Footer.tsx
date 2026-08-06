@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useSiteLocale } from '@/components/layout/LanguageToggle'
 
 const FOOTER_GROUPS = [
     {
@@ -40,6 +41,13 @@ const FOOTER_GROUPS = [
     },
 ]
 
+const FOOTER_GROUPS_EN = [
+    { label: '🌞 Solar System', links: [{ title: 'The Sun', href: '/soleil' }, { title: 'Planets', href: '/planetes' }, { title: 'Mars', href: '/mars' }, { title: 'Asteroids', href: '/asteroides' }, { title: 'Meteorites', href: '/meteorites' }] },
+    { label: '🚀 Exploration', links: [{ title: 'ISS Tracker', href: '/iss' }, { title: 'Space missions', href: '/missions' }] },
+    { label: '🔭 Observation', links: [{ title: 'Webb Telescope', href: '/jwst' }, { title: 'Tonight’s sky', href: '/ciel' }, { title: 'Picture of the Day', href: '/photo-du-jour' }, { title: 'Exoplanets', href: '/exoplanetes' }] },
+    { label: '🎓 Discover', links: [{ title: 'Space news', href: '/actualites' }, { title: 'Space quiz', href: '/quiz' }, { title: 'Space passport', href: '/passeport' }, { title: 'Parents & teachers', href: '/parents-enseignants' }] },
+]
+
 const SOURCES = [
     { name: 'NASA APIs', url: 'https://api.nasa.gov', desc: 'APOD, NeoWs, Mars Photos' },
     { name: 'NOAA SWPC', url: 'https://www.swpc.noaa.gov', desc: 'Météo spatiale & Kp index' },
@@ -50,8 +58,36 @@ const SOURCES = [
     { name: 'People in Space', url: 'https://corquaid.github.io/international-space-station-APIs/', desc: 'Équipages actuellement en orbite' },
 ]
 
+const FOOTER_COPY = {
+    fr: {
+        description: 'Comprendre l’espace avec des mots simples, des missions courtes et des sources scientifiques. Adapté aux 6–12 ans et aux curieux de 12+.',
+        sources: '📡 Sources de données',
+        copyright: 'Données scientifiques NASA, ESA, NOAA · Éducatif & non commercial',
+        privacy: 'Confidentialité', dataSources: 'Données & sources', about: 'À propos', contact: 'Contact',
+    },
+    en: {
+        description: 'Understand space through simple words, short missions and scientific sources. Designed for ages 6–12 and curious learners aged 12+.',
+        sources: '📡 Data sources',
+        copyright: 'Scientific data from NASA, ESA and NOAA · Educational & non-commercial',
+        privacy: 'Privacy', dataSources: 'Data & sources', about: 'About', contact: 'Contact',
+    },
+} as const
+
+const SOURCE_DESC_EN: Record<string, string> = {
+    'NASA APIs': 'APOD, NeoWs and Mars photos',
+    'NOAA SWPC': 'Space weather and Kp index',
+    'NASA SDO': 'Live solar images',
+    'ESA / JWST': 'Webb Telescope images',
+    'The Space Devs': 'Upcoming launches',
+    'NASA Open Data': 'Public catalogue and archives',
+    'People in Space': 'Crews currently in orbit',
+}
+
 export default function Footer() {
     const year = new Date().getFullYear()
+    const locale = useSiteLocale()
+    const copy = FOOTER_COPY[locale]
+    const groups = locale === 'en' ? FOOTER_GROUPS_EN : FOOTER_GROUPS
 
     return (
         <footer style={{
@@ -85,7 +121,7 @@ export default function Footer() {
                             }}>SolarScope</span>
                         </div>
                         <p style={{ color: '#94a3b8', fontSize: '0.8rem', lineHeight: 1.7, maxWidth: 240, marginBottom: '1rem' }}>
-                            Comprendre l&apos;espace avec des mots simples, des missions courtes et des sources scientifiques. Adapté aux 6–12 ans et aux curieux de 12+.
+                            {copy.description}
                         </p>
                         {/* Social / contact */}
                         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
@@ -109,7 +145,7 @@ export default function Footer() {
                     </div>
 
                     {/* Navigation groups */}
-                    {FOOTER_GROUPS.map(group => (
+                    {groups.map(group => (
                         <div key={group.label}>
                             <div style={{ color: '#94a3b8', fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>
                                 {group.label}
@@ -133,7 +169,7 @@ export default function Footer() {
                 {/* Data sources */}
                 <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1.5rem', marginBottom: '1.5rem' }}>
                     <div style={{ color: '#94a3b8', fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>
-                        📡 Sources de données
+                        {copy.sources}
                     </div>
                     <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                         {SOURCES.map(s => (
@@ -146,7 +182,7 @@ export default function Footer() {
                                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(99,102,241,0.06)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(99,102,241,0.2)' }}
                                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.02)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.05)' }}>
                                 <span style={{ color: '#cbd5e1', fontSize: '0.72rem', fontWeight: 700 }}>{s.name}</span>
-                                <span style={{ color: '#94a3b8', fontSize: '0.7rem' }}>{s.desc}</span>
+                                <span style={{ color: '#94a3b8', fontSize: '0.7rem' }}>{locale === 'en' ? SOURCE_DESC_EN[s.name] : s.desc}</span>
                             </a>
                         ))}
                     </div>
@@ -155,13 +191,13 @@ export default function Footer() {
                 {/* Bottom bar */}
                 <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
                     <p style={{ color: '#94a3b8', fontSize: '0.72rem' }}>
-                        © {year} SolarScope · Données scientifiques NASA, ESA, NOAA · Éducatif & non commercial
+                        © {year} SolarScope · {copy.copyright}
                     </p>
                     <div style={{ display: 'flex', gap: '1rem' }}>
-                        <Link href="/confidentialite" style={{ color: '#94a3b8', fontSize: '0.72rem' }}>Confidentialité</Link>
-                        <Link href="/sources" style={{ color: '#94a3b8', fontSize: '0.72rem' }}>Données & sources</Link>
-                        <Link href="/#explorer" style={{ color: '#94a3b8', fontSize: '0.72rem' }}>À propos</Link>
-                        <a href="https://github.com/AtomCrtr/SolarScope" target="_blank" rel="noopener noreferrer" style={{ color: '#94a3b8', fontSize: '0.72rem' }}>Contact</a>
+                        <Link href="/confidentialite" style={{ color: '#94a3b8', fontSize: '0.72rem' }}>{copy.privacy}</Link>
+                        <Link href="/sources" style={{ color: '#94a3b8', fontSize: '0.72rem' }}>{copy.dataSources}</Link>
+                        <Link href="/#explorer" style={{ color: '#94a3b8', fontSize: '0.72rem' }}>{copy.about}</Link>
+                        <a href="https://github.com/AtomCrtr/SolarScope" target="_blank" rel="noopener noreferrer" style={{ color: '#94a3b8', fontSize: '0.72rem' }}>{copy.contact}</a>
                     </div>
                 </div>
             </div>
