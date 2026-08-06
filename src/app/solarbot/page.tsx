@@ -3,7 +3,7 @@
 import { Fragment, useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import KidsGuide from '@/components/learning/KidsGuide'
-import SolarBotSourceLinks from '@/components/assistant/SolarBotSourceLinks'
+import SolarBotSourceLinks, { SolarBotReliabilityNote } from '@/components/assistant/SolarBotSourceLinks'
 import type { PublicSolarBotSource } from '@/lib/content/solarbot-sources'
 
 interface Message {
@@ -11,9 +11,10 @@ interface Message {
     text: string
     time: string
     sources?: PublicSolarBotSource[]
+    degraded?: boolean
 }
 
-type SolarBotAnswer = { text: string; sources: PublicSolarBotSource[] }
+type SolarBotAnswer = { text: string; sources: PublicSolarBotSource[]; degraded: boolean }
 
 const QUICK_QUESTIONS = [
     'Pourquoi les étoiles brillent-elles ?',
@@ -42,13 +43,14 @@ async function askSolarBot(question: string, history: Message[], mode: 'chat' | 
             body: JSON.stringify({ question, history, mode }),
         })
         const data = await res.json()
-        if (!res.ok) return { text: data.error ?? '🤖 SolarBot réfléchit encore... Réessaie !', sources: [] }
+        if (!res.ok) return { text: data.error ?? '🤖 SolarBot réfléchit encore... Réessaie !', sources: [], degraded: true }
         return {
             text: data.text ?? '🤖 SolarBot réfléchit encore... Réessaie !',
             sources: Array.isArray(data.sources) ? data.sources : [],
+            degraded: Boolean(data.degraded),
         }
     } catch {
-        return { text: '🌐 Erreur de connexion. Vérifie ta connexion Internet et réessaie.', sources: [] }
+        return { text: '🌐 Erreur de connexion. Vérifie ta connexion Internet et réessaie.', sources: [], degraded: true }
     }
 }
 
@@ -78,6 +80,7 @@ export default function SolarBotPage() {
     const [tab, setTab] = useState<'chat' | 'story'>('chat')
     const [story, setStory] = useState('')
     const [storySources, setStorySources] = useState<PublicSolarBotSource[]>([])
+    const [storyDegraded, setStoryDegraded] = useState(false)
     const [storyLoading, setStoryLoading] = useState(false)
     const [selectedTheme, setSelectedTheme] = useState(0)
     const bottomRef = useRef<HTMLDivElement>(null)
@@ -95,7 +98,7 @@ export default function SolarBotPage() {
         setMessages(prev => [...prev, userMsg])
         setLoading(true)
         const answer = await askSolarBot(q, messages)
-        setMessages(prev => [...prev, { role: 'bot', text: answer.text, sources: answer.sources, time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }])
+        setMessages(prev => [...prev, { role: 'bot', text: answer.text, sources: answer.sources, degraded: answer.degraded, time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }])
         setLoading(false)
     }
 
@@ -104,6 +107,7 @@ export default function SolarBotPage() {
         const answer = await askSolarBot(STORY_THEMES[selectedTheme].prompt, [], 'story')
         setStory(answer.text)
         setStorySources(answer.sources)
+        setStoryDegraded(answer.degraded)
         setStoryLoading(false)
     }
 
@@ -173,6 +177,7 @@ export default function SolarBotPage() {
                                                 border: msg.role === 'bot' ? '1px solid rgba(255,255,255,0.07)' : 'none',
                                                 color: '#e2e8f0', fontSize: '0.88rem', lineHeight: 1.7,
                                             }}><FormattedText text={msg.text} /></div>
+                                            {msg.role === 'bot' && <SolarBotReliabilityNote degraded={msg.degraded} />}
                                             {msg.role === 'bot' && <SolarBotSourceLinks sources={msg.sources} />}
                                             <div style={{ fontSize: '0.68rem', color: '#475569', marginTop: '0.25rem', textAlign: msg.role === 'user' ? 'right' : 'left' }}>{msg.time}</div>
                                         </div>
@@ -260,6 +265,7 @@ export default function SolarBotPage() {
                                         {STORY_THEMES[selectedTheme].emoji} {STORY_THEMES[selectedTheme].label}
                                     </div>
                                     <div style={{ color: '#cbd5e1', lineHeight: 1.85, fontSize: '0.9rem' }}><FormattedText text={story} /></div>
+                                    <SolarBotReliabilityNote degraded={storyDegraded} />
                                     <SolarBotSourceLinks sources={storySources} />
                                 </motion.div>
                             )}

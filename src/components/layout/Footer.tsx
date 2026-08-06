@@ -90,7 +90,7 @@ export default function Footer() {
     const groups = locale === 'en' ? FOOTER_GROUPS_EN : FOOTER_GROUPS
 
     return (
-        <footer style={{
+        <footer className="site-footer" style={{
             position: 'relative', zIndex: 10,
             background: 'rgba(2,2,14,0.96)',
             backdropFilter: 'blur(20px)',

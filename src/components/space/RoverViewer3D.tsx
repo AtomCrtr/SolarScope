@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import { Component, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useGLTF, OrbitControls, Html } from '@react-three/drei'
 import Image from 'next/image'
@@ -8,7 +8,7 @@ import * as THREE from 'three'
 
 /* ─── Rover 3D mesh (only for Perseverance GLB) ─── */
 function RoverMesh({ url, reduceMotion }: { url: string; reduceMotion: boolean }) {
-    const { scene } = useGLTF(url)
+    const { scene } = useGLTF(url, '/draco/gltf/')
     const groupRef = useRef<THREE.Group>(null)
 
     const { offset, modelScale } = useMemo(() => {
@@ -34,6 +34,26 @@ function RoverMesh({ url, reduceMotion }: { url: string; reduceMotion: boolean }
             <primitive object={scene} />
         </group>
     )
+}
+
+class RoverModelBoundary extends Component<{
+    children: ReactNode
+    fallback: ReactNode
+    onError: () => void
+}, { failed: boolean }> {
+    state = { failed: false }
+
+    static getDerivedStateFromError() {
+        return { failed: true }
+    }
+
+    componentDidCatch() {
+        this.props.onError()
+    }
+
+    render() {
+        return this.state.failed ? this.props.fallback : this.props.children
+    }
 }
 
 /* ─── Loading state inside Canvas ─── */
@@ -94,9 +114,22 @@ function CuriosityDisplay({ height }: { height: number }) {
                     filter: 'drop-shadow(0 0 20px rgba(239,68,68,0.3))',
                 }}
             />
-            <p style={{ color: '#475569', fontSize: '0.65rem', textAlign: 'center', marginTop: '0.25rem' }}>
+            <p style={{ color: '#94a3b8', fontSize: '0.72rem', textAlign: 'center', marginTop: '0.25rem' }}>
                 🎨 Rendu 3D officiel NASA/JPL · Curiosity MSL · Cratère Gale
             </p>
+        </div>
+    )
+}
+
+function PerseveranceFallback({ height }: { height: number }) {
+    return (
+        <div style={{ height, display: 'grid', placeItems: 'center', padding: '2rem', textAlign: 'center' }} role="status">
+            <div>
+                <Image src="/rovers/perseverance.png" alt="Rover Perseverance — rendu officiel NASA/JPL" width={1000} height={700} style={{ width: 'min(100%, 720px)', maxHeight: height - 90, objectFit: 'contain' }} />
+                <p style={{ marginTop: '0.75rem', color: '#cbd5e1', fontSize: '0.82rem' }}>
+                    Le modèle interactif est indisponible. Voici le rendu officiel de Perseverance.
+                </p>
+            </div>
         </div>
     )
 }
@@ -141,7 +174,7 @@ export default function RoverViewer3D({ rover, height = 340 }: RoverViewer3DProp
                 }}>
                     <span style={{ fontSize: '0.65rem' }}>🛸</span>
                     <span style={{ fontSize: '0.68rem', fontWeight: 700, color: meta.color, fontFamily: 'Outfit' }}>{meta.name}</span>
-                    <span style={{ fontSize: '0.55rem', color: '#475569' }}>
+                    <span style={{ fontSize: '0.65rem', color: '#94a3b8' }}>
                         {meta.has3D && !glbError ? 'Modèle 3D interactif' : 'Rendu officiel NASA/JPL'}
                     </span>
                 </div>
@@ -149,22 +182,24 @@ export default function RoverViewer3D({ rover, height = 340 }: RoverViewer3DProp
 
             {/* Content */}
             {rover === 'perseverance' && !glbError ? (
-                <div onError={() => setGlbError(true)}>
+                <RoverModelBoundary
+                    onError={() => setGlbError(true)}
+                    fallback={<PerseveranceFallback height={height} />}
+                >
                     <PerseveranceCanvas height={height} reduceMotion={reduceMotion} />
-                </div>
+                </RoverModelBoundary>
+            ) : rover === 'perseverance' ? (
+                <PerseveranceFallback height={height} />
             ) : (
                 <CuriosityDisplay height={height} />
             )}
 
             {/* Controls hint for 3D */}
             {rover === 'perseverance' && !glbError && (
-                <div style={{ position: 'absolute', bottom: 8, right: 12, fontSize: '0.6rem', color: '#334155', pointerEvents: 'none' }}>
+                <div style={{ position: 'absolute', bottom: 8, right: 12, fontSize: '0.7rem', color: '#94a3b8', pointerEvents: 'none' }}>
                     🖱 Clic + glisser · Scroll pour zoomer
                 </div>
             )}
         </div>
     )
 }
-
-// Preload
-useGLTF.preload('/models/perseverance.glb')

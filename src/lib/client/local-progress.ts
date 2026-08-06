@@ -1,4 +1,19 @@
-export const MISSION_IDS = ['planetes', 'mars', 'iss', 'quiz'] as const
+export const MISSION_IDS = [
+  'soleil',
+  'planetes',
+  'mars',
+  'asteroides',
+  'meteorites',
+  'iss',
+  'missions',
+  'jwst',
+  'ciel',
+  'photo-du-jour',
+  'exoplanetes',
+  'actualites',
+  'quiz',
+  'solarbot',
+] as const
 export type MissionId = (typeof MISSION_IDS)[number]
 
 export type LocalProgress = {

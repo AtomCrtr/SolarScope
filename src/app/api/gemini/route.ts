@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
 
   const groundedPrompt = `${systemPrompt}
 
-Appuie les faits astronomiques de ta réponse sur les repères officiels ci-dessous. Ne prétends pas avoir consulté d’autres pages. Si ces repères ne suffisent pas pour répondre avec confiance, dis-le simplement au lieu d’inventer. Les liens seront affichés séparément sous ta réponse.
+Appuie les faits astronomiques de ta réponse sur les repères officiels ci-dessous. Ajoute le numéro du repère entre crochets, par exemple [1], juste après chaque fait important. Ne prétends pas avoir consulté d’autres pages. Si ces repères ne suffisent pas pour répondre avec confiance, dis-le simplement au lieu d’inventer. Les liens numérotés seront affichés séparément sous ta réponse.
 
 ${sourceContext}`
 

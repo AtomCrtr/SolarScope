@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import KidsGuide from '@/components/learning/KidsGuide'
+import DataSourceNote from '@/components/learning/DataSourceNote'
+import { SCIENTIFIC_SOURCES } from '@/lib/data/source-registry'
 
 interface WebbImage {
   nasa_id: string
@@ -19,7 +21,7 @@ const HIGHLIGHTS = [
   {
     title: 'Carina Nebula — "Falaises Cosmiques"',
     desc: 'Des milliers d\'étoiles cachées dans cette région en formation révélées pour la première fois par Webb. Les colonnes de gaz atteignent 7 années-lumière de haut.',
-    img: 'https://esawebb.org/media/archives/images/large/weic2205a.jpg',
+    img: '/media/jwst/carina.webp',
     category: 'Nébuleuse', color: '#f97316', year: '2022',
   },
   {
@@ -31,25 +33,25 @@ const HIGHLIGHTS = [
   {
     title: 'Piliers de la Création (M16)',
     desc: 'Une vue infrarouge des Piliers de la Création. Les étoiles nouvellement formées (points rouges) sont maintenant visibles à travers les colonnes de poussière cosmique.',
-    img: 'https://stsci-opo.org/STScI-01GFNN3PWJMY4RQXKZ585BC4QH.png',
+    img: '/media/jwst/pillars-of-creation.webp',
     category: 'Nébuleuse', color: '#10b981', year: '2022',
   },
   {
     title: 'Nébuleuse de l\'Anneau Sud',
     desc: 'Une étoile mourante expulse ses couches externes en une nébuleuse planétaire spectaculaire. Webb révèle deux étoiles au cœur, dont l\'une est responsable des formes complexes.',
-    img: 'https://stsci-opo.org/STScI-01G8GZQ3ZFJRD8YF8YZWMAXCE3.png',
+    img: '/media/jwst/southern-ring.webp',
     category: 'Nébuleuse', color: '#a855f7', year: '2022',
   },
   {
     title: 'Quintette de Stephan',
     desc: 'Cinq galaxies en interaction à 290 millions d\'années-lumière. Webb révèle comment les collisions galactiques déclenchent des ondes de choc et alimentent les trous noirs supermassifs.',
-    img: 'https://esawebb.org/media/archives/images/large/weic2208a.jpg',
+    img: '/media/jwst/stephans-quintet.webp',
     category: 'Galaxies', color: '#0ea5e9', year: '2022',
   },
   {
     title: 'Nébuleuse de la Tarentule',
     desc: 'La région de formation stellaire la plus massive de notre Groupe Local. Webb y détecte des propriétés cachées et une multitude de jeunes étoiles massives dans le brouillard de poussière.',
-    img: 'https://esawebb.org/media/archives/images/large/weic2209a.jpg',
+    img: '/media/jwst/tarantula.webp',
     category: 'Nébuleuse', color: '#ef4444', year: '2022',
   },
 ]
@@ -58,15 +60,15 @@ const SCIENCE_STATS = [
   { icon: '🔭', val: '6,5 m', label: 'Diamètre miroir' },
   { icon: '🌡️', val: '-233°C', label: 'Temp. fonctionnement' },
   { icon: '📡', val: '1 500 000 km', label: 'Distance de la Terre' },
-  { icon: '🌟', val: '100×', label: 'Plus puissant qu\'Hubble' },
+  { icon: '🌟', val: '≈6×', label: 'Surface collectrice vs Hubble' },
   { icon: '💰', val: '10 Md$', label: 'Coût total' },
   { icon: '📅', val: '25 ans', label: 'De conception à lancement' },
-  { icon: '🌌', val: '400+', label: 'Articles publiés' },
-  { icon: '🔬', val: '13,8 Ga', label: 'Passé observable' },
+  { icon: '🛡️', val: '5 couches', label: 'Pare-soleil' },
+  { icon: '🔬', val: '0,6–28,5 µm', label: 'Lumière observée' },
 ]
 
 const CATEGORIES = [
-  { icon: '🌌', title: 'Premières galaxies', desc: 'Détecte des galaxies nées 300 millions d\'ans après le Big Bang — plus jeune que jamais observé.', color: '#6366f1' },
+  { icon: '🌌', title: 'Premières galaxies', desc: 'Détecte des galaxies formées quelques centaines de millions d’années après le Big Bang.', color: '#6366f1' },
   { icon: '⭐', title: 'Formation d\'étoiles', desc: 'Révèle les nurseries stellaires cachées dans les nébuleuses, impossible à voir en lumière visible.', color: '#f97316' },
   { icon: '🪐', title: 'Atmosphères exoplanètes', desc: 'Analyse la composition chimique des atmosphères de planètes à des dizaines d\'années-lumière.', color: '#10b981' },
   { icon: '🕳️', title: 'Trous noirs', desc: 'Observe les disques d\'accrétion et les jets de matière des trous noirs supermassifs en IR.', color: '#a855f7' },
@@ -79,19 +81,10 @@ export default function JWSTPage() {
   const [activeTab, setActiveTab] = useState<'gallery' | 'nasa'>('gallery')
 
   useEffect(() => {
-    fetch('https://images-api.nasa.gov/search?q=james+webb+space+telescope+nebula&media_type=image&year_start=2022&page_size=20')
+    fetch('/api/jwst-images')
       .then(r => r.json())
       .then(d => {
-        const items = d.collection?.items || []
-        const imgs: WebbImage[] = items.slice(0, 12).map((item: { data: { nasa_id: string; title: string; description: string; date_created: string }[]; links?: { href: string }[]; href: string }) => ({
-          nasa_id: item.data[0].nasa_id,
-          title: item.data[0].title,
-          description: item.data[0].description?.slice(0, 180) + '…',
-          date_created: item.data[0].date_created?.slice(0, 10),
-          href: item.links?.[0]?.href || '',
-          thumb: item.links?.[0]?.href || '',
-        }))
-        setNasaImages(imgs)
+        setNasaImages(Array.isArray(d.images) ? d.images : [])
       })
       .catch(() => { })
       .finally(() => setLoading(false))
@@ -123,6 +116,13 @@ export default function JWSTPage() {
       </motion.div>
 
       <KidsGuide topic="jwst" />
+      <DataSourceNote
+        source={SCIENTIFIC_SOURCES.jwstFacts.label}
+        href={SCIENTIFIC_SOURCES.jwstFacts.href}
+        refreshed={SCIENTIFIC_SOURCES.jwstFacts.childNote}
+        checkedOn={SCIENTIFIC_SOURCES.jwstFacts.checkedOn}
+        cadence="reference"
+      />
 
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.625rem', marginBottom: '2.5rem' }} className="max-sm:grid-cols-2">

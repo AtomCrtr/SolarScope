@@ -1,12 +1,10 @@
 import type { Metadata } from 'next'
-import Script from 'next/script'
 import './globals.css'
 import Navbar from '@/components/layout/Navbar'
 import StarField from '@/components/layout/StarField'
 import SolarBotWidget from '@/components/assistant/SolarBotWidget'
 import Footer from '@/components/layout/Footer'
 import Breadcrumb from '@/components/layout/Breadcrumb'
-import ThemeToggle from '@/components/layout/ThemeToggle'
 import ProgressTracker from '@/components/learning/ProgressTracker'
 import LanguageAvailabilityNotice from '@/components/layout/LanguageAvailabilityNotice'
 import { DEFAULT_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/config/site'
@@ -43,9 +41,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" suppressHydrationWarning>
+    <html lang="fr" data-theme="dark" suppressHydrationWarning>
       <head>
-        <Script src="/theme-init.js" strategy="beforeInteractive" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -61,10 +58,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        <a href="#main-content" className="skip-link">Aller au contenu principal</a>
         <ProgressTracker />
         <StarField />
-        <Navbar themeToggle={<ThemeToggle />} />
-        <main className="relative z-10" style={{ paddingTop: 'calc(var(--navbar-h) + 0.25rem)', minHeight: '100vh' }}>
+        <Navbar />
+        <main id="main-content" className="relative z-10" style={{ paddingTop: 'calc(var(--navbar-h) + 0.25rem)', minHeight: '100vh' }}>
           {/* Breadcrumb — auto-hides on homepage and clears the fixed navbar. */}
           <div style={{ maxWidth: 'var(--max-w)', margin: '0 auto', padding: '0.5rem var(--section-px) 0' }}>
             <Breadcrumb />

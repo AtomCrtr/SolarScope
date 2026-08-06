@@ -10,6 +10,7 @@ export default function CielPage() {
     const [city, setCity] = useState<string>('')
     const [geoLoading, setGeoLoading] = useState(true)
     const [geoError, setGeoError] = useState(false)
+    const [observationTime] = useState(() => new Date().toISOString())
 
     useEffect(() => {
         if (!navigator.geolocation) {
@@ -29,11 +30,12 @@ export default function CielPage() {
                 const coarseLongitude = Number(longitude.toFixed(2))
                 setLat(coarseLatitude)
                 setLng(coarseLongitude)
-                // Reverse geocoding via free API
+                // SolarScope's server proxy avoids exposing the browser directly
+                // to the geocoding provider and validates the coarse coordinates.
                 try {
-                    const r = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${coarseLatitude}&lon=${coarseLongitude}&format=json`)
+                    const r = await fetch(`/api/geocode?lat=${coarseLatitude}&lon=${coarseLongitude}`)
                     const d = await r.json()
-                    setCity(d.address?.city || d.address?.town || d.address?.village || 'Votre position')
+                    setCity(d.city || 'Votre position')
                 } catch {
                     setCity('Votre position')
                 }
@@ -55,9 +57,11 @@ export default function CielPage() {
     const approximateLat = lat === null ? null : Number(lat.toFixed(2))
     const approximateLng = lng === null ? null : Number(lng.toFixed(2))
 
-    // Build Stellarium URL with coarse coordinates and the current instant.
+    // Stellarium is opened as an external tool instead of embedded. Its iframe
+    // currently fails to load reliably and contains controls SolarScope cannot
+    // make accessible. The coarse location remains explicit in the URL.
     const stellariumUrl = lat !== null && lng !== null
-        ? `https://stellarium-web.org/?date=${encodeURIComponent(new Date().toISOString())}&lat=${approximateLat}&lng=${approximateLng}&fov=120`
+        ? `https://stellarium-web.org/?date=${encodeURIComponent(observationTime)}&lat=${approximateLat}&lng=${approximateLng}&fov=120`
         : null
 
     return (
@@ -95,43 +99,44 @@ export default function CielPage() {
                 {lat !== null && lng !== null && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                         <span className="pulse-dot" style={{ background: '#38bdf8', boxShadow: '0 0 6px #38bdf8' }} />
-                        <span style={{ color: '#38bdf8', fontSize: '0.7rem', fontWeight: 600 }}>Ciel temps réel</span>
+                        <span style={{ color: '#38bdf8', fontSize: '0.75rem', fontWeight: 700 }}>Calculé maintenant</span>
                     </div>
                 )}
                 {geoError && (
-                    <span style={{ color: '#f87171', fontSize: '0.72rem' }}>⚠️ Accorde la géolocalisation pour ta position exacte</span>
+                    <span style={{ color: '#fca5a5', fontSize: '0.75rem' }}>Position refusée : Paris est utilisé par défaut</span>
                 )}
             </div>
 
-            {/* Stellarium Embed */}
-            <div className="card" style={{ padding: 0, overflow: 'hidden', marginBottom: '2rem' }}>
-                <div style={{ background: 'rgba(14,165,233,0.06)', borderBottom: '1px solid rgba(14,165,233,0.15)', padding: '0.875rem 1.25rem', display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
-                    <span style={{ fontSize: '1rem' }}>🔭</span>
-                    <span style={{ color: '#e2e8f0', fontWeight: 600, fontSize: '0.88rem' }}>Stellarium — Planetarium interactif</span>
-                    <span style={{ marginLeft: 'auto', color: '#475569', fontSize: '0.72rem' }}>Zoom · Cliquer sur une étoile pour les infos</span>
+            <section className="card sky-observation-launcher" aria-labelledby="sky-map-title">
+                <div className="sky-observation-visual" aria-hidden="true">
+                    <span className="sky-star sky-star-one">✦</span>
+                    <span className="sky-star sky-star-two">·</span>
+                    <span className="sky-star sky-star-three">✧</span>
+                    <span className="sky-constellation-line" />
+                    <span className="sky-compass">N</span>
                 </div>
-                {stellariumUrl ? (
-                    <iframe
-                        src={stellariumUrl}
-                        style={{ width: '100%', height: 580, border: 'none', display: 'block', background: '#000' }}
-                        title="Carte du ciel Stellarium"
-                        referrerPolicy="strict-origin-when-cross-origin"
-                        sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-popups"
-                    />
-                ) : (
-                    <div style={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b' }}>
-                        <div style={{ textAlign: 'center' }}>
-                            <div style={{ fontSize: '3rem', marginBottom: '0.75rem' }}>🌌</div>
-                            <p>Chargement du planétarium…</p>
-                        </div>
-                    </div>
-                )}
-            </div>
+                <div>
+                    <span className="section-kicker">CARTE INTERACTIVE EXTERNE</span>
+                    <h2 id="sky-map-title">Ouvre le ciel correspondant à ta zone</h2>
+                    <p>
+                        Stellarium s’ouvre dans un nouvel onglet avec la date actuelle et une position arrondie.
+                        SolarScope ne transmet jamais ta position exacte et ne l’enregistre pas.
+                    </p>
+                    {stellariumUrl ? (
+                        <a href={stellariumUrl} target="_blank" rel="noopener noreferrer" className="btn-primary">
+                            Ouvrir la carte dans Stellarium <span aria-hidden="true">↗</span>
+                        </a>
+                    ) : (
+                        <span role="status" className="sky-map-loading">Préparation de ta zone d’observation…</span>
+                    )}
+                    <small>Service externe : ses conditions d’accessibilité et de confidentialité s’appliquent.</small>
+                </div>
+            </section>
 
             <section className="card" style={{ padding: '1.25rem', marginBottom: '2rem' }}>
                 <h2 className="section-title" style={{ color: '#e2e8f0' }}>🪐 Que peut-on réellement voir ?</h2>
                 <p style={{ color: 'var(--text-subtle)', lineHeight: 1.7, marginBottom: '1rem' }}>
-                    La carte ci-dessus calcule le ciel à l’instant présent pour votre zone approximative. La visibilité
+                    La carte proposée calcule le ciel à l’instant présent pour votre zone approximative. La visibilité
                     réelle dépend aussi de l’heure, de la météo et de la pollution lumineuse. SolarScope ne présente
                     plus de liste mensuelle figée comme une donnée « en direct ».
                 </p>

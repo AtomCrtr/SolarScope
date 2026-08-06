@@ -396,10 +396,10 @@ export default function SpaceWeatherDashboard() {
 
                     {/* Source credits */}
                     <div style={{ textAlign: 'center', paddingTop: '0.5rem' }}>
-                        <p style={{ fontSize: '0.65rem', color: '#1e293b' }}>
-                            Données : <a href="https://www.swpc.noaa.gov" target="_blank" rel="noopener noreferrer" style={{ color: '#475569' }}>NOAA Space Weather Prediction Center</a> ·
-                            Satellite <a href="https://www.swpc.noaa.gov/products/real-time-solar-wind" target="_blank" rel="noopener noreferrer" style={{ color: '#475569' }}>DSCOVR (L1)</a> ·
-                            <a href="https://soho.nascom.nasa.gov" target="_blank" rel="noopener noreferrer" style={{ color: '#475569' }}>SOHO (NASA/ESA)</a>
+                        <p style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                            Données : <a href="https://www.swpc.noaa.gov" target="_blank" rel="noopener noreferrer" style={{ color: '#cbd5e1' }}>NOAA Space Weather Prediction Center</a> ·
+                            Satellite <a href="https://www.swpc.noaa.gov/products/real-time-solar-wind" target="_blank" rel="noopener noreferrer" style={{ color: '#cbd5e1' }}>DSCOVR (L1)</a> ·
+                            <a href="https://soho.nascom.nasa.gov" target="_blank" rel="noopener noreferrer" style={{ color: '#cbd5e1' }}>SOHO (NASA/ESA)</a>
                         </p>
                     </div>
                 </div>

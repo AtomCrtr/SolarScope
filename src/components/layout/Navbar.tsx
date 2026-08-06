@@ -93,7 +93,7 @@ const NAV_EN: Record<string, { label: string; pages: Record<string, { title: str
     },
 }
 
-export default function Navbar({ themeToggle }: { themeToggle?: React.ReactNode }) {
+export default function Navbar() {
     const pathname = usePathname()
     const locale = useSiteLocale()
     const [openGroup, setOpenGroup] = useState<string | null>(null)
@@ -312,10 +312,9 @@ export default function Navbar({ themeToggle }: { themeToggle?: React.ReactNode 
                         })}
                     </nav>
 
-                    {/* ── Right slot: theme toggle (always) + mobile hamburger (hidden on desktop) ── */}
+                    {/* ── Right slot: language + mobile hamburger ── */}
                     <div className="site-navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
                         <LanguageToggle />
-                        {themeToggle}
                         {/* Mobile hamburger — Tailwind md:hidden hides it on ≥768px */}
                         <button
                             ref={mobileButtonRef}

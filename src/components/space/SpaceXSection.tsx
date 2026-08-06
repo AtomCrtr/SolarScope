@@ -125,7 +125,7 @@ export default function SpaceXSection() {
       )}
 
       <div style={{ marginTop: '1rem', textAlign: 'right' }}>
-        <a href="https://www.spacex.com/vehicles/" target="_blank" rel="noopener noreferrer" style={{ color: '#64748b', fontSize: '0.68rem', textDecoration: 'none' }}>
+        <a href="https://www.spacex.com/vehicles/" target="_blank" rel="noopener noreferrer" style={{ color: '#94a3b8', fontSize: '0.75rem', textDecoration: 'underline', textUnderlineOffset: 3 }}>
           Caractéristiques officielles des véhicules ↗
         </a>
       </div>

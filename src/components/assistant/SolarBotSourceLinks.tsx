@@ -4,17 +4,28 @@ export default function SolarBotSourceLinks({ sources, compact = false }: { sour
   if (!sources?.length) return null
 
   return (
-    <aside className={compact ? 'solarbot-sources is-compact' : 'solarbot-sources'} aria-label="Sources officielles de la réponse">
-      <strong>Sources officielles</strong>
+    <aside className={compact ? 'solarbot-sources is-compact' : 'solarbot-sources'} aria-label="Repères officiels associés à la réponse">
+      <strong>Repères officiels</strong>
       <ul>
-        {sources.map(source => (
+        {sources.map((source, index) => (
           <li key={source.id}>
             <a href={source.href} target="_blank" rel="noopener noreferrer">
-              {source.label}<span aria-hidden="true"> ↗</span>
+              [{index + 1}] {source.label}<span aria-hidden="true"> ↗</span>
             </a>
           </li>
         ))}
       </ul>
     </aside>
+  )
+}
+
+export function SolarBotReliabilityNote({ degraded, compact = false }: { degraded?: boolean; compact?: boolean }) {
+  if (!degraded) return null
+
+  return (
+    <p className={compact ? 'solarbot-reliability is-compact' : 'solarbot-reliability'} role="status">
+      <span aria-hidden="true">⚠️ </span>
+      Réponse de secours : vérifie les repères officiels ci-dessous.
+    </p>
   )
 }

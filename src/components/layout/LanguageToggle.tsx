@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
 
 export type SiteLocale = 'fr' | 'en'
 
@@ -18,7 +19,6 @@ export function useSiteLocale(): SiteLocale {
     const update = () => {
       const nextLocale = readLocale()
       setLocale(nextLocale)
-      document.documentElement.lang = nextLocale
     }
     update()
     window.addEventListener(LOCALE_EVENT, update)
@@ -30,10 +30,11 @@ export function useSiteLocale(): SiteLocale {
 
 export default function LanguageToggle() {
   const locale = useSiteLocale()
+  const pathname = usePathname()
 
   const setLocale = (nextLocale: SiteLocale) => {
     window.localStorage.setItem(STORAGE_KEY, nextLocale)
-    document.documentElement.lang = nextLocale
+    document.documentElement.lang = nextLocale === 'en' && pathname === '/' ? 'en' : 'fr'
     window.dispatchEvent(new Event(LOCALE_EVENT))
   }
 

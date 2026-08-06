@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright'
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
 
 const learningRoutes = [
   '/soleil',
@@ -20,9 +20,16 @@ const learningRoutes = [
 
 const routes = ['/', ...learningRoutes, '/passeport', '/parents-enseignants', '/sources', '/confidentialite']
 
+async function gotoSettled(page: Page, route: string) {
+  await page.goto(route, { waitUntil: 'load' })
+  await page.waitForLoadState('networkidle').catch(() => {})
+  await page.evaluate(() => document.fonts.ready)
+  await page.waitForTimeout(250)
+}
+
 for (const route of routes) {
   test(`${route} has no serious automated accessibility violation`, async ({ page }) => {
-    await page.goto(route, { waitUntil: 'domcontentloaded' })
+    await gotoSettled(page, route)
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
       .analyze()
@@ -64,12 +71,29 @@ test('the planet explorer stays inside a phone viewport', async ({ page }) => {
 })
 
 test('the Mars mission exposes a short rover journey and keeps its gallery dialog keyboard-friendly', async ({ page }) => {
+  const diagnostics: string[] = []
+  page.on('console', message => {
+    if (message.type() === 'error' || message.type() === 'warning') diagnostics.push(`console ${message.type()}: ${message.text()}`)
+  })
+  page.on('requestfailed', request => diagnostics.push(`request failed: ${request.url()} (${request.failure()?.errorText ?? 'unknown error'})`))
+  page.on('response', response => {
+    if (/\/(?:models|draco)\//.test(response.url())) {
+      diagnostics.push(`response ${response.status()}: ${response.url()}`)
+    }
+  })
   await page.goto('/mars', { waitUntil: 'domcontentloaded' })
   const mission = page.locator('[data-mars-mission]')
   await expect(mission).toBeVisible()
   await expect(mission.locator('.mars-mission-steps > li')).toHaveCount(3)
   await mission.getByRole('button', { name: /Perseverance/ }).click()
   await expect(mission.getByText('Chercher des traces d’une ancienne vie microbienne')).toBeVisible()
+  try {
+    await expect(page.getByText('Chargement modèle 3D…')).toBeHidden({ timeout: 15_000 })
+  } catch (error) {
+    console.error(`Mars 3D diagnostics:\n${diagnostics.join('\n')}`)
+    throw error
+  }
+  await expect(page.getByRole('img', { name: /modèle interactif.*Perseverance/i })).toBeVisible()
   await mission.getByRole('button', { name: 'Ouvrir l’indice' }).click()
   await expect(mission.getByText('Perseverance explore d’anciens paysages')).toBeVisible()
 
@@ -91,12 +115,21 @@ test('the homepage does not overflow on a 320 px viewport', async ({ page }) => 
 
 test('the homepage keeps its learning paths visible in a short desktop viewport', async ({ page }) => {
   await page.setViewportSize({ width: 1580, height: 850 })
-  await page.goto('/', { waitUntil: 'domcontentloaded' })
+  await gotoSettled(page, '/')
 
-  const notebook = await page.locator('.home-featured-notebook').boundingBox()
-  const missionAction = await page.locator('.home-featured-action').boundingBox()
-  const routes = await page.locator('.home-routes-section').boundingBox()
-  const firstPath = await page.locator('.home-path-card').first().boundingBox()
+  const notebookLocator = page.locator('.home-featured-notebook')
+  const missionActionLocator = page.locator('.home-featured-action')
+  const routesLocator = page.locator('.home-routes-section')
+  const firstPathLocator = page.locator('.home-path-card').first()
+  await expect(notebookLocator).toBeVisible()
+  await expect(missionActionLocator).toBeVisible()
+  await expect(routesLocator).toBeVisible()
+  await expect(firstPathLocator).toBeVisible()
+
+  const notebook = await notebookLocator.boundingBox()
+  const missionAction = await missionActionLocator.boundingBox()
+  const routes = await routesLocator.boundingBox()
+  const firstPath = await firstPathLocator.boundingBox()
 
   expect(notebook).not.toBeNull()
   expect(missionAction).not.toBeNull()
@@ -106,6 +139,54 @@ test('the homepage keeps its learning paths visible in a short desktop viewport'
     expect(missionAction.y + missionAction.height).toBeLessThan(notebook.y + notebook.height - 24)
     expect(routes.y).toBeGreaterThanOrEqual(notebook.y + notebook.height - 1)
     expect(firstPath.y).toBeLessThan(850)
+  }
+})
+
+test('the broken light theme cannot be restored from old browser storage', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('solarscope-theme', 'light'))
+  await gotoSettled(page, '/')
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+  await expect(page.getByTitle(/mode clair|mode sombre/i)).toHaveCount(0)
+})
+
+test('the sky journey uses an accessible external map instead of a broken iframe', async ({ page }) => {
+  await gotoSettled(page, '/ciel')
+  await expect(page.locator('iframe')).toHaveCount(0)
+  const mapLink = page.getByRole('link', { name: /Ouvrir la carte dans Stellarium/ })
+  await expect(mapLink).toBeVisible()
+  await expect(mapLink).toHaveAttribute('target', '_blank')
+})
+
+test('footer links expose child-friendly touch targets on a phone', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 700 })
+  await gotoSettled(page, '/sources')
+  const heights = await page.locator('.site-footer a').evaluateAll(links => links.map(link => link.getBoundingClientRect().height))
+  expect(Math.min(...heights)).toBeGreaterThanOrEqual(44)
+})
+
+test('the mission action remains inside the notebook at common viewport sizes', async ({ page }) => {
+  for (const viewport of [
+    { width: 320, height: 700 },
+    { width: 768, height: 900 },
+    { width: 1366, height: 768 },
+    { width: 1920, height: 1080 },
+  ]) {
+    await page.setViewportSize(viewport)
+    await gotoSettled(page, '/')
+    const notebookLocator = page.locator('.home-featured-notebook')
+    const actionLocator = page.locator('.home-featured-action')
+    await expect(notebookLocator).toBeVisible()
+    await expect(actionLocator).toBeVisible()
+    const notebook = await notebookLocator.boundingBox()
+    const action = await actionLocator.boundingBox()
+    expect(notebook, `${viewport.width}x${viewport.height}`).not.toBeNull()
+    expect(action, `${viewport.width}x${viewport.height}`).not.toBeNull()
+    if (notebook && action) {
+      expect(action.x).toBeGreaterThanOrEqual(notebook.x)
+      expect(action.y).toBeGreaterThanOrEqual(notebook.y)
+      expect(action.x + action.width).toBeLessThanOrEqual(notebook.x + notebook.width)
+      expect(action.y + action.height).toBeLessThanOrEqual(notebook.y + notebook.height)
+    }
   }
 })
 
@@ -152,12 +233,16 @@ test('the homepage remembers the 12+ route and shows its appropriate mission', a
 })
 
 test('parent guide badges keep their spacing and produce a visual artifact', async ({ page }, testInfo) => {
-  await page.goto('/parents-enseignants', { waitUntil: 'domcontentloaded' })
+  await gotoSettled(page, '/parents-enseignants')
   const cards = page.locator('.parent-guide')
   await expect(cards).toHaveCount(4)
+  await expect(cards.first()).toBeVisible()
 
   for (let index = 0; index < await cards.count(); index += 1) {
     const badges = cards.nth(index).locator(':scope > div > span')
+    await expect(badges).toHaveCount(2)
+    await expect(badges.nth(0)).toBeVisible()
+    await expect(badges.nth(1)).toBeVisible()
     const first = await badges.nth(0).boundingBox()
     const second = await badges.nth(1).boundingBox()
     expect(first).not.toBeNull()

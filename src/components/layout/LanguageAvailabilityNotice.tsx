@@ -2,11 +2,16 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useEffect } from 'react'
 import { useSiteLocale } from '@/components/layout/LanguageToggle'
 
 export default function LanguageAvailabilityNotice() {
   const locale = useSiteLocale()
   const pathname = usePathname()
+
+  useEffect(() => {
+    document.documentElement.lang = locale === 'en' && pathname === '/' ? 'en' : 'fr'
+  }, [locale, pathname])
 
   if (locale !== 'en' || pathname === '/') return null
 

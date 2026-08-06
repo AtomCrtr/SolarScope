@@ -109,13 +109,13 @@ export default function MissionsPage() {
                 <h2 className="section-title" style={{ color: '#e2e8f0' }}>🚀 Prochains lancements</h2>
                 <p style={{ color: '#94a3b8', fontSize: '0.8rem', marginBottom: '1rem', marginTop: '-0.5rem' }}>Données en direct via The Space Devs</p>
                 {launchLoading ? (
-                    <div style={{ display: 'flex', gap: '0.75rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
+                    <div style={{ display: 'flex', gap: '0.75rem', overflowX: 'auto', paddingBottom: '0.5rem' }} tabIndex={0} role="region" aria-label="Chargement des prochains lancements">
                         {[...Array(3)].map((_, i) => <div key={i} style={{ flexShrink: 0, width: 260, height: 120, borderRadius: '0.875rem', background: 'rgba(255,255,255,0.04)' }} />)}
                     </div>
                 ) : launches.length === 0 ? (
                     <div className="card" style={{ padding: '1.5rem', textAlign: 'center', color: '#475569' }}>Aucun lancement disponible pour le moment.</div>
                 ) : (
-                    <div style={{ display: 'flex', gap: '0.75rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
+                    <div style={{ display: 'flex', gap: '0.75rem', overflowX: 'auto', paddingBottom: '0.5rem' }} tabIndex={0} role="region" aria-label="Prochains lancements, liste défilante">
                         {launches.map((l, i) => {
                             const d = new Date(l.net)
                             const daysUntil = Math.floor((d.getTime() - renderedAt) / 86400000)

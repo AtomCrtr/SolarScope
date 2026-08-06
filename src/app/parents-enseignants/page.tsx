@@ -1,8 +1,13 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import PrintableGuidesButton from '@/components/learning/PrintableGuidesButton'
+import { createPageMetadata } from '@/lib/config/site'
 
-export const metadata: Metadata = { title: 'Parents et enseignants', description: 'Repères pour accompagner les enfants dans SolarScope.' }
+export const metadata: Metadata = createPageMetadata(
+  'Parents et enseignants',
+  'Repères pour accompagner les enfants dans SolarScope.',
+  '/parents-enseignants',
+)
 
 const GUIDES = [
   { title: 'Planètes', age: '8–10 ans', duration: '10 min', href: '/planetes', goal: 'Comparer taille, distance et nombre de lunes.', prompt: 'Demande : quelle planète aimerais-tu visiter ?' },

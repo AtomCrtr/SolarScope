@@ -47,16 +47,10 @@ export default function SolarFlareHistory() {
             .catch(() => setFlares([]))
 
         // Solar wind data (NOAA real-time)
-        fetch('https://services.swpc.noaa.gov/products/solar-wind/plasma-7-day.json')
+        fetch('/api/space-weather-history')
             .then(r => r.json())
-            .then((raw: string[][]) => {
-                // cols: time(0), density(1), speed(2), temperature(3)
-                const recent = raw.slice(-48).filter(row => row[0] !== 'time_tag').map(row => ({
-                    time: row[0],
-                    density: parseFloat(row[1]) || 0,
-                    speed: parseFloat(row[2]) || 0,
-                    bz: 0,
-                }))
+            .then((payload: { plasma?: Array<Omit<SolarWindEntry, 'bz'>> }) => {
+                const recent = (Array.isArray(payload.plasma) ? payload.plasma : []).slice(-48).map(row => ({ ...row, bz: 0 }))
                 setWind(recent)
             })
             .catch(() => { })

@@ -34,16 +34,13 @@ export default function KpChart() {
     const canvasRef = useRef<HTMLCanvasElement>(null)
 
     useEffect(() => {
-        fetch('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json')
+        fetch('/api/space-weather-history')
             .then(r => r.json())
-            .then((raw: string[][]) => {
-                // raw[0] is header, rest are data rows [time, kp, ...]
-                const parsed: KpEntry[] = raw.slice(1).map(row => ({
-                    time: row[0],
-                    kp: parseFloat(row[1]) || 0,
-                }))
+            .then((payload: { kp?: KpEntry[] }) => {
+                const parsed = Array.isArray(payload.kp) ? payload.kp : []
                 // Last 28 entries = 7 days (3h intervals)
                 const recent = parsed.slice(-28)
+                if (!recent.length) throw new Error('No Kp history')
                 setData(recent)
                 setCurrent(recent[recent.length - 1])
                 setLoading(false)

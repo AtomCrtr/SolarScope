@@ -80,19 +80,19 @@ const MARS_TIMELINE = [
 /* ─────────────────────────────────────────── Curated NASA Gallery ── */
 const MARS_GALLERY = [
     {
-        src: 'https://images-assets.nasa.gov/image/PIA24430/PIA24430~orig.jpg',
+        src: '/media/mars/ingenuity-first-flight.webp',
         title: 'Premier vol Ingenuity',
         desc: 'Le premier hélicoptère extraterrestre en vol · Sol 58',
         rover: 'Perseverance', camera: 'NavCam', sol: 58, color: '#8b5cf6'
     },
     {
-        src: 'https://images-assets.nasa.gov/image/PIA24546/PIA24546~orig.jpg',
+        src: '/media/mars/perseverance-jezero.webp',
         title: 'Perseverance au Cratère Jezero',
         desc: 'Vue panoramique depuis le site d\'atterrissage · Sol 13',
         rover: 'Perseverance', camera: 'MastCam-Z', sol: 13, color: '#8b5cf6'
     },
     {
-        src: 'https://images-assets.nasa.gov/image/PIA24542/PIA24542~orig.jpg',
+        src: '/media/mars/perseverance-selfie.webp',
         title: 'Selfie de Perseverance',
         desc: 'Auto-portrait avec Ingenuity en arrière-plan · Sol 46',
         rover: 'Perseverance', camera: 'WATSON', sol: 46, color: '#8b5cf6'
@@ -110,7 +110,7 @@ const MARS_GALLERY = [
         rover: 'Curiosity', camera: 'MastCam', sol: 1769, color: '#ef4444'
     },
     {
-        src: 'https://images-assets.nasa.gov/image/PIA19839/PIA19839~orig.jpg',
+        src: '/media/mars/martian-sunset.webp',
         title: 'Coucher de soleil martien',
         desc: 'Crépuscule bleu sur Mars — Cratère Gale · Sol 956',
         rover: 'Curiosity', camera: 'MastCam', sol: 956, color: '#ef4444'
@@ -122,7 +122,7 @@ const MARS_GALLERY = [
         rover: 'Opportunity', camera: 'PanCam', sol: 3966, color: '#f97316'
     },
     {
-        src: 'https://images-assets.nasa.gov/image/PIA24836/PIA24836~orig.jpg',
+        src: '/media/mars/dark-sand-dunes.webp',
         title: 'Dunes de sable noir',
         desc: 'Champs de dunes basaltiques depuis Perseverance · Sol 170',
         rover: 'Perseverance', camera: 'Hazcam', sol: 170, color: '#8b5cf6'

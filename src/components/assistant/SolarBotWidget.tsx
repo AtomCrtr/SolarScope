@@ -2,16 +2,17 @@
 
 import { Fragment, useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import SolarBotSourceLinks from '@/components/assistant/SolarBotSourceLinks'
+import SolarBotSourceLinks, { SolarBotReliabilityNote } from '@/components/assistant/SolarBotSourceLinks'
 import type { PublicSolarBotSource } from '@/lib/content/solarbot-sources'
 
 interface Message {
     role: 'user' | 'bot'
     text: string
     sources?: PublicSolarBotSource[]
+    degraded?: boolean
 }
 
-type SolarBotAnswer = { text: string; sources: PublicSolarBotSource[] }
+type SolarBotAnswer = { text: string; sources: PublicSolarBotSource[]; degraded: boolean }
 
 const QUICK_QUESTIONS = [
     'Pourquoi les étoiles brillent ?',
@@ -28,10 +29,10 @@ async function askSolarBot(question: string, history: Message[]): Promise<SolarB
             body: JSON.stringify({ question, history }),
         })
         const data = await res.json()
-        if (!res.ok) return { text: data.error ?? '🤖 Réessaie !', sources: [] }
-        return { text: data.text ?? '🤖 Réessaie !', sources: Array.isArray(data.sources) ? data.sources : [] }
+        if (!res.ok) return { text: data.error ?? '🤖 Réessaie !', sources: [], degraded: true }
+        return { text: data.text ?? '🤖 Réessaie !', sources: Array.isArray(data.sources) ? data.sources : [], degraded: Boolean(data.degraded) }
     } catch {
-        return { text: '🌐 Erreur de connexion. Réessaie !', sources: [] }
+        return { text: '🌐 Erreur de connexion. Réessaie !', sources: [], degraded: true }
     }
 }
 
@@ -85,7 +86,7 @@ export default function SolarBotWidget() {
         setMessages(prev => [...prev, userMsg])
         setLoading(true)
         const answer = await askSolarBot(q, messages)
-        setMessages(prev => [...prev, { role: 'bot', text: answer.text, sources: answer.sources }])
+        setMessages(prev => [...prev, { role: 'bot', text: answer.text, sources: answer.sources, degraded: answer.degraded }])
         setLoading(false)
     }
 
@@ -207,6 +208,7 @@ export default function SolarBotWidget() {
                                             border: msg.role === 'bot' ? '1px solid rgba(255,255,255,0.06)' : 'none',
                                             color: '#e2e8f0', fontSize: '0.82rem', lineHeight: 1.65,
                                         }}><FormattedText text={msg.text} /></div>
+                                        {msg.role === 'bot' && <SolarBotReliabilityNote degraded={msg.degraded} compact />}
                                         {msg.role === 'bot' && <SolarBotSourceLinks sources={msg.sources} compact />}
                                     </div>
                                 </div>

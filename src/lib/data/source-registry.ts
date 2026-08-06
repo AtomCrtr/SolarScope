@@ -50,6 +50,14 @@ export const SCIENTIFIC_SOURCES = {
     checkedOn: '2026-07-26',
     childNote: 'Le projet est encore étudié : aucune date de retour des échantillons n’est affichée comme certaine.',
   },
+  jwstFacts: {
+    id: 'nasa-jwst-facts',
+    label: 'NASA Science — James Webb Space Telescope',
+    href: 'https://science.nasa.gov/mission/webb/',
+    cadence: 'reference',
+    checkedOn: '2026-08-06',
+    childNote: 'Les images sont officielles ; leurs couleurs peuvent représenter des lumières invisibles à nos yeux.',
+  },
   spaceWeather: {
     id: 'noaa-space-weather',
     label: 'NOAA Space Weather Prediction Center',

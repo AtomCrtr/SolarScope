@@ -50,7 +50,7 @@ const SHARED_IMAGES = {
 const CONTENT: Record<'fr' | 'en', Record<Audience, AudienceContent>> = {
   fr: {
     kids: {
-      age: '6–12 ans',
+      age: '6–11 ans',
       choiceLabel: 'Je choisis mon âge',
       kicker: 'MISSION DU JOUR',
       title: 'Pourquoi le ciel est-il bleu ?',
@@ -62,11 +62,12 @@ const CONTENT: Record<'fr' | 'en', Record<Audience, AudienceContent>> = {
         image: '/home/mission-notebook.webp',
         imageAlt: 'Carnet de mission avec une photographie de la Terre vue depuis l’espace',
         duration: '8 min',
+        missionId: 'ciel',
       },
       paths: [
         { title: 'Le Système solaire', description: 'Découvre le Soleil, les planètes et leurs mondes.', href: '/planetes', image: SHARED_IMAGES.solarSystem, imageAlt: 'Le Soleil et les huit planètes', duration: '7 min', missionId: 'planetes' },
-        { title: 'Le ciel de nuit', description: 'Repère les étoiles et les constellations.', href: '/ciel', image: SHARED_IMAGES.constellation, imageAlt: 'Constellation dans un ciel étoilé', duration: '5 min' },
-        { title: 'Galaxies et Univers', description: 'Voyage bien au-delà du Système solaire.', href: '/jwst', image: SHARED_IMAGES.galaxy, imageAlt: 'Amas de galaxies observé dans l’espace', duration: '8 min' },
+        { title: 'Le ciel de nuit', description: 'Repère les étoiles et les constellations.', href: '/ciel', image: SHARED_IMAGES.constellation, imageAlt: 'Constellation dans un ciel étoilé', duration: '5 min', missionId: 'ciel' },
+        { title: 'Galaxies et Univers', description: 'Voyage bien au-delà du Système solaire.', href: '/jwst', image: SHARED_IMAGES.galaxy, imageAlt: 'Amas de galaxies observé dans l’espace', duration: '8 min', missionId: 'jwst' },
         { title: 'Explorer Mars', description: 'Suis les rovers sur la planète rouge.', href: '/mars', image: SHARED_IMAGES.mars, imageAlt: 'Rover explorant la surface de Mars', duration: '6 min', missionId: 'mars' },
       ],
       start: 'Commencer la mission',
@@ -92,11 +93,12 @@ const CONTENT: Record<'fr' | 'en', Record<Audience, AudienceContent>> = {
         image: '/home/mission-notebook.webp',
         imageAlt: 'Carnet de mission avec une photographie de la Terre vue depuis l’espace',
         duration: '12 min',
+        missionId: 'exoplanetes',
       },
       paths: [
         { title: 'Le Système solaire', description: 'Compare les planètes, leurs tailles et leurs orbites.', href: '/planetes', image: SHARED_IMAGES.solarSystem, imageAlt: 'Le Soleil et les huit planètes', duration: '10 min', missionId: 'planetes' },
-        { title: 'Observer le ciel', description: 'Prépare une observation et reconnais les constellations.', href: '/ciel', image: SHARED_IMAGES.constellation, imageAlt: 'Constellation dans un ciel étoilé', duration: '10 min' },
-        { title: 'Univers profond', description: 'Décrypte les images de Webb et les galaxies lointaines.', href: '/jwst', image: SHARED_IMAGES.galaxy, imageAlt: 'Amas de galaxies observé dans l’espace', duration: '12 min' },
+        { title: 'Observer le ciel', description: 'Prépare une observation et reconnais les constellations.', href: '/ciel', image: SHARED_IMAGES.constellation, imageAlt: 'Constellation dans un ciel étoilé', duration: '10 min', missionId: 'ciel' },
+        { title: 'Univers profond', description: 'Décrypte les images de Webb et les galaxies lointaines.', href: '/jwst', image: SHARED_IMAGES.galaxy, imageAlt: 'Amas de galaxies observé dans l’espace', duration: '12 min', missionId: 'jwst' },
         { title: 'Exploration martienne', description: 'Analyse les instruments et les objectifs des rovers.', href: '/mars', image: SHARED_IMAGES.mars, imageAlt: 'Rover explorant la surface de Mars', duration: '12 min', missionId: 'mars' },
       ],
       start: 'Lancer la mission',
@@ -112,7 +114,7 @@ const CONTENT: Record<'fr' | 'en', Record<Audience, AudienceContent>> = {
   },
   en: {
     kids: {
-      age: 'Ages 6–12',
+      age: 'Ages 6–11',
       choiceLabel: 'Choose my age',
       kicker: 'MISSION OF THE DAY',
       title: 'Why is the sky blue?',
@@ -124,11 +126,12 @@ const CONTENT: Record<'fr' | 'en', Record<Audience, AudienceContent>> = {
         image: '/home/mission-notebook.webp',
         imageAlt: 'Mission notebook with a photograph of Earth seen from space',
         duration: '8 min',
+        missionId: 'ciel',
       },
       paths: [
         { title: 'The Solar System', description: 'Meet the Sun, planets and their worlds.', href: '/planetes', image: SHARED_IMAGES.solarSystem, imageAlt: 'The Sun and eight planets', duration: '7 min', missionId: 'planetes' },
-        { title: 'The night sky', description: 'Find stars and constellations.', href: '/ciel', image: SHARED_IMAGES.constellation, imageAlt: 'Constellation in a starry sky', duration: '5 min' },
-        { title: 'Galaxies and beyond', description: 'Travel far beyond our Solar System.', href: '/jwst', image: SHARED_IMAGES.galaxy, imageAlt: 'Galaxy cluster observed in space', duration: '8 min' },
+        { title: 'The night sky', description: 'Find stars and constellations.', href: '/ciel', image: SHARED_IMAGES.constellation, imageAlt: 'Constellation in a starry sky', duration: '5 min', missionId: 'ciel' },
+        { title: 'Galaxies and beyond', description: 'Travel far beyond our Solar System.', href: '/jwst', image: SHARED_IMAGES.galaxy, imageAlt: 'Galaxy cluster observed in space', duration: '8 min', missionId: 'jwst' },
         { title: 'Explore Mars', description: 'Follow the rovers on the red planet.', href: '/mars', image: SHARED_IMAGES.mars, imageAlt: 'Rover exploring the surface of Mars', duration: '6 min', missionId: 'mars' },
       ],
       start: 'Start the mission',
@@ -154,11 +157,12 @@ const CONTENT: Record<'fr' | 'en', Record<Audience, AudienceContent>> = {
         image: '/home/mission-notebook.webp',
         imageAlt: 'Mission notebook with a photograph of Earth seen from space',
         duration: '12 min',
+        missionId: 'exoplanetes',
       },
       paths: [
         { title: 'The Solar System', description: 'Compare planets, sizes and orbits.', href: '/planetes', image: SHARED_IMAGES.solarSystem, imageAlt: 'The Sun and eight planets', duration: '10 min', missionId: 'planetes' },
-        { title: 'Observe the sky', description: 'Plan an observation and recognise constellations.', href: '/ciel', image: SHARED_IMAGES.constellation, imageAlt: 'Constellation in a starry sky', duration: '10 min' },
-        { title: 'Deep Universe', description: 'Read Webb images and distant galaxies.', href: '/jwst', image: SHARED_IMAGES.galaxy, imageAlt: 'Galaxy cluster observed in space', duration: '12 min' },
+        { title: 'Observe the sky', description: 'Plan an observation and recognise constellations.', href: '/ciel', image: SHARED_IMAGES.constellation, imageAlt: 'Constellation in a starry sky', duration: '10 min', missionId: 'ciel' },
+        { title: 'Deep Universe', description: 'Read Webb images and distant galaxies.', href: '/jwst', image: SHARED_IMAGES.galaxy, imageAlt: 'Galaxy cluster observed in space', duration: '12 min', missionId: 'jwst' },
         { title: 'Mars exploration', description: 'Study rover instruments and objectives.', href: '/mars', image: SHARED_IMAGES.mars, imageAlt: 'Rover exploring the surface of Mars', duration: '12 min', missionId: 'mars' },
       ],
       start: 'Launch the mission',

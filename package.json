@@ -14,6 +14,8 @@
     "test": "vitest run",
     "test:a11y": "playwright test",
     "check:external": "node scripts/check-external-resources.mjs",
+    "check:production": "node scripts/check-production-journeys.mjs",
+    "media:optimize": "node scripts/optimize-curated-images.mjs",
     "check": "npm run lint && npm run typecheck && npm test && npm run build"
   },
   "dependencies": {
@@ -22,7 +24,7 @@
     "@upstash/ratelimit": "2.0.8",
     "@upstash/redis": "1.38.0",
     "framer-motion": "^12.42.2",
-    "next": "16.2.11",
+    "next": "16.3.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "three": "^0.185.1"
@@ -35,13 +37,14 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19",
     "eslint": "^9.0.0",
-    "eslint-config-next": "16.2.11",
+    "eslint-config-next": "16.3.0",
+    "sharp": "0.35.3",
     "tailwindcss": "^4.3.3",
     "typescript": "^5",
     "vitest": "^3.2.4"
   },
   "overrides": {
-    "postcss": "8.5.22",
+    "postcss": "8.5.23",
     "sharp": "0.35.3"
   }
 }

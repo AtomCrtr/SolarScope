@@ -120,7 +120,12 @@ export default function AsteroidsPage() {
                 ) : error ? (
                     <div style={{ textAlign: 'center', padding: '2rem', color: '#f59e0b' }}>📡 Le service NASA NeoWs est temporairement indisponible.</div>
                 ) : (
-                    <div style={{ overflow: 'auto' }}>
+                    <div
+                        style={{ overflow: 'auto' }}
+                        tabIndex={0}
+                        role="region"
+                        aria-label="Tableau défilable des passages proches d’astéroïdes"
+                    >
                         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem', minWidth: 600 }}>
                             <thead>
                                 <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>

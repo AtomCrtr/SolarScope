@@ -24,13 +24,14 @@ const nextConfig: NextConfig = {
       "object-src 'none'",
       "frame-ancestors 'none'",
       "form-action 'self'",
-      "script-src 'self' 'unsafe-inline'",
+      "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'",
       "style-src 'self' 'unsafe-inline'",
       "font-src 'self' data:",
       "img-src 'self' data: blob: https:",
       "media-src 'self' https:",
-      "frame-src https://stellarium-web.org",
-      "connect-src 'self' https://api.nasa.gov https://services.swpc.noaa.gov https://images-api.nasa.gov https://api.wheretheiss.at https://nominatim.openstreetmap.org",
+      "frame-src 'none'",
+      "worker-src 'self' blob:",
+      "connect-src 'self' blob:",
       "upgrade-insecure-requests",
     ].join('; ')
 

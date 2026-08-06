@@ -32,9 +32,9 @@ const QUIZ_BANK_EXPERT = [
 ]
 
 const LEVELS = [
-    { id: 'debutant', label: '👶 Débutant', sublabel: '5 — 8 ans', color: '#10b981', bank: QUIZ_BANK_DEBUTANT },
-    { id: 'explorateur', label: '💡 Explorateur', sublabel: '9 — 13 ans', color: '#3b82f6', bank: QUIZ_BANK_EXPLORATEUR },
-    { id: 'expert', label: '🔭 Expert', sublabel: '14+ ans', color: '#a855f7', bank: QUIZ_BANK_EXPERT },
+    { id: 'debutant', label: '👶 Débutant', sublabel: '6 — 8 ans', color: '#34d399', bank: QUIZ_BANK_DEBUTANT },
+    { id: 'explorateur', label: '💡 Explorateur', sublabel: '9 — 11 ans', color: '#60a5fa', bank: QUIZ_BANK_EXPLORATEUR },
+    { id: 'expert', label: '🔭 Expert', sublabel: '12+ ans', color: '#c084fc', bank: QUIZ_BANK_EXPERT },
 ]
 
 
@@ -138,7 +138,7 @@ export default function QuizPage() {
                             <h2 style={{ textAlign: 'center', color: '#e2e8f0', fontFamily: 'Outfit', fontWeight: 800, fontSize: '1.25rem', marginBottom: '0.5rem' }}>
                                 🎯 Choisis ton niveau
                             </h2>
-                            <p style={{ textAlign: 'center', color: '#475569', fontSize: '0.82rem', marginBottom: '1.5rem' }}>
+                            <p style={{ textAlign: 'center', color: '#94a3b8', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
                                 Chaque niveau a ses propres questions — tu peux changer à tout moment !
                             </p>
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
@@ -154,7 +154,7 @@ export default function QuizPage() {
                                         <div style={{ color: lv.color, fontFamily: 'Outfit', fontWeight: 800, fontSize: '1.05rem', marginBottom: '0.25rem' }}>
                                             {lv.label.split(' ').slice(1).join(' ')}
                                         </div>
-                                        <div style={{ color: '#475569', fontSize: '0.78rem', marginBottom: '0.75rem' }}>{lv.sublabel}</div>
+                                        <div style={{ color: '#cbd5e1', fontSize: '0.82rem', marginBottom: '0.75rem' }}>{lv.sublabel}</div>
                                         <div style={{ padding: '0.375rem 0.75rem', borderRadius: 99, background: `${lv.color}20`, color: lv.color, fontSize: '0.72rem', fontWeight: 700 }}>
                                             {lv.bank.length} questions
                                         </div>
@@ -204,7 +204,7 @@ export default function QuizPage() {
                                                     if (chosen) {
                                                         if (opt === q.answer) { bg = 'rgba(16,185,129,0.12)'; border = '2px solid #10b981'; color = '#10b981' }
                                                         else if (opt === chosen) { bg = 'rgba(239,68,68,0.12)'; border = '2px solid #ef4444'; color = '#ef4444' }
-                                                        else { color = '#475569' }
+                                                        else { color = '#94a3b8' }
                                                     }
                                                     return chosen ? (
                                                         <div key={opt} style={{ padding: '0.75rem 1rem', borderRadius: 10, background: bg, border, color, fontWeight: 600, fontSize: '0.85rem' }}>{opt}</div>

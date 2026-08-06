@@ -17,7 +17,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+      - run: npm ci
       - name: Check YouTube resources and production health
         run: node scripts/check-external-resources.mjs
+        env:
+          SITE_URL: https://solar-scope.vercel.app
+      - name: Install Chromium for production journeys
+        run: npx playwright install --with-deps chromium
+      - name: Check critical production journeys and performance budgets
+        run: npm run check:production
         env:
           SITE_URL: https://solar-scope.vercel.app

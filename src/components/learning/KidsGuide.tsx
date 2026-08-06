@@ -23,6 +23,16 @@ export default function KidsGuide({ topic }: KidsGuideProps) {
   const [juniorMode, setJuniorMode] = useState(false)
   const titleId = `kids-guide-${topic}`
   const visibleTakeaways = juniorMode ? lesson.takeaways.slice(0, 2) : lesson.takeaways
+  const structuredData = useMemo(() => JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'LearningResource',
+    name: lesson.question,
+    description: lesson.summary,
+    inLanguage: locale === 'en' ? 'en' : 'fr',
+    learningResourceType: 'Mission éducative interactive',
+    educationalLevel: juniorMode ? '6–8 ans' : '9 ans et plus',
+    isAccessibleForFree: true,
+  }).replace(/</g, '\\u003c'), [juniorMode, lesson, locale])
 
   const spokenText = useMemo(() => [
     lesson.question,
@@ -59,9 +69,10 @@ export default function KidsGuide({ topic }: KidsGuideProps) {
 
   return (
     <section className="kids-guide" aria-labelledby={titleId} data-learning-guide={topic}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData }} />
       <div className="kids-guide-heading">
         <div>
-          <span className="kids-guide-label">🧭 {lesson.label} · {locale === 'en' ? (juniorMode ? 'AGES 6–8' : 'AGES 8–12') : (juniorMode ? '6–8 ANS' : '8–12 ANS')}</span>
+          <span className="kids-guide-label">🧭 {lesson.label} · {locale === 'en' ? (juniorMode ? 'AGES 6–8' : 'AGES 9+') : (juniorMode ? '6–8 ANS' : '9+ ANS')}</span>
           <h2 id={titleId}>{lesson.question}</h2>
         </div>
         <div className="kids-guide-actions">
@@ -121,7 +132,7 @@ export default function KidsGuide({ topic }: KidsGuideProps) {
         </ol>
       </div>
 
-      {(topic === 'planetes' || topic === 'mars' || topic === 'iss') && <MissionStamp mission={topic} />}
+      {topic !== 'quiz' && <MissionStamp mission={topic} />}
     </section>
   )
 }
