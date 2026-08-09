@@ -238,16 +238,27 @@ export default function MarsPage() {
             <MarsMission rover={activeMission} onChooseRover={setActiveRover} />
 
             {/* ── STATS ── */}
-            <MetricGrid
-                ariaLabel="Chiffres clés de Mars"
-                items={MARS_FACTS.map(s => ({ icon: s.emoji, value: s.val, label: s.label, color: '#f87171' }))}
-            />
-            <p className="metric-grid-note">
-                {MARS_DATA_DISCLAIMER}{' '}
-                <a href={SCIENTIFIC_SOURCES.marsFacts.href} target="_blank" rel="noopener noreferrer" className="touch-link touch-link-compact" style={{ color: '#fca5a5', textDecoration: 'underline', textUnderlineOffset: 3 }}>
-                    Voir la fiche NASA
-                </a>
-            </p>
+            <section className="mars-facts-section" aria-labelledby="mars-facts-title">
+                <header className="mars-section-heading">
+                    <div>
+                        <span className="mars-kicker">REPÈRES MARTIENS</span>
+                        <h2 id="mars-facts-title">Mars en huit chiffres</h2>
+                    </div>
+                    <span className="mars-reference-badge">Données NASA de référence</span>
+                </header>
+                <MetricGrid
+                    animateOnView={false}
+                    ariaLabel="Chiffres clés de Mars"
+                    className="mars-metrics"
+                    items={MARS_FACTS.map(s => ({ icon: s.emoji, value: s.val, label: s.label, color: '#fca5a5' }))}
+                />
+                <p className="metric-grid-note mars-metrics-note">
+                    {MARS_DATA_DISCLAIMER}{' '}
+                    <a href={SCIENTIFIC_SOURCES.marsFacts.href} target="_blank" rel="noopener noreferrer" className="touch-link touch-link-compact">
+                        Voir la fiche NASA
+                    </a>
+                </p>
+            </section>
 
             {/* ── ACTIVE ROVER DETAIL ── */}
             <div className="divider" />

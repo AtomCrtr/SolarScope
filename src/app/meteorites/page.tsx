@@ -186,58 +186,66 @@ export default function MeteoritesPage() {
 
             {/* Stats */}
             {stats && (
-                <MetricGrid
-                    ariaLabel="Chiffres clés des météorites"
-                    className="metric-grid-block"
-                    items={[
-                        { icon: '☄️', value: stats.total.toLocaleString('fr-FR'), label: 'Météorites localisées', color: '#fb923c' },
-                        { icon: '⚖️', value: stats.heaviest ? `${(parseFloat(stats.heaviest.mass) / 1000).toFixed(0)} kg` : '—', label: `La plus lourde (${stats.heaviest?.name || 'inconnue'})`, color: '#fb923c' },
-                        { icon: '🌍', value: '6 continents', label: 'Zones d’impact', color: '#fb923c' },
-                        { icon: '📅', value: '860+', label: 'Années de données', color: '#fb923c' },
-                    ]}
-                />
+                <section className="meteorite-stats-section" aria-labelledby="meteorite-stats-title">
+                    <header className="meteorite-section-heading">
+                        <div>
+                            <span className="meteorite-kicker">ARCHIVE MONDIALE</span>
+                            <h2 id="meteorite-stats-title">Les chiffres de la collection</h2>
+                        </div>
+                        <span className="meteorite-sample-badge">Échantillon pédagogique</span>
+                    </header>
+                    <MetricGrid
+                        animateOnView={false}
+                        ariaLabel="Chiffres clés des météorites"
+                        className="meteorite-metrics"
+                        items={[
+                            { icon: '☄️', value: stats.total.toLocaleString('fr-FR'), label: 'Météorites localisées', color: '#fdba74' },
+                            { icon: '⚖️', value: stats.heaviest ? `${(parseFloat(stats.heaviest.mass) / 1000).toFixed(0)} kg` : '—', label: `La plus lourde (${stats.heaviest?.name || 'inconnue'})`, color: '#fdba74' },
+                            { icon: '🌍', value: '6 continents', label: 'Zones d’impact', color: '#fdba74' },
+                            { icon: '📅', value: '860+', label: 'Années de données', color: '#fdba74' },
+                        ]}
+                    />
+                </section>
             )}
 
             {/* Class filter chips */}
-            <div style={{ display: 'flex', gap: '0.375rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
+            <div className="meteorite-filter-bar" aria-label="Filtrer la carte par classe de météorite">
+                <span className="meteorite-filter-label">Filtrer la carte</span>
                 {CLASS_CHIPS.map(chip => (
-                    <button key={chip} onClick={() => setClassFilter(chip)} style={{
-                        padding: '0.25rem 0.75rem', borderRadius: 99, fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer',
-                        background: classFilter === chip ? 'rgba(249,115,22,0.15)' : 'rgba(255,255,255,0.04)',
-                        border: `1px solid ${classFilter === chip ? 'rgba(249,115,22,0.4)' : 'rgba(255,255,255,0.07)'}`,
-                        color: classFilter === chip ? '#fb923c' : '#94a3b8',
-                        transition: 'all 0.15s',
-                    }}>
+                    <button key={chip} type="button" className={classFilter === chip ? 'is-active' : ''} aria-pressed={classFilter === chip} onClick={() => setClassFilter(chip)}>
                         {chip === 'Tous' ? '☄️ Tous' : chip}
                     </button>
                 ))}
                 {classFilter !== 'Tous' && (
-                    <span style={{ color: '#475569', fontSize: '0.68rem', alignSelf: 'center', marginLeft: '0.25rem' }}>
+                    <span className="meteorite-filter-count" aria-live="polite">
                         {classFiltered.length.toLocaleString('fr-FR')} résultats
                     </span>
                 )}
             </div>
 
             {/* World Map */}
-            <div className="card" style={{ padding: 0, overflow: 'hidden', marginBottom: '1.5rem', position: 'relative' }}>
-                <div style={{ background: 'rgba(249,115,22,0.06)', borderBottom: '1px solid rgba(249,115,22,0.12)', padding: '0.75rem 1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <span style={{ fontSize: '1rem' }}>🗺️</span>
-                        <span style={{ color: '#e2e8f0', fontWeight: 600, fontSize: '0.85rem' }}>Carte mondiale des impacts</span>
-                    </div>
-                    <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                        {Object.entries(CLASS_COLOR).slice(0, 5).map(([k, v]) => (
-                            <div key={k} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                                <div style={{ width: 8, height: 8, borderRadius: '50%', background: v }} />
-                                <span style={{ color: '#64748b', fontSize: '0.65rem' }}>{k}</span>
-                            </div>
-                        ))}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                            <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#64748b' }} />
-                            <span style={{ color: '#64748b', fontSize: '0.65rem' }}>Autres</span>
+            <section className="card meteorite-map-card" aria-labelledby="meteorite-map-title">
+                <header className="meteorite-map-heading">
+                    <div>
+                        <span className="meteorite-panel-icon" aria-hidden="true">🗺️</span>
+                        <div>
+                            <span className="meteorite-kicker">LOCALISATION</span>
+                            <h2 id="meteorite-map-title">Carte mondiale des découvertes</h2>
                         </div>
                     </div>
-                </div>
+                    <div className="meteorite-map-legend" aria-label="Légende des classes">
+                        {Object.entries(CLASS_COLOR).slice(0, 5).map(([k, v]) => (
+                            <div key={k}>
+                                <span style={{ background: v }} />
+                                <small>{k}</small>
+                            </div>
+                        ))}
+                        <div>
+                            <span style={{ background: '#64748b' }} />
+                            <small>Autres</small>
+                        </div>
+                    </div>
+                </header>
 
                 {loading ? (
                     <div style={{ height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b' }}>
@@ -323,89 +331,98 @@ export default function MeteoritesPage() {
                         )}
                     </div>
                 )}
-            </div>
+            </section>
 
             {/* Top meteorites table */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                <div className="card" style={{ padding: '1.25rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-                        <h2 className="section-title" style={{ color: '#e2e8f0', fontSize: '0.95rem', marginBottom: 0 }}>🏆 Top météorites</h2>
-                        <div style={{ display: 'flex', gap: '0.375rem' }}>
+            <section className="meteorite-insights-grid" aria-label="Classement et répartition des météorites">
+                <article className="card meteorite-ranking-card">
+                    <header className="meteorite-panel-heading">
+                        <div>
+                            <span className="meteorite-panel-icon" aria-hidden="true">🏆</span>
+                            <div>
+                                <span className="meteorite-kicker">CATALOGUE</span>
+                                <h2>Top météorites</h2>
+                            </div>
+                        </div>
+                        <div className="meteorite-sort-controls" aria-label="Trier les météorites">
                             {(['mass', 'year'] as const).map(s => (
-                                <button key={s} onClick={() => setSortBy(s)} style={{
-                                    padding: '3px 8px', borderRadius: 99, fontSize: '0.65rem', fontWeight: 600, cursor: 'pointer',
-                                    background: sortBy === s ? 'rgba(249,115,22,0.15)' : 'rgba(255,255,255,0.04)',
-                                    border: `1px solid ${sortBy === s ? 'rgba(249,115,22,0.4)' : 'rgba(255,255,255,0.06)'}`,
-                                    color: sortBy === s ? '#fb923c' : '#64748b',
-                                }}>
+                                <button key={s} type="button" className={sortBy === s ? 'is-active' : ''} aria-pressed={sortBy === s} onClick={() => setSortBy(s)}>
                                     {s === 'mass' ? '⚖️ Masse' : '📅 Récentes'}
                                 </button>
                             ))}
                         </div>
-                    </div>
-                    <div style={{ display: 'flex', gap: '0.375rem', marginBottom: '0.75rem' }}>
+                    </header>
+                    <div className="meteorite-search">
+                        <span aria-hidden="true">⌕</span>
                         <input
                             type="text" value={search} onChange={e => setSearch(e.target.value)}
                             placeholder="Rechercher par nom ou classe…"
                             aria-label="Rechercher une météorite par nom ou classe"
-                            style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '0.5rem', padding: '0.4rem 0.75rem', color: '#e2e8f0', fontSize: '0.75rem', outline: 'none' }}
                         />
                     </div>
-                    <div tabIndex={0} aria-label="Liste filtrée des météorites" style={{ maxHeight: 320, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                    <div className="meteorite-ranking-list" tabIndex={0} aria-label="Liste filtrée des météorites">
                         {filtered.map((m, i) => (
-                            <div key={m.id || i} style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', padding: '0.5rem 0.625rem', borderRadius: '0.5rem', background: 'rgba(255,255,255,0.03)', cursor: 'pointer' }}
+                            <div className="meteorite-ranking-row" key={m.id || i}
                                 onMouseEnter={() => setHovered(m)} onMouseLeave={() => setHovered(null)}>
-                                <div style={{ width: 8, height: 8, borderRadius: '50%', background: getColor(m.recclass || ''), flexShrink: 0 }} />
-                                <div style={{ flex: 1 }}>
-                                    <div style={{ color: '#e2e8f0', fontSize: '0.75rem', fontWeight: 600 }}>{m.name}</div>
-                                    <div style={{ color: '#475569', fontSize: '0.62rem' }}>{m.recclass} · {m.year ? new Date(m.year).getFullYear() : '?'}</div>
+                                <span className="meteorite-class-dot" style={{ background: getColor(m.recclass || '') }} />
+                                <div>
+                                    <strong>{m.name}</strong>
+                                    <small>{m.recclass} · {m.year ? new Date(m.year).getFullYear() : '?'}</small>
                                 </div>
-                                <div style={{ color: '#fb923c', fontSize: '0.72rem', fontWeight: 700, fontFamily: 'monospace' }}>
+                                <span className="meteorite-ranking-mass">
                                     {m.mass ? `${Number(m.mass) >= 1000 ? (Number(m.mass) / 1000).toFixed(1) + 'kg' : Number(m.mass).toFixed(0) + 'g'}` : '—'}
-                                </div>
+                                </span>
                             </div>
                         ))}
                     </div>
-                </div>
+                </article>
 
                 {/* Classes */}
-                <div className="card" style={{ padding: '1.25rem' }}>
-                    <h2 className="section-title" style={{ color: '#e2e8f0', fontSize: '0.95rem' }}>📊 Répartition par classe</h2>
+                <article className="card meteorite-classes-card">
+                    <header className="meteorite-panel-heading">
+                        <div>
+                            <span className="meteorite-panel-icon" aria-hidden="true">📊</span>
+                            <div>
+                                <span className="meteorite-kicker">COMPOSITION</span>
+                                <h2>Répartition par classe</h2>
+                            </div>
+                        </div>
+                        <span className="meteorite-class-count">10 principales</span>
+                    </header>
                     {stats && (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                        <div className="meteorite-class-bars">
                             {Object.entries(stats.byClass)
                                 .sort(([, a], [, b]) => b - a)
                                 .slice(0, 10)
                                 .map(([cls, cnt]) => (
-                                    <div key={cls} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                        <div style={{ width: 8, height: 8, borderRadius: '50%', background: getColor(cls), flexShrink: 0 }} />
-                                        <span style={{ color: '#94a3b8', fontSize: '0.72rem', width: 35, flexShrink: 0 }}>{cls}*</span>
-                                        <div style={{ flex: 1, height: 4, borderRadius: 99, background: 'rgba(255,255,255,0.06)', overflow: 'hidden' }}>
-                                            <div style={{ height: '100%', width: `${(cnt / stats.total) * 100 * 5}%`, maxWidth: '100%', background: getColor(cls), borderRadius: 99 }} />
+                                    <div key={cls}>
+                                        <span className="meteorite-class-dot" style={{ background: getColor(cls) }} />
+                                        <strong>{cls}*</strong>
+                                        <div className="meteorite-class-track">
+                                            <span style={{ width: `${(cnt / stats.total) * 100 * 5}%`, background: getColor(cls) }} />
                                         </div>
-                                        <span style={{ color: '#64748b', fontSize: '0.68rem', minWidth: 35, textAlign: 'right' }}>{cnt.toLocaleString('fr-FR')}</span>
+                                        <small>{cnt.toLocaleString('fr-FR')}</small>
                                     </div>
                                 ))
                             }
                         </div>
                     )}
-                    <div className="divider" />
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+                    <div className="meteorite-type-grid">
                         {[
                             { icon: '🪨', title: 'Chondrites', desc: 'Les plus communes — restent depuis la formation du système solaire (4,6 Ga)' },
                             { icon: '⚙️', title: 'Sidérites', desc: 'Métalliques (Fer/Nickel) — proviennent du noyau d\'astéroïdes fracturés' },
                             { icon: '🌕', title: 'Lunaires', desc: 'Éjectées par des impacts sur la Lune puis capturées par la Terre' },
                             { icon: '🔴', title: 'Martiennes', desc: 'Extraites de Mars par des impacts — 300 identifiées dans le monde' },
                         ].map(t => (
-                            <div key={t.title} style={{ padding: '0.625rem', borderRadius: '0.5rem', background: 'rgba(249,115,22,0.04)', border: '1px solid rgba(249,115,22,0.08)' }}>
-                                <div style={{ fontSize: '1rem', marginBottom: '0.25rem' }}>{t.icon}</div>
-                                <div style={{ color: '#fb923c', fontSize: '0.72rem', fontWeight: 700, marginBottom: '0.2rem' }}>{t.title}</div>
-                                <div style={{ color: '#475569', fontSize: '0.65rem', lineHeight: 1.5 }}>{t.desc}</div>
+                            <div key={t.title}>
+                                <span aria-hidden="true">{t.icon}</span>
+                                <strong>{t.title}</strong>
+                                <p>{t.desc}</p>
                             </div>
                         ))}
                     </div>
-                </div>
-            </div>
+                </article>
+            </section>
         </div>
     )
 }

@@ -196,6 +196,33 @@ test('metric values and labels keep a readable visual gap', async ({ page }) => 
   }
 })
 
+test('Mars and meteorite dashboards keep balanced cards without empty panel gaps', async ({ page }) => {
+  await gotoSettled(page, '/mars')
+  const marsCards = page.locator('.mars-metrics .metric-card')
+  await marsCards.first().scrollIntoViewIfNeeded()
+  await expect(marsCards).toHaveCount(8)
+  const marsHeights = await marsCards.evaluateAll(cards => cards.map(card => card.getBoundingClientRect().height))
+  expect(Math.max(...marsHeights) - Math.min(...marsHeights)).toBeLessThanOrEqual(1)
+
+  await gotoSettled(page, '/meteorites')
+  const meteoriteCards = page.locator('.meteorite-metrics .metric-card')
+  await meteoriteCards.first().scrollIntoViewIfNeeded()
+  await expect(meteoriteCards).toHaveCount(4)
+  const meteoriteHeights = await meteoriteCards.evaluateAll(cards => cards.map(card => card.getBoundingClientRect().height))
+  expect(Math.max(...meteoriteHeights) - Math.min(...meteoriteHeights)).toBeLessThanOrEqual(1)
+
+  const classBars = page.locator('.meteorite-class-bars')
+  const typeGrid = page.locator('.meteorite-type-grid')
+  await classBars.scrollIntoViewIfNeeded()
+  const barsBounds = await classBars.boundingBox()
+  const typesBounds = await typeGrid.boundingBox()
+  expect(barsBounds).not.toBeNull()
+  expect(typesBounds).not.toBeNull()
+  if (barsBounds && typesBounds) {
+    expect(typesBounds.y - (barsBounds.y + barsBounds.height)).toBeLessThanOrEqual(24)
+  }
+})
+
 test('the mission action remains inside the notebook at common viewport sizes', async ({ page }) => {
   test.setTimeout(60_000)
   for (const viewport of [

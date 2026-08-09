@@ -674,9 +674,263 @@ video {
   .iss-facts-card { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
+/* Mars facts dashboard */
+.mars-facts-section,
+.meteorite-stats-section { margin: clamp(2rem, 4vw, 3rem) 0 2.5rem; }
+.mars-section-heading,
+.meteorite-section-heading,
+.meteorite-map-heading,
+.meteorite-panel-heading,
+.meteorite-map-heading > div,
+.meteorite-panel-heading > div {
+  display: flex;
+  align-items: center;
+}
+.mars-section-heading,
+.meteorite-section-heading { justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.mars-section-heading h2,
+.meteorite-section-heading h2,
+.meteorite-map-heading h2,
+.meteorite-panel-heading h2 {
+  margin: 0;
+  color: #f8fafc;
+  font-family: 'Outfit', sans-serif;
+}
+.mars-section-heading h2,
+.meteorite-section-heading h2 { margin-top: 0.2rem; font-size: clamp(1.2rem, 2.3vw, 1.65rem); }
+.mars-kicker,
+.meteorite-kicker { font-size: 0.67rem; font-weight: 850; letter-spacing: 0.13em; }
+.mars-kicker { color: #fb7185; }
+.mars-reference-badge,
+.meteorite-sample-badge,
+.meteorite-class-count {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.66rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.mars-reference-badge { color: #fecdd3; border: 1px solid rgba(251, 113, 133, 0.25); background: rgba(127, 29, 29, 0.2); }
+.mars-metrics.metric-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+.mars-metrics .metric-card {
+  grid-template-areas: "icon label" "value value";
+  grid-template-columns: 42px minmax(0, 1fr);
+  grid-template-rows: 42px minmax(3.2rem, auto);
+  min-height: 150px;
+  align-content: center;
+  justify-items: stretch;
+  row-gap: 0.85rem;
+  padding: 1.15rem;
+  text-align: left;
+  border-color: rgba(251, 113, 133, 0.16);
+  background: linear-gradient(145deg, rgba(44, 18, 35, 0.92), rgba(20, 16, 40, 0.9));
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.035), 0 16px 44px rgba(9, 4, 20, 0.2);
+}
+.mars-metrics .metric-card::after,
+.meteorite-metrics .metric-card::after {
+  content: '';
+  position: absolute;
+  right: -28px;
+  bottom: -42px;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  filter: blur(14px);
+  pointer-events: none;
+}
+.mars-metrics .metric-card::after { background: rgba(239, 68, 68, 0.1); }
+.mars-metrics .metric-icon,
+.meteorite-metrics .metric-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  margin: 0;
+  border-radius: 0.75rem;
+  font-size: 1.05rem;
+}
+.mars-metrics .metric-icon { border: 1px solid rgba(251, 113, 133, 0.2); background: rgba(239, 68, 68, 0.1); }
+.mars-metrics .metric-label,
+.meteorite-metrics .metric-label {
+  align-self: center;
+  max-width: none;
+  font-size: 0.69rem;
+  font-weight: 750;
+  letter-spacing: 0.055em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+.mars-metrics .metric-label { color: #b9a3b5; }
+.mars-metrics .metric-value,
+.mars-metrics .metric-value[data-long-value="true"] {
+  align-self: end;
+  margin: 0;
+  font-size: clamp(1.18rem, 2vw, 1.68rem);
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  white-space: nowrap;
+}
+.mars-metrics-note { margin-bottom: 0; padding: 0.85rem 1rem; border-left: 2px solid rgba(251, 113, 133, 0.35); color: #8f9db5; background: linear-gradient(90deg, rgba(127, 29, 29, 0.09), transparent); }
+.mars-metrics-note a { color: #fda4af; text-decoration: underline; text-underline-offset: 3px; }
+
+/* Meteorite explorer dashboard */
+.meteorite-kicker { color: #fb923c; }
+.meteorite-sample-badge { color: #fed7aa; border: 1px solid rgba(251, 146, 60, 0.25); background: rgba(124, 45, 18, 0.2); }
+.meteorite-metrics.metric-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+.meteorite-metrics .metric-card {
+  grid-template-areas: "icon label" "value value";
+  grid-template-columns: 42px minmax(0, 1fr);
+  grid-template-rows: 42px minmax(3.2rem, auto);
+  min-height: 148px;
+  align-content: center;
+  justify-items: stretch;
+  row-gap: 0.85rem;
+  padding: 1.15rem;
+  text-align: left;
+  border-color: rgba(251, 146, 60, 0.16);
+  background: linear-gradient(145deg, rgba(44, 24, 24, 0.9), rgba(20, 17, 42, 0.9));
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.035), 0 16px 44px rgba(9, 4, 20, 0.2);
+}
+.meteorite-metrics .metric-card::after { background: rgba(249, 115, 22, 0.1); }
+.meteorite-metrics .metric-icon { border: 1px solid rgba(251, 146, 60, 0.2); background: rgba(249, 115, 22, 0.1); }
+.meteorite-metrics .metric-label { color: #b9aaa3; }
+.meteorite-metrics .metric-value,
+.meteorite-metrics .metric-value[data-long-value="true"] {
+  align-self: end;
+  margin: 0;
+  font-size: clamp(1.12rem, 1.85vw, 1.62rem);
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  white-space: nowrap;
+}
+.meteorite-filter-bar {
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid rgba(251, 146, 60, 0.12);
+  border-radius: 0.9rem;
+  background: rgba(22, 17, 39, 0.72);
+  backdrop-filter: blur(12px);
+}
+.meteorite-filter-label { margin-right: 0.25rem; color: #78869d; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+.meteorite-filter-bar button,
+.meteorite-sort-controls button {
+  min-height: 34px;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 999px;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.035);
+  font-size: 0.7rem;
+  font-weight: 750;
+  cursor: pointer;
+  transition: border-color 0.3s ease-out, background 0.3s ease-out, color 0.3s ease-out, transform 0.3s ease-out;
+}
+.meteorite-filter-bar button:hover,
+.meteorite-sort-controls button:hover { transform: translateY(-1px); border-color: rgba(251, 146, 60, 0.28); color: #fed7aa; }
+.meteorite-filter-bar button.is-active,
+.meteorite-sort-controls button.is-active { color: #fdba74; border-color: rgba(251, 146, 60, 0.38); background: rgba(249, 115, 22, 0.14); }
+.meteorite-filter-count { margin-left: auto; color: #fb923c; font-size: 0.7rem; font-weight: 750; }
+.meteorite-map-card { position: relative; overflow: hidden; margin-bottom: 1.25rem; padding: 0; border-color: rgba(251, 146, 60, 0.15); background: rgba(10, 10, 34, 0.9); }
+.meteorite-map-heading,
+.meteorite-panel-heading { justify-content: space-between; gap: 1rem; border-bottom: 1px solid rgba(251, 146, 60, 0.1); }
+.meteorite-map-heading { min-height: 74px; padding: 0.9rem 1.15rem; background: linear-gradient(90deg, rgba(249, 115, 22, 0.08), transparent); }
+.meteorite-map-heading > div,
+.meteorite-panel-heading > div { gap: 0.7rem; min-width: 0; }
+.meteorite-map-heading h2,
+.meteorite-panel-heading h2 { margin-top: 0.1rem; font-size: 1rem; }
+.meteorite-panel-icon { display: grid; width: 38px; height: 38px; flex: 0 0 auto; place-items: center; border: 1px solid rgba(251, 146, 60, 0.17); border-radius: 0.7rem; background: rgba(249, 115, 22, 0.08); font-size: 1rem; }
+.meteorite-map-legend { display: flex; align-items: center; justify-content: flex-end; gap: 0.7rem; flex-wrap: wrap; }
+.meteorite-map-legend > div { display: inline-flex; align-items: center; gap: 0.3rem; }
+.meteorite-map-legend span,
+.meteorite-class-dot { width: 8px; height: 8px; flex: 0 0 auto; border-radius: 50%; }
+.meteorite-map-legend small { color: #6f809b; font-size: 0.62rem; }
+.meteorite-insights-grid { display: grid; grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr); align-items: start; gap: 1rem; }
+.meteorite-ranking-card,
+.meteorite-classes-card { min-width: 0; padding: 0; border-color: rgba(251, 146, 60, 0.14); background: linear-gradient(150deg, rgba(27, 24, 54, 0.92), rgba(17, 17, 39, 0.92)); }
+.meteorite-panel-heading { min-height: 72px; padding: 0.9rem 1rem; }
+.meteorite-sort-controls { display: flex; flex: 0 0 auto; gap: 0.35rem; }
+.meteorite-sort-controls button { min-height: 30px; padding: 0.25rem 0.55rem; font-size: 0.64rem; }
+.meteorite-search { display: flex; min-height: 44px; align-items: center; gap: 0.5rem; margin: 0.85rem 0.9rem 0.7rem; padding: 0 0.75rem; border: 1px solid rgba(148, 163, 184, 0.1); border-radius: 0.65rem; background: rgba(255, 255, 255, 0.035); }
+.meteorite-search > span { color: #64748b; font-size: 1.1rem; }
+.meteorite-search input { width: 100%; min-width: 0; border: 0; outline: 0; color: #e2e8f0; background: transparent; font-size: 0.76rem; }
+.meteorite-search input::placeholder { color: #64748b; }
+.meteorite-ranking-list { display: flex; max-height: 420px; flex-direction: column; gap: 0.4rem; margin: 0 0.65rem 0.85rem 0.9rem; padding-right: 0.25rem; overflow-y: auto; scrollbar-color: rgba(251, 146, 60, 0.35) transparent; }
+.meteorite-ranking-row { display: grid; grid-template-columns: 8px minmax(0, 1fr) auto; min-height: 54px; align-items: center; gap: 0.65rem; padding: 0.55rem 0.65rem; border: 1px solid rgba(148, 163, 184, 0.07); border-radius: 0.6rem; background: rgba(255, 255, 255, 0.025); transition: border-color 0.3s ease-out, background 0.3s ease-out, transform 0.3s ease-out; }
+.meteorite-ranking-row:hover { transform: translateX(2px); border-color: rgba(251, 146, 60, 0.2); background: rgba(249, 115, 22, 0.055); }
+.meteorite-ranking-row > div { display: grid; min-width: 0; }
+.meteorite-ranking-row strong { overflow: hidden; color: #e8edf5; font-size: 0.76rem; text-overflow: ellipsis; white-space: nowrap; }
+.meteorite-ranking-row small { overflow: hidden; color: #64748b; font-size: 0.63rem; text-overflow: ellipsis; white-space: nowrap; }
+.meteorite-ranking-mass { color: #fb923c; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.72rem; font-weight: 800; white-space: nowrap; }
+.meteorite-class-count { min-height: 30px; color: #fdba74; border: 1px solid rgba(251, 146, 60, 0.18); background: rgba(249, 115, 22, 0.08); }
+.meteorite-class-bars { display: grid; gap: 0.58rem; padding: 1rem; }
+.meteorite-class-bars > div { display: grid; grid-template-columns: 8px 42px minmax(0, 1fr) 32px; align-items: center; gap: 0.55rem; min-height: 20px; }
+.meteorite-class-bars strong { color: #a8b4c7; font-size: 0.7rem; }
+.meteorite-class-bars small { color: #718099; font-size: 0.67rem; text-align: right; }
+.meteorite-class-track { height: 5px; overflow: hidden; border-radius: 99px; background: rgba(255, 255, 255, 0.055); }
+.meteorite-class-track span { display: block; max-width: 100%; height: 100%; border-radius: inherit; }
+.meteorite-type-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.55rem; margin: 0 1rem 1rem; padding-top: 1rem; border-top: 1px solid rgba(148, 163, 184, 0.09); }
+.meteorite-type-grid > div { display: grid; min-height: 116px; align-content: start; gap: 0.25rem; padding: 0.75rem; border: 1px solid rgba(251, 146, 60, 0.09); border-radius: 0.65rem; background: rgba(249, 115, 22, 0.035); }
+.meteorite-type-grid > div > span { font-size: 1rem; }
+.meteorite-type-grid strong { color: #fb923c; font-size: 0.72rem; }
+.meteorite-type-grid p { margin: 0; color: #687890; font-size: 0.65rem; line-height: 1.5; }
+
+@media (max-width: 900px) {
+  .mars-metrics.metric-grid,
+  .meteorite-metrics.metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+  .meteorite-insights-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .mars-section-heading,
+  .meteorite-section-heading,
+  .meteorite-map-heading,
+  .meteorite-panel-heading { align-items: flex-start; flex-direction: column; }
+  .mars-reference-badge,
+  .meteorite-sample-badge { min-height: 30px; }
+  .mars-metrics .metric-card,
+  .meteorite-metrics .metric-card { grid-template-columns: 34px minmax(0, 1fr); grid-template-rows: 34px minmax(2.8rem, auto); min-height: 126px; row-gap: 0.7rem; padding: 0.85rem; }
+  .mars-metrics .metric-icon,
+  .meteorite-metrics .metric-icon { width: 34px; height: 34px; border-radius: 0.6rem; font-size: 0.9rem; }
+  .mars-metrics .metric-label,
+  .meteorite-metrics .metric-label { font-size: 0.6rem; }
+  .mars-metrics .metric-value,
+  .mars-metrics .metric-value[data-long-value="true"],
+  .meteorite-metrics .metric-value,
+  .meteorite-metrics .metric-value[data-long-value="true"] { font-size: clamp(0.9rem, 4.2vw, 1.08rem); }
+  .meteorite-filter-label { flex-basis: 100%; }
+  .meteorite-filter-count { width: 100%; margin-left: 0; }
+  .meteorite-map-legend { justify-content: flex-start; }
+  .meteorite-ranking-list { max-height: 360px; }
+}
+
+@media (max-width: 390px) {
+  .mars-metrics .metric-card,
+  .meteorite-metrics .metric-card { grid-template-areas: "icon" "value" "label"; grid-template-columns: 1fr; grid-template-rows: 32px minmax(2.5rem, auto) auto; justify-items: center; row-gap: 0.45rem; padding: 0.75rem 0.55rem; text-align: center; }
+  .mars-metrics .metric-label,
+  .meteorite-metrics .metric-label { align-self: start; }
+  .meteorite-type-grid { grid-template-columns: 1fr; }
+  .meteorite-panel-heading { padding: 0.8rem; }
+  .meteorite-sort-controls { width: 100%; }
+  .meteorite-sort-controls button { flex: 1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .parent-guide, .parent-guide-link { transition: none; }
-  .parent-guide:hover { transform: none; }
+  .parent-guide, .parent-guide-link,
+  .meteorite-filter-bar button,
+  .meteorite-sort-controls button,
+  .meteorite-ranking-row { transition: none; }
+  .parent-guide:hover,
+  .meteorite-filter-bar button:hover,
+  .meteorite-sort-controls button:hover,
+  .meteorite-ranking-row:hover { transform: none; }
 }
 
 /* ─── SECTION TITLE ─── */
