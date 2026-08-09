@@ -32,7 +32,6 @@ const nextConfig: NextConfig = {
       "frame-src 'none'",
       "worker-src 'self' blob:",
       "connect-src 'self' blob:",
-      "upgrade-insecure-requests",
     ].join('; ')
 
     return [

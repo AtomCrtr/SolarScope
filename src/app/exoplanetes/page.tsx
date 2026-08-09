@@ -163,7 +163,7 @@ export default function ExoplanetesPage() {
             {/* Links */}
             <div className="card" style={{ padding: '1.5rem' }}>
                 <h2 className="section-title" style={{ color: '#e2e8f0' }}>🔗 En savoir plus</h2>
-                <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', color: '#94a3b8', fontSize: '0.85rem' }}>
+                <ul className="resource-list" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', color: '#94a3b8', fontSize: '0.85rem' }}>
                     {[
                         { label: 'NASA Exoplanet Exploration', url: 'https://exoplanets.nasa.gov/', desc: 'Le portail officiel avec visualisations interactives' },
                         { label: 'Eyes on Exoplanets 3D', url: 'https://eyes.nasa.gov/apps/exo/', desc: 'Voyage virtuel vers les exoplanètes' },
@@ -171,7 +171,7 @@ export default function ExoplanetesPage() {
                         { label: 'ESO Exoplanètes', url: 'https://www.eso.org/public/france/themes/exoplanets/', desc: "Le site de l'Observatoire Européen" },
                     ].map(l => (
                         <li key={l.label}>
-                            <a href={l.url} target="_blank" rel="noopener noreferrer" style={{ color: '#c4b5fd', textDecoration: 'underline', textUnderlineOffset: 3 }}>{l.label}</a>
+                            <a href={l.url} target="_blank" rel="noopener noreferrer" className="touch-link touch-link-compact" style={{ color: '#c4b5fd', textDecoration: 'underline', textUnderlineOffset: 3 }}>{l.label}</a>
                             <span style={{ color: '#475569' }}> — {l.desc}</span>
                         </li>
                     ))}

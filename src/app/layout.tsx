@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import Navbar from '@/components/layout/Navbar'
 import StarField from '@/components/layout/StarField'
@@ -7,6 +7,7 @@ import Footer from '@/components/layout/Footer'
 import Breadcrumb from '@/components/layout/Breadcrumb'
 import ProgressTracker from '@/components/learning/ProgressTracker'
 import LanguageAvailabilityNotice from '@/components/layout/LanguageAvailabilityNotice'
+import ServiceWorkerRegistration from '@/components/layout/ServiceWorkerRegistration'
 import { DEFAULT_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/config/site'
 
 export const metadata: Metadata = {
@@ -34,9 +35,22 @@ export const metadata: Metadata = {
     description: DEFAULT_DESCRIPTION,
   },
   icons: {
-    icon: '/favicon.ico',
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/solarscope-icon-192.png', type: 'image/png', sizes: '192x192' },
+      { url: '/solarscope-icon-512.png', type: 'image/png', sizes: '512x512' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
   },
+  appleWebApp: { capable: true, title: 'SolarScope', statusBarStyle: 'black-translucent' },
   robots: { index: true, follow: true },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: '#060614',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -72,6 +86,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </main>
         <Footer />
         <SolarBotWidget />
+        <ServiceWorkerRegistration />
       </body>
     </html>
   )

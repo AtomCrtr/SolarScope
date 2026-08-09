@@ -207,7 +207,7 @@ export default function AsteroidsPage() {
             {/* Links */}
             <div className="card" style={{ padding: '1.5rem' }}>
                 <h2 className="section-title" style={{ color: '#e2e8f0' }}>🔗 En savoir plus</h2>
-                <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', color: '#94a3b8', fontSize: '0.85rem' }}>
+                <ul className="resource-list" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', color: '#94a3b8', fontSize: '0.85rem' }}>
                     {[
                         { label: 'CNEOS Close Approach Data', url: 'https://cneos.jpl.nasa.gov/ca/', desc: 'Prochains passages d\'astéroïdes près de la Terre (NASA JPL)' },
                         { label: 'Asteroid Watch 3D', url: 'https://eyes.nasa.gov/apps/asteroids/', desc: 'Visualisation 3D des astéroïdes en temps réel' },
@@ -215,7 +215,7 @@ export default function AsteroidsPage() {
                         { label: 'Mission DART', url: 'https://dart.jhuapl.edu/', desc: 'Le programme de défense planétaire' },
                     ].map(l => (
                         <li key={l.label}>
-                            <a href={l.url} target="_blank" rel="noopener noreferrer" style={{ color: '#c4b5fd', textDecoration: 'underline', textUnderlineOffset: 3 }}>{l.label}</a>
+                            <a href={l.url} target="_blank" rel="noopener noreferrer" className="touch-link touch-link-compact" style={{ color: '#c4b5fd', textDecoration: 'underline', textUnderlineOffset: 3 }}>{l.label}</a>
                             <span style={{ color: '#475569' }}> — {l.desc}</span>
                         </li>
                     ))}

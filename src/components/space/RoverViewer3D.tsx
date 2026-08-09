@@ -159,7 +159,7 @@ export default function RoverViewer3D({ rover, height = 340 }: RoverViewer3DProp
     }, [])
 
     return (
-        <div style={{
+        <div className="rover-viewer" style={{
             position: 'relative', borderRadius: '1rem', overflow: 'hidden',
             border: `1px solid ${meta.color}20`,
             background: 'rgba(0,0,0,0.95)',

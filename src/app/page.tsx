@@ -299,7 +299,7 @@ export default function HomePage() {
         <p>
           {copy.trustText}
         </p>
-        <Link href="/actualites">{copy.trustAction} <span aria-hidden="true">→</span></Link>
+        <Link href="/actualites" className="touch-link">{copy.trustAction} <span aria-hidden="true">→</span></Link>
       </section>
     </>
   )

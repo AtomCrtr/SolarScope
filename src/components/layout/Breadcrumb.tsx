@@ -44,12 +44,12 @@ export default function Breadcrumb() {
     if (!group || !page || pathname === '/') return null
 
     return (
-        <nav style={{
+        <nav className="breadcrumb" style={{
             display: 'flex', alignItems: 'center', gap: '0.375rem',
             fontSize: '0.72rem', color: '#334155', marginBottom: '0.5rem',
             fontWeight: 500,
         }} aria-label="Fil d'Ariane">
-            <Link href="/" style={{ color: '#334155', textDecoration: 'none', transition: 'color 0.15s' }}
+            <Link href="/" className="breadcrumb-link" style={{ color: '#334155', textDecoration: 'none', transition: 'color 0.15s' }}
                 onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = '#64748b')}
                 onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = '#334155')}>
                 SolarScope

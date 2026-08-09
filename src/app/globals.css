@@ -1499,6 +1499,26 @@ body:has(.home-storyboard) { background: #03040d; }
   align-items: center;
 }
 
+/* Comfortable standalone actions on touch screens, without altering links inside prose. */
+.touch-link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.touch-link-compact,
+.breadcrumb-link {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+}
+
+.breadcrumb { min-height: 32px; }
+.source-card a { min-height: 44px; padding-block: 0.55rem; }
+.prose-card p > a:only-child { display: inline-flex; min-height: 44px; align-items: center; }
+.resource-list li { display: flex; flex-wrap: wrap; align-items: center; column-gap: 0.35rem; min-height: 44px; }
+
 .sky-observation-launcher {
   display: grid;
   grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.2fr);

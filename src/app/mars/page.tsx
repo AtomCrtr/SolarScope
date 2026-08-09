@@ -244,7 +244,7 @@ export default function MarsPage() {
             />
             <p className="metric-grid-note">
                 {MARS_DATA_DISCLAIMER}{' '}
-                <a href={SCIENTIFIC_SOURCES.marsFacts.href} target="_blank" rel="noopener noreferrer" style={{ color: '#fca5a5', textDecoration: 'underline', textUnderlineOffset: 3 }}>
+                <a href={SCIENTIFIC_SOURCES.marsFacts.href} target="_blank" rel="noopener noreferrer" className="touch-link touch-link-compact" style={{ color: '#fca5a5', textDecoration: 'underline', textUnderlineOffset: 3 }}>
                     Voir la fiche NASA
                 </a>
             </p>
