@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
 import KidsGuide from '@/components/learning/KidsGuide'
+import MetricGrid from '@/components/space/MetricGrid'
 
 const SpaceXSection = dynamic(() => import('@/components/space/SpaceXSection'), { ssr: false })
 
@@ -90,19 +91,16 @@ export default function MissionsPage() {
             </div>
 
             {/* KPIs */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '0.75rem', marginBottom: '2rem' }}>
-                {[
-                    { label: 'Missions totales', val: `${MISSIONS.length}`, color: '#6366f1' },
-                    { label: 'Actives', val: `${active}`, color: '#10b981' },
-                    { label: 'Pays/Agences', val: '8', color: '#f59e0b' },
-                    { label: 'Types de missions', val: `${ALL_TYPES.length}`, color: '#3b82f6' },
-                ].map(s => (
-                    <div key={s.label} className="card" style={{ padding: '1.25rem', textAlign: 'center' }}>
-                        <div style={{ fontSize: '1.8rem', fontFamily: 'Outfit, sans-serif', fontWeight: 900, background: s.color, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>{s.val}</div>
-                        <div style={{ color: '#64748b', fontSize: '0.75rem', marginTop: 4 }}>{s.label}</div>
-                    </div>
-                ))}
-            </div>
+            <MetricGrid
+                ariaLabel="Chiffres clés des missions spatiales"
+                className="metric-grid-block"
+                items={[
+                    { label: 'Missions totales', value: MISSIONS.length, color: '#818cf8' },
+                    { label: 'Missions actives', value: active, color: '#34d399' },
+                    { label: 'Pays et agences', value: 8, color: '#fbbf24' },
+                    { label: 'Types de missions', value: ALL_TYPES.length, color: '#60a5fa' },
+                ]}
+            />
 
             {/* ── Upcoming Launches ── */}
             <div style={{ marginBottom: '2rem' }}>

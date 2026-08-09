@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import KidsGuide from '@/components/learning/KidsGuide'
+import MetricGrid from '@/components/space/MetricGrid'
 
 interface Meteorite {
     name: string
@@ -185,20 +186,16 @@ export default function MeteoritesPage() {
 
             {/* Stats */}
             {stats && (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.625rem', marginBottom: '2rem' }} className="max-sm:grid-cols-2">
-                    {[
-                        { icon: '☄️', val: stats.total.toLocaleString('fr-FR'), label: 'Météorites localisées' },
-                        { icon: '⚖️', val: stats.heaviest ? `${(parseFloat(stats.heaviest.mass) / 1000).toFixed(0)} kg` : '—', label: `La + lourde (${stats.heaviest?.name || ''})` },
-                        { icon: '🌍', val: '6 continents', label: 'Zones d\'impact' },
-                        { icon: '📅', val: '860+', label: 'Années de données' },
-                    ].map(s => (
-                        <div key={s.label} className="stat-card">
-                            <div style={{ fontSize: '1.4rem' }}>{s.icon}</div>
-                            <div className="stat-value" style={{ color: '#fb923c', fontSize: '1rem' }}>{s.val}</div>
-                            <div className="stat-label">{s.label}</div>
-                        </div>
-                    ))}
-                </div>
+                <MetricGrid
+                    ariaLabel="Chiffres clés des météorites"
+                    className="metric-grid-block"
+                    items={[
+                        { icon: '☄️', value: stats.total.toLocaleString('fr-FR'), label: 'Météorites localisées', color: '#fb923c' },
+                        { icon: '⚖️', value: stats.heaviest ? `${(parseFloat(stats.heaviest.mass) / 1000).toFixed(0)} kg` : '—', label: `La plus lourde (${stats.heaviest?.name || 'inconnue'})`, color: '#fb923c' },
+                        { icon: '🌍', value: '6 continents', label: 'Zones d’impact', color: '#fb923c' },
+                        { icon: '📅', value: '860+', label: 'Années de données', color: '#fb923c' },
+                    ]}
+                />
             )}
 
             {/* Class filter chips */}

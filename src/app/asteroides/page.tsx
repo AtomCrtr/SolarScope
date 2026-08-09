@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import KidsGuide from '@/components/learning/KidsGuide'
+import MetricGrid from '@/components/space/MetricGrid'
 
 const FAMOUS_ASTEROIDS = [
     { name: 'Bennu', size: '490 m', danger: true, color: '#ef4444', description: "L'astéroïde le plus étudié. La sonde OSIRIS-REx en a ramené des échantillons sur Terre en 2023 ! Il a 1 chance sur 2 700 d'impacter la Terre en 2182.", fun: 'Bennu fait un tour sur lui-même en 4h 17min et projette des cailloux dans l\'espace comme un petit volcan !' },
@@ -95,19 +96,16 @@ export default function AsteroidsPage() {
             </div>
 
             {/* Live KPIs */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '0.75rem', marginBottom: '2rem' }}>
-                {[
-                    { label: 'Proches cette semaine', val: loading ? '…' : error ? 'Indisponible' : `${total}`, color: '#6366f1' },
-                    { label: 'Potentiellement dangereux', val: loading ? '…' : error ? 'Indisponible' : `${dangerous}`, color: '#ef4444' },
-                    { label: 'Fenêtre analysée', val: '7 jours', color: '#f59e0b' },
-                    { label: 'Source', val: 'NeoWs', color: '#10b981' },
-                ].map(s => (
-                    <div key={s.label} className="card" style={{ padding: '1.25rem', textAlign: 'center' }}>
-                        <div style={{ fontSize: s.val === 'Indisponible' ? '0.9rem' : '1.6rem', fontFamily: 'Outfit, sans-serif', fontWeight: 900, color: s.color }}>{s.val}</div>
-                        <div style={{ color: '#64748b', fontSize: '0.75rem', marginTop: 4 }}>{s.label}</div>
-                    </div>
-                ))}
-            </div>
+            <MetricGrid
+                ariaLabel="Chiffres clés des passages d’astéroïdes"
+                className="metric-grid-block"
+                items={[
+                    { label: 'Proches cette semaine', value: loading ? '…' : error ? 'Indisponible' : total, color: '#818cf8' },
+                    { label: 'Potentiellement dangereux', value: loading ? '…' : error ? 'Indisponible' : dangerous, color: '#f87171' },
+                    { label: 'Fenêtre analysée', value: '7 jours', color: '#fbbf24' },
+                    { label: 'Source scientifique', value: 'NeoWs', color: '#34d399' },
+                ]}
+            />
 
             {/* Live close approaches table */}
             <div className="card" style={{ padding: '1.5rem', marginBottom: '2rem' }}>

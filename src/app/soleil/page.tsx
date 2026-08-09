@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import KidsGuide from '@/components/learning/KidsGuide'
+import MetricGrid from '@/components/space/MetricGrid'
 
 const Sun3D = dynamic(() => import('@/components/space/Sun3D'), { ssr: false })
 const SpaceWeatherDashboard = dynamic(() => import('@/components/space/SpaceWeatherDashboard'), { ssr: false })
@@ -110,16 +111,10 @@ export default function SoleilPage() {
 
             {/* ── STATS GRID ── */}
             <h2 className="section-title" style={{ color: '#e2e8f0' }}>📊 Le Soleil en chiffres</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {FACTS.map((f, i) => (
-                    <motion.div key={f.val} className="stat-card"
-                        initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.06 }}>
-                        <div style={{ fontSize: '1.8rem' }}>{f.emoji}</div>
-                        <div className="stat-value gradient-text-gold">{f.val}</div>
-                        <div className="stat-label">{f.label}</div>
-                    </motion.div>
-                ))}
-            </div>
+            <MetricGrid
+                ariaLabel="Chiffres clés du Soleil"
+                items={FACTS.map(f => ({ icon: f.emoji, value: f.val, label: f.label, color: '#fbbf24' }))}
+            />
 
             {/* ── CME EXPLAINER ── */}
             <div className="card" style={{ padding: '1.75rem', marginTop: '2rem' }}>

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import KidsGuide from '@/components/learning/KidsGuide'
 import DataSourceNote from '@/components/learning/DataSourceNote'
+import MetricGrid from '@/components/space/MetricGrid'
 import { SCIENTIFIC_SOURCES } from '@/lib/data/source-registry'
 
 interface WebbImage {
@@ -125,15 +126,11 @@ export default function JWSTPage() {
       />
 
       {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.625rem', marginBottom: '2.5rem' }} className="max-sm:grid-cols-2">
-        {SCIENCE_STATS.map((s, i) => (
-          <motion.div key={s.label} className="stat-card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-            <div style={{ fontSize: '1.4rem' }}>{s.icon}</div>
-            <div className="stat-value" style={{ color: '#a5b4fc', fontSize: '1rem' }}>{s.val}</div>
-            <div className="stat-label">{s.label}</div>
-          </motion.div>
-        ))}
-      </div>
+      <MetricGrid
+        ariaLabel="Chiffres clés du télescope James Webb"
+        className="metric-grid-block"
+        items={SCIENCE_STATS.map(s => ({ icon: s.icon, value: s.val, label: s.label, color: '#a5b4fc' }))}
+      />
 
       <h2 className="sr-only">Galeries d’images du télescope James Webb</h2>
       {/* Tabs */}

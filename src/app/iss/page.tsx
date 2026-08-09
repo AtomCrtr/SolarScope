@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic'
 import type { DashboardData, IssPosition } from '@/lib/data/space-data'
 import KidsGuide from '@/components/learning/KidsGuide'
 import DataSourceNote from '@/components/learning/DataSourceNote'
+import MetricGrid from '@/components/space/MetricGrid'
 
 const ISSGlobe = dynamic(() => import('@/components/space/ISSGlobe'), { ssr: false })
 
@@ -112,20 +113,16 @@ export default function ISSPage() {
             <DataSourceNote source="NASA / Human Spaceflight" href="https://www.nasa.gov/international-space-station/" refreshed="Position mise à jour par le site ; les repères restent affichés si le flux est indisponible" />
 
             {/* ISS Stats */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem', marginBottom: '2rem' }} className="max-sm:grid-cols-2">
-                {[
-                    { icon: '📍', label: 'Latitude', val: issPos ? formatLatLng(issPos.latitude, 'N', 'S') : missingPosition },
-                    { icon: '↔️', label: 'Longitude', val: issPos ? formatLatLng(issPos.longitude, 'E', 'O') : missingPosition },
-                    { icon: '🚀', label: 'Altitude', val: issPos ? `${issPos.altitude.toFixed(1)} km` : missingPosition },
-                    { icon: '⚡', label: 'Vitesse', val: issPos ? `${issPos.velocity.toFixed(0)} km/h` : missingPosition },
-                ].map(s => (
-                    <motion.div key={s.label} className="stat-card" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                        <div style={{ fontSize: '1.5rem' }}>{s.icon}</div>
-                        <div className="stat-value" style={{ color: '#60a5fa', fontSize: '1rem', fontFamily: 'monospace' }}>{s.val}</div>
-                        <div className="stat-label">{s.label}</div>
-                    </motion.div>
-                ))}
-            </div>
+            <MetricGrid
+                ariaLabel="Position et vitesse actuelles de l’ISS"
+                className="metric-grid-block"
+                items={[
+                    { icon: '📍', label: 'Latitude', value: issPos ? formatLatLng(issPos.latitude, 'N', 'S') : missingPosition, color: '#60a5fa', monospace: true },
+                    { icon: '↔️', label: 'Longitude', value: issPos ? formatLatLng(issPos.longitude, 'E', 'O') : missingPosition, color: '#60a5fa', monospace: true },
+                    { icon: '🚀', label: 'Altitude', value: issPos ? `${issPos.altitude.toFixed(1)} km` : missingPosition, color: '#60a5fa', monospace: true },
+                    { icon: '⚡', label: 'Vitesse', value: issPos ? `${issPos.velocity.toFixed(0)} km/h` : missingPosition, color: '#60a5fa', monospace: true },
+                ]}
+            />
 
             {/* Globe + crew side by side */}
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem', marginBottom: '2rem' }} className="max-sm:grid-cols-1">

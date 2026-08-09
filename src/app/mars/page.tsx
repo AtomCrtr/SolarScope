@@ -7,6 +7,7 @@ import Image from 'next/image'
 import KidsGuide from '@/components/learning/KidsGuide'
 import DataSourceNote from '@/components/learning/DataSourceNote'
 import MarsMission from '@/components/learning/MarsMission'
+import MetricGrid from '@/components/space/MetricGrid'
 import { SCIENTIFIC_SOURCES } from '@/lib/data/source-registry'
 import { MARS_DATA_CHECKED_ON, MARS_DATA_DISCLAIMER, MARS_FACTS, MARS_ROVER_MISSIONS, type MarsRoverId } from '@/lib/content/mars-data'
 
@@ -237,16 +238,11 @@ export default function MarsPage() {
             <MarsMission rover={activeMission} onChooseRover={setActiveRover} />
 
             {/* ── STATS ── */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.65rem', marginBottom: '2.5rem' }} className="max-sm:grid-cols-2">
-                {MARS_FACTS.map((s, i) => (
-                    <motion.div key={s.label} className="stat-card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-                        <div style={{ fontSize: '1.4rem' }}>{s.emoji}</div>
-                        <div className="stat-value" style={{ color: '#f87171', fontSize: '1.05rem' }}>{s.val}</div>
-                        <div className="stat-label">{s.label}</div>
-                    </motion.div>
-                ))}
-            </div>
-            <p style={{ color: '#94a3b8', fontSize: '0.72rem', lineHeight: 1.55, marginTop: '-1.85rem', marginBottom: '2.5rem' }}>
+            <MetricGrid
+                ariaLabel="Chiffres clés de Mars"
+                items={MARS_FACTS.map(s => ({ icon: s.emoji, value: s.val, label: s.label, color: '#f87171' }))}
+            />
+            <p className="metric-grid-note">
                 {MARS_DATA_DISCLAIMER}{' '}
                 <a href={SCIENTIFIC_SOURCES.marsFacts.href} target="_blank" rel="noopener noreferrer" style={{ color: '#fca5a5', textDecoration: 'underline', textUnderlineOffset: 3 }}>
                     Voir la fiche NASA

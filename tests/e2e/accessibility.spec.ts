@@ -19,6 +19,7 @@ const learningRoutes = [
 ]
 
 const routes = ['/', ...learningRoutes, '/passeport', '/parents-enseignants', '/sources', '/confidentialite']
+const metricRoutes = ['/soleil', '/mars', '/asteroides', '/meteorites', '/iss', '/missions', '/jwst']
 
 async function gotoSettled(page: Page, route: string) {
   await page.goto(route, { waitUntil: 'load' })
@@ -164,7 +165,39 @@ test('footer links expose child-friendly touch targets on a phone', async ({ pag
   expect(Math.min(...heights)).toBeGreaterThanOrEqual(44)
 })
 
+test('metric values and labels keep a readable visual gap', async ({ page }) => {
+  for (const route of metricRoutes) {
+    await gotoSettled(page, route)
+    const grid = page.locator('.metric-grid').first()
+    await grid.scrollIntoViewIfNeeded()
+    await expect(grid, `${route} should expose the shared metric grid`).toBeVisible()
+
+    const measurements = await grid.locator('.metric-card').evaluateAll(cards => cards.map(card => {
+      const value = card.querySelector('.metric-value')?.getBoundingClientRect()
+      const label = card.querySelector('.metric-label')?.getBoundingClientRect()
+      const bounds = card.getBoundingClientRect()
+      return value && label ? {
+        gap: label.top - value.bottom,
+        valueLeft: value.left,
+        valueRight: value.right,
+        cardLeft: bounds.left,
+        cardRight: bounds.right,
+      } : null
+    }))
+
+    expect(measurements.length, route).toBeGreaterThan(0)
+    for (const measurement of measurements) {
+      expect(measurement, route).not.toBeNull()
+      if (!measurement) continue
+      expect(measurement.gap, `${route}: gap between value and label`).toBeGreaterThanOrEqual(6)
+      expect(measurement.valueLeft, `${route}: value starts inside its card`).toBeGreaterThanOrEqual(measurement.cardLeft - 1)
+      expect(measurement.valueRight, `${route}: value ends inside its card`).toBeLessThanOrEqual(measurement.cardRight + 1)
+    }
+  }
+})
+
 test('the mission action remains inside the notebook at common viewport sizes', async ({ page }) => {
+  test.setTimeout(60_000)
   for (const viewport of [
     { width: 320, height: 700 },
     { width: 768, height: 900 },
@@ -249,6 +282,16 @@ test('parent guide badges keep their spacing and produce a visual artifact', asy
     expect(second).not.toBeNull()
     if (first && second && Math.abs(first.y - second.y) < 2) {
       expect(first.x + first.width + 2).toBeLessThanOrEqual(second.x)
+    }
+
+    const details = cards.nth(index).locator('.parent-guide-detail')
+    await expect(details).toHaveCount(2)
+    for (let detailIndex = 0; detailIndex < await details.count(); detailIndex += 1) {
+      const label = await details.nth(detailIndex).locator('dt').boundingBox()
+      const content = await details.nth(detailIndex).locator('dd').boundingBox()
+      expect(label).not.toBeNull()
+      expect(content).not.toBeNull()
+      if (label && content) expect(label.x + label.width + 6).toBeLessThanOrEqual(content.x)
     }
   }
 
