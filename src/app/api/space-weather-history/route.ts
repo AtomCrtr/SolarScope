@@ -1,60 +1,75 @@
 import { NextResponse } from 'next/server'
+import {
+  parseKpHistory,
+  parsePlasmaHistory,
+  type KpEntry,
+  type PlasmaEntry,
+  type SpaceWeatherHistoryPayload,
+} from '@/lib/data/space-weather-history'
 
-type KpEntry = { time: string; kp: number }
-type PlasmaEntry = { time: string; density: number; speed: number }
+const KP_URL = 'https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json'
+const PLASMA_URL = 'https://services.swpc.noaa.gov/products/geospace/propagated-solar-wind-1-hour.json'
 
-function finite(value: unknown) {
-  const parsed = Number(value)
-  return Number.isFinite(parsed) ? parsed : null
+let lastKnown: { kp: KpEntry[]; plasma: PlasmaEntry[]; cachedAt: string } | null = null
+
+async function fetchJson(url: string) {
+  const response = await fetch(url, {
+    signal: AbortSignal.timeout(8_000),
+    next: { revalidate: 900 },
+    headers: { 'User-Agent': 'SolarScope/1.0 educational astronomy app' },
+  })
+  if (!response.ok) throw new Error(`NOAA ${response.status}`)
+  return response.json() as Promise<unknown>
 }
 
 export async function GET() {
-  try {
-    const [kpResponse, plasmaResponse] = await Promise.all([
-      fetch('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json', {
-        signal: AbortSignal.timeout(8_000),
-        next: { revalidate: 900 },
-      }),
-      fetch('https://services.swpc.noaa.gov/products/solar-wind/plasma-7-day.json', {
-        signal: AbortSignal.timeout(8_000),
-        next: { revalidate: 900 },
-      }),
-    ])
+  const [kpResult, plasmaResult] = await Promise.allSettled([fetchJson(KP_URL), fetchJson(PLASMA_URL)])
+  const liveKp = kpResult.status === 'fulfilled' ? parseKpHistory(kpResult.value) : []
+  const livePlasma = plasmaResult.status === 'fulfilled' ? parsePlasmaHistory(plasmaResult.value) : []
+  const now = new Date().toISOString()
 
-    if (!kpResponse.ok || !plasmaResponse.ok) throw new Error('NOAA unavailable')
-    const [rawKp, rawPlasma] = await Promise.all([
-      kpResponse.json() as Promise<unknown>,
-      plasmaResponse.json() as Promise<unknown>,
-    ])
-
-    const kp: KpEntry[] = Array.isArray(rawKp)
-      ? rawKp.slice(1).flatMap((row) => {
-          if (!Array.isArray(row) || typeof row[0] !== 'string') return []
-          const value = finite(row[1])
-          return value === null || value < 0 || value > 9 ? [] : [{ time: row[0], kp: value }]
-        }).slice(-56)
-      : []
-
-    const plasma: PlasmaEntry[] = Array.isArray(rawPlasma)
-      ? rawPlasma.flatMap((row) => {
-          if (!Array.isArray(row) || typeof row[0] !== 'string' || row[0] === 'time_tag') return []
-          const density = finite(row[1])
-          const speed = finite(row[2])
-          return density === null || speed === null || density < 0 || speed < 0
-            ? []
-            : [{ time: row[0], density, speed }]
-        }).slice(-96)
-      : []
-
-    if (!kp.length || !plasma.length) throw new Error('NOAA returned invalid data')
+  const kp = liveKp.length ? liveKp : lastKnown?.kp ?? []
+  const plasma = livePlasma.length ? livePlasma : lastKnown?.plasma ?? []
+  if (!kp.length && !plasma.length) {
     return NextResponse.json(
-      { kp, plasma, updatedAt: new Date().toISOString() },
-      { headers: { 'Cache-Control': 'public, s-maxage=900, stale-while-revalidate=3600' } },
-    )
-  } catch {
-    return NextResponse.json(
-      { error: 'Historique NOAA temporairement indisponible.', kp: [], plasma: [] },
+      {
+        error: 'Historique NOAA temporairement indisponible.',
+        kp: [],
+        plasma: [],
+        updatedAt: now,
+        status: 'cached',
+        sources: { kp: 'unavailable', plasma: 'unavailable' },
+      },
       { status: 503, headers: { 'Cache-Control': 'no-store' } },
     )
   }
+
+  if (liveKp.length || livePlasma.length) {
+    lastKnown = {
+      kp: liveKp.length ? liveKp : lastKnown?.kp ?? [],
+      plasma: livePlasma.length ? livePlasma : lastKnown?.plasma ?? [],
+      cachedAt: now,
+    }
+  }
+
+  const kpState = liveKp.length ? 'live' : kp.length ? 'cached' : 'unavailable'
+  const plasmaState = livePlasma.length ? 'live' : plasma.length ? 'cached' : 'unavailable'
+  const status: SpaceWeatherHistoryPayload['status'] = kpState === 'live' && plasmaState === 'live'
+    ? 'live'
+    : kpState === 'cached' && plasmaState === 'cached'
+      ? 'cached'
+      : 'partial'
+  const payload: SpaceWeatherHistoryPayload = {
+    kp,
+    plasma,
+    updatedAt: now,
+    cachedAt: status === 'live' ? undefined : lastKnown?.cachedAt,
+    status,
+    sources: { kp: kpState, plasma: plasmaState },
+    warning: status === 'live' ? undefined : 'Une dernière série connue est affichée pour le flux indisponible.',
+  }
+
+  return NextResponse.json(payload, {
+    headers: { 'Cache-Control': 'public, s-maxage=900, stale-while-revalidate=86400' },
+  })
 }

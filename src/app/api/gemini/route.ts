@@ -3,9 +3,8 @@ import { checkDistributedRateLimit } from '@/lib/security/rate-limit'
 import { readJsonBody } from '@/lib/security/request-body'
 import { solarBotContentIsSafe, SOLARBOT_PRIVACY_REMINDER } from '@/lib/security/solarbot-safety'
 import { formatSolarBotSourceContext, selectSolarBotSources, toPublicSolarBotSources } from '@/lib/content/solarbot-sources'
+import { getGeminiConfig } from '@/lib/server/gemini-health'
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite'
 const MAX_BODY_BYTES = 32_000
 
 interface Message {
@@ -40,14 +39,14 @@ async function wait(milliseconds: number) {
 }
 
 async function requestGemini(payload: unknown): Promise<Response> {
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(GEMINI_MODEL)}:generateContent`
+  const { apiKey, endpoint } = getGeminiConfig()
 
   for (let attempt = 0; attempt < 2; attempt += 1) {
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-goog-api-key': GEMINI_API_KEY || '',
+        'x-goog-api-key': apiKey || '',
       },
       body: JSON.stringify(payload),
       signal: AbortSignal.timeout(20_000),
@@ -136,10 +135,10 @@ Appuie les faits astronomiques de ta réponse sur les repères officiels ci-dess
 
 ${sourceContext}`
 
-  if (!GEMINI_API_KEY) {
+  if (!getGeminiConfig().apiKey) {
     return NextResponse.json(
       { text: fallbackAnswer(question, mode), degraded: true, sources: publicSources },
-      { headers: { 'Cache-Control': 'no-store' } },
+      { headers: { 'Cache-Control': 'no-store', 'X-SolarBot-Mode': 'fallback' } },
     )
   }
 
@@ -175,12 +174,14 @@ ${sourceContext}`
     }
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
 
+    const degraded = !text
     return NextResponse.json(
-      { text: text || fallbackAnswer(question, mode), degraded: !text, sources: publicSources },
+      { text: text || fallbackAnswer(question, mode), degraded, sources: publicSources },
       {
         headers: {
           'Cache-Control': 'no-store',
           'X-RateLimit-Remaining': String(rateLimit.remaining),
+          'X-SolarBot-Mode': degraded ? 'fallback' : 'gemini',
         },
       },
     )

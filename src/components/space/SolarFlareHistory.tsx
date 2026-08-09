@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { readSpaceWeatherHistoryCache, storeSpaceWeatherHistoryCache } from '@/lib/client/space-weather-history-cache'
+import type { HistorySourceState, PlasmaEntry, SpaceWeatherHistoryPayload } from '@/lib/data/space-weather-history'
 
 interface SolarFlare {
     beginTime: string
@@ -9,13 +11,6 @@ interface SolarFlare {
     classType: string
     sourceLocation?: string
     linkedEvents?: unknown[]
-}
-
-interface SolarWindEntry {
-    time: string
-    speed: number
-    density: number
-    bz: number
 }
 
 function getFlareColor(cls: string): string {
@@ -34,8 +29,11 @@ function getFlareDesc(cls: string): string {
 
 export default function SolarFlareHistory() {
     const [flares, setFlares] = useState<SolarFlare[]>([])
-    const [wind, setWind] = useState<SolarWindEntry[]>([])
-    const [loading, setLoading] = useState(true)
+    const [wind, setWind] = useState<PlasmaEntry[]>([])
+    const [flareLoading, setFlareLoading] = useState(true)
+    const [windLoading, setWindLoading] = useState(true)
+    const [windState, setWindState] = useState<HistorySourceState>('unavailable')
+    const [windCachedAt, setWindCachedAt] = useState<string | null>(null)
 
     useEffect(() => {
         // Solar flare history (NOAA SWPC)
@@ -45,16 +43,23 @@ export default function SolarFlareHistory() {
                 setFlares(Array.isArray(data) ? data.slice(-20).reverse() : [])
             })
             .catch(() => setFlares([]))
+            .finally(() => setFlareLoading(false))
 
         // Solar wind data (NOAA real-time)
         fetch('/api/space-weather-history')
-            .then(r => r.json())
-            .then((payload: { plasma?: Array<Omit<SolarWindEntry, 'bz'>> }) => {
-                const recent = (Array.isArray(payload.plasma) ? payload.plasma : []).slice(-48).map(row => ({ ...row, bz: 0 }))
+            .then(async r => ({ ok: r.ok, payload: await r.json() as SpaceWeatherHistoryPayload }))
+            .then(({ ok, payload }) => {
+                if (ok) storeSpaceWeatherHistoryCache(payload)
+                const localCache = readSpaceWeatherHistoryCache()
+                const rows = Array.isArray(payload.plasma) && payload.plasma.length ? payload.plasma : localCache?.plasma ?? []
+                const recent = rows.slice(-48)
                 setWind(recent)
+                const usingLocalCache = !payload.plasma?.length && Boolean(localCache?.plasma.length)
+                setWindState(recent.length ? (usingLocalCache ? 'cached' : payload.sources?.plasma ?? 'live') : 'unavailable')
+                setWindCachedAt(usingLocalCache ? localCache?.updatedAt ?? null : payload.cachedAt ?? payload.updatedAt ?? null)
             })
-            .catch(() => { })
-            .finally(() => setLoading(false))
+            .catch(() => setWindState('unavailable'))
+            .finally(() => setWindLoading(false))
     }, [])
 
     const latestWind = wind[wind.length - 1]
@@ -67,12 +72,18 @@ export default function SolarFlareHistory() {
         <>
             {/* Solar Wind */}
             <div className="card" style={{ padding: '1.75rem', marginBottom: '2rem' }}>
+                {windState === 'cached' && (
+                    <div role="status" className="space-data-status is-cached">
+                        <strong>Dernières valeurs connues</strong>
+                        <span>Le vent solaire n’est pas actualisé{windCachedAt ? ` · cache du ${new Date(windCachedAt).toLocaleString('fr-FR')}` : ''}.</span>
+                    </div>
+                )}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
                     <div>
                         <h2 className="section-title" style={{ color: '#60a5fa', marginBottom: '0.25rem' }}>
                             🌬️ Vent Solaire — Données ACE/DSCOVR
                         </h2>
-                        <p style={{ color: '#64748b', fontSize: '0.8rem' }}>Mesures en temps réel à 1,5 million km de la Terre (L1)</p>
+                        <p style={{ color: '#64748b', fontSize: '0.8rem' }}>Mesures {windState === 'cached' ? 'mises en cache' : 'en temps réel'} à 1,5 million km de la Terre (L1)</p>
                     </div>
                     {latestWind && (
                         <div style={{ display: 'flex', gap: '1rem' }}>
@@ -88,6 +99,13 @@ export default function SolarFlareHistory() {
                     )}
                 </div>
 
+                {windLoading ? (
+                    <div role="status" className="space-data-empty">⏳ Chargement du vent solaire NOAA…</div>
+                ) : windState === 'unavailable' || !windChart.length ? (
+                    <div role="status" className="space-data-empty is-unavailable">
+                        📡 Données du vent solaire temporairement indisponibles. Aucune courbe vide n’est présentée comme une mesure réelle.
+                    </div>
+                ) : <>
                 {/* SVG wind speed chart */}
                 <div style={{ background: 'rgba(0,0,0,0.2)', borderRadius: '0.75rem', overflow: 'hidden', padding: '0.5rem' }}>
                     <svg role="img" aria-label="Historique de la vitesse du vent solaire" width="100%" viewBox={`0 0 ${windChart.length * 14} 80`} preserveAspectRatio="none" style={{ display: 'block', height: 80 }}>
@@ -121,8 +139,9 @@ export default function SolarFlareHistory() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.4rem', fontSize: '0.7rem', color: '#64748b' }}>
                     <span>Il y a 12h</span>
                     <span style={{ color: '#f97316' }}>— seuil 500 km/s</span>
-                    <span>Maintenant</span>
+                    <span>{windState === 'cached' ? 'Dernière mesure' : 'Maintenant'}</span>
                 </div>
+                </>}
             </div>
 
             {/* Flare history */}
@@ -134,7 +153,7 @@ export default function SolarFlareHistory() {
                     Source : NASA DONKI (Database Of Notifications, Knowledge, Information) · Actualisé chaque heure
                 </p>
 
-                {loading ? (
+                {flareLoading ? (
                     <div style={{ textAlign: 'center', padding: '2rem', color: '#64748b' }}>⏳ Chargement des éruptions...</div>
                 ) : flares.length === 0 ? (
                     <div style={{ textAlign: 'center', padding: '2rem', color: '#64748b' }}>

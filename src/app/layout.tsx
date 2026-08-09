@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import Navbar from '@/components/layout/Navbar'
 import StarField from '@/components/layout/StarField'
-import SolarBotWidget from '@/components/assistant/SolarBotWidget'
+import SolarBotWidgetBoundary from '@/components/assistant/SolarBotWidgetBoundary'
 import Footer from '@/components/layout/Footer'
 import Breadcrumb from '@/components/layout/Breadcrumb'
 import ProgressTracker from '@/components/learning/ProgressTracker'
@@ -85,7 +85,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
         <Footer />
-        <SolarBotWidget />
+        <SolarBotWidgetBoundary />
         <ServiceWorkerRegistration />
       </body>
     </html>

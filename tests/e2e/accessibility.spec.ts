@@ -143,6 +143,23 @@ test('the homepage keeps its learning paths visible in a short desktop viewport'
   }
 })
 
+test('the mobile learning guide keeps its summary visible and resumes the last opened step', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.addInitScript(() => localStorage.setItem('solarscope:guide:mars:section', 'challenge'))
+  await page.goto('/mars', { waitUntil: 'domcontentloaded' })
+
+  const guide = page.locator('[data-learning-guide="mars"]')
+  await expect(guide.locator('.kids-guide-summary')).toBeVisible()
+  await expect(guide.locator('[data-guide-toc]')).toBeVisible()
+  await expect(guide.locator('[data-guide-section="challenge"]')).toBeVisible()
+  await expect(guide.locator('[data-guide-section="remember"]')).toBeHidden()
+
+  await guide.getByRole('button', { name: /À retenir/ }).click()
+  await expect(guide.locator('[data-guide-section="remember"]')).toBeVisible()
+  await page.reload({ waitUntil: 'domcontentloaded' })
+  await expect(page.locator('[data-learning-guide="mars"] [data-guide-section="remember"]')).toBeVisible()
+})
+
 test('the broken light theme cannot be restored from old browser storage', async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem('solarscope-theme', 'light'))
   await gotoSettled(page, '/')
@@ -275,6 +292,38 @@ test('SolarBot displays the official sources returned with an answer', async ({ 
   const source = page.getByRole('link', { name: /NASA Science — Stars/ })
   await expect(source).toBeVisible()
   await expect(source).toHaveAttribute('href', 'https://science.nasa.gov/universe/stars/')
+})
+
+test('SolarBot hides the floating duplicate and reports its real runtime mode', async ({ page }) => {
+  await page.route('**/api/health', route => route.fulfill({ status: 503, json: {
+    status: 'degraded',
+    sources: { gemini: false },
+    features: { solarBot: 'fallback' },
+  } }))
+
+  await page.goto('/solarbot', { waitUntil: 'domcontentloaded' })
+  await expect(page.locator('.solarbot-launcher')).toHaveCount(0)
+  await expect(page.getByText('Mode de secours', { exact: true })).toBeVisible()
+  expect(await page.evaluate(() => window.scrollY)).toBeLessThan(10)
+
+  await page.goto('/mars', { waitUntil: 'domcontentloaded' })
+  await page.getByRole('button', { name: 'Ouvrir SolarBot' }).click()
+  await expect(page.getByText('Mode de secours', { exact: true })).toBeVisible()
+})
+
+test('space-weather charts explicitly identify cached NOAA values', async ({ page }) => {
+  await page.route('**/api/space-weather-history', route => route.fulfill({ json: {
+    kp: [{ time: '2026-08-09T18:00:00Z', kp: 4 }],
+    plasma: [{ time: '2026-08-09T19:00:00Z', speed: 430, density: 5.2 }],
+    updatedAt: '2026-08-09T20:00:00Z',
+    cachedAt: '2026-08-09T19:00:00Z',
+    status: 'cached',
+    sources: { kp: 'cached', plasma: 'cached' },
+  } }))
+  await page.goto('/soleil', { waitUntil: 'domcontentloaded' })
+  await expect(page.getByText('Dernières valeurs connues', { exact: true })).toHaveCount(2)
+  await expect(page.getByText(/Ces données ne sont pas en direct/)).toBeVisible()
+  await expect(page.getByText(/Le vent solaire n’est pas actualisé/)).toBeVisible()
 })
 
 test('the homepage remembers the 12+ route and shows its appropriate mission', async ({ page }) => {

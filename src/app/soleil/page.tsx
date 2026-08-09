@@ -5,6 +5,8 @@ import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import KidsGuide from '@/components/learning/KidsGuide'
 import MetricGrid from '@/components/space/MetricGrid'
+import KpChart from '@/components/space/KpChart'
+import SolarFlareHistory from '@/components/space/SolarFlareHistory'
 
 const Sun3D = dynamic(() => import('@/components/space/Sun3D'), { ssr: false })
 const SpaceWeatherDashboard = dynamic(() => import('@/components/space/SpaceWeatherDashboard'), { ssr: false })
@@ -153,6 +155,11 @@ export default function SoleilPage() {
             <div style={{ marginTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
                 <SpaceWeatherDashboard />
             </div>
+
+            <section aria-label="Historique de la météo spatiale" style={{ marginTop: '2rem' }}>
+                <KpChart />
+                <SolarFlareHistory />
+            </section>
         </div>
     )
 }

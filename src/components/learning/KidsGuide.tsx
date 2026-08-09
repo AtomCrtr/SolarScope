@@ -9,6 +9,14 @@ type KidsGuideProps = {
   topic: LearningTopicId
 }
 
+type GuideSection = 'remember' | 'words' | 'challenge'
+
+const GUIDE_SECTIONS: Array<{ id: GuideSection; fr: string; en: string; icon: string }> = [
+  { id: 'remember', fr: 'À retenir', en: 'Remember', icon: '💡' },
+  { id: 'words', fr: 'Mots utiles', en: 'Useful words', icon: '🔭' },
+  { id: 'challenge', fr: 'Défi express', en: 'Quick challenge', icon: '🎯' },
+]
+
 const ENGLISH_GUIDES: Partial<Record<LearningTopicId, LearningTopic>> = {
   planetes: { label: 'PLANET MISSION', question: 'Why are the eight planets so different?', summary: 'The eight planets travel around the Sun. The four closest planets are mostly rocky. The four farthest ones are giant worlds made mainly of gas or ice.', analogy: 'Imagine a huge race track: every planet travels in its own lane around the Sun.', takeaways: ['Our Solar System has eight planets.', 'A planet follows a regular path around the Sun.', 'Earth is the only planet where we know life exists.'], glossary: [{ term: 'Orbit', definition: 'The path an object follows around another object in space.' }, { term: 'Rocky planet', definition: 'A planet with solid ground, like Earth or Mars.' }], deepDive: 'Planets are not lined up perfectly and their paths are slightly oval. The farther a planet is from the Sun, the longer it takes to travel around it.', challenge: 'Choose two planets. Compare their size, temperature and number of moons.' },
   mars: { label: 'MARS MISSION', question: 'Why is Mars red?', summary: 'Mars has lots of iron in its soil. The iron reacted with oxygen and made rust-coloured dust. Martian winds spread that dust over almost the whole planet.', analogy: 'Mars is red for the same reason an old iron bicycle can become rusty.', takeaways: ['Mars is a rocky, cold and desert-like planet.', 'Its colour mostly comes from rusty dust.', 'Robots explore it before a possible human journey.'], glossary: [{ term: 'Rover', definition: 'A wheeled robot sent to explore another world.' }, { term: 'Atmosphere', definition: 'The layer of gas around a planet.' }], deepDive: 'Mars has a very thin atmosphere made mostly of carbon dioxide. It has water ice, but no evidence of life living there today has been found.', challenge: 'Look at a rover. Can you find the tools it uses to see, drive and study rocks?' },
@@ -21,6 +29,7 @@ export default function KidsGuide({ topic }: KidsGuideProps) {
   const lesson = locale === 'en' ? ENGLISH_GUIDES[topic] || LEARNING_TOPICS[topic] : LEARNING_TOPICS[topic]
   const [speaking, setSpeaking] = useState(false)
   const [juniorMode, setJuniorMode] = useState(false)
+  const [activeSection, setActiveSection] = useState<GuideSection | null>('remember')
   const titleId = `kids-guide-${topic}`
   const visibleTakeaways = juniorMode ? lesson.takeaways.slice(0, 2) : lesson.takeaways
   const structuredData = useMemo(() => JSON.stringify({
@@ -43,10 +52,42 @@ export default function KidsGuide({ topic }: KidsGuideProps) {
   ].join(' '), [lesson, locale])
 
   useEffect(() => {
+    try {
+      const saved = localStorage.getItem(`solarscope:guide:${topic}:section`)
+      if (saved === 'closed') queueMicrotask(() => setActiveSection(null))
+      if (GUIDE_SECTIONS.some(section => section.id === saved)) queueMicrotask(() => setActiveSection(saved as GuideSection))
+    } catch {
+      // Storage may be unavailable; the first step remains open.
+    }
+  }, [topic])
+
+  useEffect(() => {
     return () => {
       window.speechSynthesis?.cancel()
     }
   }, [])
+
+  const selectSection = (section: GuideSection) => {
+    const next = activeSection === section ? null : section
+    setActiveSection(next)
+    try {
+      localStorage.setItem(`solarscope:guide:${topic}:section`, next ?? 'closed')
+    } catch {
+      // The guide still works when browser storage is disabled.
+    }
+  }
+
+  const toggleJuniorMode = () => {
+    setJuniorMode(value => !value)
+    if (!juniorMode && activeSection === 'words') {
+      setActiveSection('remember')
+      try {
+        localStorage.setItem(`solarscope:guide:${topic}:section`, 'remember')
+      } catch {
+        // The guide still works when browser storage is disabled.
+      }
+    }
+  }
 
   const toggleSpeech = () => {
     if (!('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) return
@@ -76,7 +117,7 @@ export default function KidsGuide({ topic }: KidsGuideProps) {
           <h2 id={titleId}>{lesson.question}</h2>
         </div>
         <div className="kids-guide-actions">
-          <button type="button" className="kids-mode-button" aria-pressed={juniorMode} onClick={() => setJuniorMode(value => !value)}>
+          <button type="button" className="kids-mode-button" aria-pressed={juniorMode} onClick={toggleJuniorMode}>
             {juniorMode ? (locale === 'en' ? '🚀 Full version' : '🚀 Version complète') : (locale === 'en' ? '🧒 Ages 6–8' : '🧒 Mode 6–8 ans')}
           </button>
           <button type="button" className="kids-listen-button" aria-pressed={speaking} onClick={toggleSpeech}>
@@ -87,49 +128,73 @@ export default function KidsGuide({ topic }: KidsGuideProps) {
 
       <p className="kids-guide-summary">{lesson.summary}</p>
 
-      <div className="kids-analogy">
-        <span aria-hidden="true">💭</span>
-        <p><strong>{locale === 'en' ? 'Imagine:' : 'Imagine :'}</strong> {lesson.analogy}</p>
-      </div>
-
-      <div className="kids-takeaways">
-        <h3>{juniorMode ? (locale === 'en' ? '2 quick ideas' : '2 idées rapides') : (locale === 'en' ? '3 ideas to remember' : 'Les 3 idées à retenir')}</h3>
-        <ol>
-          {visibleTakeaways.map((takeaway, index) => (
-            <li key={takeaway}><span>{index + 1}</span><p>{takeaway}</p></li>
+      <nav className="kids-guide-toc" aria-label={locale === 'en' ? 'Mission steps' : 'Étapes de la mission'} data-guide-toc>
+        <span>{locale === 'en' ? 'Mission path' : 'Parcours'}</span>
+        <div>
+          {GUIDE_SECTIONS.filter(section => !juniorMode || section.id !== 'words').map(section => (
+            <button
+              key={section.id}
+              type="button"
+              aria-controls={`${titleId}-${section.id}`}
+              aria-expanded={activeSection === section.id}
+              className={activeSection === section.id ? 'is-active' : undefined}
+              onClick={() => selectSection(section.id)}
+            >
+              <span aria-hidden="true">{section.icon}</span>{locale === 'en' ? section.en : section.fr}
+            </button>
           ))}
-        </ol>
+        </div>
+      </nav>
+
+      <div id={`${titleId}-remember`} className={`kids-progressive-panel${activeSection === 'remember' ? ' is-active' : ''}`} data-guide-section="remember">
+        <div className="kids-analogy">
+          <span aria-hidden="true">💭</span>
+          <p><strong>{locale === 'en' ? 'Imagine:' : 'Imagine :'}</strong> {lesson.analogy}</p>
+        </div>
+
+        <div className="kids-takeaways">
+          <h3>{juniorMode ? (locale === 'en' ? '2 quick ideas' : '2 idées rapides') : (locale === 'en' ? '3 ideas to remember' : 'Les 3 idées à retenir')}</h3>
+          <ol>
+            {visibleTakeaways.map((takeaway, index) => (
+              <li key={takeaway}><span>{index + 1}</span><p>{takeaway}</p></li>
+            ))}
+          </ol>
+        </div>
       </div>
 
-      {!juniorMode && <div className="kids-glossary" aria-label={locale === 'en' ? 'Useful words' : 'Mots utiles'}>
-        {lesson.glossary.map(item => (
-          <div key={item.term}>
-            <strong>{item.term}</strong>
-            <span>{item.definition}</span>
-          </div>
-        ))}
+      {!juniorMode && <div id={`${titleId}-words`} className={`kids-progressive-panel${activeSection === 'words' ? ' is-active' : ''}`} data-guide-section="words">
+        <div className="kids-glossary" aria-label={locale === 'en' ? 'Useful words' : 'Mots utiles'}>
+          {lesson.glossary.map(item => (
+            <div key={item.term}>
+              <strong>{item.term}</strong>
+              <span>{item.definition}</span>
+            </div>
+          ))}
+        </div>
+
+        <details className="kids-deep-dive">
+          <summary>{locale === 'en' ? '🔭 I want to go further' : '🔭 Je veux aller plus loin'}</summary>
+          <p>{lesson.deepDive}</p>
+        </details>
       </div>}
 
-      {!juniorMode && <details className="kids-deep-dive">
-        <summary>{locale === 'en' ? '🔭 I want to go further' : '🔭 Je veux aller plus loin'}</summary>
-        <p>{lesson.deepDive}</p>
-      </details>}
-
-      <div className="kids-challenge">
-        <span aria-hidden="true">🎯</span>
-        <p><strong>{locale === 'en' ? 'Your turn:' : 'À toi de jouer :'}</strong> {lesson.challenge}</p>
-      </div>
-
-      <div className="kids-quick-mission" data-quick-mission>
-        <div>
-          <span aria-hidden="true">⏱️</span>
-          <h3>{locale === 'en' ? '5-minute mission' : 'Mission express · 5 min'}</h3>
+      <div id={`${titleId}-challenge`} className={`kids-progressive-panel${activeSection === 'challenge' ? ' is-active' : ''}`} data-guide-section="challenge">
+        <div className="kids-challenge">
+          <span aria-hidden="true">🎯</span>
+          <p><strong>{locale === 'en' ? 'Your turn:' : 'À toi de jouer :'}</strong> {lesson.challenge}</p>
         </div>
-        <ol>
-          <li>{locale === 'en' ? 'Read the big question.' : 'Lis la grande question.'}</li>
-          <li>{locale === 'en' ? 'Try one action or comparison.' : 'Essaie une action ou une comparaison.'}</li>
-          <li>{locale === 'en' ? 'Tell someone one thing you discovered.' : 'Raconte une chose que tu as découverte.'}</li>
-        </ol>
+
+        <div className="kids-quick-mission" data-quick-mission>
+          <div>
+            <span aria-hidden="true">⏱️</span>
+            <h3>{locale === 'en' ? '5-minute mission' : 'Mission express · 5 min'}</h3>
+          </div>
+          <ol>
+            <li>{locale === 'en' ? 'Read the big question.' : 'Lis la grande question.'}</li>
+            <li>{locale === 'en' ? 'Try one action or comparison.' : 'Essaie une action ou une comparaison.'}</li>
+            <li>{locale === 'en' ? 'Tell someone one thing you discovered.' : 'Raconte une chose que tu as découverte.'}</li>
+          </ol>
+        </div>
       </div>
 
       {topic !== 'quiz' && <MissionStamp mission={topic} />}

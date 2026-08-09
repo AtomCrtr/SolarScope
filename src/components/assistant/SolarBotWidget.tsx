@@ -4,6 +4,7 @@ import { Fragment, useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import SolarBotSourceLinks, { SolarBotReliabilityNote } from '@/components/assistant/SolarBotSourceLinks'
 import type { PublicSolarBotSource } from '@/lib/content/solarbot-sources'
+import SolarBotStatus, { type SolarBotRuntimeStatus, useSolarBotStatus } from '@/components/assistant/SolarBotStatus'
 
 interface Message {
     role: 'user' | 'bot'
@@ -12,7 +13,7 @@ interface Message {
     degraded?: boolean
 }
 
-type SolarBotAnswer = { text: string; sources: PublicSolarBotSource[]; degraded: boolean }
+type SolarBotAnswer = { text: string; sources: PublicSolarBotSource[]; degraded: boolean; status: Exclude<SolarBotRuntimeStatus, 'checking'> }
 
 const QUICK_QUESTIONS = [
     'Pourquoi les étoiles brillent ?',
@@ -29,10 +30,11 @@ async function askSolarBot(question: string, history: Message[]): Promise<SolarB
             body: JSON.stringify({ question, history }),
         })
         const data = await res.json()
-        if (!res.ok) return { text: data.error ?? '🤖 Réessaie !', sources: [], degraded: true }
-        return { text: data.text ?? '🤖 Réessaie !', sources: Array.isArray(data.sources) ? data.sources : [], degraded: Boolean(data.degraded) }
+        if (!res.ok) return { text: data.error ?? '🤖 Réessaie !', sources: [], degraded: true, status: 'unavailable' }
+        const degraded = Boolean(data.degraded)
+        return { text: data.text ?? '🤖 Réessaie !', sources: Array.isArray(data.sources) ? data.sources : [], degraded, status: degraded ? 'fallback' : 'available' }
     } catch {
-        return { text: '🌐 Erreur de connexion. Réessaie !', sources: [], degraded: true }
+        return { text: '🌐 Erreur de connexion. Réessaie !', sources: [], degraded: true, status: 'unavailable' }
     }
 }
 
@@ -54,6 +56,7 @@ function FormattedText({ text }: { text: string }) {
 }
 
 export default function SolarBotWidget() {
+    const { status, updateFromAnswer } = useSolarBotStatus()
     const [open, setOpen] = useState(false)
     const [messages, setMessages] = useState<Message[]>([
         { role: 'bot', text: "👋 Salut ! Je suis SolarBot 🚀\nPose-moi n'importe quelle question sur l'espace !" }
@@ -86,6 +89,7 @@ export default function SolarBotWidget() {
         setMessages(prev => [...prev, userMsg])
         setLoading(true)
         const answer = await askSolarBot(q, messages)
+        updateFromAnswer(answer.status)
         setMessages(prev => [...prev, { role: 'bot', text: answer.text, sources: answer.sources, degraded: answer.degraded }])
         setLoading(false)
     }
@@ -181,10 +185,7 @@ export default function SolarBotWidget() {
                             }}>🤖</div>
                             <div style={{ flex: 1 }}>
                                 <div style={{ color: '#e2e8f0', fontWeight: 700, fontSize: '0.9rem', fontFamily: 'Outfit, sans-serif' }}>SolarBot</div>
-                                <div style={{ color: '#10b981', fontSize: '0.7rem', display: 'flex', alignItems: 'center', gap: 4 }}>
-                                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981', display: 'inline-block' }} />
-                                    En ligne · Propulsé par Gemini
-                                </div>
+                                <SolarBotStatus status={status} compact />
                             </div>
                             <button onClick={() => setMessages([messages[0]])} aria-label="Effacer la conversation" title="Effacer" style={{ background: 'none', border: 'none', color: '#475569', cursor: 'pointer', fontSize: '0.8rem', padding: '4px' }}>🗑</button>
                         </div>

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import KidsGuide from '@/components/learning/KidsGuide'
 import SolarBotSourceLinks, { SolarBotReliabilityNote } from '@/components/assistant/SolarBotSourceLinks'
 import type { PublicSolarBotSource } from '@/lib/content/solarbot-sources'
+import SolarBotStatus, { type SolarBotRuntimeStatus, useSolarBotStatus } from '@/components/assistant/SolarBotStatus'
 
 interface Message {
     role: 'user' | 'bot'
@@ -14,7 +15,7 @@ interface Message {
     degraded?: boolean
 }
 
-type SolarBotAnswer = { text: string; sources: PublicSolarBotSource[]; degraded: boolean }
+type SolarBotAnswer = { text: string; sources: PublicSolarBotSource[]; degraded: boolean; status: Exclude<SolarBotRuntimeStatus, 'checking'> }
 
 const QUICK_QUESTIONS = [
     'Pourquoi les étoiles brillent-elles ?',
@@ -43,14 +44,16 @@ async function askSolarBot(question: string, history: Message[], mode: 'chat' | 
             body: JSON.stringify({ question, history, mode }),
         })
         const data = await res.json()
-        if (!res.ok) return { text: data.error ?? '🤖 SolarBot réfléchit encore... Réessaie !', sources: [], degraded: true }
+        if (!res.ok) return { text: data.error ?? '🤖 SolarBot réfléchit encore... Réessaie !', sources: [], degraded: true, status: 'unavailable' }
+        const degraded = Boolean(data.degraded)
         return {
             text: data.text ?? '🤖 SolarBot réfléchit encore... Réessaie !',
             sources: Array.isArray(data.sources) ? data.sources : [],
-            degraded: Boolean(data.degraded),
+            degraded,
+            status: degraded ? 'fallback' : 'available',
         }
     } catch {
-        return { text: '🌐 Erreur de connexion. Vérifie ta connexion Internet et réessaie.', sources: [], degraded: true }
+        return { text: '🌐 Erreur de connexion. Vérifie ta connexion Internet et réessaie.', sources: [], degraded: true, status: 'unavailable' }
     }
 }
 
@@ -72,6 +75,7 @@ function FormattedText({ text }: { text: string }) {
 }
 
 export default function SolarBotPage() {
+    const { status, updateFromAnswer } = useSolarBotStatus()
     const [messages, setMessages] = useState<Message[]>([
         { role: 'bot', text: '👋 Bonjour ! Je suis **SolarBot**, ton compagnon spatial. 🚀\n\nPose une question à la fois et je l\'expliquerai avec des mots simples. Je peux parfois me tromper : vérifie les faits importants et ne partage jamais ton nom complet, ton adresse ou ton école.', time: 'maintenant' }
     ])
@@ -83,10 +87,12 @@ export default function SolarBotPage() {
     const [storyDegraded, setStoryDegraded] = useState(false)
     const [storyLoading, setStoryLoading] = useState(false)
     const [selectedTheme, setSelectedTheme] = useState(0)
-    const bottomRef = useRef<HTMLDivElement>(null)
+    const messagesRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
-        bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+        if (messages.length <= 1 && !loading) return
+        const panel = messagesRef.current
+        panel?.scrollTo({ top: panel.scrollHeight, behavior: 'smooth' })
     }, [messages, loading])
 
     const sendMessage = async (text?: string) => {
@@ -98,6 +104,7 @@ export default function SolarBotPage() {
         setMessages(prev => [...prev, userMsg])
         setLoading(true)
         const answer = await askSolarBot(q, messages)
+        updateFromAnswer(answer.status)
         setMessages(prev => [...prev, { role: 'bot', text: answer.text, sources: answer.sources, degraded: answer.degraded, time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }])
         setLoading(false)
     }
@@ -105,6 +112,7 @@ export default function SolarBotPage() {
     const generateStory = async () => {
         setStoryLoading(true)
         const answer = await askSolarBot(STORY_THEMES[selectedTheme].prompt, [], 'story')
+        updateFromAnswer(answer.status)
         setStory(answer.text)
         setStorySources(answer.sources)
         setStoryDegraded(answer.degraded)
@@ -114,8 +122,8 @@ export default function SolarBotPage() {
     return (
         <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem', maxWidth: 860 }}>
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="page-header">
-                <div className="badge" style={{ background: 'rgba(139,92,246,0.12)', color: '#a78bfa', borderColor: 'rgba(139,92,246,0.25)' }}>
-                    🤖 PROPULSÉ PAR GOOGLE GEMINI AI
+                <div className="badge solarbot-hero-status" style={{ background: 'rgba(139,92,246,0.12)', color: '#a78bfa', borderColor: 'rgba(139,92,246,0.25)' }}>
+                    🤖 <SolarBotStatus status={status} />
                 </div>
                 <h1 className="page-title" style={{ background: 'linear-gradient(135deg, #e9d5ff, #8b5cf6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
                     SolarBot
@@ -156,7 +164,7 @@ export default function SolarBotPage() {
                         {/* Chat window */}
                         <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
                             {/* Messages */}
-                            <div aria-live="polite" aria-busy={loading} style={{ height: 420, overflowY: 'auto', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                            <div ref={messagesRef} aria-live="polite" aria-busy={loading} style={{ height: 420, overflowY: 'auto', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                                 {messages.map((msg, i) => (
                                     <motion.div key={i}
                                         initial={{ opacity: 0, y: 10, scale: 0.96 }}
@@ -195,7 +203,6 @@ export default function SolarBotPage() {
                                         </div>
                                     </div>
                                 )}
-                                <div ref={bottomRef} />
                             </div>
 
                             {/* Input */}
@@ -234,8 +241,8 @@ export default function SolarBotPage() {
                 ) : (
                     <motion.div key="story" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
                         <div className="card" style={{ padding: '2rem', marginBottom: '1.5rem' }}>
-                            <h2 className="section-title" style={{ color: '#c084fc' }}>📖 Histoires spatiales générées par Gemini</h2>
-                            <p style={{ color: '#64748b', fontSize: '0.85rem', marginBottom: '1.5rem' }}>Choisis un thème et l&apos;IA écrit une aventure rien que pour toi !</p>
+                            <h2 className="section-title" style={{ color: '#c084fc' }}>📖 Histoires spatiales assistées</h2>
+                            <p style={{ color: '#64748b', fontSize: '0.85rem', marginBottom: '1.5rem' }}>Choisis un thème. Gemini écrit l’aventure lorsqu’il est disponible ; sinon SolarBot propose une histoire de secours clairement signalée.</p>
 
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '0.75rem', marginBottom: '1.5rem' }}>
                                 {STORY_THEMES.map((t, i) => (
@@ -252,7 +259,7 @@ export default function SolarBotPage() {
                             </div>
 
                             <button onClick={generateStory} disabled={storyLoading} className="btn-primary" style={{ width: '100%', justifyContent: 'center', opacity: storyLoading ? 0.7 : 1 }}>
-                                {storyLoading ? '✨ Gemini écrit...' : '✨ Générer l\'histoire !'}
+                                {storyLoading ? '✨ SolarBot écrit…' : '✨ Générer l\'histoire !'}
                             </button>
 
                             {story && (

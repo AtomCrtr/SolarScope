@@ -6,8 +6,31 @@ import {
   parseXrayPayload,
   stationForCraft,
 } from '../../src/lib/data/space-data'
+import { parseKpHistory, parsePlasmaHistory } from '../../src/lib/data/space-weather-history'
 
 describe('space data normalization', () => {
+  it('reads the current NOAA Kp object format and the former tabular format', () => {
+    expect(parseKpHistory([
+      { time_tag: '2026-08-09T18:00:00Z', Kp: 3.67 },
+      { time_tag: '2026-08-09T21:00:00Z', Kp: 4 },
+    ])).toEqual([
+      { time: '2026-08-09T18:00:00Z', kp: 3.67 },
+      { time: '2026-08-09T21:00:00Z', kp: 4 },
+    ])
+
+    expect(parseKpHistory([
+      ['time_tag', 'Kp'],
+      ['2026-08-09T18:00:00Z', 3],
+    ])).toEqual([{ time: '2026-08-09T18:00:00Z', kp: 3 }])
+  })
+
+  it('reads speed and density from the replacement NOAA propagated wind feed', () => {
+    expect(parsePlasmaHistory([
+      ['time_tag', 'speed', 'density', 'temperature', 'bx'],
+      ['2026-08-09T19:06:00Z', 436, 5.28, 175639, 3.42],
+    ])).toEqual([{ time: '2026-08-09T19:06:00Z', speed: 436, density: 5.28 }])
+  })
+
   it('maps crew vehicles to their current space station', () => {
     expect(stationForCraft('Crew-12 Dragon')).toBe('ISS')
     expect(stationForCraft('Soyuz MS-29')).toBe('ISS')

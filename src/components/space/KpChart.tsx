@@ -1,11 +1,8 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
-
-interface KpEntry {
-    time: string
-    kp: number
-}
+import { readSpaceWeatherHistoryCache, storeSpaceWeatherHistoryCache } from '@/lib/client/space-weather-history-cache'
+import type { HistorySourceState, KpEntry, SpaceWeatherHistoryPayload } from '@/lib/data/space-weather-history'
 
 function getKpColor(kp: number): string {
     if (kp >= 8) return '#ef4444'
@@ -30,23 +27,29 @@ export default function KpChart() {
     const [data, setData] = useState<KpEntry[]>([])
     const [current, setCurrent] = useState<KpEntry | null>(null)
     const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(false)
+    const [sourceState, setSourceState] = useState<HistorySourceState>('unavailable')
+    const [cachedAt, setCachedAt] = useState<string | null>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
 
     useEffect(() => {
         fetch('/api/space-weather-history')
-            .then(r => r.json())
-            .then((payload: { kp?: KpEntry[] }) => {
-                const parsed = Array.isArray(payload.kp) ? payload.kp : []
+            .then(async r => ({ ok: r.ok, payload: await r.json() as SpaceWeatherHistoryPayload }))
+            .then(({ ok, payload }) => {
+                if (ok) storeSpaceWeatherHistoryCache(payload)
+                const localCache = readSpaceWeatherHistoryCache()
+                const parsed = Array.isArray(payload.kp) && payload.kp.length ? payload.kp : localCache?.kp ?? []
                 // Last 28 entries = 7 days (3h intervals)
                 const recent = parsed.slice(-28)
                 if (!recent.length) throw new Error('No Kp history')
                 setData(recent)
                 setCurrent(recent[recent.length - 1])
+                const usingLocalCache = !payload.kp?.length && Boolean(localCache?.kp.length)
+                setSourceState(usingLocalCache ? 'cached' : payload.sources?.kp ?? 'live')
+                setCachedAt(usingLocalCache ? localCache?.updatedAt ?? null : payload.cachedAt ?? payload.updatedAt ?? null)
                 setLoading(false)
             })
             .catch(() => {
-                setError(true)
+                setSourceState('unavailable')
                 setLoading(false)
             })
     }, [])
@@ -157,7 +160,7 @@ export default function KpChart() {
         )
     }
 
-    if (error || !current) {
+    if (sourceState === 'unavailable' || !current) {
         return (
             <div className="card" style={{ padding: '2rem', textAlign: 'center' }}>
                 <div style={{ color: '#64748b', fontSize: '0.9rem' }}>📡 Données Kp temporairement indisponibles</div>
@@ -169,10 +172,16 @@ export default function KpChart() {
 
     return (
         <div className="card" style={{ padding: '1.75rem', marginBottom: '2rem' }}>
+            {sourceState === 'cached' && (
+                <div role="status" className="space-data-status is-cached">
+                    <strong>Dernières valeurs connues</strong>
+                    <span>Le flux NOAA est momentanément indisponible. Ces données ne sont pas en direct{cachedAt ? ` · cache du ${new Date(cachedAt).toLocaleString('fr-FR')}` : ''}.</span>
+                </div>
+            )}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
                 <div>
                     <h2 className="section-title" style={{ color: '#fbbf24', marginBottom: '0.25rem' }}>
-                        ⚡ Indice Kp — Météo Spatiale en Direct
+                        ⚡ Indice Kp — Météo spatiale {sourceState === 'cached' ? 'en cache' : 'en direct'}
                     </h2>
                     <p style={{ color: '#64748b', fontSize: '0.8rem' }}>Source : NOAA SWPC — mis à jour toutes les 3h</p>
                 </div>
