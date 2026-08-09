@@ -15,9 +15,10 @@ interface MetricGridProps {
   items: MetricItem[]
   ariaLabel: string
   className?: string
+  animateOnView?: boolean
 }
 
-export default function MetricGrid({ items, ariaLabel, className = '' }: MetricGridProps) {
+export default function MetricGrid({ items, ariaLabel, className = '', animateOnView = true }: MetricGridProps) {
   const reduceMotion = useReducedMotion()
 
   return (
@@ -29,9 +30,10 @@ export default function MetricGrid({ items, ariaLabel, className = '' }: MetricG
           <motion.dl
             key={item.label}
             className={`card stat-card metric-card${item.icon ? ' has-icon' : ''}`}
-            initial={reduceMotion ? false : { opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.25 }}
+            initial={reduceMotion || !animateOnView ? false : { opacity: 0, y: 16 }}
+            animate={!animateOnView ? { opacity: 1, y: 0 } : undefined}
+            whileInView={animateOnView ? { opacity: 1, y: 0 } : undefined}
+            viewport={animateOnView ? { once: true, amount: 0.25 } : undefined}
             transition={{ duration: 0.35, delay: reduceMotion ? 0 : index * 0.05, ease: 'easeOut' }}
           >
             {item.icon && <dd className="metric-icon" aria-hidden="true">{item.icon}</dd>}

@@ -177,7 +177,7 @@ test('metric values and labels keep a readable visual gap', async ({ page }) => 
       const label = card.querySelector('.metric-label')?.getBoundingClientRect()
       const bounds = card.getBoundingClientRect()
       return value && label ? {
-        gap: label.top - value.bottom,
+        gap: Math.max(label.top - value.bottom, value.top - label.bottom),
         valueLeft: value.left,
         valueRight: value.right,
         cardLeft: bounds.left,
@@ -330,7 +330,18 @@ test('ISS KPI use the validated server position feed', async ({ page }) => {
   } }))
   await page.goto('/iss', { waitUntil: 'domcontentloaded' })
   await expect(page.locator('.stat-card', { hasText: 'Altitude' }).locator('.stat-value')).toHaveText('421.4 km')
-  await expect(page.getByText('2 pers.')).toBeVisible()
+  await expect(page.getByText('2 personnes')).toBeVisible()
+
+  const cards = page.locator('.iss-live-metrics .metric-card')
+  await expect(cards).toHaveCount(4)
+  const cardHeights = await cards.evaluateAll(elements => elements.map(element => element.getBoundingClientRect().height))
+  expect(Math.max(...cardHeights) - Math.min(...cardHeights)).toBeLessThanOrEqual(1)
+
+  const valueTops = await cards.evaluateAll(elements => elements.map(element => (
+    element.querySelector('.metric-value')?.getBoundingClientRect().top ?? 0
+  )))
+  expect(Math.abs(valueTops[0] - valueTops[1])).toBeLessThanOrEqual(2)
+  expect(Math.abs(valueTops[2] - valueTops[3])).toBeLessThanOrEqual(2)
 })
 
 test('solar KPI render normalized NOAA data', async ({ page }) => {

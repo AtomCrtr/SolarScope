@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 import type { DashboardData, IssPosition } from '@/lib/data/space-data'
 import KidsGuide from '@/components/learning/KidsGuide'
 import DataSourceNote from '@/components/learning/DataSourceNote'
@@ -112,85 +113,98 @@ export default function ISSPage() {
             <KidsGuide topic="iss" />
             <DataSourceNote source="NASA / Human Spaceflight" href="https://www.nasa.gov/international-space-station/" refreshed="Position mise à jour par le site ; les repères restent affichés si le flux est indisponible" />
 
-            {/* ISS Stats */}
-            <MetricGrid
-                ariaLabel="Position et vitesse actuelles de l’ISS"
-                className="metric-grid-block"
-                items={[
-                    { icon: '📍', label: 'Latitude', value: issPos ? formatLatLng(issPos.latitude, 'N', 'S') : missingPosition, color: '#60a5fa', monospace: true },
-                    { icon: '↔️', label: 'Longitude', value: issPos ? formatLatLng(issPos.longitude, 'E', 'O') : missingPosition, color: '#60a5fa', monospace: true },
-                    { icon: '🚀', label: 'Altitude', value: issPos ? `${issPos.altitude.toFixed(1)} km` : missingPosition, color: '#60a5fa', monospace: true },
-                    { icon: '⚡', label: 'Vitesse', value: issPos ? `${issPos.velocity.toFixed(0)} km/h` : missingPosition, color: '#60a5fa', monospace: true },
-                ]}
-            />
-
-            {/* Globe + crew side by side */}
-            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem', marginBottom: '2rem' }} className="max-sm:grid-cols-1">
-
-                {/* 3D Globe */}
-                <div className="card" style={{ padding: 0, overflow: 'hidden', position: 'relative', height: 460 }}>
-                    <ISSGlobe issPos={issPos} />
-                    <div style={{
-                        position: 'absolute', top: 12, left: 12,
-                        background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)',
-                        border: '1px solid rgba(96,165,250,0.3)', borderRadius: 99,
-                        padding: '4px 12px', display: 'flex', alignItems: 'center', gap: 6,
-                    }}>
-                        <span className="pulse-dot" style={{ width: 7, height: 7, background: issPos ? '#60a5fa' : '#f59e0b', boxShadow: `0 0 6px ${issPos ? '#60a5fa' : '#f59e0b'}` }} />
-                        <span style={{ color: issPos ? '#60a5fa' : '#f59e0b', fontSize: '0.7rem', fontWeight: 700 }}>
-                            {positionLoading ? 'Connexion à l’ISS…' : positionError && !issPos ? 'Position indisponible' : positionError ? 'Dernière position connue' : 'Position vérifiée toutes les 5 s'}
-                        </span>
+            <section className="iss-telemetry" aria-labelledby="iss-telemetry-title">
+                <div className="iss-section-heading">
+                    <div>
+                        <span className="iss-kicker">TÉLÉMÉTRIE ORBITALE</span>
+                        <h2 id="iss-telemetry-title">Où se trouve la station maintenant ?</h2>
                     </div>
-                    <div style={{ position: 'absolute', bottom: 10, right: 12, color: '#334155', fontSize: '0.6rem' }}>🖱 Glisser pour pivoter</div>
+                    <div className="iss-live-status" data-state={positionError ? 'warning' : 'live'}>
+                        <span className="pulse-dot" aria-hidden="true" />
+                        <span>{positionLoading ? 'Connexion en cours…' : positionError && !issPos ? 'Flux indisponible' : positionError ? 'Dernière position connue' : 'Actualisation toutes les 5 s'}</span>
+                    </div>
                 </div>
 
-                {/* Crew Panel */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    <div className="card" style={{ padding: '1.25rem', flex: 1 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-                            <span style={{ fontSize: '1.3rem' }}>👨‍🚀</span>
-                            <h2 style={{ color: '#e2e8f0', fontWeight: 700, fontFamily: 'Outfit, sans-serif' }}>
-                                Équipage actuel
-                            </h2>
-                            <span style={{ marginLeft: 'auto', background: 'rgba(16,185,129,0.12)', color: '#10b981', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 99, padding: '2px 8px', fontSize: '0.68rem', fontWeight: 700 }}>
-                                {crewLoading ? '…' : crewError ? 'Indispo.' : `${issOnISS.length} pers.`}
-                            </span>
+                <MetricGrid
+                    animateOnView={false}
+                    ariaLabel="Position et vitesse actuelles de l’ISS"
+                    className="iss-live-metrics"
+                    items={[
+                        { icon: '📍', label: 'Latitude', value: issPos ? formatLatLng(issPos.latitude, 'N', 'S') : missingPosition, color: '#bfdbfe', monospace: true },
+                        { icon: '↔️', label: 'Longitude', value: issPos ? formatLatLng(issPos.longitude, 'E', 'O') : missingPosition, color: '#bfdbfe', monospace: true },
+                        { icon: '🚀', label: 'Altitude', value: issPos ? `${issPos.altitude.toFixed(1)} km` : missingPosition, color: '#bfdbfe', monospace: true },
+                        { icon: '⚡', label: 'Vitesse', value: issPos ? `${issPos.velocity.toFixed(0)} km/h` : missingPosition, color: '#bfdbfe', monospace: true },
+                    ]}
+                />
+            </section>
+
+            <section className="iss-dashboard-grid" aria-label="Suivi orbital et équipage de l’ISS">
+                <article className="card iss-orbit-card">
+                    <header className="iss-panel-heading">
+                        <div>
+                            <span className="iss-panel-icon" aria-hidden="true">🌍</span>
+                            <div>
+                                <span className="iss-kicker">CARTE 3D</span>
+                                <h2>Position orbitale</h2>
+                            </div>
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                        <span className="iss-orbit-badge">orbite basse</span>
+                    </header>
+                    <div className="iss-globe-stage">
+                        <ISSGlobe issPos={issPos} />
+                        <div className="iss-globe-overlay">
+                            <span className="pulse-dot" aria-hidden="true" />
+                            {issPos ? 'ISS localisée' : 'Recherche du signal'}
+                        </div>
+                        <div className="iss-globe-help">Glisser pour faire pivoter <span aria-hidden="true">↗</span></div>
+                    </div>
+                    <footer className="iss-orbit-context">
+                        <div><span>Durée d’un tour</span><strong>≈ 92 min</strong></div>
+                        <div><span>Tours par jour</span><strong>≈ 16</strong></div>
+                        <div><span>Distance moyenne</span><strong>≈ 400 km</strong></div>
+                    </footer>
+                </article>
+
+                <aside className="iss-side-stack">
+                    <section className="card iss-crew-card" aria-labelledby="iss-crew-title">
+                        <header className="iss-panel-heading">
+                            <div>
+                                <span className="iss-panel-icon" aria-hidden="true">👨‍🚀</span>
+                                <div>
+                                    <span className="iss-kicker">À BORD</span>
+                                    <h2 id="iss-crew-title">Équipage actuel</h2>
+                                </div>
+                            </div>
+                            <span className="iss-crew-count">{crewLoading ? '…' : crewError ? 'Indispo.' : `${issOnISS.length} personnes`}</span>
+                        </header>
+                        <ul className="iss-crew-list">
                             {issOnISS.slice(0, 10).map(a => (
-                                <div key={`${a.name}-${a.craft}`} style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', padding: '0.5rem', borderRadius: '0.5rem', background: 'rgba(255,255,255,0.03)' }}>
-                                    <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', flexShrink: 0 }}>
-                                        {a.name.charAt(0)}
-                                    </div>
-                                    <div>
-                                        <div style={{ color: '#e2e8f0', fontSize: '0.78rem', fontWeight: 600 }}>{a.name}</div>
-                                        <div style={{ color: '#64748b', fontSize: '0.65rem' }}>{a.craft}</div>
-                                    </div>
-                                </div>
+                                <li key={`${a.name}-${a.craft}`}>
+                                    <span className="iss-crew-avatar" aria-hidden="true">{a.name.charAt(0)}</span>
+                                    <span><strong>{a.name}</strong><small>{a.craft}</small></span>
+                                </li>
                             ))}
-                            {!crewLoading && crewError && <p style={{ color: '#f59e0b', fontSize: '0.75rem' }}>Équipage temporairement indisponible.</p>}
-                        </div>
-                    </div>
+                        </ul>
+                        {!crewLoading && crewError && <p className="iss-data-warning">Équipage temporairement indisponible.</p>}
+                    </section>
 
-                    {/* ISS Facts mini */}
-                    <div className="card" style={{ padding: '1rem' }}>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
-                            {[
-                                { icon: '📅', val: `${daysOnOrbit} j.`, label: 'En orbite' },
-                                { icon: '🏗️', val: '420 t', label: 'Masse' },
-                                { icon: '📐', val: '109 m', label: 'Envergure' },
-                                { icon: '🔄', val: '16/j', label: 'Tours/jour' },
-                            ].map(f => (
-                                <div key={f.label} style={{ textAlign: 'center', padding: '0.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: '0.5rem' }}>
-                                    <div style={{ fontSize: '1rem' }}>{f.icon}</div>
-                                    <div style={{ color: '#60a5fa', fontWeight: 800, fontSize: '0.85rem', fontFamily: 'Outfit' }}>{f.val}</div>
-                                    <div style={{ color: '#475569', fontSize: '0.62rem' }}>{f.label}</div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </div>
+                    <section className="card iss-facts-card" aria-labelledby="iss-facts-title">
+                        <h2 id="iss-facts-title" className="sr-only">Repères sur la station</h2>
+                        {[
+                            { icon: '📅', val: `${daysOnOrbit} j.`, label: 'En orbite' },
+                            { icon: '🏗️', val: '420 t', label: 'Masse' },
+                            { icon: '📐', val: '109 m', label: 'Envergure' },
+                            { icon: '🔄', val: '16/j', label: 'Tours/jour' },
+                        ].map(f => (
+                            <div key={f.label}>
+                                <span aria-hidden="true">{f.icon}</span>
+                                <strong>{f.val}</strong>
+                                <small>{f.label}</small>
+                            </div>
+                        ))}
+                    </section>
+                </aside>
+            </section>
 
             {/* ISS Fun facts */}
             <div className="card" style={{ padding: '1.25rem', marginBottom: '1.5rem' }}>
@@ -212,7 +226,7 @@ export default function ISSPage() {
 
             {/* Next launch teaser */}
             {nextLaunch && (
-                <div className="card" style={{ padding: '1.25rem', background: 'linear-gradient(135deg, rgba(99,102,241,0.06), rgba(59,130,246,0.06))', border: '1px solid rgba(99,102,241,0.15)' }}>
+                <div className="card iss-next-launch">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
                         <span style={{ fontSize: '1.5rem' }}>🚀</span>
                         <div style={{ flex: 1 }}>
@@ -220,9 +234,9 @@ export default function ISSPage() {
                             <div style={{ color: '#e2e8f0', fontWeight: 600 }}>{nextLaunch.name}</div>
                             <div style={{ color: '#64748b', fontSize: '0.75rem' }}>{nextLaunch.agency} · {new Date(nextLaunch.net).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
                         </div>
-                        <a href="/missions" style={{ padding: '0.5rem 1rem', borderRadius: 99, background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: '#a5b4fc', textDecoration: 'none', fontSize: '0.8rem', fontWeight: 600 }}>
+                        <Link href="/missions" className="touch-link">
                             Voir tous →
-                        </a>
+                        </Link>
                     </div>
                 </div>
             )}
