@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getDashboardData, getIssPosition, getSpaceWeatherData } from '@/lib/data/space-data'
 import { checkGeminiAvailability } from '@/lib/server/gemini-health'
+import { summarizeServiceHealth } from '@/lib/server/health-status'
 
 export const dynamic = 'force-dynamic'
 
@@ -25,19 +26,18 @@ export async function GET() {
       ...weatherSources,
       gemini: geminiResult.status === 'fulfilled' && geminiResult.value,
     }
-    const healthySources = Object.values(sources).filter(Boolean).length
-    const healthy = healthySources >= 6 && sources.gemini
+    const health = summarizeServiceHealth(sources)
 
     return NextResponse.json(
       {
-        status: healthy ? 'ok' : 'degraded',
+        status: health.status,
         checkedAt: new Date().toISOString(),
         latencyMs: Date.now() - startedAt,
         sources,
         features: { solarBot: sources.gemini ? 'gemini' : 'fallback' },
       },
       {
-        status: healthy ? 200 : 503,
+        status: health.httpStatus,
         headers: { 'Cache-Control': 'no-store' },
       },
     )

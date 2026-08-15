@@ -128,7 +128,7 @@ export default function JWSTPage() {
       {/* Stats */}
       <MetricGrid
         ariaLabel="Chiffres clés du télescope James Webb"
-        className="metric-grid-block"
+        className="metric-grid-block jwst-metrics"
         items={SCIENCE_STATS.map(s => ({ icon: s.icon, value: s.val, label: s.label, color: '#a5b4fc' }))}
       />
 

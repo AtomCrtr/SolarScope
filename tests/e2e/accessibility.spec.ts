@@ -213,6 +213,26 @@ test('metric values and labels keep a readable visual gap', async ({ page }) => 
   }
 })
 
+test('the JWST KPI grid keeps two balanced rows on desktop', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop', 'The responsive balance is verified once at desktop width')
+  await page.setViewportSize({ width: 1280, height: 900 })
+  await page.goto('/jwst', { waitUntil: 'domcontentloaded' })
+
+  const cards = page.locator('.metric-grid-block .metric-card')
+  await expect(cards).toHaveCount(8)
+  await cards.first().scrollIntoViewIfNeeded()
+  const rowCounts = await cards.evaluateAll(elements => {
+    const rows = new Map<number, number>()
+    for (const element of elements) {
+      const rowTop = Math.round(element.getBoundingClientRect().top)
+      rows.set(rowTop, (rows.get(rowTop) ?? 0) + 1)
+    }
+    return [...rows.values()]
+  })
+
+  expect(rowCounts).toEqual([4, 4])
+})
+
 test('Mars and meteorite dashboards keep balanced cards without empty panel gaps', async ({ page }) => {
   await gotoSettled(page, '/mars')
   const marsCards = page.locator('.mars-metrics .metric-card')

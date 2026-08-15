@@ -457,6 +457,7 @@ video {
   gap: clamp(0.75rem, 1.8vw, 1rem);
 }
 .metric-grid-block { margin-bottom: 2rem; }
+.jwst-metrics.metric-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .metric-card {
   min-width: 0;
   min-height: 142px;
@@ -496,6 +497,14 @@ video {
   line-height: 1.45;
 }
 .metric-grid-note { margin-top: 0.85rem; margin-bottom: 2.5rem; color: #94a3b8; font-size: 0.75rem; line-height: 1.6; }
+
+@media (max-width: 767px) {
+  .jwst-metrics.metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 359px) {
+  .jwst-metrics.metric-grid { grid-template-columns: minmax(0, 1fr); }
+}
 
 /* ISS Tracker dashboard */
 .iss-telemetry { margin: clamp(2rem, 4vw, 3rem) 0 1.25rem; }
