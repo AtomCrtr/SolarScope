@@ -382,10 +382,14 @@ export default function Navbar() {
                             {navGroups.map(group => {
                                 const isGroupOpen = mobileGroup === group.id
                                 const isActive = activeGroup === group.id
+                                const mobileGroupPanelId = `mobile-navigation-group-${group.id}`
                                 return (
                                     <div key={group.id} style={{ marginBottom: '0.375rem' }}>
                                         <button
+                                            type="button"
                                             onClick={() => setMobileGroup(isGroupOpen ? null : group.id)}
+                                            aria-expanded={isGroupOpen}
+                                            aria-controls={mobileGroupPanelId}
                                             style={{
                                                 width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                                                 padding: '0.7rem 0.875rem', borderRadius: '10px', cursor: 'pointer',
@@ -402,6 +406,7 @@ export default function Navbar() {
                                             {isGroupOpen && (
                                                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }}
                                                     exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }}
+                                                    id={mobileGroupPanelId}
                                                     style={{ overflow: 'hidden', paddingLeft: '0.5rem', marginTop: '0.25rem' }}>
                                                     {group.pages.map(page => {
                                                         const active = pathname === page.href

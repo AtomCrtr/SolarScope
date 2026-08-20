@@ -30,7 +30,6 @@ export default function ISSGlobe({ issPos }: { issPos: ISSPos | null }) {
         issMarker: THREE.Group
         trail: THREE.Line
         trailPositions: THREE.Vector3[]
-        animId: number
         isDragging: boolean
         previousMousePosition: { x: number; y: number }
     } | null>(null)
@@ -57,7 +56,8 @@ export default function ISSGlobe({ issPos }: { issPos: ISSPos | null }) {
         const starPositions = new Float32Array(starCount * 3)
         for (let i = 0; i < starCount * 3; i++) starPositions[i] = (Math.random() - 0.5) * 400
         starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3))
-        scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color: '#ffffff', size: 0.3, transparent: true, opacity: 0.7 })))
+        const starMaterial = new THREE.PointsMaterial({ color: '#ffffff', size: 0.3, transparent: true, opacity: 0.7 })
+        scene.add(new THREE.Points(starGeo, starMaterial))
 
         // Lights
         scene.add(new THREE.AmbientLight(0x222233, 0.8))
@@ -71,9 +71,10 @@ export default function ISSGlobe({ issPos }: { issPos: ISSPos | null }) {
 
         // Earth
         const loader = new THREE.TextureLoader()
+        const earthTexture = loader.load('/textures/earth.jpg')
         const earthGeo = new THREE.SphereGeometry(1, 64, 64)
         const earthMat = new THREE.MeshPhongMaterial({
-            map: loader.load('/textures/earth.jpg'),
+            map: earthTexture,
             specular: new THREE.Color(0x226699),
             shininess: 18,
         })
@@ -116,9 +117,14 @@ export default function ISSGlobe({ issPos }: { issPos: ISSPos | null }) {
         let isDragging = false
         let previousMousePosition = { x: 0, y: 0 }
         let autoRotate = true
+        let resumeTimeout: ReturnType<typeof setTimeout> | null = null
 
         const onMouseDown = (e: MouseEvent) => { isDragging = true; autoRotate = false; previousMousePosition = { x: e.clientX, y: e.clientY } }
-        const onMouseUp = () => { isDragging = false; setTimeout(() => { autoRotate = true }, 3000) }
+        const onMouseUp = () => {
+            isDragging = false
+            if (resumeTimeout) clearTimeout(resumeTimeout)
+            resumeTimeout = setTimeout(() => { autoRotate = true }, 3000)
+        }
         const onMouseMove = (e: MouseEvent) => {
             if (!isDragging) return
             const dx = e.clientX - previousMousePosition.x
@@ -133,7 +139,10 @@ export default function ISSGlobe({ issPos }: { issPos: ISSPos | null }) {
         window.addEventListener('mousemove', onMouseMove)
 
         let t = 0
-        const animId = requestAnimationFrame(function loop() {
+        let frameId: number | null = null
+        let disposed = false
+        const loop = () => {
+            if (disposed) return
             t += 0.005
             if (autoRotate) earthGroup.rotation.y += 0.0015
             // Ring pulse
@@ -141,18 +150,37 @@ export default function ISSGlobe({ issPos }: { issPos: ISSPos | null }) {
             ring.scale.setScalar(scale)
             ring.material.opacity = 0.7 - 0.4 * Math.abs(Math.sin(t * 3))
             renderer.render(scene, camera)
-            requestAnimationFrame(loop)
-        })
+            frameId = requestAnimationFrame(loop)
+        }
+        frameId = requestAnimationFrame(loop)
 
-        sceneRef.current = { renderer, scene, camera, issMarker, trail, trailPositions, animId, isDragging, previousMousePosition }
+        sceneRef.current = { renderer, scene, camera, issMarker, trail, trailPositions, isDragging, previousMousePosition }
 
         return () => {
-            cancelAnimationFrame(animId)
+            disposed = true
+            if (frameId !== null) cancelAnimationFrame(frameId)
+            if (resumeTimeout) clearTimeout(resumeTimeout)
             renderer.domElement.removeEventListener('mousedown', onMouseDown)
             window.removeEventListener('mouseup', onMouseUp)
             window.removeEventListener('mousemove', onMouseMove)
+            earthTexture.dispose()
+            starGeo.dispose()
+            starMaterial.dispose()
+            earthGeo.dispose()
+            earthMat.dispose()
+            atmGeo.dispose()
+            atmMat.dispose()
+            gridGeo.dispose()
+            gridMat.dispose()
+            issDot.geometry.dispose()
+            issDot.material.dispose()
+            ringGeo.dispose()
+            ringMat.dispose()
+            trail.geometry.dispose()
+            trailMat.dispose()
             renderer.dispose()
             if (el.contains(renderer.domElement)) el.removeChild(renderer.domElement)
+            sceneRef.current = null
         }
     }, [])
 

@@ -15,7 +15,8 @@ const CATEGORY_COLORS: Record<string, string> = {
   Sciences: '#38bdf8',
 }
 
-function formatDate(date: string) {
+function formatDate(date: string | null) {
+  if (!date) return 'Date inconnue'
   return new Date(date).toLocaleDateString('fr-FR', {
     day: 'numeric',
     month: 'short',
@@ -174,7 +175,7 @@ export default function ActualitesPage() {
                   <span style={{ color, background: `${color}12`, border: `1px solid ${color}30`, borderRadius: 999, padding: '0.2rem 0.65rem', fontSize: '0.64rem', fontWeight: 800 }}>
                     {article.category}
                   </span>
-                  <time dateTime={article.date} style={{ color: 'var(--text-muted)', fontSize: '0.65rem' }}>{formatDate(article.date)}</time>
+                  <time dateTime={article.date ?? undefined} style={{ color: 'var(--text-muted)', fontSize: '0.65rem' }}>{formatDate(article.date)}</time>
                 </div>
                 <h2 style={{ margin: '1rem 0 0.6rem', color: 'var(--text)', font: "750 1rem/1.45 'Outfit', sans-serif" }}>{article.title}</h2>
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.77rem', lineHeight: 1.65, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>

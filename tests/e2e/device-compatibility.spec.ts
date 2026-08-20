@@ -57,9 +57,17 @@ test('the mobile menu remains usable', async ({ page }, testInfo) => {
   const viewport = page.viewportSize()
   test.skip(testInfo.project.name === 'desktop' || !viewport || viewport.width >= 768, 'This viewport uses the expanded navigation')
   await page.goto('/')
-  await page.getByRole('button', { name: 'Ouvrir le menu' }).click()
+  const menuButton = page.getByRole('button', { name: 'Ouvrir le menu' })
+  await menuButton.click()
   await expect(page.locator('#mobile-navigation')).toBeVisible()
   await expect(page.locator('#mobile-navigation').getByRole('link', { name: /Accueil/ })).toBeVisible()
+
+  const solarSystemButton = page.getByRole('button', { name: /Système Solaire/ })
+  await expect(solarSystemButton).toHaveAttribute('aria-expanded', 'false')
+  await expect(solarSystemButton).toHaveAttribute('aria-controls', 'mobile-navigation-group-systeme')
+  await solarSystemButton.click()
+  await expect(solarSystemButton).toHaveAttribute('aria-expanded', 'true')
+  await expect(page.locator('#mobile-navigation-group-systeme')).toBeVisible()
 })
 
 test('the rover remains interactive in Safari-compatible WebKit', async ({ page }, testInfo) => {
