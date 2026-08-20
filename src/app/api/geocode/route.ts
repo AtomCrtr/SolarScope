@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { checkDistributedRateLimit } from '@/lib/security/rate-limit'
 
 const FALLBACK_CITY = 'Votre position'
 
@@ -8,12 +9,59 @@ function parseCoordinate(value: string | null, min: number, max: number) {
   return Number(parsed.toFixed(2))
 }
 
+function firstHeaderValue(request: NextRequest, names: string[]): string | null {
+  for (const name of names) {
+    const value = request.headers.get(name)?.split(',')[0]?.trim()
+    if (value) return value
+  }
+  return null
+}
+
+function clientIdentifier(request: NextRequest): string | null {
+  const headerNames = process.env.VERCEL === '1'
+    ? ['x-vercel-forwarded-for', 'x-forwarded-for', 'x-real-ip']
+    : ['x-forwarded-for', 'x-real-ip']
+  return firstHeaderValue(request, headerNames)
+}
+
 export async function GET(request: NextRequest) {
   const latitude = parseCoordinate(request.nextUrl.searchParams.get('lat'), -90, 90)
   const longitude = parseCoordinate(request.nextUrl.searchParams.get('lon'), -180, 180)
 
   if (latitude === null || longitude === null) {
     return NextResponse.json({ error: 'Coordonnées invalides.' }, { status: 400 })
+  }
+
+  const identifier = clientIdentifier(request)
+  if (process.env.VERCEL === '1' && !identifier) {
+    return NextResponse.json(
+      { error: 'Service de localisation temporairement protégé.' },
+      { status: 503, headers: { 'Cache-Control': 'no-store' } },
+    )
+  }
+
+  const rateLimit = await checkDistributedRateLimit(`geocode:${identifier || 'local-anonymous'}`, {
+    namespace: 'geocode',
+    limit: 20,
+    windowSeconds: 60,
+  })
+  if (rateLimit.unavailable) {
+    return NextResponse.json(
+      { error: 'Service de localisation temporairement protégé.' },
+      { status: 503, headers: { 'Cache-Control': 'no-store' } },
+    )
+  }
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: 'Trop de demandes de localisation. Réessaie dans un instant.' },
+      {
+        status: 429,
+        headers: {
+          'Cache-Control': 'no-store',
+          'Retry-After': String(rateLimit.retryAfter),
+        },
+      },
+    )
   }
 
   const url = new URL('https://nominatim.openstreetmap.org/reverse')

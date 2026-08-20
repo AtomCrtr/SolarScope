@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   parseCrew,
   parseLaunches,
+  parseNasaNewsFeed,
   parseSolarWindPayload,
   parseXrayPayload,
   stationForCraft,
@@ -77,5 +78,16 @@ describe('space data normalization', () => {
 
     expect(parsed.history).toEqual([2e-7, 3e-7])
     expect(parsed.observedAt).toBe('2026-07-22T19:01:00Z')
+  })
+
+  it('does not invent a publication date when NASA RSS omits or corrupts it', () => {
+    const articles = parseNasaNewsFeed(`
+      <rss><channel>
+        <item><title>No date</title><link>https://www.nasa.gov/no-date</link><description>Summary</description></item>
+        <item><title>Bad date</title><link>https://www.nasa.gov/bad-date</link><description>Summary</description><pubDate>not-a-date</pubDate></item>
+      </channel></rss>
+    `)
+
+    expect(articles.map(article => article.date)).toEqual([null, null])
   })
 })
