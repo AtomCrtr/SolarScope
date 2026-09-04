@@ -3,7 +3,10 @@ import { defineConfig, devices } from '@playwright/test'
 export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: true,
-  workers: 4,
+  // The Mars page mounts a WebGL viewer; running multiple browser projects
+  // concurrently makes the interaction tests intermittently miss stable
+  // controls on constrained CI runners.
+  workers: process.env.CI ? 1 : 4,
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? 'github' : 'list',
   use: {

@@ -23,7 +23,7 @@ const metricRoutes = ['/soleil', '/mars', '/asteroides', '/meteorites', '/iss', 
 
 async function gotoSettled(page: Page, route: string) {
   await page.goto(route, { waitUntil: 'load' })
-  await page.waitForLoadState('networkidle').catch(() => {})
+  await page.waitForLoadState('networkidle', { timeout: 5_000 }).catch(() => {})
   await page.evaluate(() => document.fonts.ready)
   await page.waitForTimeout(250)
 }
