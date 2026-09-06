@@ -36,9 +36,15 @@ export default function PrivacyPage() {
 
         <h2>Stockage local et intelligence artificielle</h2>
         <p>
-          Le thème clair ou sombre est mémorisé uniquement dans votre navigateur. Les questions adressées à
-          SolarBot sont envoyées au service Gemini de Google pour produire une réponse, sans être conservées
-          dans une base de données SolarScope.
+          SolarScope ne crée pas de compte. Le navigateur peut conserver la langue choisie, le public ou niveau
+          sélectionné, la progression du passeport, l’étape ouverte dans une fiche pédagogique et un cache local
+          temporaire de météo spatiale. Ces informations restent sur l’appareil et ne sont pas envoyées à SolarScope.
+        </p>
+        <p>
+          Le passeport peut être effacé depuis la page « Passeport spatial ». Les autres préférences et le cache
+          peuvent être supprimés depuis les réglages de stockage du navigateur ; le cache météo expire également
+          automatiquement. Les questions adressées à SolarBot sont envoyées au service Gemini de Google lorsque
+          Gemini est activé, sans être conservées dans une base de données SolarScope.
         </p>
 
         <p><Link href="/">← Retour à l’accueil</Link></p>

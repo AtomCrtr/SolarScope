@@ -91,7 +91,7 @@ export interface NewsArticle {
   title: string
   source: string
   url: string
-  date: string
+  date: string | null
   summary: string
   category: string
 }
@@ -507,6 +507,31 @@ function classifyArticle(text: string): string {
   return 'Sciences'
 }
 
+export function parseNasaNewsFeed(xml: string): NewsArticle[] {
+  const items = xml.match(/<item>[\s\S]*?<\/item>/gi) || []
+
+  return items
+    .map((item): NewsArticle | null => {
+      const title = xmlTag(item, 'title')
+      const url = xmlTag(item, 'link')
+      const summary = xmlTag(item, 'description')
+      const published = xmlTag(item, 'pubDate')
+      if (!title || !url) return null
+
+      const parsedDate = published ? new Date(published) : null
+      return {
+        title,
+        source: 'NASA',
+        url,
+        date: parsedDate && !Number.isNaN(parsedDate.getTime()) ? parsedDate.toISOString() : null,
+        summary: summary || 'Consultez l’article complet sur le site officiel de la NASA.',
+        category: classifyArticle(`${title} ${summary}`),
+      }
+    })
+    .filter((article): article is NewsArticle => article !== null)
+    .slice(0, 18)
+}
+
 export async function getNasaNews(): Promise<{ articles: NewsArticle[]; updatedAt: string }> {
   const response = await fetchWithTimeout(
     'https://www.nasa.gov/feed/',
@@ -515,30 +540,7 @@ export async function getNasaNews(): Promise<{ articles: NewsArticle[]; updatedA
     'application/rss+xml, application/xml, text/xml',
   )
   const xml = await response.text()
-  const items = xml.match(/<item>[\s\S]*?<\/item>/gi) || []
-
-  const articles = items
-    .map((item): NewsArticle | null => {
-      const title = xmlTag(item, 'title')
-      const url = xmlTag(item, 'link')
-      const summary = xmlTag(item, 'description')
-      const published = xmlTag(item, 'pubDate')
-      if (!title || !url) return null
-      const parsedDate = published ? new Date(published) : new Date()
-
-      return {
-        title,
-        source: 'NASA',
-        url,
-        date: Number.isNaN(parsedDate.getTime()) ? new Date().toISOString() : parsedDate.toISOString(),
-        summary: summary || 'Consultez l’article complet sur le site officiel de la NASA.',
-        category: classifyArticle(`${title} ${summary}`),
-      }
-    })
-    .filter((article): article is NewsArticle => article !== null)
-    .slice(0, 18)
-
-  return { articles, updatedAt: new Date().toISOString() }
+  return { articles: parseNasaNewsFeed(xml), updatedAt: new Date().toISOString() }
 }
 
 export function getNasaApiKey(): string {
