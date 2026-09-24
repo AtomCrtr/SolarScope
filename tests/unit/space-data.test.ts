@@ -105,4 +105,22 @@ describe('space data normalization', () => {
     expect(article.url).toBe('https://www.nasa.gov/?p=1&lang=en')
     expect(article.summary).toBe('Read more… about &lt;tags&gt; here')
   })
+  it('reads Launch Library 2.3 image and video objects and keeps only https links', () => {
+    const [launch] = parseLaunches({
+      results: [{
+        id: 'll23',
+        name: 'Falcon 9 | Crew-13',
+        net: '2026-10-01T10:00:00Z',
+        image: { image_url: 'https://example.test/f9.jpg' },
+        vid_urls: [{ url: 'https://example.test/live' }],
+        launch_service_provider: { name: 'SpaceX' },
+      }],
+    }, Date.parse('2026-09-24T00:00:00Z'))
+
+    expect(launch.image).toBe('https://example.test/f9.jpg')
+    expect(launch.webcast).toBe('https://example.test/live')
+    expect(launch.agency).toBe('SpaceX')
+    expect(parseLaunches({ results: [{ id: 'unsafe', name: 'x', net: '2026-10-02T10:00:00Z', image: 'javascript:alert(1)', vidURLs: ['http://example.test/live'] }] }, 0)[0])
+      .toMatchObject({ image: null, webcast: null })
+  })
 })

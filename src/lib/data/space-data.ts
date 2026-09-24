@@ -195,7 +195,11 @@ export function parseLaunches(payload: unknown, now = Date.now()): LaunchDetails
       const status = isRecord(launch.status) ? launch.status : null
       const pad = isRecord(launch.pad) ? launch.pad : null
       const location = pad && isRecord(pad.location) ? pad.location : null
-      const videos = Array.isArray(launch.vidURLs) ? launch.vidURLs : []
+      // Launch Library 2.3 returns `image` as an object and videos as { url } objects.
+      const image = isRecord(launch.image) ? stringValue(launch.image.image_url) : stringValue(launch.image)
+      const videos = Array.isArray(launch.vid_urls) ? launch.vid_urls : Array.isArray(launch.vidURLs) ? launch.vidURLs : []
+      const firstVideo = videos[0]
+      const webcast = isRecord(firstVideo) ? stringValue(firstVideo.url) : stringValue(firstVideo)
 
       return {
         id,
@@ -204,9 +208,9 @@ export function parseLaunches(payload: unknown, now = Date.now()): LaunchDetails
         agency: stringValue(provider?.name) || 'Agence non renseignée',
         rocket: stringValue(configuration?.name) || 'Lanceur non renseigné',
         status: stringValue(status?.name) || stringValue(status?.abbrev) || 'Planifié',
-        image: stringValue(launch.image),
+        image: image?.startsWith('https://') ? image : null,
         location: stringValue(location?.name) || stringValue(pad?.name) || 'Site non renseigné',
-        webcast: stringValue(videos[0]),
+        webcast: webcast?.startsWith('https://') ? webcast : null,
         live: launch.webcast_live === true,
         url: stringValue(launch.url),
       }
@@ -228,7 +232,7 @@ export function parseLaunchProvider(value: string | null | undefined): LaunchPro
 export async function getUpcomingLaunches(limit = 8, provider?: LaunchProvider): Promise<LaunchDetails[]> {
   const requestedLimit = Number.isFinite(limit) ? Math.trunc(limit) : 8
   const safeLimit = Math.min(Math.max(requestedLimit, 1), LAUNCH_UPSTREAM_PAGE_SIZE)
-  const upstream = new URL('https://ll.thespacedevs.com/2.2.0/launch/upcoming/')
+  const upstream = new URL('https://ll.thespacedevs.com/2.3.0/launches/upcoming/')
   upstream.searchParams.set('limit', String(LAUNCH_UPSTREAM_PAGE_SIZE))
   upstream.searchParams.set('format', 'json')
   if (provider) upstream.searchParams.set('lsp__name', provider)
