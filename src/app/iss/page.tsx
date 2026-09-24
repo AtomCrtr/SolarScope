@@ -123,7 +123,6 @@ export default function ISSPage() {
                 </div>
 
                 <MetricGrid
-                    animateOnView={false}
                     ariaLabel="Position et vitesse actuelles de l’ISS"
                     className="iss-live-metrics"
                     items={[
@@ -205,7 +204,7 @@ export default function ISSPage() {
 
             {/* ISS Fun facts */}
             <div className="card" style={{ padding: '1.25rem', marginBottom: '1.5rem' }}>
-                <h2 className="section-title" style={{ color: '#60a5fa', fontSize: '1rem' }}>💡 Le savais-tu ?</h2>
+                <h2 className="section-title" style={{ color: '#60a5fa', fontSize: '1rem' }}>Le savais-tu ?</h2>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '0.75rem' }}>
                     {[
                         { icon: '🌅', fact: 'Les astronautes voient le Soleil se lever et se coucher 16 fois par jour en orbite !' },

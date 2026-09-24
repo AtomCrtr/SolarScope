@@ -242,7 +242,6 @@ export default function MarsPage() {
                     <span className="mars-reference-badge">Données NASA de référence</span>
                 </header>
                 <MetricGrid
-                    animateOnView={false}
                     ariaLabel="Chiffres clés de Mars"
                     className="mars-metrics"
                     items={MARS_FACTS.map(s => ({ icon: s.emoji, value: s.val, label: s.label, color: '#fca5a5' }))}
@@ -304,7 +303,7 @@ export default function MarsPage() {
             {/* ── 3D ROVER VIEWER ── */}
             <div style={{ marginBottom: '2.5rem' }}>
                 <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '0.5rem' }}>
-                    {activeRover === 'perseverance' ? '🛸 Modèle 3D' : '📷 Vue NASA'} — {activeRoverDetail.name}
+                    {activeRover === 'perseverance' ? 'Modèle 3D' : 'Vue NASA'} — {activeRoverDetail.name}
                 </h2>
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', marginBottom: '1rem' }}>
                     {activeRover === 'perseverance'
@@ -317,12 +316,11 @@ export default function MarsPage() {
             {/* ── CURATED NASA GALLERY ── */}
             <div className="divider" />
             <div style={{ marginBottom: '2.5rem' }}>
-                <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '0.25rem' }}>📸 Galerie — Icônes de l&apos;exploration martienne</h2>
+                <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '0.25rem' }}>Galerie — Icônes de l&apos;exploration martienne</h2>
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', marginBottom: '1.25rem' }}>Sélection des photos les plus marquantes — Curiosity, Opportunity &amp; Perseverance</p>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.625rem' }} className="max-sm:grid-cols-2">
                     {MARS_GALLERY.map((photo, i) => (
-                        <motion.button type="button" aria-label={`Agrandir ${photo.title}`} key={i}
-                            initial={{ opacity: 0, scale: 0.94 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.03 }}
+                        <motion.button type="button" aria-label={`Agrandir ${photo.title}`} key={i} transition={{ delay: i * 0.03 }}
                             onClick={event => {
                                 lightboxTriggerRef.current = event.currentTarget
                                 setLightboxIdx(i)
@@ -400,7 +398,7 @@ export default function MarsPage() {
 
             {/* ── ROVER HISTORY ── */}
             <div className="divider" />
-            <h2 className="section-title" style={{ color: 'var(--text)' }}>🤖 Rovers de la NASA présentés ici</h2>
+            <h2 className="section-title" style={{ color: 'var(--text)' }}>Rovers de la NASA présentés ici</h2>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.5rem', marginTop: '-0.5rem' }}>
                 Ces cinq rovers de la NASA racontent l’histoire de l’exploration martienne. Curiosity et Perseverance sont des missions en cours ; leur état est daté ci-dessus.
             </p>
@@ -455,7 +453,7 @@ export default function MarsPage() {
 
             {/* ── TIMELINE ── */}
             <div className="divider" />
-            <h2 className="section-title" style={{ color: 'var(--text)' }}>🚀 Histoire de l&apos;exploration martienne</h2>
+            <h2 className="section-title" style={{ color: 'var(--text)' }}>Histoire de l&apos;exploration martienne</h2>
             <div className="card" style={{ padding: '1.5rem' }}>
                 {MARS_TIMELINE.map((ev, i) => (
                     <div key={`${ev.year}-${i}`} className="timeline-item">
@@ -480,7 +478,7 @@ export default function MarsPage() {
 
             {/* ── FUN FACTS ── */}
             <div className="card" style={{ padding: '1.25rem', marginTop: '1.5rem' }}>
-                <h3 className="section-title" style={{ color: '#f87171', fontSize: '1rem' }}>💡 Le savais-tu ?</h3>
+                <h3 className="section-title" style={{ color: '#f87171', fontSize: '1rem' }}>Le savais-tu ?</h3>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '0.75rem' }}>
                     {[
                         { icon: '🌋', fact: 'Olympus Mons est 3× plus haut que l\'Everest et si large qu\'on ne verrait pas l\'autre côté depuis le sommet.' },

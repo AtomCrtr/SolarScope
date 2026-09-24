@@ -136,7 +136,7 @@ export default function QuizPage() {
                         /* Level picker */
                         <div>
                             <h2 style={{ textAlign: 'center', color: 'var(--text)', fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.25rem', marginBottom: '0.5rem' }}>
-                                🎯 Choisis ton niveau
+                                Choisis ton niveau
                             </h2>
                             <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
                                 Chaque niveau a ses propres questions — tu peux changer à tout moment !

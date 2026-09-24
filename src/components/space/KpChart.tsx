@@ -181,7 +181,7 @@ export default function KpChart() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
                 <div>
                     <h2 className="section-title" style={{ color: '#fbbf24', marginBottom: '0.25rem' }}>
-                        ⚡ Indice Kp — Météo spatiale {sourceState === 'cached' ? 'en cache' : 'en direct'}
+                        Indice Kp — Météo spatiale {sourceState === 'cached' ? 'en cache' : 'en direct'}
                     </h2>
                     <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Source : NOAA SWPC — mis à jour toutes les 3h</p>
                 </div>

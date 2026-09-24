@@ -81,7 +81,7 @@ export default function SolarFlareHistory() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
                     <div>
                         <h2 className="section-title" style={{ color: '#60a5fa', marginBottom: '0.25rem' }}>
-                            🌬️ Vent Solaire — Données ACE/DSCOVR
+                            Vent Solaire — Données ACE/DSCOVR
                         </h2>
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Mesures {windState === 'cached' ? 'mises en cache' : 'en temps réel'} à 1,5 million km de la Terre (L1)</p>
                     </div>
@@ -147,7 +147,7 @@ export default function SolarFlareHistory() {
             {/* Flare history */}
             <div className="card" style={{ padding: '1.75rem', marginBottom: '2rem' }}>
                 <h2 className="section-title" style={{ color: '#fbbf24', marginBottom: '1.25rem' }}>
-                    🔥 Historique Éruptions Solaires — 30 derniers jours
+                    Historique Éruptions Solaires — 30 derniers jours
                 </h2>
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '1.25rem' }}>
                     Source : NASA DONKI (Database Of Notifications, Knowledge, Information) · Actualisé chaque heure

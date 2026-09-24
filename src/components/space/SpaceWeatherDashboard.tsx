@@ -243,7 +243,7 @@ export default function SpaceWeatherDashboard() {
     return (
         <div style={{ padding: '3rem 2rem 4rem', maxWidth: 'var(--max-w)', margin: '0 auto' }}>
             {/* Header */}
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: '2.5rem' }}>
+            <motion.div style={{ marginBottom: '2.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', marginBottom: '0.5rem' }}>
                     <div>
                         <div className="badge" style={{ marginBottom: '0.5rem' }}>⚡ NOAA SWPC — EN DIRECT</div>
@@ -275,7 +275,7 @@ export default function SpaceWeatherDashboard() {
                 <div style={{ display: 'grid', gap: '1.25rem' }}>
 
                     {/* Row 1 — Solar Wind Gauges */}
-                    <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                    <motion.div
                         style={{ background: 'rgba(245,158,11,0.04)', border: '1px solid rgba(245,158,11,0.12)', borderRadius: '1.25rem', padding: '1.5rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
                             <span style={{ fontSize: '1.2rem' }}>💨</span>
@@ -314,7 +314,7 @@ export default function SpaceWeatherDashboard() {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }} className="max-md:grid-cols-1">
 
                         {/* Bz magnetic field */}
-                        <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+                        <motion.div
                             style={{ background: 'rgba(99,102,241,0.04)', border: '1px solid rgba(99,102,241,0.12)', borderRadius: '1.25rem', padding: '1.5rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
                                 <span style={{ fontSize: '1.2rem' }}>🧲</span>
@@ -346,7 +346,7 @@ export default function SpaceWeatherDashboard() {
                         </motion.div>
 
                         {/* X-ray flux */}
-                        <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+                        <motion.div
                             style={{ background: 'rgba(239,68,68,0.04)', border: '1px solid rgba(239,68,68,0.12)', borderRadius: '1.25rem', padding: '1.5rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
                                 <span style={{ fontSize: '1.2rem' }}>☢️</span>
@@ -375,7 +375,7 @@ export default function SpaceWeatherDashboard() {
                     </div>
 
                     {/* Row 3 — SOHO Coronagraph */}
-                    <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                    <motion.div
                         style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '1.25rem', padding: '1.5rem' }}>
                         <SOHOPanel />
                     </motion.div>

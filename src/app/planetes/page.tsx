@@ -134,7 +134,7 @@ export default function PlanetesPage() {
 
             {/* Intro text */}
             <div className="card" style={{ padding: '1.25rem', marginBottom: '2rem' }}>
-                <h2 className="section-title" style={{ color: 'var(--nebula)' }}>📘 Le système solaire</h2>
+                <h2 className="section-title" style={{ color: 'var(--nebula)' }}>Le système solaire</h2>
                 <p style={{ color: 'var(--text-muted)', lineHeight: 1.8, fontSize: '0.875rem' }}>
                     Notre système solaire compte <strong style={{ color: 'var(--text)' }}>8 planètes</strong>.
                     Les 4 premières sont des <strong style={{ color: '#f97316' }}>planètes rocheuses</strong> (Mercure, Vénus, Terre, Mars).
@@ -145,7 +145,7 @@ export default function PlanetesPage() {
 
             {/* Size comparison bars */}
             <div className="card" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
-                <h2 className="section-title" style={{ color: 'var(--text)' }}>📊 Comparaison des tailles</h2>
+                <h2 className="section-title" style={{ color: 'var(--text)' }}>Comparaison des tailles</h2>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                     {PLANETS.map(pl => (
                         <div key={pl.name} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }} onClick={() => setSelected(PLANETS.indexOf(pl))}>
@@ -164,7 +164,7 @@ export default function PlanetesPage() {
 
             {/* ── TAILLE RELATIVE ── */}
             <div className="card" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
-                <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '0.25rem' }}>🔭 Taille des planètes comparée à la Terre</h2>
+                <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '0.25rem' }}>Taille des planètes comparée à la Terre</h2>
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', marginBottom: '1.25rem' }}>Chaque cercle est proportionnel au vrai rayon — Jupiter pourrait contenir 1 300 Terres !</p>
                 <div style={{ display: 'flex', alignItems: 'flex-end', gap: '0.75rem', flexWrap: 'wrap', justifyContent: 'center', padding: '1rem 0' }}>
                     {PLANETS.map((pl, i) => {
@@ -199,7 +199,7 @@ export default function PlanetesPage() {
 
             {/* Comparator */}
             <div className="card" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
-                <h2 className="section-title" style={{ color: 'var(--text)' }}>⚖️ Comparateur</h2>
+                <h2 className="section-title" style={{ color: 'var(--text)' }}>Comparateur</h2>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.25rem' }} className="max-sm:grid-cols-1">
                     {[{ v: comp1, set: setComp1 }, { v: comp2, set: setComp2 }].map((c, ci) => (
                         <div key={ci}>
@@ -275,7 +275,7 @@ export default function PlanetesPage() {
             </div>
 
             {/* Full table */}
-            <h2 className="section-title" style={{ color: 'var(--text)' }}>📋 Tableau des planètes</h2>
+            <h2 className="section-title" style={{ color: 'var(--text)' }}>Tableau des planètes</h2>
             <div style={{ overflow: 'auto', borderRadius: '0.875rem', border: '1px solid rgba(255,255,255,0.06)' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem', minWidth: 700 }}>
                     <thead>

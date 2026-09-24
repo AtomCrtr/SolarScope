@@ -78,7 +78,7 @@ export default function AsteroidsPage() {
 
             {/* Explainer */}
             <div className="card" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
-                <h2 className="section-title" style={{ color: '#fbbf24' }}>🪨 C&apos;est quoi un astéroïde ?</h2>
+                <h2 className="section-title" style={{ color: '#fbbf24' }}>C&apos;est quoi un astéroïde ?</h2>
                 <p style={{ color: 'var(--text-muted)', lineHeight: 1.8, fontSize: '0.875rem', marginBottom: '0.875rem' }}>
                     Un astéroïde, c&apos;est un <strong style={{ color: 'var(--text)' }}>gros rocher qui flotte dans l&apos;espace</strong> !
                     La plupart se trouvent entre Mars et Jupiter dans la &quot;ceinture d&apos;astéroïdes&quot;, mais certains passent parfois près de la Terre.
@@ -110,7 +110,7 @@ export default function AsteroidsPage() {
             {/* Live close approaches table */}
             <div className="card" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-                    <h2 className="section-title" style={{ color: 'var(--text)' }}>🔴 Passages proches cette semaine (NASA NeoWs)</h2>
+                    <h2 className="section-title" style={{ color: 'var(--text)' }}>Passages proches cette semaine (NASA NeoWs)</h2>
                     {updatedAt && <span style={{ color: 'var(--text-muted)', fontSize: '0.68rem' }}>Vérifié à {new Date(updatedAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>}
                 </div>
                 {loading ? (
@@ -152,7 +152,7 @@ export default function AsteroidsPage() {
 
             {/* Size comparisons */}
             <div className="card" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
-                <h2 className="section-title" style={{ color: 'var(--text)' }}>📏 Échelle de comparaison (échelle logarithmique)</h2>
+                <h2 className="section-title" style={{ color: 'var(--text)' }}>Échelle de comparaison (échelle logarithmique)</h2>
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '1.25rem' }}>Les barres utilisent une comparaison visuelle proportionnelle.</p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                     {SIZE_COMPARISONS.map(s => (
@@ -172,7 +172,7 @@ export default function AsteroidsPage() {
             </div>
 
             {/* Famous asteroids */}
-            <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '1rem' }}>⭐ Astéroïdes célèbres</h2>
+            <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '1rem' }}>Astéroïdes célèbres</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
                 {FAMOUS_ASTEROIDS.map(a => (
                     <div key={a.name} className="card" style={{ padding: '1.25rem', borderLeft: `4px solid ${a.color}` }}>
@@ -188,7 +188,7 @@ export default function AsteroidsPage() {
             </div>
 
             {/* Videos */}
-            <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '1rem' }}>🎬 Vidéos éducatives</h2>
+            <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '1rem' }}>Vidéos éducatives</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
                 {VIDEOS.map(v => (
                     <div key={v.title} className="card" style={{ padding: '1.25rem' }}>
@@ -206,7 +206,7 @@ export default function AsteroidsPage() {
 
             {/* Links */}
             <div className="card" style={{ padding: '1.5rem' }}>
-                <h2 className="section-title" style={{ color: 'var(--text)' }}>🔗 En savoir plus</h2>
+                <h2 className="section-title" style={{ color: 'var(--text)' }}>En savoir plus</h2>
                 <ul className="resource-list" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
                     {[
                         { label: 'CNEOS Close Approach Data', url: 'https://cneos.jpl.nasa.gov/ca/', desc: 'Prochains passages d\'astéroïdes près de la Terre (NASA JPL)' },

@@ -134,7 +134,7 @@ export default function CielPage() {
             </section>
 
             <section className="card" style={{ padding: '1.25rem', marginBottom: '2rem' }}>
-                <h2 className="section-title" style={{ color: 'var(--text)' }}>🪐 Que peut-on réellement voir ?</h2>
+                <h2 className="section-title" style={{ color: 'var(--text)' }}>Que peut-on réellement voir ?</h2>
                 <p style={{ color: 'var(--text-subtle)', lineHeight: 1.7, marginBottom: '1rem' }}>
                     La carte proposée calcule le ciel à l’instant présent pour votre zone approximative. La visibilité
                     réelle dépend aussi de l’heure, de la météo et de la pollution lumineuse. SolarScope ne présente
@@ -152,7 +152,7 @@ export default function CielPage() {
 
             {/* Tips */}
             <div className="card" style={{ padding: '1.25rem' }}>
-                <h3 className="section-title" style={{ color: '#38bdf8', fontSize: '1rem' }}>💡 Conseils pour observer le ciel</h3>
+                <h3 className="section-title" style={{ color: '#38bdf8', fontSize: '1rem' }}>Conseils pour observer le ciel</h3>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem' }}>
                     {[
                         { icon: '🌑', tip: 'Observe quand la Lune est absente ou en croissant — elle éclaire trop le ciel sinon.' },

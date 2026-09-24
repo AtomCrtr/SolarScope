@@ -80,7 +80,7 @@ export default function SolarSystem2D() {
         <div style={{ padding: '1.5rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                 <div>
-                    <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '0.25rem' }}>🌌 Système Solaire — Aujourd&apos;hui</h2>
+                    <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '0.25rem' }}>Système Solaire — Aujourd&apos;hui</h2>
                     <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>Positions calculées par éphémérides J2000 pour le {dateStr}</p>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>

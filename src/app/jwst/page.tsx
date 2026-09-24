@@ -226,7 +226,7 @@ export default function JWSTPage() {
 
       {/* Science categories */}
       <div className="divider" />
-      <h2 className="section-title" style={{ color: 'var(--text)' }}>🔬 Domaines de recherche de Webb</h2>
+      <h2 className="section-title" style={{ color: 'var(--text)' }}>Domaines de recherche de Webb</h2>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.875rem', marginBottom: '2rem' }} className="max-sm:grid-cols-1">
         {CATEGORIES.map((c, i) => (
           <motion.div key={c.title} className="card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }}
@@ -242,7 +242,7 @@ export default function JWSTPage() {
 
       {/* Webb vs Hubble */}
       <div className="card" style={{ padding: '1.5rem' }}>
-        <h2 className="section-title" style={{ color: 'var(--text)' }}>📡 Webb vs Hubble</h2>
+        <h2 className="section-title" style={{ color: 'var(--text)' }}>Webb vs Hubble</h2>
         <div
           role="region"
           aria-label="Comparatif des télescopes spatiaux"

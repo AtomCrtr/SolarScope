@@ -1,6 +1,3 @@
-'use client'
-
-import { motion, useReducedMotion } from 'framer-motion'
 import type { ReactNode } from 'react'
 
 export interface MetricItem {
@@ -15,27 +12,18 @@ interface MetricGridProps {
   items: MetricItem[]
   ariaLabel: string
   className?: string
-  animateOnView?: boolean
 }
 
-export default function MetricGrid({ items, ariaLabel, className = '', animateOnView = true }: MetricGridProps) {
-  const reduceMotion = useReducedMotion()
-
+// No entrance animation: key figures must be readable as soon as the page loads,
+// including further down the page and before JavaScript runs.
+export default function MetricGrid({ items, ariaLabel, className = '' }: MetricGridProps) {
   return (
     <div className={`metric-grid ${className}`.trim()} role="group" aria-label={ariaLabel}>
-      {items.map((item, index) => {
+      {items.map(item => {
         const value = String(item.value)
 
         return (
-          <motion.dl
-            key={item.label}
-            className={`card stat-card metric-card${item.icon ? ' has-icon' : ''}`}
-            initial={reduceMotion || !animateOnView ? false : { opacity: 0, y: 16 }}
-            animate={!animateOnView ? { opacity: 1, y: 0 } : undefined}
-            whileInView={animateOnView ? { opacity: 1, y: 0 } : undefined}
-            viewport={animateOnView ? { once: true, amount: 0.25 } : undefined}
-            transition={{ duration: 0.35, delay: reduceMotion ? 0 : index * 0.05, ease: 'easeOut' }}
-          >
+          <dl key={item.label} className={`card stat-card metric-card${item.icon ? ' has-icon' : ''}`}>
             {item.icon && <dd className="metric-icon" aria-hidden="true">{item.icon}</dd>}
             <dt className="stat-label metric-label">{item.label}</dt>
             <dd
@@ -45,7 +33,7 @@ export default function MetricGrid({ items, ariaLabel, className = '', animateOn
             >
               {item.value}
             </dd>
-          </motion.dl>
+          </dl>
         )
       })}
     </div>

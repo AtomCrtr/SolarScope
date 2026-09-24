@@ -73,7 +73,7 @@ export default function SoleilPage() {
                 </motion.div>
 
                 <div>
-                    <h2 className="section-title" style={{ color: '#fbbf24' }}>📡 Images SDO en direct</h2>
+                    <h2 className="section-title" style={{ color: '#fbbf24' }}>Images SDO en direct</h2>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                         {SDO_IMAGES.map((img, i) => (
                             <motion.div key={img.src} className="card" style={{ overflow: 'hidden', padding: 0 }}
@@ -98,7 +98,7 @@ export default function SoleilPage() {
 
             {/* ── SUN LAYERS ── */}
             <div className="card" style={{ padding: '1.75rem', marginBottom: '2rem' }}>
-                <h2 className="section-title" style={{ color: '#fbbf24' }}>🔬 Structure interne du Soleil</h2>
+                <h2 className="section-title" style={{ color: '#fbbf24' }}>Structure interne du Soleil</h2>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem' }} className="max-sm:grid-cols-2">
                     {LAYERS.map((l) => (
                         <div key={l.name} style={{ padding: '1rem', borderRadius: '0.875rem', background: `${l.color}10`, border: `1px solid ${l.color}25` }}>
@@ -112,7 +112,7 @@ export default function SoleilPage() {
             </div>
 
             {/* ── STATS GRID ── */}
-            <h2 className="section-title" style={{ color: 'var(--text)' }}>📊 Le Soleil en chiffres</h2>
+            <h2 className="section-title" style={{ color: 'var(--text)' }}>Le Soleil en chiffres</h2>
             <MetricGrid
                 ariaLabel="Chiffres clés du Soleil"
                 items={FACTS.map(f => ({ icon: f.emoji, value: f.val, label: f.label, color: '#fbbf24' }))}
@@ -120,7 +120,7 @@ export default function SoleilPage() {
 
             {/* ── CME EXPLAINER ── */}
             <div className="card" style={{ padding: '1.75rem', marginTop: '2rem' }}>
-                <h2 className="section-title" style={{ color: '#f97316' }}>☄️ Éjections de Masse Coronale (CME)</h2>
+                <h2 className="section-title" style={{ color: '#f97316' }}>Éjections de Masse Coronale (CME)</h2>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', alignItems: 'start' }} className="max-sm:grid-cols-1">
                     <div>
                         <p style={{ color: 'var(--text-muted)', lineHeight: 1.8, fontSize: '0.875rem', marginBottom: '1rem' }}>

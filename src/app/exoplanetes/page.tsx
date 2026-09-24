@@ -45,7 +45,7 @@ export default function ExoplanetesPage() {
 
             {/* Explainer */}
             <div className="card" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
-                <h2 className="section-title" style={{ color: '#fbbf24' }}>🌍 C&apos;est quoi une exoplanète ?</h2>
+                <h2 className="section-title" style={{ color: '#fbbf24' }}>C&apos;est quoi une exoplanète ?</h2>
                 <p style={{ color: 'var(--text-muted)', lineHeight: 1.8, fontSize: '0.875rem', marginBottom: '0.875rem' }}>
                     Une exoplanète, c&apos;est une planète qui tourne autour d&apos;une <strong style={{ color: 'var(--text)' }}>autre étoile</strong> que le Soleil !
                     On en a découvert des milliers depuis 1995, grâce à des télescopes comme <strong style={{ color: 'var(--text)' }}>Kepler</strong> et <strong style={{ color: 'var(--text)' }}>James Webb</strong>.
@@ -78,7 +78,7 @@ export default function ExoplanetesPage() {
 
             {/* Classification guide */}
             <div className="card" style={{ padding: '1.25rem', marginBottom: '2rem' }}>
-                <h2 className="section-title" style={{ color: 'var(--nebula)' }}>📊 Classification des exoplanètes</h2>
+                <h2 className="section-title" style={{ color: 'var(--nebula)' }}>Classification des exoplanètes</h2>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.5rem' }}>
                     {[
                         { label: 'Planète terrestre', marker: 'petite et rocheuse', color: '#10b981', desc: 'Un monde à surface solide, comme la Terre ou Mars' },
@@ -95,7 +95,7 @@ export default function ExoplanetesPage() {
             </div>
 
             {/* Detection methods */}
-            <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '1rem' }}>🔭 Comment trouve-t-on des exoplanètes ?</h2>
+            <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '1rem' }}>Comment trouve-t-on des exoplanètes ?</h2>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.82rem', marginBottom: '1rem' }}>Les télescopes ne voient presque jamais les exoplanètes directement. Voici les astuces des scientifiques :</p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem', marginBottom: '2rem' }}>
                 {DETECTION_METHODS.map(m => (
@@ -127,7 +127,7 @@ export default function ExoplanetesPage() {
             </div>
 
             {/* Famous exoplanets */}
-            <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '1rem' }}>⭐ Exoplanètes célèbres</h2>
+            <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '1rem' }}>Exoplanètes célèbres</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
                 {filtered.map(exo => (
                     <div key={exo.name} className="card" style={{ padding: '1.25rem', borderLeft: `4px solid ${exo.color}` }}>
@@ -146,7 +146,7 @@ export default function ExoplanetesPage() {
             </div>
 
             {/* Videos */}
-            <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '1rem' }}>🎬 Vidéos éducatives</h2>
+            <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '1rem' }}>Vidéos éducatives</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
                 {VIDEOS.map(v => (
                     <div key={v.title} className="card" style={{ padding: '1.25rem' }}>
@@ -162,7 +162,7 @@ export default function ExoplanetesPage() {
 
             {/* Links */}
             <div className="card" style={{ padding: '1.5rem' }}>
-                <h2 className="section-title" style={{ color: 'var(--text)' }}>🔗 En savoir plus</h2>
+                <h2 className="section-title" style={{ color: 'var(--text)' }}>En savoir plus</h2>
                 <ul className="resource-list" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
                     {[
                         { label: 'NASA Exoplanet Exploration', url: 'https://exoplanets.nasa.gov/', desc: 'Le portail officiel avec visualisations interactives' },

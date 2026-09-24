@@ -70,7 +70,7 @@ export default async function ApodPage() {
             )}
 
             {/* Gallery */}
-            <h2 className="section-title" style={{ color: 'var(--text)' }}>📸 Galerie récente</h2>
+            <h2 className="section-title" style={{ color: 'var(--text)' }}>Galerie récente</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {gallery.map((p: ApodEntry, i: number) => (
                     <div key={i} className="card" style={{ overflow: 'hidden', padding: 0 }}>

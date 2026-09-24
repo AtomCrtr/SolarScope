@@ -241,7 +241,7 @@ export default function SolarBotPage() {
                 ) : (
                     <motion.div key="story" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
                         <div className="card" style={{ padding: '2rem', marginBottom: '1.5rem' }}>
-                            <h2 className="section-title" style={{ color: '#c084fc' }}>📖 Histoires spatiales assistées</h2>
+                            <h2 className="section-title" style={{ color: '#c084fc' }}>Histoires spatiales assistées</h2>
                             <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>Choisis un thème. Gemini écrit l’aventure lorsqu’il est disponible ; sinon SolarBot propose une histoire de secours clairement signalée.</p>
 
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '0.75rem', marginBottom: '1.5rem' }}>

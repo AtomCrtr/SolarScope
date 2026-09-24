@@ -195,7 +195,6 @@ export default function MeteoritesPage() {
                         <span className="meteorite-sample-badge">Échantillon pédagogique</span>
                     </header>
                     <MetricGrid
-                        animateOnView={false}
                         ariaLabel="Chiffres clés des météorites"
                         className="meteorite-metrics"
                         items={[

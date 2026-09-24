@@ -82,7 +82,7 @@ export default function MissionsPage() {
 
             {/* Intro */}
             <div className="card" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
-                <h2 className="section-title" style={{ color: 'var(--nebula)' }}>🌌 Près de 70 ans d&apos;exploration spatiale</h2>
+                <h2 className="section-title" style={{ color: 'var(--nebula)' }}>Près de 70 ans d&apos;exploration spatiale</h2>
                 <p style={{ color: 'var(--text-muted)', lineHeight: 1.8, fontSize: '0.875rem' }}>
                     Depuis le premier satellite <strong style={{ color: 'var(--text)' }}>Spoutnik</strong> en 1957, l&apos;humanité n&apos;a jamais cessé d&apos;explorer l&apos;espace.
                     Des premiers pas sur la Lune aux rovers sur Mars, en passant par les télescopes qui voient les premières lumières de l&apos;Univers,
@@ -104,7 +104,7 @@ export default function MissionsPage() {
 
             {/* ── Upcoming Launches ── */}
             <div style={{ marginBottom: '2rem' }}>
-                <h2 className="section-title" style={{ color: 'var(--text)' }}>🚀 Prochains lancements</h2>
+                <h2 className="section-title" style={{ color: 'var(--text)' }}>Prochains lancements</h2>
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '1rem', marginTop: '-0.5rem' }}>Données en direct via The Space Devs</p>
                 {launchLoading ? (
                     <div style={{ display: 'flex', gap: '0.75rem', overflowX: 'auto', paddingBottom: '0.5rem' }} tabIndex={0} role="region" aria-label="Chargement des prochains lancements">
@@ -145,7 +145,7 @@ export default function MissionsPage() {
             </div>
 
             <div className="card" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
-                <h2 className="section-title" style={{ color: 'var(--text)' }}>📅 Timeline chronologique</h2>
+                <h2 className="section-title" style={{ color: 'var(--text)' }}>Timeline chronologique</h2>
                 <div style={{ overflowX: 'auto', paddingBottom: '0.5rem' }} tabIndex={0} role="region" aria-label="Frise chronologique défilante des missions spatiales">
                     <div style={{ display: 'flex', alignItems: 'center', gap: 0, minWidth: 700, position: 'relative' }}>
                         <div style={{ position: 'absolute', height: 2, background: 'rgba(255,255,255,0.1)', left: 0, right: 0, top: '50%', transform: 'translateY(-50%)', zIndex: 0 }} />
