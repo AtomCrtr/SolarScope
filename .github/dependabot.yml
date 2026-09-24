@@ -9,6 +9,13 @@ updates:
         dependency-type: production
       development-dependencies:
         dependency-type: development
+    ignore:
+      # eslint-config-next (plugins import, jsx-a11y, react) ne prend pas encore ESLint 10 en charge.
+      - dependency-name: eslint
+        update-types: ["version-update:semver-major"]
+      # typescript-eslint, utilisé par eslint-config-next, ne prend pas encore TypeScript 7 en charge.
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
