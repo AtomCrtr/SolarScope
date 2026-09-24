@@ -142,11 +142,6 @@ export default function MarsPage() {
     useEffect(() => {
         if (lightboxIdx === null) return
         const onKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'Escape') {
-                event.preventDefault()
-                setLightboxIdx(null)
-                return
-            }
             if (event.key === 'Tab') {
                 const focusable = Array.from(lightboxPanelRef.current?.querySelectorAll<HTMLElement>('a[href], button:not([disabled])') ?? [])
                 if (!focusable.length) return
@@ -361,6 +356,12 @@ export default function MarsPage() {
                     <motion.div
                         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                         onClick={() => setLightboxIdx(null)}
+                        onKeyDown={event => {
+                            if (event.key === 'Escape') {
+                                event.preventDefault()
+                                setLightboxIdx(null)
+                            }
+                        }}
                         role="dialog"
                         aria-modal="true"
                         aria-labelledby="mars-dialog-title"
