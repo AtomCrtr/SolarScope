@@ -56,7 +56,7 @@ const SOURCES = [
     { name: 'NASA APIs', url: 'https://api.nasa.gov', desc: 'APOD, NeoWs, Mars Photos' },
     { name: 'NOAA SWPC', url: 'https://www.swpc.noaa.gov', desc: 'Météo spatiale & Kp index' },
     { name: 'NASA SDO', url: 'https://sdo.gsfc.nasa.gov', desc: 'Images solaires en direct' },
-    { name: 'ESA / JWST', url: 'https://webbtelescope.org', desc: 'Images du télescope Webb' },
+    { name: 'ESA / JWST', url: 'https://esawebb.org', desc: 'Images du télescope Webb' },
     { name: 'The Space Devs', url: 'https://thespacedevs.com', desc: 'Prochains lancements' },
     { name: 'NASA Open Data', url: 'https://data.nasa.gov', desc: 'Catalogue public & archives' },
     { name: 'People in Space', url: 'https://corquaid.github.io/international-space-station-APIs/', desc: 'Équipages actuellement en orbite' },

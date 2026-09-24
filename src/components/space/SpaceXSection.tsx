@@ -14,6 +14,7 @@ interface Launch {
   location: string
   webcast: string | null
   live: boolean
+  url: string | null
 }
 
 const VEHICLES = [
@@ -117,6 +118,7 @@ export default function SpaceXSection() {
               <p style={{ color: 'var(--text-muted)', fontSize: '0.68rem', lineHeight: 1.6, marginTop: '0.45rem' }}>{launch.rocket} · {launch.location}</p>
               <div style={{ marginTop: 'auto', paddingTop: '0.9rem', display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', fontSize: '0.65rem' }}>
                 <span>{new Date(launch.net).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>
+                {launch.url && <a href={launch.url} target="_blank" rel="noopener noreferrer" className="touch-link touch-link-compact" style={{ color: 'var(--star)', textDecoration: 'none' }} aria-label={`Fiche du lancement ${launch.name} (nouvel onglet)`}>Fiche ↗</a>}
                 {launch.webcast && <a href={launch.webcast} target="_blank" rel="noopener noreferrer" className="touch-link touch-link-compact" style={{ color: 'var(--nebula)', textDecoration: 'none' }}>Diffusion ↗</a>}
               </div>
             </motion.article>

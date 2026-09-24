@@ -6,6 +6,7 @@ import type { NewsArticle } from '@/lib/data/space-data'
 import KidsGuide from '@/components/learning/KidsGuide'
 
 const CATEGORY_COLORS: Record<string, string> = {
+  'Système solaire': '#ffb27a',
   Mars: '#f87171',
   Univers: '#a78bfa',
   Astéroïdes: '#fb923c',

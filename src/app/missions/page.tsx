@@ -33,6 +33,7 @@ interface UpcomingLaunch {
     rocket: string
     status: string
     image: string | null
+    url: string | null
 }
 
 const TYPE_COLORS: Record<string, string> = {
@@ -136,6 +137,7 @@ export default function MissionsPage() {
                                             <span style={{ color: 'var(--text-muted)', fontSize: '0.68rem' }}>🏢 {l.agency.length > 28 ? l.agency.slice(0, 28) + '…' : l.agency}</span>
                                             <span style={{ color: 'var(--text-muted)', fontSize: '0.67rem' }}>{d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}</span>
                                         </div>
+                                        {l.url && <a href={l.url} target="_blank" rel="noopener noreferrer" className="touch-link touch-link-compact" style={{ display: 'inline-flex', marginTop: '0.35rem', color: 'var(--star)', fontSize: '0.75rem', fontWeight: 700, textDecoration: 'none' }} aria-label={`Fiche du lancement ${l.name} (nouvel onglet)`}>Fiche du lancement ↗</a>}
                                     </div>
                                 </motion.div>
                             )

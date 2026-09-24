@@ -3,6 +3,8 @@ import {
   parseCrew,
   parseLaunches,
   parseNasaNewsFeed,
+  mergeNewsArticles,
+  isSuitableArticle,
   parseSolarWindPayload,
   parseXrayPayload,
   stationForCraft,
@@ -113,6 +115,8 @@ describe('space data normalization', () => {
         net: '2026-10-01T10:00:00Z',
         image: { image_url: 'https://example.test/f9.jpg' },
         vid_urls: [{ url: 'https://example.test/live' }],
+        slug: 'falcon-9-crew-13',
+        url: 'https://ll.thespacedevs.com/2.3.0/launches/ll23/?format=json',
         launch_service_provider: { name: 'SpaceX' },
       }],
     }, Date.parse('2026-09-24T00:00:00Z'))
@@ -120,7 +124,34 @@ describe('space data normalization', () => {
     expect(launch.image).toBe('https://example.test/f9.jpg')
     expect(launch.webcast).toBe('https://example.test/live')
     expect(launch.agency).toBe('SpaceX')
+    expect(launch.url).toBe('https://spacelaunchnow.app/launch/falcon-9-crew-13/')
     expect(parseLaunches({ results: [{ id: 'unsafe', name: 'x', net: '2026-10-02T10:00:00Z', image: 'javascript:alert(1)', vidURLs: ['http://example.test/live'] }] }, 0)[0])
       .toMatchObject({ image: null, webcast: null })
+  })
+  it('keeps internal NASA pages out of the children news feed and uses the feed category', () => {
+    const articles = parseNasaNewsFeed(`
+      <rss><channel>
+        <item><title>Travel</title><link>https://www.nasa.gov/centers-and-facilities/nssc/travel/</link></item>
+        <item><title>Machines for Mars Make Beer Bubbly</title><link>https://www.nasa.gov/technology/tech-transfer-spinoffs/beer/</link></item>
+        <item><title>Webb Opens Treasure Chest</title><link>https://science.nasa.gov/missions/webb/treasure/</link></item>
+      </channel></rss>
+    `, 'Univers')
+
+    expect(articles.map(article => article.title)).toEqual(['Webb Opens Treasure Chest'])
+    expect(articles[0].category).toBe('Univers')
+    expect(isSuitableArticle({ title: 'x', url: 'javascript:alert(1)' })).toBe(false)
+  })
+
+  it('merges topic feeds without duplicates, newest first', () => {
+    const base = { source: 'NASA', summary: '', category: 'Univers' }
+    const merged = mergeNewsArticles([
+      [{ ...base, title: 'Old', url: 'https://www.nasa.gov/a', date: '2026-09-01T00:00:00.000Z' }],
+      [
+        { ...base, title: 'New', url: 'https://www.nasa.gov/b', date: '2026-09-20T00:00:00.000Z' },
+        { ...base, title: 'Old again', url: 'https://www.nasa.gov/a', date: '2026-09-01T00:00:00.000Z' },
+      ],
+    ])
+
+    expect(merged.map(article => article.title)).toEqual(['New', 'Old'])
   })
 })

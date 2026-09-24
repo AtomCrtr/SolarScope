@@ -200,6 +200,9 @@ export function parseLaunches(payload: unknown, now = Date.now()): LaunchDetails
       const videos = Array.isArray(launch.vid_urls) ? launch.vid_urls : Array.isArray(launch.vidURLs) ? launch.vidURLs : []
       const firstVideo = videos[0]
       const webcast = isRecord(firstVideo) ? stringValue(firstVideo.url) : stringValue(firstVideo)
+      // Readable launch page (Space Launch Now, by the Launch Library team) instead of the JSON API URL.
+      const slug = stringValue(launch.slug)
+      const infoUrl = slug && /^[a-z0-9-]+$/.test(slug) ? `https://spacelaunchnow.app/launch/${slug}/` : null
 
       return {
         id,
@@ -212,7 +215,7 @@ export function parseLaunches(payload: unknown, now = Date.now()): LaunchDetails
         location: stringValue(location?.name) || stringValue(pad?.name) || 'Site non renseigné',
         webcast: webcast?.startsWith('https://') ? webcast : null,
         live: launch.webcast_live === true,
-        url: stringValue(launch.url),
+        url: infoUrl,
       }
     })
     .filter((launch): launch is LaunchDetails => launch !== null && Date.parse(launch.net) > now)
@@ -544,7 +547,26 @@ function classifyArticle(text: string): string {
   return 'Sciences'
 }
 
-export function parseNasaNewsFeed(xml: string): NewsArticle[] {
+// Topic feeds: the general nasa.gov feed mixes stories with internal pages (travel,
+// procurement, technology transfer…). Each topic feed also gives a reliable category.
+export const NASA_NEWS_FEEDS: ReadonlyArray<{ url: string; category: string }> = [
+  { url: 'https://www.nasa.gov/solar-system/feed/', category: 'Système solaire' },
+  { url: 'https://www.nasa.gov/missions/mars-2020-perseverance/feed/', category: 'Mars' },
+  { url: 'https://www.nasa.gov/universe/feed/', category: 'Univers' },
+  { url: 'https://www.nasa.gov/missions/webb/feed/', category: 'Univers' },
+  { url: 'https://www.nasa.gov/missions/hubble/feed/', category: 'Univers' },
+  { url: 'https://www.nasa.gov/missions/artemis/feed/', category: 'Exploration' },
+  { url: 'https://www.nasa.gov/missions/station/feed/', category: 'Exploration' },
+  { url: 'https://www.nasa.gov/earth/feed/', category: 'Terre' },
+]
+
+const NOT_FOR_YOUNG_READERS = /\/(centers-and-facilities|directorates|organizations|technology|careers|nssc|budgets?|procurement)\//i
+
+export function isSuitableArticle(article: Pick<NewsArticle, 'title' | 'url'>): boolean {
+  return article.url.startsWith('https://') && !NOT_FOR_YOUNG_READERS.test(article.url) && article.title.trim().toLowerCase() !== 'travel'
+}
+
+export function parseNasaNewsFeed(xml: string, category?: string): NewsArticle[] {
   const items = xml.match(/<item>[\s\S]*?<\/item>/gi) || []
 
   return items
@@ -562,22 +584,32 @@ export function parseNasaNewsFeed(xml: string): NewsArticle[] {
         url,
         date: parsedDate && !Number.isNaN(parsedDate.getTime()) ? parsedDate.toISOString() : null,
         summary: summary || 'Consultez l’article complet sur le site officiel de la NASA.',
-        category: classifyArticle(`${title} ${summary}`),
+        category: category ?? classifyArticle(`${title} ${summary}`),
       }
     })
-    .filter((article): article is NewsArticle => article !== null)
+    .filter((article): article is NewsArticle => article !== null && isSuitableArticle(article))
     .slice(0, 18)
 }
 
+/** Merges topic feeds: one entry per URL, newest first. */
+export function mergeNewsArticles(groups: NewsArticle[][], limit = 24): NewsArticle[] {
+  const byUrl = new Map<string, NewsArticle>()
+  for (const article of groups.flat()) {
+    if (!byUrl.has(article.url)) byUrl.set(article.url, article)
+  }
+  return [...byUrl.values()]
+    .sort((a, b) => (b.date ? Date.parse(b.date) : 0) - (a.date ? Date.parse(a.date) : 0))
+    .slice(0, limit)
+}
+
 export async function getNasaNews(): Promise<{ articles: NewsArticle[]; updatedAt: string }> {
-  const response = await fetchWithTimeout(
-    'https://www.nasa.gov/feed/',
-    1_800,
-    'space-news',
-    'application/rss+xml, application/xml, text/xml',
-  )
-  const xml = await response.text()
-  return { articles: parseNasaNewsFeed(xml), updatedAt: new Date().toISOString() }
+  const results = await Promise.allSettled(NASA_NEWS_FEEDS.map(async feed => {
+    const response = await fetchWithTimeout(feed.url, 1_800, 'space-news', 'application/rss+xml, application/xml, text/xml')
+    return parseNasaNewsFeed(await response.text(), feed.category)
+  }))
+  const groups = results.flatMap(result => result.status === 'fulfilled' ? [result.value] : [])
+  if (!groups.length) throw new Error('NASA news feeds unavailable')
+  return { articles: mergeNewsArticles(groups), updatedAt: new Date().toISOString() }
 }
 
 export function getNasaApiKey(): string {

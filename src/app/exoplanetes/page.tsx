@@ -165,10 +165,10 @@ export default function ExoplanetesPage() {
                 <h2 className="section-title" style={{ color: 'var(--text)' }}>En savoir plus</h2>
                 <ul className="resource-list" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
                     {[
-                        { label: 'NASA Exoplanet Exploration', url: 'https://exoplanets.nasa.gov/', desc: 'Le portail officiel avec visualisations interactives' },
+                        { label: 'NASA Exoplanet Exploration', url: 'https://science.nasa.gov/exoplanets/', desc: 'Le portail officiel avec visualisations interactives' },
                         { label: 'Eyes on Exoplanets 3D', url: 'https://eyes.nasa.gov/apps/exo/', desc: 'Voyage virtuel vers les exoplanètes' },
                         { label: 'NASA Exoplanet Archive', url: 'https://exoplanetarchive.ipac.caltech.edu/', desc: 'Base de données complète de toutes les exoplanètes' },
-                        { label: 'ESO Exoplanètes', url: 'https://www.eso.org/public/france/themes/exoplanets/', desc: "Le site de l'Observatoire Européen" },
+                        { label: 'ESO Exoplanètes', url: 'https://www.eso.org/public/france/science/exoplanets/', desc: "Le site de l'Observatoire Européen" },
                     ].map(l => (
                         <li key={l.label}>
                             <a href={l.url} target="_blank" rel="noopener noreferrer" className="touch-link touch-link-compact" style={{ color: 'var(--nebula)', textDecoration: 'underline', textUnderlineOffset: 3 }}>{l.label}</a>

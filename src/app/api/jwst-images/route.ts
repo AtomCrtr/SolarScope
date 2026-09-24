@@ -25,7 +25,8 @@ export async function GET() {
         title: detail.title,
         description: `${detail.description?.slice(0, 180) || ''}${detail.description ? '…' : ''}`,
         date_created: detail.date_created?.slice(0, 10) || '',
-        href: thumbnail,
+        // The NASA page for the image (title, description, credits), not the raw file.
+        href: `https://images.nasa.gov/details/${encodeURIComponent(detail.nasa_id)}`,
         thumb: thumbnail,
       }]
     })

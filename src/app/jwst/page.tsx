@@ -182,7 +182,7 @@ export default function JWSTPage() {
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.625rem', marginBottom: '2rem' }} className="max-sm:grid-cols-2">
             {nasaImages.map((img, i) => (
-              <motion.a key={img.nasa_id} href={img.thumb} target="_blank" rel="noopener noreferrer"
+              <motion.a key={img.nasa_id} href={img.href} target="_blank" rel="noopener noreferrer" aria-label={`${img.title} — voir la fiche sur le site de la NASA (nouvel onglet)`}
                 initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.03 }}
                 style={{ display: 'block', textDecoration: 'none', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid rgba(99,102,241,0.12)' }}
                 whileHover={{ scale: 1.04 }}>

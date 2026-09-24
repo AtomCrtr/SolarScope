@@ -398,7 +398,7 @@ export default function SpaceWeatherDashboard() {
                     <div style={{ textAlign: 'center', paddingTop: '0.5rem' }}>
                         <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
                             Données : <a href="https://www.swpc.noaa.gov" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-subtle)' }}>NOAA Space Weather Prediction Center</a> ·
-                            Satellite <a href="https://www.swpc.noaa.gov/products/real-time-solar-wind" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-subtle)' }}>DSCOVR (L1)</a> ·
+                            Satellite <a href="https://www.spaceweather.gov/products/solar-wind" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-subtle)' }}>DSCOVR (L1)</a> ·
                             <a href="https://soho.nascom.nasa.gov" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-subtle)' }}>SOHO (NASA/ESA)</a>
                         </p>
                     </div>
