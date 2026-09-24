@@ -8,6 +8,7 @@ import type { DashboardData, IssPosition } from '@/lib/data/space-data'
 import KidsGuide from '@/components/learning/KidsGuide'
 import DataSourceNote from '@/components/learning/DataSourceNote'
 import MetricGrid from '@/components/space/MetricGrid'
+import { useDaysSince } from '@/lib/client/use-client-value'
 
 const ISSGlobe = dynamic(() => import('@/components/space/ISSGlobe'), { ssr: false })
 
@@ -20,10 +21,6 @@ interface LaunchInfo {
 
 function formatLatLng(val: number, posLabel: string, negLabel: string) {
     return `${Math.abs(val).toFixed(4)}° ${val >= 0 ? posLabel : negLabel}`
-}
-
-function daysSince(dateStr: string) {
-    return Math.floor((Date.now() - new Date(dateStr).getTime()) / 86400000)
 }
 
 export default function ISSPage() {
@@ -91,7 +88,7 @@ export default function ISSPage() {
     }, [])
 
     const issOnISS = astronauts.filter(a => a.station === 'ISS')
-    const daysOnOrbit = daysSince('1998-11-20')
+    const daysOnOrbit = useDaysSince('1998-11-20')
     const missingPosition = positionLoading ? '…' : 'Indisponible'
 
     return (
@@ -191,7 +188,7 @@ export default function ISSPage() {
                     <section className="card iss-facts-card" aria-labelledby="iss-facts-title">
                         <h2 id="iss-facts-title" className="sr-only">Repères sur la station</h2>
                         {[
-                            { icon: '📅', val: `${daysOnOrbit} j.`, label: 'En orbite' },
+                            { icon: '📅', val: daysOnOrbit === null ? '…' : `${daysOnOrbit} j.`, label: 'En orbite' },
                             { icon: '🏗️', val: '420 t', label: 'Masse' },
                             { icon: '📐', val: '109 m', label: 'Envergure' },
                             { icon: '🔄', val: '16/j', label: 'Tours/jour' },

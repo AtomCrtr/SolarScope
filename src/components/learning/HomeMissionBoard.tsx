@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 import { MISSION_IDS, PROGRESS_EVENT, readLocalProgress, visitMission, type MissionId } from '@/lib/client/local-progress'
+import { readStorage, writeStorage } from '@/lib/client/safe-storage'
 
 type Audience = 'kids' | 'teens'
 
@@ -186,7 +187,7 @@ export default function HomeMissionBoard({ locale }: HomeMissionBoardProps) {
 
   useEffect(() => {
     const restoreAudienceFrame = window.requestAnimationFrame(() => {
-      const savedAudience = window.localStorage.getItem(AUDIENCE_STORAGE_KEY)
+      const savedAudience = readStorage(AUDIENCE_STORAGE_KEY)
       if (savedAudience === 'kids' || savedAudience === 'teens') setAudience(savedAudience)
     })
 
@@ -204,7 +205,7 @@ export default function HomeMissionBoard({ locale }: HomeMissionBoardProps) {
 
   const selectAudience = (next: Audience) => {
     setAudience(next)
-    window.localStorage.setItem(AUDIENCE_STORAGE_KEY, next)
+    writeStorage(AUDIENCE_STORAGE_KEY, next)
   }
 
   const markVisited = (mission?: MissionId) => {

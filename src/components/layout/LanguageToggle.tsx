@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
 import { usePathname } from 'next/navigation'
+import { readStorage, writeStorage } from '@/lib/client/safe-storage'
 
 export type SiteLocale = 'fr' | 'en'
 
@@ -9,23 +10,20 @@ const STORAGE_KEY = 'solarscope-locale'
 const LOCALE_EVENT = 'solarscope-locale-change'
 
 function readLocale(): SiteLocale {
-  return window.localStorage.getItem(STORAGE_KEY) === 'en' ? 'en' : 'fr'
+  return readStorage(STORAGE_KEY) === 'en' ? 'en' : 'fr'
+}
+
+function subscribeToLocale(onChange: () => void) {
+  window.addEventListener(LOCALE_EVENT, onChange)
+  window.addEventListener('storage', onChange)
+  return () => {
+    window.removeEventListener(LOCALE_EVENT, onChange)
+    window.removeEventListener('storage', onChange)
+  }
 }
 
 export function useSiteLocale(): SiteLocale {
-  const [locale, setLocale] = useState<SiteLocale>('fr')
-
-  useEffect(() => {
-    const update = () => {
-      const nextLocale = readLocale()
-      setLocale(nextLocale)
-    }
-    update()
-    window.addEventListener(LOCALE_EVENT, update)
-    return () => window.removeEventListener(LOCALE_EVENT, update)
-  }, [])
-
-  return locale
+  return useSyncExternalStore(subscribeToLocale, readLocale, () => 'fr')
 }
 
 export default function LanguageToggle() {
@@ -33,7 +31,7 @@ export default function LanguageToggle() {
   const pathname = usePathname()
 
   const setLocale = (nextLocale: SiteLocale) => {
-    window.localStorage.setItem(STORAGE_KEY, nextLocale)
+    writeStorage(STORAGE_KEY, nextLocale)
     document.documentElement.lang = nextLocale === 'en' && pathname === '/' ? 'en' : 'fr'
     window.dispatchEvent(new Event(LOCALE_EVENT))
   }

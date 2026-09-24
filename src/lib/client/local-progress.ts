@@ -1,3 +1,5 @@
+import { readStorage, removeStorage, writeStorage } from './safe-storage'
+
 export const MISSION_IDS = [
   'soleil',
   'planetes',
@@ -30,7 +32,7 @@ const emptyProgress = (): LocalProgress => ({ visited: {}, completed: {} })
 export function readLocalProgress(): LocalProgress {
   if (typeof window === 'undefined') return emptyProgress()
   try {
-    const saved = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '') as LocalProgress
+    const saved = JSON.parse(readStorage(STORAGE_KEY) || '') as LocalProgress
     return { visited: saved.visited || {}, completed: saved.completed || {}, bestQuizScore: saved.bestQuizScore }
   } catch {
     return emptyProgress()
@@ -40,7 +42,7 @@ export function readLocalProgress(): LocalProgress {
 export function updateLocalProgress(update: (current: LocalProgress) => LocalProgress) {
   if (typeof window === 'undefined') return
   const next = update(readLocalProgress())
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+  writeStorage(STORAGE_KEY, JSON.stringify(next))
   window.dispatchEvent(new Event(PROGRESS_EVENT))
 }
 
@@ -58,6 +60,6 @@ export function recordQuizScore(score: number) {
 
 export function clearLocalProgress() {
   if (typeof window === 'undefined') return
-  window.localStorage.removeItem(STORAGE_KEY)
+  removeStorage(STORAGE_KEY)
   window.dispatchEvent(new Event(PROGRESS_EVENT))
 }

@@ -2,6 +2,10 @@
 
 import Link from 'next/link'
 import { useSiteLocale } from '@/components/layout/LanguageToggle'
+import { useClientValue } from '@/lib/client/use-client-value'
+
+// Évaluée au build : la page prérendue affiche cette année jusqu’à l’hydratation.
+const BUILD_YEAR = new Date().getFullYear()
 
 const FOOTER_GROUPS = [
     {
@@ -84,7 +88,7 @@ const SOURCE_DESC_EN: Record<string, string> = {
 }
 
 export default function Footer() {
-    const year = new Date().getFullYear()
+    const year = useClientValue(() => new Date().getFullYear(), BUILD_YEAR)
     const locale = useSiteLocale()
     const copy = FOOTER_COPY[locale]
     const groups = locale === 'en' ? FOOTER_GROUPS_EN : FOOTER_GROUPS

@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from 'react'
 import type { DashboardData } from '@/lib/data/space-data'
 import HomeMissionBoard from '@/components/learning/HomeMissionBoard'
 import { useSiteLocale } from '@/components/layout/LanguageToggle'
+import { useDaysSince } from '@/lib/client/use-client-value'
 
 const HOME_COPY = {
   fr: {
@@ -90,13 +91,7 @@ const CATEGORY_EN: Record<string, { title: string; desc: string; pages: Record<s
   },
 }
 
-function daysSince(date: string) {
-  return Math.floor((Date.now() - new Date(date).getTime()) / 86_400_000)
-}
-
-function martianSolsSince(date: string) {
-  return Math.floor(daysSince(date) / 1.02749125)
-}
+const EARTH_DAYS_PER_SOL = 1.02749125
 
 function useCountdown(target: string | undefined) {
   const [remaining, setRemaining] = useState<number | null>(() => target ? Math.max(0, new Date(target).getTime() - Date.now()) : null)
@@ -157,6 +152,7 @@ export default function HomePage() {
   )
   const dashboardLoading = data === null && !dataError
   const issCrew = data?.crew.filter(member => member.station === 'ISS').length ?? null
+  const perseveranceDays = useDaysSince('2021-02-18')
   const categories = locale === 'en'
     ? CATEGORIES.map(category => ({
         ...category,
@@ -180,7 +176,9 @@ export default function HomePage() {
       label: copy.kpis.crew, source: 'People in Space', color: '#38bdf8', live: data?.sources.crew,
     },
     {
-      value: martianSolsSince('2021-02-18').toLocaleString(locale === 'fr' ? 'fr-FR' : 'en-US'),
+      value: perseveranceDays === null
+        ? '…'
+        : Math.floor(perseveranceDays / EARTH_DAYS_PER_SOL).toLocaleString(locale === 'fr' ? 'fr-FR' : 'en-US'),
       label: copy.kpis.perseverance, source: copy.kpis.perseveranceSince, color: '#f87171', live: false,
     },
   ]
@@ -188,12 +186,7 @@ export default function HomePage() {
   return (
     <>
       <section className="home-storyboard container">
-        <motion.div
-          className="home-story-intro"
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-        >
+        <div className="home-story-intro">
           <span className="home-story-note">{copy.title[0]}</span>
           <h1 className="home-title">
             <span>{copy.title[1]}</span>
@@ -215,7 +208,7 @@ export default function HomePage() {
             className="home-discovery-notebook"
             priority
           />
-        </motion.div>
+        </div>
         <HomeMissionBoard locale={locale} />
       </section>
 
