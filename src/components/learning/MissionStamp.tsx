@@ -21,9 +21,18 @@ export default function MissionStamp({ mission }: { mission: MissionId }) {
 
   return (
     <button type="button" className="mission-stamp" aria-pressed={completed} onClick={markCompleted}>
-      {completed
-        ? (locale === 'en' ? '✅ Mission saved in my passport' : '✅ Mission validée dans mon passeport')
-        : (locale === 'en' ? '🏁 I finished this mission' : '🏁 J’ai terminé cette mission')}
+      {completed && (
+        <svg className="mission-stamp-mark" width="52" height="52" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="3" strokeDasharray="4 3" />
+          <circle cx="32" cy="32" r="21" stroke="currentColor" strokeWidth="2" />
+          <path d="M22 33l7 7 14-15" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      )}
+      <span>
+        {completed
+          ? (locale === 'en' ? 'Mission stamp saved in my passport' : 'Tampon ajouté à mon passeport')
+          : (locale === 'en' ? 'I finished this mission' : 'J’ai terminé cette mission')}
+      </span>
     </button>
   )
 }

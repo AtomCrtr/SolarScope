@@ -5,6 +5,7 @@ import Navbar from '@/components/layout/Navbar'
 import StarField from '@/components/layout/StarField'
 import SolarBotWidgetBoundary from '@/components/assistant/SolarBotWidgetBoundary'
 import Footer from '@/components/layout/Footer'
+import MobileTabBar from '@/components/layout/MobileTabBar'
 import Breadcrumb from '@/components/layout/Breadcrumb'
 import ProgressTracker from '@/components/learning/ProgressTracker'
 import LanguageAvailabilityNotice from '@/components/layout/LanguageAvailabilityNotice'
@@ -91,6 +92,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
         <Footer />
+        <MobileTabBar />
         <SolarBotWidgetBoundary />
         <ServiceWorkerRegistration />
       </body>

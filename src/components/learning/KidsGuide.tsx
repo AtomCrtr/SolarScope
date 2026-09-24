@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { LEARNING_TOPICS, type LearningTopic, type LearningTopicId } from '@/lib/content/learning-content'
 import MissionStamp from '@/components/learning/MissionStamp'
 import { useSiteLocale } from '@/components/layout/LanguageToggle'
+import SpaceIcon, { type SpaceIconName } from '@/components/ui/SpaceIcon'
+import { frenchNonBreakingSpaces } from '@/lib/content/typography'
 
 type KidsGuideProps = {
   topic: LearningTopicId
@@ -11,10 +13,10 @@ type KidsGuideProps = {
 
 type GuideSection = 'remember' | 'words' | 'challenge'
 
-const GUIDE_SECTIONS: Array<{ id: GuideSection; fr: string; en: string; icon: string }> = [
-  { id: 'remember', fr: 'À retenir', en: 'Remember', icon: '💡' },
-  { id: 'words', fr: 'Mots utiles', en: 'Useful words', icon: '🔭' },
-  { id: 'challenge', fr: 'Défi express', en: 'Quick challenge', icon: '🎯' },
+const GUIDE_SECTIONS: Array<{ id: GuideSection; fr: string; en: string; icon: SpaceIconName }> = [
+  { id: 'remember', fr: 'À retenir', en: 'Remember', icon: 'bulb' },
+  { id: 'words', fr: 'Mots utiles', en: 'Useful words', icon: 'book' },
+  { id: 'challenge', fr: 'Défi express', en: 'Quick challenge', icon: 'target' },
 ]
 
 const ENGLISH_GUIDES: Partial<Record<LearningTopicId, LearningTopic>> = {
@@ -113,15 +115,17 @@ export default function KidsGuide({ topic }: KidsGuideProps) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData }} />
       <div className="kids-guide-heading">
         <div>
-          <span className="kids-guide-label">🧭 {lesson.label} · {locale === 'en' ? (juniorMode ? 'AGES 6–8' : 'AGES 9+') : (juniorMode ? '6–8 ANS' : '9+ ANS')}</span>
-          <h2 id={titleId}>{lesson.question}</h2>
+          <span className="kids-guide-label">{lesson.label} · {locale === 'en' ? (juniorMode ? 'AGES 6–8' : 'AGES 9+') : (juniorMode ? '6–8 ANS' : '9+ ANS')}</span>
+          <h2 id={titleId}>{frenchNonBreakingSpaces(lesson.question)}</h2>
         </div>
         <div className="kids-guide-actions">
           <button type="button" className="kids-mode-button" aria-pressed={juniorMode} onClick={toggleJuniorMode}>
-            {juniorMode ? (locale === 'en' ? '🚀 Full version' : '🚀 Version complète') : (locale === 'en' ? '🧒 Ages 6–8' : '🧒 Mode 6–8 ans')}
+            <SpaceIcon name={juniorMode ? 'rocket' : 'child'} size={18} />
+            {juniorMode ? (locale === 'en' ? 'Full version' : 'Version complète') : (locale === 'en' ? 'Ages 6–8' : 'Mode 6–8 ans')}
           </button>
           <button type="button" className="kids-listen-button" aria-pressed={speaking} onClick={toggleSpeech}>
-            {speaking ? (locale === 'en' ? '■ Stop' : '■ Arrêter') : (locale === 'en' ? '🔊 Listen' : '🔊 Écouter')}
+            <SpaceIcon name={speaking ? 'stop' : 'speaker'} size={18} />
+            {speaking ? (locale === 'en' ? 'Stop' : 'Arrêter') : (locale === 'en' ? 'Listen' : 'Écouter')}
           </button>
         </div>
       </div>
@@ -140,7 +144,7 @@ export default function KidsGuide({ topic }: KidsGuideProps) {
               className={activeSection === section.id ? 'is-active' : undefined}
               onClick={() => selectSection(section.id)}
             >
-              <span aria-hidden="true">{section.icon}</span>{locale === 'en' ? section.en : section.fr}
+              <SpaceIcon name={section.icon} size={18} />{locale === 'en' ? section.en : section.fr}
             </button>
           ))}
         </div>
@@ -148,8 +152,11 @@ export default function KidsGuide({ topic }: KidsGuideProps) {
 
       <div id={`${titleId}-remember`} className={`kids-progressive-panel${activeSection === 'remember' ? ' is-active' : ''}`} data-guide-section="remember">
         <div className="kids-analogy">
-          <span aria-hidden="true">💭</span>
-          <p><strong>{locale === 'en' ? 'Imagine:' : 'Imagine :'}</strong> {lesson.analogy}</p>
+          <SpaceIcon name="bulb" size={28} className="kids-note-icon" />
+          <div>
+            <span className="kids-note-title">{locale === 'en' ? 'It’s like…' : 'C’est comme…'}</span>
+            <p>{lesson.analogy}</p>
+          </div>
         </div>
 
         <div className="kids-takeaways">
@@ -173,20 +180,23 @@ export default function KidsGuide({ topic }: KidsGuideProps) {
         </div>
 
         <details className="kids-deep-dive">
-          <summary>{locale === 'en' ? '🔭 I want to go further' : '🔭 Je veux aller plus loin'}</summary>
+          <summary><SpaceIcon name="telescope" size={18} />{locale === 'en' ? 'I want to go further' : 'Je veux aller plus loin'}</summary>
           <p>{lesson.deepDive}</p>
         </details>
       </div>}
 
       <div id={`${titleId}-challenge`} className={`kids-progressive-panel${activeSection === 'challenge' ? ' is-active' : ''}`} data-guide-section="challenge">
         <div className="kids-challenge">
-          <span aria-hidden="true">🎯</span>
-          <p><strong>{locale === 'en' ? 'Your turn:' : 'À toi de jouer :'}</strong> {lesson.challenge}</p>
+          <SpaceIcon name="target" size={28} className="kids-note-icon" />
+          <div>
+            <span className="kids-note-title">{locale === 'en' ? 'Your challenge' : 'Ton défi'}</span>
+            <p>{lesson.challenge}</p>
+          </div>
         </div>
 
         <div className="kids-quick-mission" data-quick-mission>
           <div>
-            <span aria-hidden="true">⏱️</span>
+            <SpaceIcon name="clock" size={20} />
             <h3>{locale === 'en' ? '5-minute mission' : 'Mission express · 5 min'}</h3>
           </div>
           <ol>

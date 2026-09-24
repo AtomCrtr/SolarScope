@@ -17,6 +17,14 @@ export type SpaceIconName =
   | 'quiz'
   | 'passport'
   | 'family'
+  | 'compass'
+  | 'bulb'
+  | 'target'
+  | 'book'
+  | 'speaker'
+  | 'stop'
+  | 'clock'
+  | 'child'
 
 const PATHS: Record<SpaceIconName, ReactNode> = {
   home: <path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z" />,
@@ -34,6 +42,14 @@ const PATHS: Record<SpaceIconName, ReactNode> = {
   news: <><rect x="4" y="4" width="16" height="16" rx="2" /><path d="M8 8h8M8 12h8M8 16h5" /></>,
   quiz: <><circle cx="12" cy="12" r="9" /><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5v.01" /></>,
   passport: <><rect x="5" y="3" width="14" height="18" rx="2" /><path d="M12 8l1.2 2.4 2.6.4-1.9 1.8.5 2.6L12 14l-2.4 1.2.5-2.6-1.9-1.8 2.6-.4z" /></>,
+  bulb: <path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.4 1 1.1 1 1.8V16h5v-.3c0-.7.4-1.4 1-1.8A6 6 0 0 0 12 3z" />,
+  target: <><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="5" /><circle cx="12" cy="12" r="1" /></>,
+  book: <><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z" /><path d="M4 21V5M9 8h6M9 12h4" /></>,
+  speaker: <><path d="M4 9v6h4l5 4V5L8 9z" /><path d="M16.5 8.5a5 5 0 0 1 0 7" /></>,
+  stop: <rect x="6" y="6" width="12" height="12" rx="2" />,
+  clock: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>,
+  child: <><circle cx="12" cy="6" r="3" /><path d="M12 9v7M8 12h8M9 21l3-5 3 5" /></>,
+  compass: <><circle cx="12" cy="12" r="9" /><path d="M15.5 8.5l-2 5-5 2 2-5z" /></>,
   family: <><circle cx="8" cy="7" r="3" /><circle cx="17" cy="9" r="2.5" /><path d="M3 20c0-3 2.2-5 5-5s5 2 5 5M13 20c0-2.5 1.7-4 4-4s4 1.5 4 4" /></>,
 }
 

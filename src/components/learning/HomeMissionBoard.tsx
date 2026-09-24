@@ -7,6 +7,7 @@ import { MISSION_IDS, PROGRESS_EVENT, readLocalProgress, visitMission, type Loca
 import { readStorage, writeStorage } from '@/lib/client/safe-storage'
 import Cosmo from '@/components/learning/Cosmo'
 import { SkyScatterArt, TransitArt } from '@/components/learning/MissionArt'
+import { frenchNonBreakingSpaces } from '@/lib/content/typography'
 
 type Audience = 'kids' | 'teens'
 
@@ -301,7 +302,7 @@ export default function HomeMissionBoard({ locale, hero }: HomeMissionBoardProps
             <span className="home-featured-kicker">{copy.kicker}</span>
             <span className="home-featured-duration"><ClockIcon />{copy.featured.duration}</span>
           </div>
-          <h2 id="home-mission-title">{copy.title}</h2>
+          <h2 id="home-mission-title">{frenchNonBreakingSpaces(copy.title)}</h2>
           <p>{copy.intro}</p>
           <div className="home-featured-actions">
             <Link href={copy.featured.href} className="home-featured-action" onClick={() => markVisited(copy.featured.missionId)}>
@@ -317,7 +318,7 @@ export default function HomeMissionBoard({ locale, hero }: HomeMissionBoardProps
         </div>
       </article>
 
-      <section className="home-routes-section" aria-labelledby="home-routes-title">
+      <section className="home-routes-section" id="parcours" aria-labelledby="home-routes-title">
         <div className="home-route-heading">
           <h2 id="home-routes-title">{copy.routeTitle}</h2>
           <p>{copy.routeText}</p>
@@ -346,7 +347,7 @@ export default function HomeMissionBoard({ locale, hero }: HomeMissionBoardProps
           <Image src={SHARED_IMAGES.constellation} alt="" width={640} height={360} sizes="(max-width: 700px) 100vw, 50vw" />
           <div>
             <span className="home-discovery-kicker">{copy.bannerKicker}</span>
-            <strong>{copy.bannerTitle}</strong>
+            <strong>{frenchNonBreakingSpaces(copy.bannerTitle)}</strong>
             <span>{copy.bannerText}</span>
             <Link href={audience === 'kids' ? '/ciel' : '/exoplanetes'}>{copy.bannerAction}</Link>
           </div>
