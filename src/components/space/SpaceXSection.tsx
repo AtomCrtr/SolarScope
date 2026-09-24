@@ -106,7 +106,7 @@ export default function SpaceXSection() {
               style={{ padding: '1.1rem', display: 'flex', flexDirection: 'column', minHeight: 195 }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
-                <time dateTime={launch.net} style={{ color: '#818cf8', fontSize: '0.68rem', fontWeight: 800 }}>
+                <time dateTime={launch.net} style={{ color: 'var(--nebula)', fontSize: '0.68rem', fontWeight: 800 }}>
                   {new Date(launch.net).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
                 </time>
                 <span style={{ color: launch.live ? '#34d399' : 'var(--text-muted)', fontSize: '0.6rem', fontWeight: 800 }}>
@@ -115,9 +115,9 @@ export default function SpaceXSection() {
               </div>
               <h3 style={{ marginTop: '0.8rem', color: 'var(--text)', font: "730 0.92rem/1.45 var(--font-display)" }}>{launch.name}</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.68rem', lineHeight: 1.6, marginTop: '0.45rem' }}>{launch.rocket} · {launch.location}</p>
-              <div style={{ marginTop: 'auto', paddingTop: '0.9rem', display: 'flex', justifyContent: 'space-between', color: '#64748b', fontSize: '0.65rem' }}>
+              <div style={{ marginTop: 'auto', paddingTop: '0.9rem', display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', fontSize: '0.65rem' }}>
                 <span>{new Date(launch.net).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>
-                {launch.webcast && <a href={launch.webcast} target="_blank" rel="noopener noreferrer" className="touch-link touch-link-compact" style={{ color: '#a5b4fc', textDecoration: 'none' }}>Diffusion ↗</a>}
+                {launch.webcast && <a href={launch.webcast} target="_blank" rel="noopener noreferrer" className="touch-link touch-link-compact" style={{ color: 'var(--nebula)', textDecoration: 'none' }}>Diffusion ↗</a>}
               </div>
             </motion.article>
           ))}
@@ -125,7 +125,7 @@ export default function SpaceXSection() {
       )}
 
       <div style={{ marginTop: '1rem', textAlign: 'right' }}>
-        <a href="https://www.spacex.com/vehicles/" target="_blank" rel="noopener noreferrer" className="touch-link touch-link-compact" style={{ color: '#94a3b8', fontSize: '0.75rem', textDecoration: 'underline', textUnderlineOffset: 3 }}>
+        <a href="https://www.spacex.com/vehicles/" target="_blank" rel="noopener noreferrer" className="touch-link touch-link-compact" style={{ color: 'var(--text-muted)', fontSize: '0.75rem', textDecoration: 'underline', textUnderlineOffset: 3 }}>
           Caractéristiques officielles des véhicules ↗
         </a>
       </div>

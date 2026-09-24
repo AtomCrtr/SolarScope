@@ -68,7 +68,7 @@ export default function ActualitesPage() {
     <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
       <motion.header initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="page-header">
         <div className="badge">📰 PUBLICATIONS OFFICIELLES</div>
-        <h1 className="page-title gradient-text-blue">Actualités spatiales</h1>
+        <h1 className="page-title">Actualités spatiales</h1>
         <p className="page-subtitle">
           Les nouvelles publiées par la NASA, avec leur date et leur source pour pouvoir les vérifier.
         </p>

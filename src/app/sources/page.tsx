@@ -16,7 +16,7 @@ export default function SourcesPage() {
     <div className="container prose-page sources-page">
       <header className="page-header">
         <div className="badge">🔎 DONNÉES EXPLIQUÉES</div>
-        <h1 className="page-title gradient-text">Comment savons-nous cela ?</h1>
+        <h1 className="page-title">Comment savons-nous cela ?</h1>
         <p className="page-subtitle">Chaque chiffre important indique sa source, son type et sa dernière vérification.</p>
       </header>
 

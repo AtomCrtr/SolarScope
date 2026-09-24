@@ -29,7 +29,7 @@ const HIGHLIGHTS = [
     title: 'SMACS 0723 — Premier champ profond',
     desc: 'La première image publique de Webb. Des milliers de galaxies sur une portion de ciel aussi petite qu\'un grain de sable tenu à bout de bras — certaines vieilles de 13 milliards d\'années.',
     img: '/smacs0723.png',
-    category: 'Cosmologie', color: '#6366f1', year: '2022',
+    category: 'Cosmologie', color: '#c4b5fd', year: '2022',
   },
   {
     title: 'Piliers de la Création (M16)',
@@ -41,7 +41,7 @@ const HIGHLIGHTS = [
     title: 'Nébuleuse de l\'Anneau Sud',
     desc: 'Une étoile mourante expulse ses couches externes en une nébuleuse planétaire spectaculaire. Webb révèle deux étoiles au cœur, dont l\'une est responsable des formes complexes.',
     img: '/media/jwst/southern-ring.webp',
-    category: 'Nébuleuse', color: '#a855f7', year: '2022',
+    category: 'Nébuleuse', color: '#c084fc', year: '2022',
   },
   {
     title: 'Quintette de Stephan',
@@ -53,7 +53,7 @@ const HIGHLIGHTS = [
     title: 'Nébuleuse de la Tarentule',
     desc: 'La région de formation stellaire la plus massive de notre Groupe Local. Webb y détecte des propriétés cachées et une multitude de jeunes étoiles massives dans le brouillard de poussière.',
     img: '/media/jwst/tarantula.webp',
-    category: 'Nébuleuse', color: '#ef4444', year: '2022',
+    category: 'Nébuleuse', color: '#f87171', year: '2022',
   },
 ]
 
@@ -69,10 +69,10 @@ const SCIENCE_STATS = [
 ]
 
 const CATEGORIES = [
-  { icon: '🌌', title: 'Premières galaxies', desc: 'Détecte des galaxies formées quelques centaines de millions d’années après le Big Bang.', color: '#6366f1' },
+  { icon: '🌌', title: 'Premières galaxies', desc: 'Détecte des galaxies formées quelques centaines de millions d’années après le Big Bang.', color: '#a5b4fc' },
   { icon: '⭐', title: 'Formation d\'étoiles', desc: 'Révèle les nurseries stellaires cachées dans les nébuleuses, impossible à voir en lumière visible.', color: '#f97316' },
   { icon: '🪐', title: 'Atmosphères exoplanètes', desc: 'Analyse la composition chimique des atmosphères de planètes à des dizaines d\'années-lumière.', color: '#10b981' },
-  { icon: '🕳️', title: 'Trous noirs', desc: 'Observe les disques d\'accrétion et les jets de matière des trous noirs supermassifs en IR.', color: '#a855f7' },
+  { icon: '🕳️', title: 'Trous noirs', desc: 'Observe les disques d\'accrétion et les jets de matière des trous noirs supermassifs en IR.', color: '#c084fc' },
 ]
 
 export default function JWSTPage() {
@@ -105,10 +105,10 @@ export default function JWSTPage() {
 
       {/* HERO */}
       <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="page-header">
-        <div className="badge" style={{ background: 'rgba(99,102,241,0.12)', color: '#a5b4fc', borderColor: 'rgba(99,102,241,0.25)' }}>
+        <div className="badge" style={{ background: 'rgba(99,102,241,0.12)', color: 'var(--nebula)', borderColor: 'rgba(99,102,241,0.25)' }}>
           🔭 JAMES WEBB SPACE TELESCOPE
         </div>
-        <h1 className="page-title" style={{ background: 'linear-gradient(135deg, #e0e7ff, #6366f1, #4f46e5)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+        <h1 className="page-title">
           Télescope Webb
         </h1>
         <p className="page-subtitle">
@@ -140,7 +140,7 @@ export default function JWSTPage() {
             padding: '0.5rem 1.25rem', borderRadius: 99, fontSize: '0.82rem', fontWeight: 700, cursor: 'pointer',
             background: activeTab === tab ? 'rgba(99,102,241,0.2)' : 'rgba(255,255,255,0.04)',
             border: `1px solid ${activeTab === tab ? 'rgba(99,102,241,0.45)' : 'rgba(255,255,255,0.07)'}`,
-            color: activeTab === tab ? '#a5b4fc' : '#94a3b8', transition: 'all 0.2s',
+            color: activeTab === tab ? 'var(--nebula)' : 'var(--text-muted)', transition: 'all 0.2s',
           }}>
             {tab === 'gallery' ? '🌌 Images iconiques Webb' : '🛰️ Galerie NASA live'}
           </button>
@@ -163,7 +163,7 @@ export default function JWSTPage() {
                 <div style={{ fontSize: '0.62rem', fontWeight: 700, color: h.color, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem' }}>
                   {h.category} · {h.year}
                 </div>
-                <h3 style={{ color: '#e2e8f0', fontSize: '0.88rem', fontWeight: 700, fontFamily: 'var(--font-display)', lineHeight: 1.3 }}>{h.title}</h3>
+                <h3 style={{ color: 'var(--text)', fontSize: '0.88rem', fontWeight: 700, fontFamily: 'var(--font-display)', lineHeight: 1.3 }}>{h.title}</h3>
               </div>
               <div style={{ position: 'absolute', top: 10, right: 10, background: `${h.color}20`, border: `1px solid ${h.color}40`, borderRadius: 99, padding: '2px 8px', fontSize: '0.65rem', color: h.color, fontWeight: 700 }}>
                 JWST
@@ -190,7 +190,7 @@ export default function JWSTPage() {
                   onError={e => { e.currentTarget.style.visibility = 'hidden' }} />
                 <div style={{ padding: '0.5rem 0.625rem', background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)' }}>
                   <div style={{ color: '#c7d2fe', fontSize: '0.65rem', fontWeight: 600, lineHeight: 1.3 }}>{img.title?.slice(0, 55)}{img.title?.length > 55 ? '…' : ''}</div>
-                  <div style={{ color: '#475569', fontSize: '0.6rem', marginTop: 2 }}>{img.date_created}</div>
+                  <div style={{ color: 'var(--text-muted)', fontSize: '0.6rem', marginTop: 2 }}>{img.date_created}</div>
                 </div>
               </motion.a>
             ))}
@@ -211,13 +211,13 @@ export default function JWSTPage() {
               onClick={e => e.stopPropagation()}
               style={{ maxWidth: 900, width: '100%', borderRadius: '1.25rem', overflow: 'hidden', border: '1px solid rgba(99,102,241,0.2)' }}>
               <Image src={HIGHLIGHTS[selectedHighlight].img} alt={HIGHLIGHTS[selectedHighlight].title} width={1400} height={900} style={{ width: '100%', height: 'auto', maxHeight: '60vh', objectFit: 'contain', background: '#000', display: 'block' }} />
-              <div style={{ padding: '1.25rem 1.5rem', background: '#080818' }}>
+              <div style={{ padding: '1.25rem 1.5rem', background: 'var(--card)' }}>
                 <div style={{ color: HIGHLIGHTS[selectedHighlight].color, fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.375rem' }}>
                   {HIGHLIGHTS[selectedHighlight].category} · JWST {HIGHLIGHTS[selectedHighlight].year}
                 </div>
-                <h2 id="jwst-dialog-title" style={{ color: '#e2e8f0', fontWeight: 700, fontFamily: 'var(--font-display)', fontSize: '1.1rem', marginBottom: '0.625rem' }}>{HIGHLIGHTS[selectedHighlight].title}</h2>
-                <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: 1.7 }}>{HIGHLIGHTS[selectedHighlight].desc}</p>
-                <button onClick={() => setSelectedHighlight(null)} style={{ marginTop: '1rem', padding: '0.5rem 1rem', borderRadius: 99, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8', cursor: 'pointer', fontSize: '0.8rem' }}>✕ Fermer</button>
+                <h2 id="jwst-dialog-title" style={{ color: 'var(--text)', fontWeight: 700, fontFamily: 'var(--font-display)', fontSize: '1.1rem', marginBottom: '0.625rem' }}>{HIGHLIGHTS[selectedHighlight].title}</h2>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: 1.7 }}>{HIGHLIGHTS[selectedHighlight].desc}</p>
+                <button onClick={() => setSelectedHighlight(null)} style={{ marginTop: '1rem', padding: '0.5rem 1rem', borderRadius: 99, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.8rem' }}>✕ Fermer</button>
               </div>
             </motion.div>
           </motion.div>
@@ -226,7 +226,7 @@ export default function JWSTPage() {
 
       {/* Science categories */}
       <div className="divider" />
-      <h2 className="section-title" style={{ color: '#e2e8f0' }}>🔬 Domaines de recherche de Webb</h2>
+      <h2 className="section-title" style={{ color: 'var(--text)' }}>🔬 Domaines de recherche de Webb</h2>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.875rem', marginBottom: '2rem' }} className="max-sm:grid-cols-1">
         {CATEGORIES.map((c, i) => (
           <motion.div key={c.title} className="card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }}
@@ -234,7 +234,7 @@ export default function JWSTPage() {
             <span style={{ fontSize: '2rem', flexShrink: 0 }}>{c.icon}</span>
             <div>
               <h3 style={{ color: c.color, fontWeight: 700, fontFamily: 'var(--font-display)', marginBottom: '0.375rem' }}>{c.title}</h3>
-              <p style={{ color: '#64748b', fontSize: '0.82rem', lineHeight: 1.65 }}>{c.desc}</p>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.82rem', lineHeight: 1.65 }}>{c.desc}</p>
             </div>
           </motion.div>
         ))}
@@ -242,7 +242,7 @@ export default function JWSTPage() {
 
       {/* Webb vs Hubble */}
       <div className="card" style={{ padding: '1.5rem' }}>
-        <h2 className="section-title" style={{ color: '#e2e8f0' }}>📡 Webb vs Hubble</h2>
+        <h2 className="section-title" style={{ color: 'var(--text)' }}>📡 Webb vs Hubble</h2>
         <div
           role="region"
           aria-label="Comparatif des télescopes spatiaux"
@@ -253,7 +253,7 @@ export default function JWSTPage() {
             <thead>
               <tr>
                 {['Caractéristique', '🔭 Hubble', '🌌 James Webb'].map(h => (
-                  <th key={h} style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#64748b', fontWeight: 600, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>{h}</th>
+                  <th key={h} style={{ padding: '0.75rem 1rem', textAlign: 'left', color: 'var(--text-muted)', fontWeight: 600, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -270,9 +270,9 @@ export default function JWSTPage() {
                 <tr key={row[0]} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', transition: 'background 0.15s' }}
                   onMouseOver={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.03)')}
                   onMouseOut={e => (e.currentTarget.style.background = 'transparent')}>
-                  <td style={{ padding: '0.625rem 1rem', color: '#94a3b8', fontWeight: 600 }}>{row[0]}</td>
-                  <td style={{ padding: '0.625rem 1rem', color: '#64748b' }}>{row[1]}</td>
-                  <td style={{ padding: '0.625rem 1rem', color: '#a5b4fc', fontWeight: 700 }}>{row[2]}</td>
+                  <td style={{ padding: '0.625rem 1rem', color: 'var(--text-muted)', fontWeight: 600 }}>{row[0]}</td>
+                  <td style={{ padding: '0.625rem 1rem', color: 'var(--text-muted)' }}>{row[1]}</td>
+                  <td style={{ padding: '0.625rem 1rem', color: 'var(--nebula)', fontWeight: 700 }}>{row[2]}</td>
                 </tr>
               ))}
             </tbody>

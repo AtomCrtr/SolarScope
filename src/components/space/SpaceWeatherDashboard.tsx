@@ -6,7 +6,7 @@ import type { MagneticField, SolarWind, SpaceWeatherData } from '@/lib/data/spac
 
 /* ─── Helpers ─── */
 function getFlareClass(flux: number): { label: string; color: string; bg: string; danger: string } {
-    if (flux >= 1e-4) return { label: 'X', color: '#ef4444', bg: 'rgba(239,68,68,0.12)', danger: 'Éruption extrême — blackout radio mondial' }
+    if (flux >= 1e-4) return { label: 'X', color: '#f87171', bg: 'rgba(239,68,68,0.12)', danger: 'Éruption extrême — blackout radio mondial' }
     if (flux >= 1e-5) return { label: 'M', color: '#f97316', bg: 'rgba(249,115,22,0.12)', danger: 'Éruption majeure — perturbations GPS' }
     if (flux >= 1e-6) return { label: 'C', color: '#eab308', bg: 'rgba(234,179,8,0.12)', danger: 'Éruption modérée — légères perturbations' }
     if (flux >= 1e-7) return { label: 'B', color: '#22c55e', bg: 'rgba(34,197,94,0.12)', danger: 'Éruption faible — sans conséquence' }
@@ -14,7 +14,7 @@ function getFlareClass(flux: number): { label: string; color: string; bg: string
 }
 
 function getBzStatus(bz: number): { color: string; label: string; risk: string } {
-    if (bz < -20) return { color: '#ef4444', label: 'CRITIQUE', risk: 'Couplage magnétique maximal — tempête géomagnétique sévère' }
+    if (bz < -20) return { color: '#f87171', label: 'CRITIQUE', risk: 'Couplage magnétique maximal — tempête géomagnétique sévère' }
     if (bz < -10) return { color: '#f97316', label: 'ÉLEVÉ', risk: 'Champ magnétique terrestre fortement perturbé' }
     if (bz < -5) return { color: '#eab308', label: 'MODÉRÉ', risk: 'Possible activité aurore boréale aux hautes latitudes' }
     if (bz < 0) return { color: '#84cc16', label: 'FAIBLE', risk: 'Légère interaction avec la magnétosphère' }
@@ -22,7 +22,7 @@ function getBzStatus(bz: number): { color: string; label: string; risk: string }
 }
 
 function getWindStatus(speed: number): { color: string; label: string } {
-    if (speed > 700) return { color: '#ef4444', label: 'Tempête solaire' }
+    if (speed > 700) return { color: '#f87171', label: 'Tempête solaire' }
     if (speed > 500) return { color: '#f97316', label: 'Vent rapide' }
     if (speed > 350) return { color: '#eab308', label: 'Vent modéré' }
     return { color: '#22c55e', label: 'Vent calme' }
@@ -33,7 +33,7 @@ function Gauge({ value, min, max, color, unit, label }: { value: number; min: nu
     const pct = Math.min(1, Math.max(0, (value - min) / (max - min)))
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-            <div style={{ fontSize: '0.65rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</div>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</div>
             <div style={{ position: 'relative', width: 88, height: 88 }}>
                 <svg aria-hidden="true" width="88" height="88" style={{ transform: 'rotate(-90deg)' }}>
                     <circle cx="44" cy="44" r="36" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
@@ -46,7 +46,7 @@ function Gauge({ value, min, max, color, unit, label }: { value: number; min: nu
                 </svg>
                 <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                     <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.05rem', color }}>{Math.round(value)}</span>
-                    <span style={{ fontSize: '0.6rem', color: '#334155' }}>{unit}</span>
+                    <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>{unit}</span>
                 </div>
             </div>
         </div>
@@ -61,7 +61,7 @@ function BzBar({ bz, bt }: { bz: number; bt: number }) {
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
-                <span style={{ fontSize: '0.65rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Bz (champ magnétique IMF)</span>
+                <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Bz (champ magnétique IMF)</span>
                 <span style={{ fontSize: '0.65rem', fontWeight: 700, color: status.color }}>{status.label}</span>
             </div>
             {/* Track */}
@@ -77,13 +77,13 @@ function BzBar({ bz, bt }: { bz: number; bt: number }) {
                     transition={{ duration: 1.2, ease: 'easeOut' }} />
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '0.6rem', color: '#334155' }}>-30 nT (sud)</span>
+                <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>-30 nT (sud)</span>
                 <span style={{ fontFamily: 'monospace', fontSize: '0.78rem', fontWeight: 700, color: status.color }}>{bz > 0 ? '+' : ''}{bz.toFixed(1)} nT</span>
-                <span style={{ fontSize: '0.6rem', color: '#334155' }}>+30 nT (nord)</span>
+                <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>+30 nT (nord)</span>
             </div>
-            <p style={{ color: '#334155', fontSize: '0.65rem', marginTop: '0.3rem', lineHeight: 1.5 }}>{status.risk}</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.65rem', marginTop: '0.3rem', lineHeight: 1.5 }}>{status.risk}</p>
             <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.35rem' }}>
-                <span style={{ fontSize: '0.65rem', color: '#475569' }}>Bt total : <strong style={{ color: '#94a3b8' }}>{bt.toFixed(1)} nT</strong></span>
+                <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>Bt total : <strong style={{ color: 'var(--text-muted)' }}>{bt.toFixed(1)} nT</strong></span>
             </div>
         </div>
     )
@@ -108,7 +108,7 @@ function XraySparkline({ history }: { history: number[] }) {
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem', alignItems: 'center' }}>
-                <span style={{ fontSize: '0.65rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Rayons X GOES (6h)</span>
+                <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Rayons X GOES (6h)</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                     <span style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '1.2rem', color: currentFlare.color }}>{currentFlare.label}</span>
                     <span style={{ fontSize: '0.65rem', color: currentFlare.color, background: currentFlare.bg, padding: '1px 7px', borderRadius: 99, border: `1px solid ${currentFlare.color}30` }}>Classe d&apos;éruption</span>
@@ -123,7 +123,7 @@ function XraySparkline({ history }: { history: number[] }) {
                         const logMax = Math.log10(Math.max(max, 1e-4))
                         const y = h - ((logV - logMin) / (logMax - logMin)) * h
                         const cls = ['A', 'B', 'C', 'M', 'X'][i]
-                        const clr = ['#06b6d4', '#22c55e', '#eab308', '#f97316', '#ef4444'][i]
+                        const clr = ['#06b6d4', '#22c55e', '#eab308', '#f97316', '#f87171'][i]
                         return (
                             <g key={v}>
                                 <line x1={0} y1={y} x2={w} y2={y} stroke={clr} strokeOpacity={0.15} strokeDasharray="3 3" />
@@ -137,7 +137,7 @@ function XraySparkline({ history }: { history: number[] }) {
                     <polyline points={points} fill="none" stroke={currentFlare.color} strokeWidth={1.5} />
                 </svg>
             </div>
-            <p style={{ color: '#475569', fontSize: '0.65rem', marginTop: '0.35rem' }}>{currentFlare.danger}</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.65rem', marginTop: '0.35rem' }}>{currentFlare.danger}</p>
         </div>
     )
 }
@@ -154,19 +154,19 @@ function SOHOPanel() {
         <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                 <div>
-                    <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#e2e8f0', fontFamily: 'var(--font-display)' }}>🛰️ SOHO Coronagraphe en direct</div>
-                    <div style={{ color: '#475569', fontSize: '0.72rem' }}>Satellite Solar and Heliospheric Observatory — NASA/ESA</div>
+                    <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text)', fontFamily: 'var(--font-display)' }}>🛰️ SOHO Coronagraphe en direct</div>
+                    <div style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>Satellite Solar and Heliospheric Observatory — NASA/ESA</div>
                 </div>
                 <div style={{ display: 'flex', gap: '0.4rem' }}>
                     {[{ label: 'LASCO C3', img: SOHO_LASCO_C3 }, { label: 'LASCO C2', img: SOHO_C2 }].map(b => (
-                        <button key={b.label} onClick={() => { setSrc(b.img); setImgErr(false) }} style={{ padding: '3px 10px', borderRadius: 99, fontSize: '0.68rem', fontWeight: 600, cursor: 'pointer', background: src === b.img ? 'rgba(245,158,11,0.15)' : 'rgba(255,255,255,0.04)', border: `1px solid ${src === b.img ? 'rgba(245,158,11,0.4)' : 'rgba(255,255,255,0.06)'}`, color: src === b.img ? '#f59e0b' : '#475569' }}>
+                        <button key={b.label} onClick={() => { setSrc(b.img); setImgErr(false) }} style={{ padding: '3px 10px', borderRadius: 99, fontSize: '0.68rem', fontWeight: 600, cursor: 'pointer', background: src === b.img ? 'rgba(245,158,11,0.15)' : 'rgba(255,255,255,0.04)', border: `1px solid ${src === b.img ? 'rgba(245,158,11,0.4)' : 'rgba(255,255,255,0.06)'}`, color: src === b.img ? '#f59e0b' : 'var(--text-muted)' }}>
                             {b.label}
                         </button>
                     ))}
                 </div>
             </div>
             {imgErr ? (
-                <div style={{ height: 240, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.02)', borderRadius: '0.75rem', color: '#334155', fontSize: '0.8rem', flexDirection: 'column', gap: '0.5rem' }}>
+                <div style={{ height: 240, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.02)', borderRadius: '0.75rem', color: 'var(--text-muted)', fontSize: '0.8rem', flexDirection: 'column', gap: '0.5rem' }}>
                     <span style={{ fontSize: '2rem' }}>🛰️</span>
                     <span>Image SOHO temporairement indisponible</span>
                     <a href="https://soho.nascom.nasa.gov/data/realtime-images.html" target="_blank" rel="noopener noreferrer" style={{ color: '#f59e0b', fontSize: '0.72rem' }}>Voir sur soho.nascom.nasa.gov →</a>
@@ -181,7 +181,7 @@ function SOHOPanel() {
                     </div>
                 </div>
             )}
-            <p style={{ color: '#334155', fontSize: '0.68rem', marginTop: '0.5rem', lineHeight: 1.6 }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.68rem', marginTop: '0.5rem', lineHeight: 1.6 }}>
                 Le coronagraphe bloque le disque solaire pour observer la couronne et détecter les éjections de masse coronale (CME) qui se dirigent vers la Terre.
             </p>
         </div>
@@ -238,7 +238,7 @@ export default function SpaceWeatherDashboard() {
 
     const windStatus = wind ? getWindStatus(wind.speed) : null
     const availableSources = Object.values(sources).filter(Boolean).length
-    const statusColor = availableSources === 2 ? '#22c55e' : availableSources === 1 ? '#f59e0b' : '#ef4444'
+    const statusColor = availableSources === 2 ? '#22c55e' : availableSources === 1 ? '#f59e0b' : '#f87171'
 
     return (
         <div style={{ padding: '3rem 2rem 4rem', maxWidth: 'var(--max-w)', margin: '0 auto' }}>
@@ -250,16 +250,16 @@ export default function SpaceWeatherDashboard() {
                         <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', background: 'linear-gradient(135deg, #f59e0b, #ef4444)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
                             Dashboard Météo Spatiale
                         </h2>
-                        <p style={{ color: '#475569', fontSize: '0.85rem', marginTop: '0.25rem' }}>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '0.25rem' }}>
                             Données en temps réel du vent solaire, du champ magnétique interplanétaire et des rayons X GOES
                         </p>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         <motion.div animate={{ scale: [1, 1.3, 1] }} transition={{ repeat: Infinity, duration: 2 }} style={{ width: 8, height: 8, borderRadius: '50%', background: statusColor }} />
-                        <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                        <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
                             {loading ? 'Chargement…' : availableSources === 0 ? 'Données indisponibles' : `Observations de ${lastUpdate || 'maintenant'}`}
                         </span>
-                        <button onClick={fetchAll} style={{ padding: '3px 10px', borderRadius: 99, fontSize: '0.68rem', fontWeight: 600, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', color: '#64748b', cursor: 'pointer' }}>
+                        <button onClick={fetchAll} style={{ padding: '3px 10px', borderRadius: 99, fontSize: '0.68rem', fontWeight: 600, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', color: 'var(--text-muted)', cursor: 'pointer' }}>
                             ↺ Actualiser
                         </button>
                     </div>
@@ -267,7 +267,7 @@ export default function SpaceWeatherDashboard() {
             </motion.div>
 
             {loading ? (
-                <div style={{ display: 'flex', justifyContent: 'center', padding: '4rem', color: '#334155', gap: '0.75rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', padding: '4rem', color: 'var(--text-muted)', gap: '0.75rem' }}>
                     <motion.span animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }} style={{ display: 'inline-block' }}>⚙️</motion.span>
                     <span>Connexion aux satellites NOAA…</span>
                 </div>
@@ -280,10 +280,10 @@ export default function SpaceWeatherDashboard() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
                             <span style={{ fontSize: '1.2rem' }}>💨</span>
                             <div>
-                                <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#e2e8f0', fontFamily: 'var(--font-display)' }}>Vent Solaire</div>
+                                <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text)', fontFamily: 'var(--font-display)' }}>Vent Solaire</div>
                                 {windStatus && <div style={{ fontSize: '0.7rem', color: windStatus.color, fontWeight: 600 }}>{windStatus.label}</div>}
                             </div>
-                            <div style={{ marginLeft: 'auto', fontSize: '0.65rem', color: '#64748b' }}>Source : NOAA SWPC · vent propagé vers la Terre</div>
+                            <div style={{ marginLeft: 'auto', fontSize: '0.65rem', color: 'var(--text-muted)' }}>Source : NOAA SWPC · vent propagé vers la Terre</div>
                         </div>
                         {!wind && <DataUnavailable label="Vent solaire" />}
                         <div style={{ display: 'flex', justifyContent: 'space-around', gap: '1rem', flexWrap: 'wrap' }}>
@@ -302,8 +302,8 @@ export default function SpaceWeatherDashboard() {
                                 ].map(s => (
                                     <div key={s.label} style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '0.625rem', padding: '0.6rem' }}>
                                         <div style={{ fontFamily: 'monospace', fontWeight: 800, fontSize: '1rem', color: '#f59e0b' }}>{s.val}</div>
-                                        <div style={{ fontSize: '0.62rem', color: '#475569', marginTop: 2 }}>{s.label}</div>
-                                        <div style={{ fontSize: '0.6rem', color: '#334155', marginTop: 2 }}>{s.note}</div>
+                                        <div style={{ fontSize: '0.62rem', color: 'var(--text-muted)', marginTop: 2 }}>{s.label}</div>
+                                        <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', marginTop: 2 }}>{s.note}</div>
                                     </div>
                                 ))}
                             </div>
@@ -319,8 +319,8 @@ export default function SpaceWeatherDashboard() {
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
                                 <span style={{ fontSize: '1.2rem' }}>🧲</span>
                                 <div>
-                                    <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#e2e8f0', fontFamily: 'var(--font-display)' }}>Champ Magnétique IMF</div>
-                                    <div style={{ fontSize: '0.7rem', color: '#475569' }}>Interplanetary Magnetic Field</div>
+                                    <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text)', fontFamily: 'var(--font-display)' }}>Champ Magnétique IMF</div>
+                                    <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Interplanetary Magnetic Field</div>
                                 </div>
                             </div>
                             {!mag && <DataUnavailable label="Champ magnétique" />}
@@ -332,15 +332,15 @@ export default function SpaceWeatherDashboard() {
                                         { label: 'Longitude GSM', val: `${mag.lon.toFixed(1)}°` },
                                     ].map(s => (
                                         <div key={s.label} style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '0.5rem', padding: '0.5rem', textAlign: 'center' }}>
-                                            <div style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: '0.9rem', color: '#6366f1' }}>{s.val}</div>
-                                            <div style={{ fontSize: '0.6rem', color: '#334155' }}>{s.label}</div>
+                                            <div style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: '0.9rem', color: 'var(--nebula)' }}>{s.val}</div>
+                                            <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>{s.label}</div>
                                         </div>
                                     ))}
                                 </div>
                             )}
                             <div style={{ marginTop: '0.875rem', padding: '0.625rem', background: 'rgba(99,102,241,0.06)', borderRadius: '0.625rem', border: '1px solid rgba(99,102,241,0.12)' }}>
-                                <div style={{ fontSize: '0.65rem', color: '#475569', lineHeight: 1.6 }}>
-                                    💡 <strong style={{ color: '#94a3b8' }}>Bz négatif</strong> = le champ magnétique solaire pointe vers le sud. Il peut se reconnecter avec le champ terrestre et favoriser l’arrivée de particules chargées à l’origine des aurores.
+                                <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+                                    💡 <strong style={{ color: 'var(--text-muted)' }}>Bz négatif</strong> = le champ magnétique solaire pointe vers le sud. Il peut se reconnecter avec le champ terrestre et favoriser l’arrivée de particules chargées à l’origine des aurores.
                                 </div>
                             </div>
                         </motion.div>
@@ -351,8 +351,8 @@ export default function SpaceWeatherDashboard() {
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
                                 <span style={{ fontSize: '1.2rem' }}>☢️</span>
                                 <div>
-                                    <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#e2e8f0', fontFamily: 'var(--font-display)' }}>Rayons X Solaires</div>
-                                    <div style={{ fontSize: '0.7rem', color: '#475569' }}>Satellite GOES (NOAA) — canal 1–8 Å</div>
+                                    <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text)', fontFamily: 'var(--font-display)' }}>Rayons X Solaires</div>
+                                    <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Satellite GOES (NOAA) — canal 1–8 Å</div>
                                 </div>
                             </div>
                             {!xrayHistory.length && <DataUnavailable label="Rayons X solaires" />}
@@ -363,11 +363,11 @@ export default function SpaceWeatherDashboard() {
                                     { cls: 'B', color: '#22c55e', flux: '≥ 10⁻⁷' },
                                     { cls: 'C', color: '#eab308', flux: '≥ 10⁻⁶' },
                                     { cls: 'M', color: '#f97316', flux: '≥ 10⁻⁵' },
-                                    { cls: 'X', color: '#ef4444', flux: '≥ 10⁻⁴' },
+                                    { cls: 'X', color: '#f87171', flux: '≥ 10⁻⁴' },
                                 ].map(c => (
                                     <div key={c.cls} style={{ textAlign: 'center', padding: '0.3rem', background: `${c.color}0a`, borderRadius: '0.4rem', border: `1px solid ${c.color}20` }}>
                                         <div style={{ fontWeight: 900, fontSize: '1rem', color: c.color, fontFamily: 'var(--font-display)' }}>{c.cls}</div>
-                                        <div style={{ fontSize: '0.55rem', color: '#334155' }}>{c.flux}</div>
+                                        <div style={{ fontSize: '0.55rem', color: 'var(--text-muted)' }}>{c.flux}</div>
                                     </div>
                                 ))}
                             </div>
@@ -387,8 +387,8 @@ export default function SpaceWeatherDashboard() {
                                 style={{ background: 'linear-gradient(135deg, rgba(239,68,68,0.12), rgba(249,115,22,0.08))', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '1rem', padding: '1.25rem 1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                 <motion.span animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 1.5 }} style={{ fontSize: '1.5rem' }}>🚨</motion.span>
                                 <div>
-                                    <div style={{ fontWeight: 700, color: '#ef4444', fontFamily: 'var(--font-display)', fontSize: '0.95rem' }}>Alerte Météo Spatiale</div>
-                                    <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Bz = {mag.bz.toFixed(1)} nT — Conditions favorables aux aurores boréales. Regardez vers le nord ce soir si le ciel est dégagé !</div>
+                                    <div style={{ fontWeight: 700, color: '#f87171', fontFamily: 'var(--font-display)', fontSize: '0.95rem' }}>Alerte Météo Spatiale</div>
+                                    <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Bz = {mag.bz.toFixed(1)} nT — Conditions favorables aux aurores boréales. Regardez vers le nord ce soir si le ciel est dégagé !</div>
                                 </div>
                             </motion.div>
                         )}
@@ -396,10 +396,10 @@ export default function SpaceWeatherDashboard() {
 
                     {/* Source credits */}
                     <div style={{ textAlign: 'center', paddingTop: '0.5rem' }}>
-                        <p style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
-                            Données : <a href="https://www.swpc.noaa.gov" target="_blank" rel="noopener noreferrer" style={{ color: '#cbd5e1' }}>NOAA Space Weather Prediction Center</a> ·
-                            Satellite <a href="https://www.swpc.noaa.gov/products/real-time-solar-wind" target="_blank" rel="noopener noreferrer" style={{ color: '#cbd5e1' }}>DSCOVR (L1)</a> ·
-                            <a href="https://soho.nascom.nasa.gov" target="_blank" rel="noopener noreferrer" style={{ color: '#cbd5e1' }}>SOHO (NASA/ESA)</a>
+                        <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                            Données : <a href="https://www.swpc.noaa.gov" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-subtle)' }}>NOAA Space Weather Prediction Center</a> ·
+                            Satellite <a href="https://www.swpc.noaa.gov/products/real-time-solar-wind" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-subtle)' }}>DSCOVR (L1)</a> ·
+                            <a href="https://soho.nascom.nasa.gov" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-subtle)' }}>SOHO (NASA/ESA)</a>
                         </p>
                     </div>
                 </div>

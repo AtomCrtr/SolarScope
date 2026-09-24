@@ -12,7 +12,7 @@ export default function OfflinePage() {
     <div className="container prose-page">
       <section className="card prose-card" role="status">
         <div className="badge">MODE HORS CONNEXION</div>
-        <h1 className="page-title gradient-text">La liaison avec l’espace est interrompue.</h1>
+        <h1 className="page-title">La liaison avec l’espace est interrompue.</h1>
         <p>
           Vérifie ta connexion puis réessaie. Les pages déjà visitées peuvent rester accessibles sur cet appareil.
         </p>

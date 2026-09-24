@@ -44,7 +44,7 @@ const ROVERS_DETAIL = [
     },
     {
         name: 'Curiosity', agency: 'NASA / JPL', active: true, key: 'curiosity',
-        launch: '26 nov. 2011', land: '6 août 2012', area: 'Cratère Gale / Mont Sharp', color: '#ef4444',
+        launch: '26 nov. 2011', land: '6 août 2012', area: 'Cratère Gale / Mont Sharp', color: '#f87171',
         mass: '899 kg', distance: 'plus de 37 km', duration: 'sol 4 955 (juil. 2026)',
         emoji: '🤖',
         desc: 'Laboratoire mobile de la taille d\'une voiture. Explore le Cratère Gale depuis 2012 et grimpe le Mont Sharp. A confirmé que Mars était habitable par le passé.',
@@ -52,7 +52,7 @@ const ROVERS_DETAIL = [
     },
     {
         name: 'Perseverance', agency: 'NASA / JPL', active: true, key: 'perseverance',
-        launch: '30 juil. 2020', land: '18 fév. 2021', area: 'Cratère Jezero', color: '#8b5cf6',
+        launch: '30 juil. 2020', land: '18 fév. 2021', area: 'Cratère Jezero', color: '#a78bfa',
         mass: '1 025 kg', distance: '42,2 km', duration: 'sol 1 890 (juin 2026)',
         emoji: '🚀',
         desc: 'Laboratoire roulant qui cherche des traces d’ancienne vie dans un ancien delta de rivière. Il a transporté Ingenuity, le premier hélicoptère à voler sur une autre planète.',
@@ -84,37 +84,37 @@ const MARS_GALLERY = [
         src: '/media/mars/ingenuity-first-flight.webp',
         title: 'Premier vol Ingenuity',
         desc: 'Le premier hélicoptère extraterrestre en vol · Sol 58',
-        rover: 'Perseverance', camera: 'NavCam', sol: 58, color: '#8b5cf6'
+        rover: 'Perseverance', camera: 'NavCam', sol: 58, color: '#a78bfa'
     },
     {
         src: '/media/mars/perseverance-jezero.webp',
         title: 'Perseverance au Cratère Jezero',
         desc: 'Vue panoramique depuis le site d\'atterrissage · Sol 13',
-        rover: 'Perseverance', camera: 'MastCam-Z', sol: 13, color: '#8b5cf6'
+        rover: 'Perseverance', camera: 'MastCam-Z', sol: 13, color: '#a78bfa'
     },
     {
         src: '/media/mars/perseverance-selfie.webp',
         title: 'Selfie de Perseverance',
         desc: 'Auto-portrait avec Ingenuity en arrière-plan · Sol 46',
-        rover: 'Perseverance', camera: 'WATSON', sol: 46, color: '#8b5cf6'
+        rover: 'Perseverance', camera: 'WATSON', sol: 46, color: '#a78bfa'
     },
     {
         src: '/rovers/curiosity.png',
         title: 'Curiosity au Mont Sharp',
         desc: 'Selfie au pied du Mont Sharp · Sol 2291',
-        rover: 'Curiosity', camera: 'MAHLI', sol: 2291, color: '#ef4444'
+        rover: 'Curiosity', camera: 'MAHLI', sol: 2291, color: '#f87171'
     },
     {
         src: '/textures/mars.jpg',
         title: 'Roches de Vera Rubin Ridge',
         desc: 'Litage sédimentaire martien · Sol 1769',
-        rover: 'Curiosity', camera: 'MastCam', sol: 1769, color: '#ef4444'
+        rover: 'Curiosity', camera: 'MastCam', sol: 1769, color: '#f87171'
     },
     {
         src: '/media/mars/martian-sunset.webp',
         title: 'Coucher de soleil martien',
         desc: 'Crépuscule bleu sur Mars — Cratère Gale · Sol 956',
-        rover: 'Curiosity', camera: 'MastCam', sol: 956, color: '#ef4444'
+        rover: 'Curiosity', camera: 'MastCam', sol: 956, color: '#f87171'
     },
     {
         src: '/rovers/opportunity.png',
@@ -126,7 +126,7 @@ const MARS_GALLERY = [
         src: '/media/mars/dark-sand-dunes.webp',
         title: 'Dunes de sable noir',
         desc: 'Champs de dunes basaltiques depuis Perseverance · Sol 170',
-        rover: 'Perseverance', camera: 'Hazcam', sol: 170, color: '#8b5cf6'
+        rover: 'Perseverance', camera: 'Hazcam', sol: 170, color: '#a78bfa'
     },
 ]
 
@@ -173,10 +173,10 @@ export default function MarsPage() {
                     <div className="badge" style={{ background: 'rgba(239,68,68,0.12)', color: '#f87171', borderColor: 'rgba(239,68,68,0.25)' }}>
                         🤖 ROVERS NASA — MISSIONS VÉRIFIÉES
                     </div>
-                    <h1 className="page-title" style={{ background: 'linear-gradient(135deg, #fca5a5, #ef4444, #b91c1c)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                    <h1 className="page-title">
                         Mars
                     </h1>
-                    <p style={{ color: '#94a3b8', fontSize: '1.05rem', lineHeight: 1.75, maxWidth: 440, marginBottom: '1.5rem' }}>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', lineHeight: 1.75, maxWidth: 440, marginBottom: '1.5rem' }}>
                         Mars est la quatrième planète autour du Soleil. Deux rovers de la NASA y roulent encore et plusieurs engins l&apos;observent depuis l&apos;espace.
                     </p>
                     {/* Active rover selector */}
@@ -186,7 +186,7 @@ export default function MarsPage() {
                                 padding: '0.5rem 1.1rem', borderRadius: 99, fontSize: '0.82rem', fontWeight: 700,
                                 cursor: 'pointer', border: `2px solid ${activeRover === r.key ? r.color : 'rgba(255,255,255,0.1)'}`,
                                 background: activeRover === r.key ? `${r.color}18` : 'transparent',
-                                color: activeRover === r.key ? r.color : '#64748b',
+                                color: activeRover === r.key ? r.color : 'var(--text-muted)',
                                 transition: 'all 0.2s ease',
                             }}>{r.emoji} {r.name}</button>
                         ))}
@@ -206,7 +206,7 @@ export default function MarsPage() {
                         </div>
                         <div style={{
                             position: 'absolute', bottom: 12, left: 0, right: 0, textAlign: 'center',
-                            color: '#475569', fontSize: '0.65rem', letterSpacing: '0.05em',
+                            color: 'var(--text-muted)', fontSize: '0.65rem', letterSpacing: '0.05em',
                         }}>🖱 Maintenir & glisser pour explorer</div>
                         <div style={{
                             position: 'absolute', top: 14, right: 14,
@@ -270,7 +270,7 @@ export default function MarsPage() {
             <div className="card" style={{ padding: '1.5rem', marginBottom: '1.5rem', border: `1px solid ${activeRoverDetail.color}25` }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '1.5rem', alignItems: 'start' }} className="max-sm:grid-cols-1">
                     <div>
-                        <p style={{ color: '#cbd5e1', lineHeight: 1.8, marginBottom: '1rem', fontSize: '0.9rem' }}>{activeRoverDetail.desc}</p>
+                        <p style={{ color: 'var(--text-subtle)', lineHeight: 1.8, marginBottom: '1rem', fontSize: '0.9rem' }}>{activeRoverDetail.desc}</p>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
                             {activeRoverDetail.achievements.map(a => (
                                 <span key={a} style={{
@@ -292,8 +292,8 @@ export default function MarsPage() {
                             <div key={d.label} style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', padding: '0.5rem 0.75rem', borderRadius: '0.5rem', background: 'rgba(255,255,255,0.03)' }}>
                                 <span style={{ fontSize: '1rem' }}>{d.icon}</span>
                                 <div>
-                                    <div style={{ color: '#64748b', fontSize: '0.65rem' }}>{d.label}</div>
-                                    <div style={{ color: '#e2e8f0', fontSize: '0.8rem', fontWeight: 700 }}>{d.val}</div>
+                                    <div style={{ color: 'var(--text-muted)', fontSize: '0.65rem' }}>{d.label}</div>
+                                    <div style={{ color: 'var(--text)', fontSize: '0.8rem', fontWeight: 700 }}>{d.val}</div>
                                 </div>
                             </div>
                         ))}
@@ -303,10 +303,10 @@ export default function MarsPage() {
 
             {/* ── 3D ROVER VIEWER ── */}
             <div style={{ marginBottom: '2.5rem' }}>
-                <h2 className="section-title" style={{ color: '#e2e8f0', marginBottom: '0.5rem' }}>
+                <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '0.5rem' }}>
                     {activeRover === 'perseverance' ? '🛸 Modèle 3D' : '📷 Vue NASA'} — {activeRoverDetail.name}
                 </h2>
-                <p style={{ color: '#94a3b8', fontSize: '0.72rem', marginBottom: '1rem' }}>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', marginBottom: '1rem' }}>
                     {activeRover === 'perseverance'
                         ? 'Modèle 3D manipulable : utilise la souris ou le doigt pour le faire pivoter.'
                         : 'Image NASA/JPL de Curiosity : elle ne se manipule pas comme un modèle 3D.'}
@@ -317,8 +317,8 @@ export default function MarsPage() {
             {/* ── CURATED NASA GALLERY ── */}
             <div className="divider" />
             <div style={{ marginBottom: '2.5rem' }}>
-                <h2 className="section-title" style={{ color: '#e2e8f0', marginBottom: '0.25rem' }}>📸 Galerie — Icônes de l&apos;exploration martienne</h2>
-                <p style={{ color: '#94a3b8', fontSize: '0.72rem', marginBottom: '1.25rem' }}>Sélection des photos les plus marquantes — Curiosity, Opportunity &amp; Perseverance</p>
+                <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '0.25rem' }}>📸 Galerie — Icônes de l&apos;exploration martienne</h2>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', marginBottom: '1.25rem' }}>Sélection des photos les plus marquantes — Curiosity, Opportunity &amp; Perseverance</p>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.625rem' }} className="max-sm:grid-cols-2">
                     {MARS_GALLERY.map((photo, i) => (
                         <motion.button type="button" aria-label={`Agrandir ${photo.title}`} key={i}
@@ -339,7 +339,7 @@ export default function MarsPage() {
                             />
                             <div style={{ padding: '0.4rem 0.6rem', background: 'rgba(0,0,0,0.78)', backdropFilter: 'blur(6px)' }}>
                                 <div style={{ color: photo.color, fontSize: '0.65rem', fontWeight: 700, fontFamily: 'var(--font-display)' }}>{photo.rover} · {photo.camera}</div>
-                                <div style={{ color: '#94a3b8', fontSize: '0.6rem', marginTop: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{photo.title}</div>
+                                <div style={{ color: 'var(--text-muted)', fontSize: '0.6rem', marginTop: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{photo.title}</div>
                             </div>
                             {/* hover overlay */}
                             <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0)', transition: 'background 0.2s', pointerEvents: 'none' }}>
@@ -376,11 +376,11 @@ export default function MarsPage() {
                             style={{ maxWidth: 880, width: '100%', borderRadius: '1.25rem', overflow: 'hidden', border: `1px solid ${MARS_GALLERY[lightboxIdx].color}30` }}>
                             <Image src={MARS_GALLERY[lightboxIdx].src} alt={MARS_GALLERY[lightboxIdx].title} width={1400} height={900} sizes="(max-width: 920px) 100vw, 880px" quality={80}
                                 style={{ width: '100%', height: 'auto', display: 'block', maxHeight: '65vh', objectFit: 'contain', background: '#000' }} />
-                            <div style={{ padding: '1rem 1.5rem', background: '#080816', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+                            <div style={{ padding: '1rem 1.5rem', background: 'var(--card)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
                                 <div>
                                     <h2 id="mars-dialog-title" style={{ color: MARS_GALLERY[lightboxIdx].color, fontWeight: 700, fontFamily: 'var(--font-display)' }}>{MARS_GALLERY[lightboxIdx].title}</h2>
-                                    <div id="mars-dialog-description" style={{ color: '#64748b', fontSize: '0.8rem', marginTop: 2 }}>{MARS_GALLERY[lightboxIdx].desc}</div>
-                                    <div style={{ color: '#334155', fontSize: '0.7rem', marginTop: 3 }}>Rover {MARS_GALLERY[lightboxIdx].rover} · {MARS_GALLERY[lightboxIdx].camera} · Sol {MARS_GALLERY[lightboxIdx].sol}</div>
+                                    <div id="mars-dialog-description" style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: 2 }}>{MARS_GALLERY[lightboxIdx].desc}</div>
+                                    <div style={{ color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: 3 }}>Rover {MARS_GALLERY[lightboxIdx].rover} · {MARS_GALLERY[lightboxIdx].camera} · Sol {MARS_GALLERY[lightboxIdx].sol}</div>
                                 </div>
                                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                                     <a href={MARS_GALLERY[lightboxIdx].src} target="_blank" rel="noopener noreferrer"
@@ -388,7 +388,7 @@ export default function MarsPage() {
                                         ↗ Pleine résolution
                                     </a>
                                     <button ref={lightboxCloseRef} type="button" onClick={() => setLightboxIdx(null)}
-                                        style={{ padding: '0.5rem 1rem', borderRadius: 99, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8', fontSize: '0.8rem', cursor: 'pointer' }}>
+                                        style={{ padding: '0.5rem 1rem', borderRadius: 99, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-muted)', fontSize: '0.8rem', cursor: 'pointer' }}>
                                         ✕ Fermer
                                     </button>
                                 </div>
@@ -400,8 +400,8 @@ export default function MarsPage() {
 
             {/* ── ROVER HISTORY ── */}
             <div className="divider" />
-            <h2 className="section-title" style={{ color: '#e2e8f0' }}>🤖 Rovers de la NASA présentés ici</h2>
-            <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginBottom: '1.5rem', marginTop: '-0.5rem' }}>
+            <h2 className="section-title" style={{ color: 'var(--text)' }}>🤖 Rovers de la NASA présentés ici</h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.5rem', marginTop: '-0.5rem' }}>
                 Ces cinq rovers de la NASA racontent l’histoire de l’exploration martienne. Curiosity et Perseverance sont des missions en cours ; leur état est daté ci-dessus.
             </p>
             <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))' }}>
@@ -415,17 +415,17 @@ export default function MarsPage() {
                                 <span style={{ fontSize: '1.6rem' }}>{r.emoji}</span>
                                 <div>
                                     <h3 style={{ color: r.color, fontWeight: 800, fontFamily: 'var(--font-display)', fontSize: '1.05rem' }}>{r.name}</h3>
-                                    <div style={{ fontSize: '0.7rem', color: '#64748b' }}>{r.agency}</div>
+                                    <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{r.agency}</div>
                                 </div>
                             </div>
                             <span style={{
                                 padding: '3px 8px', borderRadius: 99, fontSize: '0.65rem', fontWeight: 700,
                                 background: r.active ? 'rgba(16,185,129,0.12)' : 'rgba(100,116,139,0.12)',
                                 border: `1px solid ${r.active ? 'rgba(16,185,129,0.3)' : 'rgba(100,116,139,0.2)'}`,
-                                color: r.active ? '#10b981' : '#64748b',
+                                color: r.active ? '#10b981' : 'var(--text-muted)',
                             }}>{r.active ? '● Actif' : '○ Mission terminée'}</span>
                         </div>
-                        <p style={{ color: '#94a3b8', fontSize: '0.8rem', lineHeight: 1.65, marginBottom: '0.875rem' }}>{r.desc}</p>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', lineHeight: 1.65, marginBottom: '0.875rem' }}>{r.desc}</p>
                         {/* Key stats mini-grid */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.375rem', marginBottom: '0.875rem' }}>
                             {[
@@ -435,8 +435,8 @@ export default function MarsPage() {
                             ].map(d => (
                                 <div key={d.label} style={{ textAlign: 'center', background: 'rgba(255,255,255,0.03)', borderRadius: '0.5rem', padding: '0.4rem 0.25rem' }}>
                                     <div style={{ fontSize: '0.75rem' }}>{d.icon}</div>
-                                    <div style={{ color: '#e2e8f0', fontWeight: 700, fontSize: '0.68rem' }}>{d.val}</div>
-                                    <div style={{ color: '#475569', fontSize: '0.6rem' }}>{d.label}</div>
+                                    <div style={{ color: 'var(--text)', fontWeight: 700, fontSize: '0.68rem' }}>{d.val}</div>
+                                    <div style={{ color: 'var(--text-muted)', fontSize: '0.6rem' }}>{d.label}</div>
                                 </div>
                             ))}
                         </div>
@@ -445,7 +445,7 @@ export default function MarsPage() {
                             {r.achievements.slice(0, 3).map(a => (
                                 <div key={a} style={{ display: 'flex', gap: '0.375rem', alignItems: 'flex-start' }}>
                                     <span style={{ color: r.color, fontSize: '0.65rem', marginTop: 2, flexShrink: 0 }}>✓</span>
-                                    <span style={{ color: '#64748b', fontSize: '0.72rem', lineHeight: 1.5 }}>{a}</span>
+                                    <span style={{ color: 'var(--text-muted)', fontSize: '0.72rem', lineHeight: 1.5 }}>{a}</span>
                                 </div>
                             ))}
                         </div>
@@ -455,7 +455,7 @@ export default function MarsPage() {
 
             {/* ── TIMELINE ── */}
             <div className="divider" />
-            <h2 className="section-title" style={{ color: '#e2e8f0' }}>🚀 Histoire de l&apos;exploration martienne</h2>
+            <h2 className="section-title" style={{ color: 'var(--text)' }}>🚀 Histoire de l&apos;exploration martienne</h2>
             <div className="card" style={{ padding: '1.5rem' }}>
                 {MARS_TIMELINE.map((ev, i) => (
                     <div key={`${ev.year}-${i}`} className="timeline-item">
@@ -470,9 +470,9 @@ export default function MarsPage() {
                         <div style={{ flex: 1 }}>
                             <div style={{ display: 'flex', gap: '0.625rem', alignItems: 'baseline', flexWrap: 'wrap' }}>
                                 <span style={{ color: '#f87171', fontWeight: 800, fontSize: '0.78rem', fontFamily: 'var(--font-display)', flexShrink: 0 }}>{ev.year}</span>
-                                <span style={{ color: '#e2e8f0', fontWeight: 600, fontSize: '0.88rem' }}>{ev.event}</span>
+                                <span style={{ color: 'var(--text)', fontWeight: 600, fontSize: '0.88rem' }}>{ev.event}</span>
                             </div>
-                            <p style={{ color: '#64748b', fontSize: '0.775rem', marginTop: '0.2rem', lineHeight: 1.6 }}>{ev.detail}</p>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.775rem', marginTop: '0.2rem', lineHeight: 1.6 }}>{ev.detail}</p>
                         </div>
                     </div>
                 ))}
@@ -492,7 +492,7 @@ export default function MarsPage() {
                     ].map(f => (
                         <div key={f.icon} style={{ display: 'flex', gap: '0.625rem', padding: '0.875rem', borderRadius: '0.625rem', background: 'rgba(239,68,68,0.04)', border: '1px solid rgba(239,68,68,0.08)' }}>
                             <span style={{ fontSize: '1.3rem', flexShrink: 0 }}>{f.icon}</span>
-                            <p style={{ color: '#94a3b8', fontSize: '0.8rem', lineHeight: 1.65 }}>{f.fact}</p>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', lineHeight: 1.65 }}>{f.fact}</p>
                         </div>
                     ))}
                 </div>

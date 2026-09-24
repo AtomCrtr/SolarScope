@@ -99,7 +99,7 @@ export default function ISSPage() {
                 <div className="badge" style={{ background: 'rgba(59,130,246,0.12)', color: '#60a5fa', borderColor: 'rgba(59,130,246,0.25)' }}>
                     🛰️ STATION SPATIALE — POSITION EN DIRECT
                 </div>
-                <h1 className="page-title" style={{ background: 'linear-gradient(135deg, #bfdbfe, #3b82f6, #1d4ed8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                <h1 className="page-title">
                     ISS Tracker
                 </h1>
                 <p className="page-subtitle">
@@ -215,7 +215,7 @@ export default function ISSPage() {
                     ].map(f => (
                         <div key={f.icon} style={{ display: 'flex', gap: '0.5rem', padding: '0.75rem', borderRadius: '0.625rem', background: 'rgba(59,130,246,0.05)', border: '1px solid rgba(59,130,246,0.1)' }}>
                             <span style={{ fontSize: '1.2rem', flexShrink: 0 }}>{f.icon}</span>
-                            <p style={{ color: '#94a3b8', fontSize: '0.8rem', lineHeight: 1.6 }}>{f.fact}</p>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', lineHeight: 1.6 }}>{f.fact}</p>
                         </div>
                     ))}
                 </div>
@@ -227,9 +227,9 @@ export default function ISSPage() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
                         <span style={{ fontSize: '1.5rem' }}>🚀</span>
                         <div style={{ flex: 1 }}>
-                            <div style={{ color: '#a5b4fc', fontWeight: 700, fontSize: '0.85rem', fontFamily: 'var(--font-display)' }}>Prochain lancement</div>
-                            <div style={{ color: '#e2e8f0', fontWeight: 600 }}>{nextLaunch.name}</div>
-                            <div style={{ color: '#64748b', fontSize: '0.75rem' }}>{nextLaunch.agency} · {new Date(nextLaunch.net).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+                            <div style={{ color: 'var(--nebula)', fontWeight: 700, fontSize: '0.85rem', fontFamily: 'var(--font-display)' }}>Prochain lancement</div>
+                            <div style={{ color: 'var(--text)', fontWeight: 600 }}>{nextLaunch.name}</div>
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{nextLaunch.agency} · {new Date(nextLaunch.net).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
                         </div>
                         <Link href="/missions" className="touch-link">
                             Voir tous →

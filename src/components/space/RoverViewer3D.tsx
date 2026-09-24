@@ -60,7 +60,7 @@ class RoverModelBoundary extends Component<{
 function CanvasLoader() {
     return (
         <Html center>
-            <div style={{ color: '#8b5cf6', fontSize: '0.75rem', textAlign: 'center', pointerEvents: 'none' }}>
+            <div style={{ color: 'var(--nebula)', fontSize: '0.75rem', textAlign: 'center', pointerEvents: 'none' }}>
                 <div style={{ fontSize: '1.5rem', marginBottom: 6 }}>⚙️</div>
                 Chargement modèle 3D…
             </div>
@@ -114,7 +114,7 @@ function CuriosityDisplay({ height }: { height: number }) {
                     filter: 'drop-shadow(0 0 20px rgba(239,68,68,0.3))',
                 }}
             />
-            <p style={{ color: '#94a3b8', fontSize: '0.72rem', textAlign: 'center', marginTop: '0.25rem' }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', textAlign: 'center', marginTop: '0.25rem' }}>
                 🎨 Rendu 3D officiel NASA/JPL · Curiosity MSL · Cratère Gale
             </p>
         </div>
@@ -126,7 +126,7 @@ function PerseveranceFallback({ height }: { height: number }) {
         <div style={{ height, display: 'grid', placeItems: 'center', padding: '2rem', textAlign: 'center' }} role="status">
             <div>
                 <Image src="/rovers/perseverance.png" alt="Rover Perseverance — rendu officiel NASA/JPL" width={1000} height={700} style={{ width: 'min(100%, 720px)', maxHeight: height - 90, objectFit: 'contain' }} />
-                <p style={{ marginTop: '0.75rem', color: '#cbd5e1', fontSize: '0.82rem' }}>
+                <p style={{ marginTop: '0.75rem', color: 'var(--text-subtle)', fontSize: '0.82rem' }}>
                     Le modèle interactif est indisponible. Voici le rendu officiel de Perseverance.
                 </p>
             </div>
@@ -141,8 +141,8 @@ interface RoverViewer3DProps {
 }
 
 const ROVER_META = {
-    curiosity: { name: 'Curiosity MSL', color: '#ef4444', has3D: false },
-    perseverance: { name: 'Perseverance Mars 2020', color: '#8b5cf6', has3D: true },
+    curiosity: { name: 'Curiosity MSL', color: '#f87171', has3D: false },
+    perseverance: { name: 'Perseverance Mars 2020', color: '#a78bfa', has3D: true },
 }
 
 export default function RoverViewer3D({ rover, height = 340 }: RoverViewer3DProps) {
@@ -174,7 +174,7 @@ export default function RoverViewer3D({ rover, height = 340 }: RoverViewer3DProp
                 }}>
                     <span style={{ fontSize: '0.65rem' }}>🛸</span>
                     <span style={{ fontSize: '0.68rem', fontWeight: 700, color: meta.color, fontFamily: 'var(--font-display)' }}>{meta.name}</span>
-                    <span style={{ fontSize: '0.65rem', color: '#94a3b8' }}>
+                    <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>
                         {meta.has3D && !glbError ? 'Modèle 3D interactif' : 'Rendu officiel NASA/JPL'}
                     </span>
                 </div>
@@ -196,7 +196,7 @@ export default function RoverViewer3D({ rover, height = 340 }: RoverViewer3DProp
 
             {/* Controls hint for 3D */}
             {rover === 'perseverance' && !glbError && (
-                <div style={{ position: 'absolute', bottom: 8, right: 12, fontSize: '0.7rem', color: '#94a3b8', pointerEvents: 'none' }}>
+                <div style={{ position: 'absolute', bottom: 8, right: 12, fontSize: '0.7rem', color: 'var(--text-muted)', pointerEvents: 'none' }}>
                     🖱 Clic + glisser · Scroll pour zoomer
                 </div>
             )}

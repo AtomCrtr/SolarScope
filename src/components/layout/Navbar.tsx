@@ -256,7 +256,7 @@ export default function Navbar() {
                                                 onMouseLeave={handleMouseLeave}
                                                 style={{
                                                     position: 'absolute', top: 'calc(100% + 8px)', left: '50%', transform: 'translateX(-50%)',
-                                                    background: 'rgba(4,4,20,0.95)', backdropFilter: 'saturate(180%) blur(28px)',
+                                                    background: 'rgba(11,16,38,0.95)', backdropFilter: 'saturate(180%) blur(28px)',
                                                     WebkitBackdropFilter: 'saturate(180%) blur(28px)',
                                                     border: `1px solid ${group.color}22`,
                                                     borderRadius: '14px', padding: '0.5rem',
@@ -332,7 +332,7 @@ export default function Navbar() {
                                 width: 36, height: 36, borderRadius: 10,
                                 background: mobileOpen ? 'rgba(139,92,246,0.15)' : 'rgba(255,255,255,0.05)',
                                 border: `1px solid ${mobileOpen ? 'rgba(139,92,246,0.3)' : 'rgba(255,255,255,0.08)'}`,
-                                cursor: 'pointer', color: '#e2e8f0', flexShrink: 0,
+                                cursor: 'pointer', color: 'var(--text)', flexShrink: 0,
                                 alignItems: 'center', justifyContent: 'center',
                                 fontSize: '1rem', transition: 'all 0.2s',
                                 // Do NOT set display here — let md:hidden do it
@@ -363,7 +363,7 @@ export default function Navbar() {
                         className="md:hidden"
                         style={{
                             position: 'absolute', top: 'var(--navbar-h)', left: 0, right: 0,
-                            background: 'rgba(2,2,14,0.97)',
+                            background: 'rgba(11,16,38,0.97)',
                             backdropFilter: 'saturate(180%) blur(32px)',
                             WebkitBackdropFilter: 'saturate(180%) blur(32px)',
                             borderBottom: '1px solid rgba(255,255,255,0.07)',

@@ -10,7 +10,7 @@ interface KpiCardProps {
     color?: string
 }
 
-export default function KpiCard({ emoji, value, label, suffix = '', color = '#8b5cf6' }: KpiCardProps) {
+export default function KpiCard({ emoji, value, label, suffix = '', color = '#a78bfa' }: KpiCardProps) {
     const [count, setCount] = useState(0)
     const [visible, setVisible] = useState(false)
     const ref = useRef<HTMLDivElement>(null)
@@ -60,7 +60,7 @@ export default function KpiCard({ emoji, value, label, suffix = '', color = '#8b
             >
                 {count.toLocaleString('fr-FR')}{suffix}
             </span>
-            <span style={{ color: '#94a3b8', fontSize: '0.82rem', fontWeight: 500 }}>
+            <span style={{ color: 'var(--text-muted)', fontSize: '0.82rem', fontWeight: 500 }}>
                 {label}
             </span>
         </div>

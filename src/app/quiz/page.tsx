@@ -109,7 +109,7 @@ export default function QuizPage() {
         <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="page-header">
                 <div className="badge">🎮 COIN DES CURIEUX</div>
-                <h1 className="page-title" style={{ background: 'linear-gradient(135deg, #d8b4fe, #8b5cf6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                <h1 className="page-title">
                     Le Coin des Curieux
                 </h1>
                 <p className="page-subtitle">Vidéos, quiz, anecdotes et événements célestes pour les jeunes explorateurs !</p>
@@ -122,10 +122,10 @@ export default function QuizPage() {
                 {[{ id: 'quiz', label: '🧠 Quiz' }, { id: 'videos', label: '🎬 Vidéos' }, { id: 'events', label: '📅 Événements' }, { id: 'anecdotes', label: '💡 Anecdotes' }].map(t => (
                     <button key={t.id} onClick={() => setTab(t.id as typeof tab)} style={{
                         padding: '0.6rem 1.25rem', borderRadius: 10, fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer',
-                        background: tab === t.id ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'rgba(255,255,255,0.04)',
-                        color: tab === t.id ? '#fff' : '#94a3b8',
+                        background: tab === t.id ? 'var(--sun)' : 'rgba(255,255,255,0.04)',
+                        color: tab === t.id ? 'var(--ink)' : 'var(--text-muted)',
                         border: tab === t.id ? 'none' : '1px solid rgba(255,255,255,0.07)',
-                        boxShadow: tab === t.id ? '0 0 20px rgba(99,102,241,0.35)' : 'none',
+                        boxShadow: 'none',
                     }}>{t.label}</button>
                 ))}
             </div>
@@ -135,10 +135,10 @@ export default function QuizPage() {
                     {!level ? (
                         /* Level picker */
                         <div>
-                            <h2 style={{ textAlign: 'center', color: '#e2e8f0', fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.25rem', marginBottom: '0.5rem' }}>
+                            <h2 style={{ textAlign: 'center', color: 'var(--text)', fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.25rem', marginBottom: '0.5rem' }}>
                                 🎯 Choisis ton niveau
                             </h2>
-                            <p style={{ textAlign: 'center', color: '#94a3b8', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                            <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
                                 Chaque niveau a ses propres questions — tu peux changer à tout moment !
                             </p>
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
@@ -154,7 +154,7 @@ export default function QuizPage() {
                                         <div style={{ color: lv.color, fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.05rem', marginBottom: '0.25rem' }}>
                                             {lv.label.split(' ').slice(1).join(' ')}
                                         </div>
-                                        <div style={{ color: '#cbd5e1', fontSize: '0.82rem', marginBottom: '0.75rem' }}>{lv.sublabel}</div>
+                                        <div style={{ color: 'var(--text-subtle)', fontSize: '0.82rem', marginBottom: '0.75rem' }}>{lv.sublabel}</div>
                                         <div style={{ padding: '0.375rem 0.75rem', borderRadius: 99, background: `${lv.color}20`, color: lv.color, fontSize: '0.72rem', fontWeight: 700 }}>
                                             {lv.bank.length} questions
                                         </div>
@@ -177,8 +177,8 @@ export default function QuizPage() {
                             {finished && (
                                 <div className="card" style={{ textAlign: 'center', padding: '1.5rem', marginBottom: '1.5rem', background: totalCorrect >= Math.ceil(questions.length * 0.8) ? 'rgba(16,185,129,0.06)' : 'rgba(251,191,36,0.06)', border: `2px solid ${totalCorrect >= Math.ceil(questions.length * 0.8) ? '#10b981' : '#f59e0b'}30` }}>
                                     <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>{totalCorrect === questions.length ? '🏆' : totalCorrect >= Math.ceil(questions.length * 0.8) ? '🎉' : '💪'}</div>
-                                    <div style={{ fontSize: '1.8rem', fontWeight: 900, fontFamily: 'var(--font-display)', color: '#e2e8f0' }}>{totalCorrect}/{questions.length}</div>
-                                    <div style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: '0.25rem' }}>
+                                    <div style={{ fontSize: '1.8rem', fontWeight: 900, fontFamily: 'var(--font-display)', color: 'var(--text)' }}>{totalCorrect}/{questions.length}</div>
+                                    <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '0.25rem' }}>
                                         {totalCorrect === questions.length ? 'Parfait ! Tu es un expert de l\'espace ! 🌟' : totalCorrect >= Math.ceil(questions.length * 0.8) ? 'Excellent travail ! Tu maîtrises bien l\'astronomie !' : 'Continue à explorer, tu y arriveras !'}
                                     </div>
                                     {suggestedLevel && <div className="adaptive-quiz-next" data-adaptive-quiz>
@@ -195,7 +195,7 @@ export default function QuizPage() {
                                     const chosen = answers[idx]
                                     return (
                                         <div key={idx} className="card" style={{ padding: '1.5rem' }}>
-                                            <h3 style={{ color: '#e2e8f0', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1rem', marginBottom: '1rem' }}>
+                                            <h3 style={{ color: 'var(--text)', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1rem', marginBottom: '1rem' }}>
                                                 {q.emoji} Question {idx + 1} — {q.question}
                                             </h3>
                                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.625rem', marginBottom: chosen ? '0.875rem' : 0 }}>
@@ -203,7 +203,7 @@ export default function QuizPage() {
                                                     let bg = 'rgba(255,255,255,0.04)', border = '1px solid rgba(255,255,255,0.07)', color = '#94a3b8'
                                                     if (chosen) {
                                                         if (opt === q.answer) { bg = 'rgba(16,185,129,0.12)'; border = '2px solid #10b981'; color = '#10b981' }
-                                                        else if (opt === chosen) { bg = 'rgba(239,68,68,0.12)'; border = '2px solid #ef4444'; color = '#ef4444' }
+                                                        else if (opt === chosen) { bg = 'rgba(239,68,68,0.12)'; border = '2px solid #ef4444'; color = '#f87171' }
                                                         else { color = '#94a3b8' }
                                                     }
                                                     return chosen ? (
@@ -218,11 +218,11 @@ export default function QuizPage() {
                                                 })}
                                             </div>
                                             {chosen && (
-                                                <div style={{ padding: '0.75rem 1rem', borderRadius: '0.625rem', background: chosen === q.answer ? 'rgba(16,185,129,0.08)' : 'rgba(239,68,68,0.08)', borderLeft: `3px solid ${chosen === q.answer ? '#10b981' : '#ef4444'}` }}>
-                                                    <span style={{ color: chosen === q.answer ? '#10b981' : '#ef4444', fontWeight: 700 }}>
+                                                <div style={{ padding: '0.75rem 1rem', borderRadius: '0.625rem', background: chosen === q.answer ? 'rgba(16,185,129,0.08)' : 'rgba(239,68,68,0.08)', borderLeft: `3px solid ${chosen === q.answer ? '#10b981' : '#f87171'}` }}>
+                                                    <span style={{ color: chosen === q.answer ? '#10b981' : '#f87171', fontWeight: 700 }}>
                                                         {chosen === q.answer ? '✅ Bravo !' : `❌ Raté ! Bonne réponse : ${q.answer}`}
                                                     </span>
-                                                    <span style={{ color: '#94a3b8', fontSize: '0.82rem', marginLeft: '0.5rem' }}>{q.explication}</span>
+                                                    <span style={{ color: 'var(--text-muted)', fontSize: '0.82rem', marginLeft: '0.5rem' }}>{q.explication}</span>
                                                 </div>
                                             )}
                                         </div>
@@ -234,15 +234,15 @@ export default function QuizPage() {
                                 <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} style={{
                                     marginTop: '2rem', padding: '2rem', borderRadius: '1.25rem', textAlign: 'center',
                                     background: totalCorrect === questions.length ? 'linear-gradient(135deg, rgba(16,185,129,0.1),rgba(99,102,241,0.1))' : 'rgba(255,255,255,0.04)',
-                                    border: `2px solid ${totalCorrect === questions.length ? '#10b981' : totalCorrect >= questions.length / 2 ? '#f59e0b' : '#ef4444'}`,
+                                    border: `2px solid ${totalCorrect === questions.length ? '#10b981' : totalCorrect >= questions.length / 2 ? '#f59e0b' : '#f87171'}`,
                                 }}>
                                     <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>
                                         {totalCorrect === questions.length ? '🏆' : totalCorrect >= questions.length / 2 ? '⭐' : '💪'}
                                     </div>
-                                    <h3 style={{ color: totalCorrect === questions.length ? '#10b981' : totalCorrect >= questions.length / 2 ? '#f59e0b' : '#ef4444', fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '1.4rem', marginBottom: '0.5rem' }}>
+                                    <h3 style={{ color: totalCorrect === questions.length ? '#10b981' : totalCorrect >= questions.length / 2 ? '#f59e0b' : '#f87171', fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '1.4rem', marginBottom: '0.5rem' }}>
                                         Score : {totalCorrect}/{questions.length} ({Math.round(totalCorrect / questions.length * 100)}%)
                                     </h3>
-                                    <p style={{ color: '#94a3b8', fontSize: '0.875rem' }}>
+                                    <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
                                         {totalCorrect === questions.length ? 'Score parfait ! Tu es un vrai astronome ! 🌟' : totalCorrect >= questions.length / 2 ? 'Continue comme ça, explore les autres pages pour en apprendre plus !' : 'Pas de panique ! Explore les pages du site et reviens tenter ta chance !'}
                                     </p>
                                 </motion.div>
@@ -258,9 +258,9 @@ export default function QuizPage() {
                         {VIDEOS.map(v => (
                             <div key={v.title} className="card" style={{ padding: '1.25rem', textAlign: 'center' }}>
                                 <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>{v.emoji}</div>
-                                <h3 style={{ color: '#e2e8f0', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.375rem' }}>{v.title}</h3>
-                                <p style={{ color: '#64748b', fontSize: '0.8rem', lineHeight: 1.6, marginBottom: '0.875rem' }}>{v.description}</p>
-                                <span style={{ fontSize: '0.72rem', color: '#a78bfa', background: 'rgba(167,139,250,0.1)', padding: '2px 10px', borderRadius: 999 }}>{v.age}</span>
+                                <h3 style={{ color: 'var(--text)', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.375rem' }}>{v.title}</h3>
+                                <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', lineHeight: 1.6, marginBottom: '0.875rem' }}>{v.description}</p>
+                                <span style={{ fontSize: '0.72rem', color: 'var(--nebula)', background: 'rgba(167,139,250,0.1)', padding: '2px 10px', borderRadius: 999 }}>{v.age}</span>
                                 <br /><br />
                                 <a href={v.url} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ textDecoration: 'none', display: 'inline-flex' }}>▶ Regarder sur YouTube</a>
                                 <a href={v.fallback} target="_blank" rel="noopener noreferrer" className="video-fallback">Si la vidéo est indisponible : {v.fallbackLabel} ↗</a>
@@ -280,9 +280,9 @@ export default function QuizPage() {
                         {OBSERVATION_RESOURCES.map(resource => (
                             <a key={resource.name} href={resource.url} target="_blank" rel="noopener noreferrer" className="card" style={{ padding: '1.25rem', textAlign: 'center', borderTop: '4px solid #6366f1', textDecoration: 'none' }}>
                                 <div aria-hidden="true" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{resource.emoji}</div>
-                                <strong style={{ color: '#e2e8f0', display: 'block', marginBottom: '0.25rem' }}>{resource.name}</strong>
-                                <p style={{ color: '#94a3b8', fontSize: '0.78rem' }}>{resource.detail}</p>
-                                <span style={{ color: '#a78bfa', fontSize: '0.72rem', display: 'inline-block', marginTop: '0.75rem' }}>Ouvrir la source NASA ↗</span>
+                                <strong style={{ color: 'var(--text)', display: 'block', marginBottom: '0.25rem' }}>{resource.name}</strong>
+                                <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>{resource.detail}</p>
+                                <span style={{ color: 'var(--nebula)', fontSize: '0.72rem', display: 'inline-block', marginTop: '0.75rem' }}>Ouvrir la source NASA ↗</span>
                             </a>
                         ))}
                     </div>
@@ -295,8 +295,8 @@ export default function QuizPage() {
                         {anecdotes.map((a, i) => (
                             <motion.div key={i} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="card" style={{ padding: '1.5rem', textAlign: 'center', borderTop: '4px solid #a78bfa' }}>
                                 <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{a.emoji}</div>
-                                <strong style={{ color: '#a78bfa', display: 'block', marginBottom: '0.625rem' }}>{a.title}</strong>
-                                <p style={{ color: '#94a3b8', fontSize: '0.875rem', lineHeight: 1.7 }}>{a.text}</p>
+                                <strong style={{ color: 'var(--nebula)', display: 'block', marginBottom: '0.625rem' }}>{a.title}</strong>
+                                <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', lineHeight: 1.7 }}>{a.text}</p>
                             </motion.div>
                         ))}
                     </div>

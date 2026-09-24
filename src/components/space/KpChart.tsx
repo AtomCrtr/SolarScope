@@ -5,7 +5,7 @@ import { readSpaceWeatherHistoryCache, storeSpaceWeatherHistoryCache } from '@/l
 import type { HistorySourceState, KpEntry, SpaceWeatherHistoryPayload } from '@/lib/data/space-weather-history'
 
 function getKpColor(kp: number): string {
-    if (kp >= 8) return '#ef4444'
+    if (kp >= 8) return '#f87171'
     if (kp >= 6) return '#f97316'
     if (kp >= 5) return '#f59e0b'
     if (kp >= 4) return '#eab308'
@@ -88,7 +88,7 @@ export default function KpChart() {
         }
 
         // Storm threshold lines
-        const thresholds = [{ v: 5, label: 'G1', color: '#f59e0b' }, { v: 7, label: 'G3', color: '#ef4444' }]
+        const thresholds = [{ v: 5, label: 'G1', color: '#f59e0b' }, { v: 7, label: 'G3', color: '#f87171' }]
         for (const t of thresholds) {
             const y = pad.top + chartH - (t.v / maxKp) * chartH
             ctx.beginPath()
@@ -155,7 +155,7 @@ export default function KpChart() {
     if (loading) {
         return (
             <div className="card" style={{ padding: '2rem', textAlign: 'center' }}>
-                <div style={{ color: '#64748b', fontSize: '0.9rem' }}>⏳ Chargement des données Kp NOAA...</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>⏳ Chargement des données Kp NOAA...</div>
             </div>
         )
     }
@@ -163,7 +163,7 @@ export default function KpChart() {
     if (sourceState === 'unavailable' || !current) {
         return (
             <div className="card" style={{ padding: '2rem', textAlign: 'center' }}>
-                <div style={{ color: '#64748b', fontSize: '0.9rem' }}>📡 Données Kp temporairement indisponibles</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>📡 Données Kp temporairement indisponibles</div>
             </div>
         )
     }
@@ -183,7 +183,7 @@ export default function KpChart() {
                     <h2 className="section-title" style={{ color: '#fbbf24', marginBottom: '0.25rem' }}>
                         ⚡ Indice Kp — Météo spatiale {sourceState === 'cached' ? 'en cache' : 'en direct'}
                     </h2>
-                    <p style={{ color: '#64748b', fontSize: '0.8rem' }}>Source : NOAA SWPC — mis à jour toutes les 3h</p>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Source : NOAA SWPC — mis à jour toutes les 3h</p>
                 </div>
                 {/* Current Kp gauge */}
                 <div style={{
@@ -191,7 +191,7 @@ export default function KpChart() {
                     background: `${kpColor}12`, border: `2px solid ${kpColor}40`,
                     borderRadius: '1rem', minWidth: 120,
                 }}>
-                    <div style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, letterSpacing: '0.06em', marginBottom: '0.25rem' }}>KP ACTUEL</div>
+                    <div style={{ color: 'var(--text-muted)', fontSize: '0.72rem', fontWeight: 600, letterSpacing: '0.06em', marginBottom: '0.25rem' }}>KP ACTUEL</div>
                     <div style={{ color: kpColor, fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '2.8rem', lineHeight: 1, textShadow: `0 0 20px ${kpColor}` }}>{current.kp.toFixed(1)}</div>
                     <div style={{ color: kpColor, fontSize: '0.72rem', fontWeight: 600, marginTop: '0.3rem' }}>{getKpLabel(current.kp)}</div>
                 </div>
@@ -203,7 +203,7 @@ export default function KpChart() {
                     { label: 'Kp 0-2 Calme', color: '#10b981' },
                     { label: 'Kp 3-4 Actif', color: '#eab308' },
                     { label: 'Kp 5-6 G1-G2', color: '#f97316' },
-                    { label: 'Kp 7+ G3+', color: '#ef4444' },
+                    { label: 'Kp 7+ G3+', color: '#f87171' },
                 ].map(s => (
                     <span key={s.label} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: '0.72rem', color: s.color, fontWeight: 600 }}>
                         <span style={{ width: 10, height: 10, borderRadius: 2, background: s.color, display: 'inline-block' }} />
@@ -224,7 +224,7 @@ export default function KpChart() {
                 />
             </div>
 
-            <p style={{ color: '#64748b', fontSize: '0.75rem', marginTop: '0.75rem', textAlign: 'right' }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '0.75rem', textAlign: 'right' }}>
                 📅 7 derniers jours · Données NOAA/SWPC · {current.time.slice(0, 16)} UTC
             </p>
         </div>

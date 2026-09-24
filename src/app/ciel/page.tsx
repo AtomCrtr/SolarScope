@@ -71,7 +71,7 @@ export default function CielPage() {
                 <div className="badge" style={{ background: 'rgba(14,165,233,0.12)', color: '#38bdf8', borderColor: 'rgba(14,165,233,0.25)' }}>
                     🌌 CIEL EN DIRECT
                 </div>
-                <h1 className="page-title" style={{ background: 'linear-gradient(135deg, #bae6fd, #0ea5e9, #0369a1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                <h1 className="page-title">
                     Carte du Ciel
                 </h1>
                 <p className="page-subtitle">
@@ -86,12 +86,12 @@ export default function CielPage() {
                 <span style={{ fontSize: '1.25rem' }}>📍</span>
                 <div style={{ flex: 1 }}>
                     {geoLoading ? (
-                        <span style={{ color: '#64748b', fontSize: '0.85rem' }}>Détection de ta position…</span>
+                        <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Détection de ta position…</span>
                     ) : (
                         <>
-                            <span style={{ color: '#e2e8f0', fontWeight: 600, fontSize: '0.85rem' }}>{city}</span>
+                            <span style={{ color: 'var(--text)', fontWeight: 600, fontSize: '0.85rem' }}>{city}</span>
                             {lat !== null && lng !== null && (
-                                <span style={{ color: '#64748b', fontSize: '0.72rem', marginLeft: '0.5rem' }}>zone approximative · {approximateLat}°, {approximateLng}°</span>
+                                <span style={{ color: 'var(--text-muted)', fontSize: '0.72rem', marginLeft: '0.5rem' }}>zone approximative · {approximateLat}°, {approximateLng}°</span>
                             )}
                         </>
                     )}
@@ -134,7 +134,7 @@ export default function CielPage() {
             </section>
 
             <section className="card" style={{ padding: '1.25rem', marginBottom: '2rem' }}>
-                <h2 className="section-title" style={{ color: '#e2e8f0' }}>🪐 Que peut-on réellement voir ?</h2>
+                <h2 className="section-title" style={{ color: 'var(--text)' }}>🪐 Que peut-on réellement voir ?</h2>
                 <p style={{ color: 'var(--text-subtle)', lineHeight: 1.7, marginBottom: '1rem' }}>
                     La carte proposée calcule le ciel à l’instant présent pour votre zone approximative. La visibilité
                     réelle dépend aussi de l’heure, de la météo et de la pollution lumineuse. SolarScope ne présente
@@ -162,7 +162,7 @@ export default function CielPage() {
                     ].map(t => (
                         <div key={t.icon} style={{ display: 'flex', gap: '0.5rem', padding: '0.75rem', borderRadius: '0.5rem', background: 'rgba(14,165,233,0.05)', border: '1px solid rgba(14,165,233,0.08)' }}>
                             <span style={{ fontSize: '1.1rem', flexShrink: 0 }}>{t.icon}</span>
-                            <p style={{ color: '#94a3b8', fontSize: '0.78rem', lineHeight: 1.6 }}>{t.tip}</p>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem', lineHeight: 1.6 }}>{t.tip}</p>
                         </div>
                     ))}
                 </div>

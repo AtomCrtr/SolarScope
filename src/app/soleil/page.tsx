@@ -40,7 +40,7 @@ const FACTS = [
 
 
 const LAYERS = [
-    { name: 'Noyau', temp: '15 000 000°C', radius: '0–25% R☉', desc: 'Fusion nucléaire — 4H → He + énergie', color: '#ef4444' },
+    { name: 'Noyau', temp: '15 000 000°C', radius: '0–25% R☉', desc: 'Fusion nucléaire — 4H → He + énergie', color: '#f87171' },
     { name: 'Zone radiative', temp: '7 000 000°C', radius: '25–70% R☉', desc: 'Les photons mettent 100 000 ans à traverser cette zone !', color: '#f97316' },
     { name: 'Zone convective', temp: '2 000 000°C', radius: '70–100% R☉', desc: 'Convection de plasma — transport de chaleur', color: '#f59e0b' },
     { name: 'Photosphère', temp: '5 500°C', radius: '~696 000 km', desc: 'Surface visible du Soleil — taches solaires', color: '#fbbf24' },
@@ -57,7 +57,7 @@ export default function SoleilPage() {
                 <div className="badge" style={{ background: 'rgba(245,158,11,0.12)', color: '#fbbf24', borderColor: 'rgba(245,158,11,0.25)' }}>
                     🛸 DONNÉES SDO & NOAA — EN DIRECT
                 </div>
-                <h1 className="page-title gradient-text-gold">Le Soleil</h1>
+                <h1 className="page-title">Le Soleil</h1>
                 <p className="page-subtitle">Notre étoile — à 150 millions de km, source de toute vie sur Terre</p>
             </motion.div>
 
@@ -84,12 +84,12 @@ export default function SoleilPage() {
                                 </div>
                                 <div style={{ padding: '0.6rem' }}>
                                     <p style={{ color: '#fcd34d', fontWeight: 700, fontSize: '0.75rem' }}>{img.label}</p>
-                                    <p style={{ color: '#94a3b8', fontSize: '0.7rem', marginTop: 2 }}>{img.desc}</p>
+                                    <p style={{ color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: 2 }}>{img.desc}</p>
                                 </div>
                             </motion.div>
                         ))}
                     </div>
-                    <p style={{ color: '#94a3b8', fontSize: '0.7rem', marginTop: '0.5rem', textAlign: 'right' }}>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: '0.5rem', textAlign: 'right' }}>
                         ⟳ Source : NASA Solar Dynamics Observatory — mise à jour toutes les 15 min
                     </p>
                 </div>
@@ -104,15 +104,15 @@ export default function SoleilPage() {
                         <div key={l.name} style={{ padding: '1rem', borderRadius: '0.875rem', background: `${l.color}10`, border: `1px solid ${l.color}25` }}>
                             <div style={{ color: l.color, fontWeight: 700, fontFamily: 'var(--font-display)', fontSize: '0.9rem', marginBottom: '0.25rem' }}>{l.name}</div>
                             <div style={{ color: l.color, fontWeight: 800, fontSize: '0.85rem', opacity: 0.9, marginBottom: '0.35rem' }}>{l.temp}</div>
-                            <div style={{ color: '#64748b', fontSize: '0.7rem', marginBottom: '0.35rem' }}>{l.radius}</div>
-                            <p style={{ color: '#94a3b8', fontSize: '0.75rem', lineHeight: 1.5 }}>{l.desc}</p>
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.7rem', marginBottom: '0.35rem' }}>{l.radius}</div>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', lineHeight: 1.5 }}>{l.desc}</p>
                         </div>
                     ))}
                 </div>
             </div>
 
             {/* ── STATS GRID ── */}
-            <h2 className="section-title" style={{ color: '#e2e8f0' }}>📊 Le Soleil en chiffres</h2>
+            <h2 className="section-title" style={{ color: 'var(--text)' }}>📊 Le Soleil en chiffres</h2>
             <MetricGrid
                 ariaLabel="Chiffres clés du Soleil"
                 items={FACTS.map(f => ({ icon: f.emoji, value: f.val, label: f.label, color: '#fbbf24' }))}
@@ -123,13 +123,13 @@ export default function SoleilPage() {
                 <h2 className="section-title" style={{ color: '#f97316' }}>☄️ Éjections de Masse Coronale (CME)</h2>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', alignItems: 'start' }} className="max-sm:grid-cols-1">
                     <div>
-                        <p style={{ color: '#94a3b8', lineHeight: 1.8, fontSize: '0.875rem', marginBottom: '1rem' }}>
+                        <p style={{ color: 'var(--text-muted)', lineHeight: 1.8, fontSize: '0.875rem', marginBottom: '1rem' }}>
                             Une <strong style={{ color: '#f97316' }}>CME</strong> est une gigantesque bulle de plasma et de champ magnétique éjectée
                             par le Soleil à des vitesses allant de <strong style={{ color: '#fbbf24' }}>250 à 3 000 km/s</strong>. Lorsqu’elle
                             atteint la Terre (en 1 à 3 jours), elle peut provoquer des tempêtes géomagnétiques.
                         </p>
-                        <p style={{ color: '#94a3b8', lineHeight: 1.8, fontSize: '0.875rem' }}>
-                            L’événement le plus puissant jamais enregistré est la <strong style={{ color: '#ef4444' }}>Tempête de Carrington
+                        <p style={{ color: 'var(--text-muted)', lineHeight: 1.8, fontSize: '0.875rem' }}>
+                            L’événement le plus puissant jamais enregistré est la <strong style={{ color: '#f87171' }}>Tempête de Carrington
                                 (1859)</strong> — si elle se reproduisait aujourd’hui, elle détruirait la majorité des satellites et provoquerait
                             des pannes électriques mondiales pendant des mois.
                         </p>
@@ -137,12 +137,12 @@ export default function SoleilPage() {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
                         {[
                             { emoji: '⚡', label: 'Délai Terre', val: '1–3 jours', color: '#f59e0b' },
-                            { emoji: '🌡️', label: 'Temp. plasma', val: '10 000–100 000°C', color: '#ef4444' },
+                            { emoji: '🌡️', label: 'Temp. plasma', val: '10 000–100 000°C', color: '#f87171' },
                             { emoji: '📡', label: 'Vitesse max', val: '3 000 km/s', color: '#f97316' },
-                            { emoji: '🌐', label: 'Énergie libérée', val: '10²⁴ joules', color: '#8b5cf6' },
+                            { emoji: '🌐', label: 'Énergie libérée', val: '10²⁴ joules', color: '#a78bfa' },
                         ].map((s) => (
                             <div key={s.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.6rem 0.875rem', borderRadius: '0.625rem', background: `${s.color}0d`, border: `1px solid ${s.color}20` }}>
-                                <span style={{ color: '#64748b', fontSize: '0.8rem' }}>{s.emoji} {s.label}</span>
+                                <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>{s.emoji} {s.label}</span>
                                 <span style={{ color: s.color, fontWeight: 700, fontSize: '0.85rem', fontFamily: 'var(--font-display)' }}>{s.val}</span>
                             </div>
                         ))}

@@ -122,10 +122,10 @@ export default function SolarBotPage() {
     return (
         <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem', maxWidth: 860 }}>
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="page-header">
-                <div className="badge solarbot-hero-status" style={{ background: 'rgba(139,92,246,0.12)', color: '#a78bfa', borderColor: 'rgba(139,92,246,0.25)' }}>
+                <div className="badge solarbot-hero-status" style={{ background: 'rgba(139,92,246,0.12)', color: 'var(--nebula)', borderColor: 'rgba(139,92,246,0.25)' }}>
                     🤖 <SolarBotStatus status={status} />
                 </div>
-                <h1 className="page-title" style={{ background: 'linear-gradient(135deg, #e9d5ff, #8b5cf6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                <h1 className="page-title">
                     SolarBot
                 </h1>
                 <p className="page-subtitle">Pose une question et demande une explication courte, une comparaison ou une histoire clairement annoncée.</p>
@@ -138,10 +138,10 @@ export default function SolarBotPage() {
                 {[{ id: 'chat', label: '💬 Chat' }, { id: 'story', label: '📖 Histoires IA' }].map(t => (
                     <button key={t.id} onClick={() => setTab(t.id as 'chat' | 'story')} style={{
                         padding: '0.6rem 1.5rem', borderRadius: 10, fontWeight: 700, fontSize: '0.875rem', cursor: 'pointer',
-                        background: tab === t.id ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'rgba(255,255,255,0.04)',
-                        color: tab === t.id ? '#fff' : '#94a3b8',
+                        background: tab === t.id ? 'var(--sun)' : 'rgba(255,255,255,0.04)',
+                        color: tab === t.id ? 'var(--ink)' : 'var(--text-muted)',
                         border: tab === t.id ? 'none' : '1px solid rgba(255,255,255,0.07)',
-                        boxShadow: tab === t.id ? '0 0 20px rgba(99,102,241,0.4)' : 'none',
+                        boxShadow: tab === t.id ? 'none' : 'none',
                     }}>{t.label}</button>
                 ))}
             </div>
@@ -154,8 +154,8 @@ export default function SolarBotPage() {
                             {QUICK_QUESTIONS.map(q => (
                                 <button key={q} onClick={() => sendMessage(q)} disabled={loading} style={{
                                     padding: '0.4rem 0.875rem', borderRadius: 999, fontSize: '0.78rem', cursor: 'pointer',
-                                    background: 'rgba(139,92,246,0.08)', color: '#c084fc',
-                                    border: '1px solid rgba(139,92,246,0.2)', fontWeight: 500,
+                                    background: 'var(--card-2)', color: 'var(--nebula)',
+                                    border: '1px solid var(--orbit)', fontWeight: 500,
                                     transition: 'all 0.15s',
                                 }}>{q}</button>
                             ))}
@@ -172,7 +172,7 @@ export default function SolarBotPage() {
                                         style={{ display: 'flex', flexDirection: msg.role === 'user' ? 'row-reverse' : 'row', gap: '0.75rem', alignItems: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
                                         <div style={{
                                             width: 36, height: 36, borderRadius: '50%', flexShrink: 0,
-                                            background: msg.role === 'bot' ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'linear-gradient(135deg, #0f172a, #1e293b)',
+                                            background: msg.role === 'bot' ? 'var(--sun)' : 'linear-gradient(135deg, #0f172a, #1e293b)',
                                             border: msg.role === 'bot' ? '2px solid rgba(99,102,241,0.4)' : '2px solid rgba(255,255,255,0.1)',
                                             display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem'
                                         }}>
@@ -181,23 +181,23 @@ export default function SolarBotPage() {
                                         <div style={{ maxWidth: '75%' }}>
                                             <div style={{
                                                 padding: '0.875rem 1rem', borderRadius: msg.role === 'user' ? '1rem 1rem 0 1rem' : '1rem 1rem 1rem 0',
-                                                background: msg.role === 'user' ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'rgba(255,255,255,0.05)',
+                                                background: msg.role === 'user' ? '#2a3566' : 'rgba(255,255,255,0.05)',
                                                 border: msg.role === 'bot' ? '1px solid rgba(255,255,255,0.07)' : 'none',
-                                                color: '#e2e8f0', fontSize: '0.88rem', lineHeight: 1.7,
+                                                color: 'var(--text)', fontSize: '0.88rem', lineHeight: 1.7,
                                             }}><FormattedText text={msg.text} /></div>
                                             {msg.role === 'bot' && <SolarBotReliabilityNote degraded={msg.degraded} />}
                                             {msg.role === 'bot' && <SolarBotSourceLinks sources={msg.sources} />}
-                                            <div style={{ fontSize: '0.68rem', color: '#475569', marginTop: '0.25rem', textAlign: msg.role === 'user' ? 'right' : 'left' }}>{msg.time}</div>
+                                            <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: '0.25rem', textAlign: msg.role === 'user' ? 'right' : 'left' }}>{msg.time}</div>
                                         </div>
                                     </motion.div>
                                 ))}
                                 {loading && (
                                     <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-end' }}>
-                                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🤖</div>
+                                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--sun)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🤖</div>
                                         <div style={{ padding: '0.875rem 1rem', borderRadius: '1rem 1rem 1rem 0', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.07)' }}>
                                             <div style={{ display: 'flex', gap: 4 }}>
                                                 {[0, 1, 2].map(i => (
-                                                    <span key={i} style={{ width: 8, height: 8, borderRadius: '50%', background: '#8b5cf6', display: 'inline-block', animation: `bounce 1s ${i * 0.15}s infinite` }} />
+                                                    <span key={i} style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--sun)', display: 'inline-block', animation: `bounce 1s ${i * 0.15}s infinite` }} />
                                                 ))}
                                             </div>
                                         </div>
@@ -218,13 +218,13 @@ export default function SolarBotPage() {
                                     style={{
                                         flex: 1, padding: '0.75rem 1rem', borderRadius: 12, fontSize: '0.9rem',
                                         background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-                                        color: '#e2e8f0', outline: 'none',
+                                        color: 'var(--text)', outline: 'none',
                                     }}
                                 />
                                 <button aria-label="Envoyer la question" onClick={() => sendMessage()} disabled={loading || !input.trim()} style={{
                                     padding: '0.75rem 1.25rem', borderRadius: 12, fontWeight: 700,
-                                    background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-                                    color: 'white', border: 'none', cursor: 'pointer', fontSize: '1rem',
+                                    background: 'var(--sun)',
+                                    color: 'var(--ink)', border: 'none', cursor: 'pointer', fontSize: '1rem',
                                     opacity: loading || !input.trim() ? 0.5 : 1,
                                 }}>🚀</button>
                                 {messages.length > 1 && (
@@ -242,7 +242,7 @@ export default function SolarBotPage() {
                     <motion.div key="story" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
                         <div className="card" style={{ padding: '2rem', marginBottom: '1.5rem' }}>
                             <h2 className="section-title" style={{ color: '#c084fc' }}>📖 Histoires spatiales assistées</h2>
-                            <p style={{ color: '#64748b', fontSize: '0.85rem', marginBottom: '1.5rem' }}>Choisis un thème. Gemini écrit l’aventure lorsqu’il est disponible ; sinon SolarBot propose une histoire de secours clairement signalée.</p>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>Choisis un thème. Gemini écrit l’aventure lorsqu’il est disponible ; sinon SolarBot propose une histoire de secours clairement signalée.</p>
 
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '0.75rem', marginBottom: '1.5rem' }}>
                                 {STORY_THEMES.map((t, i) => (
@@ -250,7 +250,7 @@ export default function SolarBotPage() {
                                         padding: '0.875rem', borderRadius: 12, cursor: 'pointer', textAlign: 'center',
                                         background: selectedTheme === i ? 'linear-gradient(135deg, rgba(99,102,241,0.2), rgba(139,92,246,0.2))' : 'rgba(255,255,255,0.04)',
                                         border: `1px solid ${selectedTheme === i ? 'rgba(139,92,246,0.4)' : 'rgba(255,255,255,0.07)'}`,
-                                        color: selectedTheme === i ? '#e2e8f0' : '#94a3b8', fontWeight: 600, fontSize: '0.82rem',
+                                        color: selectedTheme === i ? 'var(--text)' : 'var(--text-muted)', fontWeight: 600, fontSize: '0.82rem',
                                     }}>
                                         <div style={{ fontSize: '1.5rem', marginBottom: '0.3rem' }}>{t.emoji}</div>
                                         {t.label}
@@ -265,13 +265,13 @@ export default function SolarBotPage() {
                             {story && (
                                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{
                                     marginTop: '1.5rem', padding: '1.5rem', borderRadius: '1rem',
-                                    background: 'rgba(139,92,246,0.06)', border: '1px solid rgba(139,92,246,0.2)',
-                                    borderLeft: '4px solid #8b5cf6',
+                                    background: 'rgba(139,92,246,0.06)', border: '1px solid var(--orbit)',
+                                    borderLeft: '4px solid var(--sun)',
                                 }}>
                                     <div style={{ color: '#c084fc', fontWeight: 700, fontFamily: 'var(--font-display)', marginBottom: '0.75rem' }}>
                                         {STORY_THEMES[selectedTheme].emoji} {STORY_THEMES[selectedTheme].label}
                                     </div>
-                                    <div style={{ color: '#cbd5e1', lineHeight: 1.85, fontSize: '0.9rem' }}><FormattedText text={story} /></div>
+                                    <div style={{ color: 'var(--text-subtle)', lineHeight: 1.85, fontSize: '0.9rem' }}><FormattedText text={story} /></div>
                                     <SolarBotReliabilityNote degraded={storyDegraded} />
                                     <SolarBotSourceLinks sources={storySources} />
                                 </motion.div>
@@ -286,7 +286,7 @@ export default function SolarBotPage() {
                 marginTop: '1.5rem', padding: '1rem 1.25rem', borderRadius: '0.875rem',
                 background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.15)',
             }}>
-                <p style={{ color: '#94a3b8', fontSize: '0.78rem', lineHeight: 1.6 }}>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem', lineHeight: 1.6 }}>
                     🔒 Ne partage jamais ton nom complet, ton adresse ou ton école. SolarBot peut se tromper : vérifie
                     les informations importantes grâce aux sources scientifiques proposées sur le site.
                 </p>

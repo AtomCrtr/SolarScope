@@ -17,9 +17,9 @@ interface Meteorite {
 }
 
 const CLASS_COLOR: Record<string, string> = {
-    'L': '#f97316', 'H': '#ef4444', 'LL': '#f59e0b',
-    'Iron': '#94a3b8', 'Pallasite': '#10b981', 'CM': '#6366f1',
-    'CV': '#a855f7', 'CO': '#0ea5e9', 'CK': '#06b6d4',
+    'L': '#f97316', 'H': '#f87171', 'LL': '#f59e0b',
+    'Iron': '#94a3b8', 'Pallasite': '#10b981', 'CM': '#a5b4fc',
+    'CV': '#c084fc', 'CO': '#0ea5e9', 'CK': '#06b6d4',
 }
 
 function getColor(recclass: string): string {
@@ -174,7 +174,7 @@ export default function MeteoritesPage() {
                 <div className="badge" style={{ background: 'rgba(249,115,22,0.12)', color: '#fb923c', borderColor: 'rgba(249,115,22,0.25)' }}>
                     ☄️ ARCHIVE NASA — ÉCHANTILLON DE {meteorites.length.toLocaleString('fr-FR')} MÉTÉORITES
                 </div>
-                <h1 className="page-title" style={{ background: 'linear-gradient(135deg, #fed7aa, #f97316, #c2410c)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                <h1 className="page-title">
                     Carte des Météorites
                 </h1>
                 <p className="page-subtitle">
@@ -248,14 +248,14 @@ export default function MeteoritesPage() {
                 </header>
 
                 {loading ? (
-                    <div style={{ height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b' }}>
+                    <div style={{ height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
                         <div style={{ textAlign: 'center' }}>
                             <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🔄</div>
                             <p>Chargement de la base NASA…</p>
                         </div>
                     </div>
                 ) : (
-                    <div style={{ position: 'relative', background: '#030314' }}>
+                    <div style={{ position: 'relative', background: 'var(--card)' }}>
                         <svg
                             role="img"
                             aria-label={`Carte mondiale de ${classFiltered.length} météorites recensées`}
@@ -318,13 +318,13 @@ export default function MeteoritesPage() {
                                 <div style={{ color: '#fb923c', fontWeight: 700, fontSize: '0.85rem', marginBottom: '0.25rem' }}>
                                     {hovered.name}
                                 </div>
-                                <div style={{ color: '#94a3b8', fontSize: '0.72rem' }}>
+                                <div style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>
                                     {hovered.recclass} · {hovered.mass ? `${Number(hovered.mass).toFixed(0)}g` : 'masse inconnue'}
                                 </div>
-                                <div style={{ color: '#64748b', fontSize: '0.65rem' }}>
+                                <div style={{ color: 'var(--text-muted)', fontSize: '0.65rem' }}>
                                     {hovered.year ? new Date(hovered.year).getFullYear() : 'Année inconnue'} · {hovered.fall}
                                 </div>
-                                <div style={{ color: '#475569', fontSize: '0.62rem', marginTop: 2 }}>
+                                <div style={{ color: 'var(--text-muted)', fontSize: '0.62rem', marginTop: 2 }}>
                                     {parseFloat(hovered.reclat).toFixed(2)}°, {parseFloat(hovered.reclong).toFixed(2)}°
                                 </div>
                             </div>

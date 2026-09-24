@@ -14,7 +14,7 @@ interface SolarFlare {
 }
 
 function getFlareColor(cls: string): string {
-    if (cls.startsWith('X')) return '#ef4444'
+    if (cls.startsWith('X')) return '#f87171'
     if (cls.startsWith('M')) return '#f97316'
     if (cls.startsWith('C')) return '#f59e0b'
     return '#64748b'
@@ -83,17 +83,17 @@ export default function SolarFlareHistory() {
                         <h2 className="section-title" style={{ color: '#60a5fa', marginBottom: '0.25rem' }}>
                             🌬️ Vent Solaire — Données ACE/DSCOVR
                         </h2>
-                        <p style={{ color: '#64748b', fontSize: '0.8rem' }}>Mesures {windState === 'cached' ? 'mises en cache' : 'en temps réel'} à 1,5 million km de la Terre (L1)</p>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Mesures {windState === 'cached' ? 'mises en cache' : 'en temps réel'} à 1,5 million km de la Terre (L1)</p>
                     </div>
                     {latestWind && (
                         <div style={{ display: 'flex', gap: '1rem' }}>
                             <div style={{ textAlign: 'center', padding: '0.75rem 1rem', background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.25)', borderRadius: '0.75rem' }}>
                                 <div style={{ color: '#60a5fa', fontWeight: 900, fontFamily: 'var(--font-display)', fontSize: '1.5rem' }}>{Math.round(latestWind.speed)}</div>
-                                <div style={{ color: '#64748b', fontSize: '0.7rem', fontWeight: 600 }}>km/s</div>
+                                <div style={{ color: 'var(--text-muted)', fontSize: '0.7rem', fontWeight: 600 }}>km/s</div>
                             </div>
                             <div style={{ textAlign: 'center', padding: '0.75rem 1rem', background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.25)', borderRadius: '0.75rem' }}>
                                 <div style={{ color: '#22d3ee', fontWeight: 900, fontFamily: 'var(--font-display)', fontSize: '1.5rem' }}>{latestWind.density.toFixed(1)}</div>
-                                <div style={{ color: '#64748b', fontSize: '0.7rem', fontWeight: 600 }}>p/cm³</div>
+                                <div style={{ color: 'var(--text-muted)', fontSize: '0.7rem', fontWeight: 600 }}>p/cm³</div>
                             </div>
                         </div>
                     )}
@@ -136,7 +136,7 @@ export default function SolarFlareHistory() {
                         />
                     </svg>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.4rem', fontSize: '0.7rem', color: '#64748b' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.4rem', fontSize: '0.7rem', color: 'var(--text-muted)' }}>
                     <span>Il y a 12h</span>
                     <span style={{ color: '#f97316' }}>— seuil 500 km/s</span>
                     <span>{windState === 'cached' ? 'Dernière mesure' : 'Maintenant'}</span>
@@ -149,14 +149,14 @@ export default function SolarFlareHistory() {
                 <h2 className="section-title" style={{ color: '#fbbf24', marginBottom: '1.25rem' }}>
                     🔥 Historique Éruptions Solaires — 30 derniers jours
                 </h2>
-                <p style={{ color: '#64748b', fontSize: '0.8rem', marginBottom: '1.25rem' }}>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '1.25rem' }}>
                     Source : NASA DONKI (Database Of Notifications, Knowledge, Information) · Actualisé chaque heure
                 </p>
 
                 {flareLoading ? (
-                    <div style={{ textAlign: 'center', padding: '2rem', color: '#64748b' }}>⏳ Chargement des éruptions...</div>
+                    <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>⏳ Chargement des éruptions...</div>
                 ) : flares.length === 0 ? (
-                    <div style={{ textAlign: 'center', padding: '2rem', color: '#64748b' }}>
+                    <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
                         <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>☀️</div>
                         Aucune éruption significative ces 30 derniers jours — période calme !
                     </div>
@@ -183,7 +183,7 @@ export default function SolarFlareHistory() {
                                 <thead>
                                     <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.07)', background: 'rgba(0,0,0,0.2)' }}>
                                         {['Classe', 'Début (UTC)', 'Pic', 'Fin', 'Région', 'Impact'].map(h => (
-                                            <th key={h} style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#64748b', fontWeight: 600, fontSize: '0.75rem', letterSpacing: '0.03em' }}>{h}</th>
+                                            <th key={h} style={{ padding: '0.75rem 1rem', textAlign: 'left', color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.75rem', letterSpacing: '0.03em' }}>{h}</th>
                                         ))}
                                     </tr>
                                 </thead>
@@ -199,16 +199,16 @@ export default function SolarFlareHistory() {
                                                         background: `${color}12`, border: `1px solid ${color}30`,
                                                     }}>{f.classType || '—'}</span>
                                                 </td>
-                                                <td style={{ padding: '0.7rem 1rem', color: '#e2e8f0', fontVariantNumeric: 'tabular-nums', fontSize: '0.78rem' }}>
+                                                <td style={{ padding: '0.7rem 1rem', color: 'var(--text)', fontVariantNumeric: 'tabular-nums', fontSize: '0.78rem' }}>
                                                     {f.beginTime?.slice(0, 16).replace('T', ' ') || '—'}
                                                 </td>
-                                                <td style={{ padding: '0.7rem 1rem', color: '#94a3b8', fontVariantNumeric: 'tabular-nums', fontSize: '0.78rem' }}>
+                                                <td style={{ padding: '0.7rem 1rem', color: 'var(--text-muted)', fontVariantNumeric: 'tabular-nums', fontSize: '0.78rem' }}>
                                                     {f.peakTime?.slice(11, 16) || '—'}
                                                 </td>
-                                                <td style={{ padding: '0.7rem 1rem', color: '#64748b', fontVariantNumeric: 'tabular-nums', fontSize: '0.78rem' }}>
+                                                <td style={{ padding: '0.7rem 1rem', color: 'var(--text-muted)', fontVariantNumeric: 'tabular-nums', fontSize: '0.78rem' }}>
                                                     {f.endTime?.slice(11, 16) || '—'}
                                                 </td>
-                                                <td style={{ padding: '0.7rem 1rem', color: '#94a3b8', fontSize: '0.78rem' }}>
+                                                <td style={{ padding: '0.7rem 1rem', color: 'var(--text-muted)', fontSize: '0.78rem' }}>
                                                     {f.sourceLocation || '—'}
                                                 </td>
                                                 <td style={{ padding: '0.7rem 1rem' }}>

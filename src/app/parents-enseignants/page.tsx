@@ -21,7 +21,7 @@ export default function ParentsTeachersPage() {
     <div className="container prose-page parent-page">
       <header className="page-header">
         <div className="badge">👨‍👩‍👧‍👦 ACCOMPAGNER</div>
-        <h1 className="page-title gradient-text">Parents et enseignants</h1>
+        <h1 className="page-title">Parents et enseignants</h1>
         <p className="page-subtitle">Des repères simples pour explorer l’espace avec un enfant, sans compte et sans collecte de données personnelles.</p>
       </header>
 

@@ -106,13 +106,13 @@ export default function SolarBotWidget() {
                             exit={{ scale: 0, opacity: 0 }}
                             style={{
                                 position: 'absolute', bottom: '110%', right: 0, marginBottom: '0.5rem',
-                                background: 'rgba(4,4,15,0.95)', border: '1px solid rgba(139,92,246,0.3)',
+                                background: 'rgba(11,16,38,0.96)', border: '1px solid var(--orbit)',
                                 backdropFilter: 'blur(12px)', borderRadius: '0.75rem', padding: '0.625rem 0.875rem',
-                                whiteSpace: 'nowrap', color: '#e2e8f0', fontSize: '0.8rem', fontWeight: 500,
+                                whiteSpace: 'nowrap', color: 'var(--text)', fontSize: '0.8rem', fontWeight: 500,
                             }}
                         >
                             🤖 Pose-moi une question !
-                            <div style={{ position: 'absolute', bottom: -6, right: 20, width: 12, height: 12, background: 'rgba(4,4,15,0.95)', transform: 'rotate(45deg)', borderRight: '1px solid rgba(139,92,246,0.3)', borderBottom: '1px solid rgba(139,92,246,0.3)' }} />
+                            <div style={{ position: 'absolute', bottom: -6, right: 20, width: 12, height: 12, background: 'rgba(11,16,38,0.96)', transform: 'rotate(45deg)', borderRight: '1px solid var(--orbit)', borderBottom: '1px solid var(--orbit)' }} />
                         </motion.div>
                     )}
                 </AnimatePresence>
@@ -126,9 +126,9 @@ export default function SolarBotWidget() {
                     }}
                     style={{
                         width: 58, height: 58, borderRadius: '50%',
-                        background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                        background: 'var(--sun)',
                         border: 'none', cursor: 'pointer', fontSize: '1.6rem',
-                        boxShadow: '0 0 30px rgba(99,102,241,0.6), 0 4px 20px rgba(0,0,0,0.4)',
+                        boxShadow: '0 6px 24px rgba(255,138,61,0.35), 0 4px 20px rgba(0,0,0,0.4)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         position: 'relative',
                     }}
@@ -161,11 +161,11 @@ export default function SolarBotWidget() {
                         style={{
                             position: 'fixed', bottom: '5.5rem', right: '1.5rem', zIndex: 999,
                             width: 340, maxWidth: 'calc(100vw - 2rem)',
-                            background: 'rgba(4,4,15,0.97)',
-                            border: '1px solid rgba(139,92,246,0.3)',
+                            background: 'rgba(11,16,38,0.97)',
+                            border: '1px solid var(--orbit)',
                             backdropFilter: 'blur(24px)',
                             borderRadius: '1.25rem',
-                            boxShadow: '0 8px 60px rgba(0,0,0,0.8), 0 0 40px rgba(99,102,241,0.2)',
+                            boxShadow: '0 12px 48px rgba(0,0,0,0.6)',
                             overflow: 'hidden',
                             display: 'flex', flexDirection: 'column',
                         }}
@@ -173,21 +173,21 @@ export default function SolarBotWidget() {
                         {/* Header */}
                         <div style={{
                             padding: '0.875rem 1rem',
-                            background: 'linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.15))',
+                            background: 'var(--card-2)',
                             borderBottom: '1px solid rgba(255,255,255,0.06)',
                             display: 'flex', alignItems: 'center', gap: '0.625rem',
                         }}>
                             <div style={{
                                 width: 36, height: 36, borderRadius: '50%',
-                                background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                                background: 'var(--sun)',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem',
                                 flexShrink: 0,
                             }}>🤖</div>
                             <div style={{ flex: 1 }}>
-                                <div style={{ color: '#e2e8f0', fontWeight: 700, fontSize: '0.9rem', fontFamily: 'var(--font-display)' }}>SolarBot</div>
+                                <div style={{ color: 'var(--text)', fontWeight: 700, fontSize: '0.9rem', fontFamily: 'var(--font-display)' }}>SolarBot</div>
                                 <SolarBotStatus status={status} compact />
                             </div>
-                            <button onClick={() => setMessages([messages[0]])} aria-label="Effacer la conversation" title="Effacer" style={{ background: 'none', border: 'none', color: '#475569', cursor: 'pointer', fontSize: '0.8rem', padding: '4px' }}>🗑</button>
+                            <button onClick={() => setMessages([messages[0]])} aria-label="Effacer la conversation" title="Effacer" style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.8rem', padding: '4px' }}>🗑</button>
                         </div>
 
                         <p id="solarbot-privacy-tip" style={{ padding: '0.55rem 0.875rem', color: '#bfdbfe', background: 'rgba(14,165,233,0.08)', borderBottom: '1px solid rgba(125,211,252,0.14)', fontSize: '0.7rem', lineHeight: 1.45 }}>
@@ -199,15 +199,15 @@ export default function SolarBotWidget() {
                             {messages.map((msg, i) => (
                                 <div key={i} style={{ display: 'flex', gap: '0.5rem', justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
                                     {msg.role === 'bot' && (
-                                        <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', flexShrink: 0 }}>🤖</div>
+                                        <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'var(--sun)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', flexShrink: 0 }}>🤖</div>
                                     )}
                                     <div style={{ maxWidth: '80%' }}>
                                         <div style={{
                                             padding: '0.5rem 0.75rem',
                                             borderRadius: msg.role === 'user' ? '1rem 1rem 0 1rem' : '1rem 1rem 1rem 0',
-                                            background: msg.role === 'user' ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'rgba(255,255,255,0.06)',
+                                            background: msg.role === 'user' ? '#2a3566' : 'rgba(255,255,255,0.06)',
                                             border: msg.role === 'bot' ? '1px solid rgba(255,255,255,0.06)' : 'none',
-                                            color: '#e2e8f0', fontSize: '0.82rem', lineHeight: 1.65,
+                                            color: 'var(--text)', fontSize: '0.82rem', lineHeight: 1.65,
                                         }}><FormattedText text={msg.text} /></div>
                                         {msg.role === 'bot' && <SolarBotReliabilityNote degraded={msg.degraded} compact />}
                                         {msg.role === 'bot' && <SolarBotSourceLinks sources={msg.sources} compact />}
@@ -216,10 +216,10 @@ export default function SolarBotWidget() {
                             ))}
                             {loading && (
                                 <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                    <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem' }}>🤖</div>
+                                    <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'var(--sun)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem' }}>🤖</div>
                                     <div style={{ padding: '0.625rem 0.875rem', borderRadius: '1rem 1rem 1rem 0', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.06)' }}>
                                         <div style={{ display: 'flex', gap: 4 }}>
-                                            {[0, 1, 2].map(i => <span key={i} style={{ width: 7, height: 7, borderRadius: '50%', background: '#8b5cf6', display: 'inline-block', animation: `botBounce 1s ${i * 0.15}s ease-in-out infinite` }} />)}
+                                            {[0, 1, 2].map(i => <span key={i} style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--sun)', display: 'inline-block', animation: `botBounce 1s ${i * 0.15}s ease-in-out infinite` }} />)}
                                         </div>
                                     </div>
                                 </div>
@@ -232,8 +232,8 @@ export default function SolarBotWidget() {
                             {QUICK_QUESTIONS.map(q => (
                                 <button key={q} onClick={() => send(q)} disabled={loading} style={{
                                     padding: '0.3rem 0.625rem', borderRadius: 999, fontSize: '0.7rem', cursor: 'pointer',
-                                    background: 'rgba(139,92,246,0.08)', color: '#c084fc',
-                                    border: '1px solid rgba(139,92,246,0.18)', fontWeight: 500,
+                                    background: 'var(--card-2)', color: 'var(--nebula)',
+                                    border: '1px solid var(--orbit)', fontWeight: 500,
                                 }}>{q}</button>
                             ))}
                         </div>
@@ -253,11 +253,11 @@ export default function SolarBotWidget() {
                                 style={{
                                     flex: 1, padding: '0.5rem 0.75rem', borderRadius: 10, fontSize: '0.82rem',
                                     background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.09)',
-                                    color: '#e2e8f0', outline: 'none',
+                                    color: 'var(--text)', outline: 'none',
                                 }}
                             />
                             <button aria-label="Envoyer la question" onClick={() => send()} disabled={loading || !input.trim()} style={{
-                                width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                                width: 36, height: 36, borderRadius: 10, background: 'var(--sun)',
                                 border: 'none', cursor: 'pointer', fontSize: '0.9rem', opacity: loading || !input.trim() ? 0.5 : 1,
                             }}>🚀</button>
                         </div>
