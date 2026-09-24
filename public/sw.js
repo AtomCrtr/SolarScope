@@ -1,4 +1,7 @@
-const CACHE_NAME = 'solarscope-shell-v1'
+// The registration URL carries the deployment id (?v=…), so every deployment gets a
+// fresh cache and the activate step removes the previous one.
+const VERSION = new URL(self.location.href).searchParams.get('v') || 'dev'
+const CACHE_NAME = `solarscope-shell-${VERSION}`
 const APP_SHELL = ['/', '/offline', '/manifest.webmanifest', '/solarscope-icon-192.png', '/solarscope-icon-512.png']
 
 self.addEventListener('install', event => {
@@ -17,6 +20,11 @@ self.addEventListener('activate', event => {
   )
 })
 
+function putInCache(request, response) {
+  if (response.ok) caches.open(CACHE_NAME).then(cache => cache.put(request, response.clone()))
+  return response
+}
+
 self.addEventListener('fetch', event => {
   const { request } = event
   const url = new URL(request.url)
@@ -26,21 +34,29 @@ self.addEventListener('fetch', event => {
   if (request.mode === 'navigate') {
     event.respondWith(
       fetch(request)
-        .then(response => {
-          if (response.ok) caches.open(CACHE_NAME).then(cache => cache.put(request, response.clone()))
-          return response
-        })
+        .then(response => putInCache(request, response))
         .catch(async () => (await caches.match(request)) || (await caches.match('/offline'))),
     )
     return
   }
 
-  if (url.pathname.startsWith('/_next/static/') || /\.(?:png|webp|svg|ico|woff2?)$/i.test(url.pathname)) {
+  // Hashed build assets never change: cache first.
+  if (url.pathname.startsWith('/_next/static/')) {
     event.respondWith(
-      caches.match(request).then(cached => cached || fetch(request).then(response => {
-        if (response.ok) caches.open(CACHE_NAME).then(cache => cache.put(request, response.clone()))
-        return response
-      })),
+      caches.match(request).then(cached => cached || fetch(request).then(response => putInCache(request, response))),
+    )
+    return
+  }
+
+  // Public files keep their name when replaced: serve the cached copy, refresh it in the background.
+  if (/\.(?:png|webp|jpe?g|svg|ico|woff2?)$/i.test(url.pathname)) {
+    event.respondWith(
+      caches.match(request).then(cached => {
+        const network = fetch(request).then(response => putInCache(request, response))
+        if (!cached) return network
+        event.waitUntil(network.catch(() => undefined))
+        return cached
+      }),
     )
   }
 })

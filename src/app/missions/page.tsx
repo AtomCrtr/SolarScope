@@ -122,7 +122,7 @@ export default function MissionsPage() {
                                     className="card" style={{ flexShrink: 0, width: 280, padding: '1.1rem', position: 'relative', overflow: 'hidden' }}>
                                     {/* External launch providers use changing image hosts; keep this decorative background unoptimized. */}
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    {l.image && <img src={l.image} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.08 }} />}
+                                    {l.image && <img src={l.image} alt="" loading="lazy" decoding="async" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.08 }} />}
                                     <div style={{ position: 'relative' }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
                                             <span style={{ fontSize: '0.68rem', fontWeight: 700, padding: '2px 7px', borderRadius: 99, background: 'rgba(99,102,241,0.15)', color: '#a5b4fc', border: '1px solid rgba(99,102,241,0.2)' }}>

@@ -157,7 +157,7 @@ export default function JWSTPage() {
               whileHover={{ scale: 1.02 }}>
               <Image src={h.img} alt={h.title} width={800} height={440}
                 style={{ width: '100%', height: 220, objectFit: 'cover', display: 'block' }}
-                onError={e => { (e.target as HTMLImageElement).src = `https://placehold.co/400x220/0a0a1a/6366f1?text=Webb+${encodeURIComponent(h.category)}` }} />
+                onError={e => { e.currentTarget.style.visibility = 'hidden' }} />
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, transparent 55%)' }} />
               <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1rem' }}>
                 <div style={{ fontSize: '0.62rem', fontWeight: 700, color: h.color, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem' }}>
@@ -187,7 +187,7 @@ export default function JWSTPage() {
                 style={{ display: 'block', textDecoration: 'none', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid rgba(99,102,241,0.12)' }}
                 whileHover={{ scale: 1.04 }}>
                 <Image src={img.thumb} alt={img.title} width={600} height={400} style={{ width: '100%', height: 170, objectFit: 'cover', display: 'block' }}
-                  onError={e => { (e.target as HTMLImageElement).src = 'https://placehold.co/400x170/0a0a1a/6366f1?text=JWST' }} />
+                  onError={e => { e.currentTarget.style.visibility = 'hidden' }} />
                 <div style={{ padding: '0.5rem 0.625rem', background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)' }}>
                   <div style={{ color: '#c7d2fe', fontSize: '0.65rem', fontWeight: 600, lineHeight: 1.3 }}>{img.title?.slice(0, 55)}{img.title?.length > 55 ? '…' : ''}</div>
                   <div style={{ color: '#475569', fontSize: '0.6rem', marginTop: 2 }}>{img.date_created}</div>

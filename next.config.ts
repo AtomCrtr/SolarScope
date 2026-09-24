@@ -2,6 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  env: {
+    // Versions the service worker cache (see public/sw.js).
+    NEXT_PUBLIC_BUILD_ID: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 12) || String(Date.now()),
+  },
   reactStrictMode: true,
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -14,7 +18,6 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'esawebb.org' },
       { protocol: 'https', hostname: 'upload.wikimedia.org' },
       { protocol: 'https', hostname: 'www.jpl.nasa.gov' },
-      { protocol: 'https', hostname: 'placehold.co' },
     ],
   },
   async headers() {
