@@ -173,7 +173,7 @@ export default function RoverViewer3D({ rover, height = 340 }: RoverViewer3DProp
                     display: 'flex', alignItems: 'center', gap: 6,
                 }}>
                     <span style={{ fontSize: '0.65rem' }}>🛸</span>
-                    <span style={{ fontSize: '0.68rem', fontWeight: 700, color: meta.color, fontFamily: 'Outfit' }}>{meta.name}</span>
+                    <span style={{ fontSize: '0.68rem', fontWeight: 700, color: meta.color, fontFamily: 'var(--font-display)' }}>{meta.name}</span>
                     <span style={{ fontSize: '0.65rem', color: '#94a3b8' }}>
                         {meta.has3D && !glbError ? 'Modèle 3D interactif' : 'Rendu officiel NASA/JPL'}
                     </span>

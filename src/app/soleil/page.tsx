@@ -102,7 +102,7 @@ export default function SoleilPage() {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem' }} className="max-sm:grid-cols-2">
                     {LAYERS.map((l) => (
                         <div key={l.name} style={{ padding: '1rem', borderRadius: '0.875rem', background: `${l.color}10`, border: `1px solid ${l.color}25` }}>
-                            <div style={{ color: l.color, fontWeight: 700, fontFamily: 'Outfit, sans-serif', fontSize: '0.9rem', marginBottom: '0.25rem' }}>{l.name}</div>
+                            <div style={{ color: l.color, fontWeight: 700, fontFamily: 'var(--font-display)', fontSize: '0.9rem', marginBottom: '0.25rem' }}>{l.name}</div>
                             <div style={{ color: l.color, fontWeight: 800, fontSize: '0.85rem', opacity: 0.9, marginBottom: '0.35rem' }}>{l.temp}</div>
                             <div style={{ color: '#64748b', fontSize: '0.7rem', marginBottom: '0.35rem' }}>{l.radius}</div>
                             <p style={{ color: '#94a3b8', fontSize: '0.75rem', lineHeight: 1.5 }}>{l.desc}</p>
@@ -143,7 +143,7 @@ export default function SoleilPage() {
                         ].map((s) => (
                             <div key={s.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.6rem 0.875rem', borderRadius: '0.625rem', background: `${s.color}0d`, border: `1px solid ${s.color}20` }}>
                                 <span style={{ color: '#64748b', fontSize: '0.8rem' }}>{s.emoji} {s.label}</span>
-                                <span style={{ color: s.color, fontWeight: 700, fontSize: '0.85rem', fontFamily: 'Outfit, sans-serif' }}>{s.val}</span>
+                                <span style={{ color: s.color, fontWeight: 700, fontSize: '0.85rem', fontFamily: 'var(--font-display)' }}>{s.val}</span>
                             </div>
                         ))}
                     </div>

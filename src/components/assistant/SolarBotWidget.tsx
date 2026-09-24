@@ -184,7 +184,7 @@ export default function SolarBotWidget() {
                                 flexShrink: 0,
                             }}>🤖</div>
                             <div style={{ flex: 1 }}>
-                                <div style={{ color: '#e2e8f0', fontWeight: 700, fontSize: '0.9rem', fontFamily: 'Outfit, sans-serif' }}>SolarBot</div>
+                                <div style={{ color: '#e2e8f0', fontWeight: 700, fontSize: '0.9rem', fontFamily: 'var(--font-display)' }}>SolarBot</div>
                                 <SolarBotStatus status={status} compact />
                             </div>
                             <button onClick={() => setMessages([messages[0]])} aria-label="Effacer la conversation" title="Effacer" style={{ background: 'none', border: 'none', color: '#475569', cursor: 'pointer', fontSize: '0.8rem', padding: '4px' }}>🗑</button>

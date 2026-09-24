@@ -9,7 +9,7 @@ const BUILD_YEAR = new Date().getFullYear()
 
 const FOOTER_GROUPS = [
     {
-        label: '🌞 Système Solaire',
+        label: 'Système solaire',
         links: [
             { title: 'Le Soleil', href: '/soleil' },
             { title: 'Les Planètes', href: '/planetes' },
@@ -19,14 +19,14 @@ const FOOTER_GROUPS = [
         ],
     },
     {
-        label: '🚀 Exploration',
+        label: 'Exploration',
         links: [
             { title: 'ISS Tracker', href: '/iss' },
             { title: 'Missions spatiales', href: '/missions' },
         ],
     },
     {
-        label: '🔭 Observation',
+        label: 'Observation',
         links: [
             { title: 'Télescope Webb', href: '/jwst' },
             { title: 'Ciel ce soir', href: '/ciel' },
@@ -35,7 +35,7 @@ const FOOTER_GROUPS = [
         ],
     },
     {
-        label: '🎓 Découverte',
+        label: 'Découverte',
         links: [
             { title: 'Actualités spatiales', href: '/actualites' },
             { title: 'Quiz spatial', href: '/quiz' },
@@ -46,10 +46,10 @@ const FOOTER_GROUPS = [
 ]
 
 const FOOTER_GROUPS_EN = [
-    { label: '🌞 Solar System', links: [{ title: 'The Sun', href: '/soleil' }, { title: 'Planets', href: '/planetes' }, { title: 'Mars', href: '/mars' }, { title: 'Asteroids', href: '/asteroides' }, { title: 'Meteorites', href: '/meteorites' }] },
-    { label: '🚀 Exploration', links: [{ title: 'ISS Tracker', href: '/iss' }, { title: 'Space missions', href: '/missions' }] },
-    { label: '🔭 Observation', links: [{ title: 'Webb Telescope', href: '/jwst' }, { title: 'Tonight’s sky', href: '/ciel' }, { title: 'Picture of the Day', href: '/photo-du-jour' }, { title: 'Exoplanets', href: '/exoplanetes' }] },
-    { label: '🎓 Discover', links: [{ title: 'Space news', href: '/actualites' }, { title: 'Space quiz', href: '/quiz' }, { title: 'Space passport', href: '/passeport' }, { title: 'Parents & teachers', href: '/parents-enseignants' }] },
+    { label: 'Solar System', links: [{ title: 'The Sun', href: '/soleil' }, { title: 'Planets', href: '/planetes' }, { title: 'Mars', href: '/mars' }, { title: 'Asteroids', href: '/asteroides' }, { title: 'Meteorites', href: '/meteorites' }] },
+    { label: 'Exploration', links: [{ title: 'ISS Tracker', href: '/iss' }, { title: 'Space missions', href: '/missions' }] },
+    { label: 'Observation', links: [{ title: 'Webb Telescope', href: '/jwst' }, { title: 'Tonight’s sky', href: '/ciel' }, { title: 'Picture of the Day', href: '/photo-du-jour' }, { title: 'Exoplanets', href: '/exoplanetes' }] },
+    { label: 'Discover', links: [{ title: 'Space news', href: '/actualites' }, { title: 'Space quiz', href: '/quiz' }, { title: 'Space passport', href: '/passeport' }, { title: 'Parents & teachers', href: '/parents-enseignants' }] },
 ]
 
 const SOURCES = [
@@ -65,13 +65,13 @@ const SOURCES = [
 const FOOTER_COPY = {
     fr: {
         description: 'Comprendre l’espace avec des mots simples, des missions courtes et des sources scientifiques. Adapté aux 6–12 ans et aux curieux de 12+.',
-        sources: '📡 Sources de données',
+        sources: 'Sources de données',
         copyright: 'Données scientifiques NASA, ESA, NOAA · Éducatif & non commercial',
         privacy: 'Confidentialité', dataSources: 'Données & sources', about: 'À propos', contact: 'Contact',
     },
     en: {
         description: 'Understand space through simple words, short missions and scientific sources. Designed for ages 6–12 and curious learners aged 12+.',
-        sources: '📡 Data sources',
+        sources: 'Data sources',
         copyright: 'Scientific data from NASA, ESA and NOAA · Educational & non-commercial',
         privacy: 'Privacy', dataSources: 'Data & sources', about: 'About', contact: 'Contact',
     },
@@ -102,7 +102,7 @@ export default function Footer() {
             marginTop: '4rem',
         }}>
             {/* Top gradient accent */}
-            <div style={{ height: 1, background: 'linear-gradient(90deg, transparent, rgba(139,92,246,0.4), rgba(99,102,241,0.4), transparent)' }} />
+            <div style={{ height: 1, background: 'var(--border)' }} />
 
             <div style={{ maxWidth: 'var(--max-w)', margin: '0 auto', padding: '3rem 2rem 1.5rem' }}>
 
@@ -112,16 +112,13 @@ export default function Footer() {
                     {/* Brand */}
                     <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.875rem' }}>
-                            <div style={{
-                                width: 32, height: 32, borderRadius: 9,
-                                background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                fontSize: '1rem', boxShadow: '0 2px 14px rgba(139,92,246,0.45)',
-                            }}>🔭</div>
+                            <svg width="32" height="32" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+                                <circle cx="18" cy="18" r="7" fill="#ff8a3d" />
+                                <ellipse cx="18" cy="18" rx="16" ry="6.5" stroke="#8ec5ff" strokeWidth="2" transform="rotate(-24 18 18)" />
+                                <circle cx="31" cy="11" r="2.4" fill="#eef1fa" />
+                            </svg>
                             <span style={{
-                                fontFamily: 'Outfit, sans-serif', fontWeight: 800, fontSize: '1.1rem',
-                                background: 'linear-gradient(135deg, #f1f5f9, #c4b5fd)',
-                                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+                                fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: '1.25rem', color: 'var(--text)',
                             }}>SolarScope</span>
                         </div>
                         <p style={{ color: '#94a3b8', fontSize: '0.8rem', lineHeight: 1.7, maxWidth: 240, marginBottom: '1rem' }}>
@@ -130,9 +127,9 @@ export default function Footer() {
                         {/* Social / contact */}
                         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                             {[
-                                { icon: '🌐', label: 'NASA', href: 'https://NASA.gov' },
-                                { icon: '📡', label: 'ESA', href: 'https://esa.int' },
-                                { icon: '🛸', label: 'CNES', href: 'https://cnes.fr' },
+                                { label: 'NASA', href: 'https://www.nasa.gov' },
+                                { label: 'ESA', href: 'https://www.esa.int' },
+                                { label: 'CNES', href: 'https://cnes.fr' },
                             ].map(s => (
                                 <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" style={{
                                     display: 'flex', alignItems: 'center', gap: '0.3rem',
@@ -142,7 +139,7 @@ export default function Footer() {
                                 }}
                                     onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#c4b5fd'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(196,181,253,0.25)' }}
                                     onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = '#94a3b8'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.07)' }}>
-                                    {s.icon} {s.label}
+                                    {s.label}
                                 </a>
                             ))}
                         </div>

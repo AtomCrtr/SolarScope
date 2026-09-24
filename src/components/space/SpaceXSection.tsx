@@ -61,7 +61,7 @@ export default function SpaceXSection() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '1rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
         <div>
           <div className="badge" style={{ marginBottom: '0.75rem' }}>🛸 SPACEX · CALENDRIER LIVE</div>
-          <h2 style={{ color: 'var(--text)', font: "800 clamp(1.8rem, 4vw, 2.8rem)/1 'Outfit', sans-serif", letterSpacing: '-0.035em' }}>
+          <h2 style={{ color: 'var(--text)', font: "800 clamp(1.8rem, 4vw, 2.8rem)/1 var(--font-display)", letterSpacing: '-0.035em' }}>
             Lancements à venir
           </h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem', marginTop: '0.55rem' }}>
@@ -78,7 +78,7 @@ export default function SpaceXSection() {
         {VEHICLES.map(vehicle => (
           <article key={vehicle.name} className="card" style={{ padding: '1.2rem', borderTop: `2px solid ${vehicle.color}` }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.75rem', alignItems: 'center' }}>
-              <h3 style={{ color: 'var(--text)', font: "750 1rem 'Outfit', sans-serif" }}>{vehicle.name}</h3>
+              <h3 style={{ color: 'var(--text)', font: "750 1rem var(--font-display)" }}>{vehicle.name}</h3>
               <span style={{ color: vehicle.color, fontSize: '0.62rem', fontWeight: 800 }}>{vehicle.status}</span>
             </div>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.74rem', lineHeight: 1.65, marginTop: '0.75rem' }}>{vehicle.detail}</p>
@@ -113,7 +113,7 @@ export default function SpaceXSection() {
                   {launch.live ? '● LIVE' : launch.status.toUpperCase()}
                 </span>
               </div>
-              <h3 style={{ marginTop: '0.8rem', color: 'var(--text)', font: "730 0.92rem/1.45 'Outfit', sans-serif" }}>{launch.name}</h3>
+              <h3 style={{ marginTop: '0.8rem', color: 'var(--text)', font: "730 0.92rem/1.45 var(--font-display)" }}>{launch.name}</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.68rem', lineHeight: 1.6, marginTop: '0.45rem' }}>{launch.rocket} · {launch.location}</p>
               <div style={{ marginTop: 'auto', paddingTop: '0.9rem', display: 'flex', justifyContent: 'space-between', color: '#64748b', fontSize: '0.65rem' }}>
                 <span>{new Date(launch.net).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>

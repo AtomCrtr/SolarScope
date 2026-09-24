@@ -144,7 +144,7 @@ export default function ActualitesPage() {
       {!loading && error && (
         <div className="card" style={{ padding: '2rem', textAlign: 'center' }}>
           <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📡</div>
-          <h2 style={{ color: 'var(--text)', font: "700 1.1rem 'Outfit', sans-serif" }}>Impossible de joindre le flux NASA</h2>
+          <h2 style={{ color: 'var(--text)', font: "700 1.1rem var(--font-display)" }}>Impossible de joindre le flux NASA</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.82rem', marginTop: '0.4rem' }}>Réessayez dans quelques instants ou consultez directement la source officielle.</p>
         </div>
       )}
@@ -177,7 +177,7 @@ export default function ActualitesPage() {
                   </span>
                   <time dateTime={article.date ?? undefined} style={{ color: 'var(--text-muted)', fontSize: '0.65rem' }}>{formatDate(article.date)}</time>
                 </div>
-                <h2 style={{ margin: '1rem 0 0.6rem', color: 'var(--text)', font: "750 1rem/1.45 'Outfit', sans-serif" }}>{article.title}</h2>
+                <h2 style={{ margin: '1rem 0 0.6rem', color: 'var(--text)', font: "750 1rem/1.45 var(--font-display)" }}>{article.title}</h2>
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.77rem', lineHeight: 1.65, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                   {article.summary}
                 </p>

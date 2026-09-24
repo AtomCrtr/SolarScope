@@ -88,11 +88,11 @@ export default function SolarFlareHistory() {
                     {latestWind && (
                         <div style={{ display: 'flex', gap: '1rem' }}>
                             <div style={{ textAlign: 'center', padding: '0.75rem 1rem', background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.25)', borderRadius: '0.75rem' }}>
-                                <div style={{ color: '#60a5fa', fontWeight: 900, fontFamily: 'Outfit, sans-serif', fontSize: '1.5rem' }}>{Math.round(latestWind.speed)}</div>
+                                <div style={{ color: '#60a5fa', fontWeight: 900, fontFamily: 'var(--font-display)', fontSize: '1.5rem' }}>{Math.round(latestWind.speed)}</div>
                                 <div style={{ color: '#64748b', fontSize: '0.7rem', fontWeight: 600 }}>km/s</div>
                             </div>
                             <div style={{ textAlign: 'center', padding: '0.75rem 1rem', background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.25)', borderRadius: '0.75rem' }}>
-                                <div style={{ color: '#22d3ee', fontWeight: 900, fontFamily: 'Outfit, sans-serif', fontSize: '1.5rem' }}>{latestWind.density.toFixed(1)}</div>
+                                <div style={{ color: '#22d3ee', fontWeight: 900, fontFamily: 'var(--font-display)', fontSize: '1.5rem' }}>{latestWind.density.toFixed(1)}</div>
                                 <div style={{ color: '#64748b', fontSize: '0.7rem', fontWeight: 600 }}>p/cm³</div>
                             </div>
                         </div>
@@ -170,7 +170,7 @@ export default function SolarFlareHistory() {
                                 const color = getFlareColor(cls)
                                 return (
                                     <div key={cls} style={{ padding: '0.5rem 1rem', borderRadius: '0.625rem', background: `${color}12`, border: `1px solid ${color}30`, textAlign: 'center' }}>
-                                        <div style={{ color, fontWeight: 900, fontFamily: 'Outfit, sans-serif', fontSize: '1.4rem', lineHeight: 1 }}>{count}</div>
+                                        <div style={{ color, fontWeight: 900, fontFamily: 'var(--font-display)', fontSize: '1.4rem', lineHeight: 1 }}>{count}</div>
                                         <div style={{ color, fontSize: '0.72rem', fontWeight: 700 }}>Classe {cls}</div>
                                     </div>
                                 )
@@ -194,7 +194,7 @@ export default function SolarFlareHistory() {
                                             <tr key={i} style={{ borderBottom: i < flares.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none' }}>
                                                 <td style={{ padding: '0.7rem 1rem' }}>
                                                     <span style={{
-                                                        color, fontWeight: 800, fontFamily: 'Outfit, sans-serif', fontSize: '0.9rem',
+                                                        color, fontWeight: 800, fontFamily: 'var(--font-display)', fontSize: '0.9rem',
                                                         padding: '2px 10px', borderRadius: 999,
                                                         background: `${color}12`, border: `1px solid ${color}30`,
                                                     }}>{f.classType || '—'}</span>

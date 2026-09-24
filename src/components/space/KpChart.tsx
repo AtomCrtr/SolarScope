@@ -192,7 +192,7 @@ export default function KpChart() {
                     borderRadius: '1rem', minWidth: 120,
                 }}>
                     <div style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, letterSpacing: '0.06em', marginBottom: '0.25rem' }}>KP ACTUEL</div>
-                    <div style={{ color: kpColor, fontFamily: 'Outfit, sans-serif', fontWeight: 900, fontSize: '2.8rem', lineHeight: 1, textShadow: `0 0 20px ${kpColor}` }}>{current.kp.toFixed(1)}</div>
+                    <div style={{ color: kpColor, fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '2.8rem', lineHeight: 1, textShadow: `0 0 20px ${kpColor}` }}>{current.kp.toFixed(1)}</div>
                     <div style={{ color: kpColor, fontSize: '0.72rem', fontWeight: 600, marginTop: '0.3rem' }}>{getKpLabel(current.kp)}</div>
                 </div>
             </div>

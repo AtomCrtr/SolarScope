@@ -5,59 +5,67 @@ import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, useRef } from 'react'
 import LanguageToggle, { useSiteLocale } from '@/components/layout/LanguageToggle'
+import SpaceIcon, { type SpaceIconName } from '@/components/ui/SpaceIcon'
 
 /* ─────────────────────────────────────────────
    Navigation structure — 5 logical categories
 ───────────────────────────────────────────── */
-const NAV_GROUPS = [
+type NavGroup = {
+    id: string
+    label: string
+    color: string
+    pages: Array<{ icon: SpaceIconName; title: string; href: string; desc: string }>
+}
+
+const NAV_GROUPS: NavGroup[] = [
     {
         id: 'systeme',
-        label: '🌞 Système Solaire',
-        color: '#f59e0b',
+        label: 'Système solaire',
+        color: '#ff8a3d',
         pages: [
-            { icon: '☀️', title: 'Le Soleil', href: '/soleil', desc: 'Météo spatiale, éruptions, données SDO' },
-            { icon: '🪐', title: 'Planètes', href: '/planetes', desc: 'Les 8 planètes en 3D + positions J2000' },
-            { icon: '🔴', title: 'Mars', href: '/mars', desc: 'Photos rovers Curiosity & Perseverance' },
-            { icon: '☄️', title: 'Astéroïdes', href: '/asteroides', desc: 'NEO qui frôlent la Terre — base NASA' },
-            { icon: '🪨', title: 'Météorites', href: '/meteorites', desc: 'Catalogue historique sur carte interactive' },
+            { icon: 'sun', title: 'Le Soleil', href: '/soleil', desc: 'Météo spatiale, éruptions, données SDO' },
+            { icon: 'planet', title: 'Planètes', href: '/planetes', desc: 'Les 8 planètes en 3D + positions J2000' },
+            { icon: 'mars', title: 'Mars', href: '/mars', desc: 'Photos rovers Curiosity & Perseverance' },
+            { icon: 'asteroid', title: 'Astéroïdes', href: '/asteroides', desc: 'NEO qui frôlent la Terre — base NASA' },
+            { icon: 'meteorite', title: 'Météorites', href: '/meteorites', desc: 'Catalogue historique sur carte interactive' },
         ],
     },
     {
         id: 'exploration',
-        label: '🚀 Exploration',
-        color: '#3b82f6',
+        label: 'Exploration',
+        color: '#8ec5ff',
         pages: [
-            { icon: '🛰️', title: 'ISS Tracker', href: '/iss', desc: 'Position live de la Station Spatiale' },
-            { icon: '🚀', title: 'Missions', href: '/missions', desc: 'De Spoutnik à Artémis — 70 ans d\'histoire' },
+            { icon: 'satellite', title: 'ISS Tracker', href: '/iss', desc: 'Position live de la Station Spatiale' },
+            { icon: 'rocket', title: 'Missions', href: '/missions', desc: 'De Spoutnik à Artémis — 70 ans d\'histoire' },
         ],
     },
     {
         id: 'observation',
-        label: '🔭 Observation',
-        color: '#a855f7',
+        label: 'Observation',
+        color: '#c4b5fd',
         pages: [
-            { icon: '🔭', title: 'Télescope Webb', href: '/jwst', desc: 'Galerie des images JWST les plus épiques' },
-            { icon: '🌌', title: 'Ciel ce soir', href: '/ciel', desc: 'Carte du ciel selon ta géolocalisation' },
-            { icon: '🌠', title: 'Photo du Jour', href: '/photo-du-jour', desc: 'APOD — image NASA choisie chaque jour' },
-            { icon: '🌟', title: 'Exoplanètes', href: '/exoplanetes', desc: 'Catalogue NASA des mondes confirmés' },
+            { icon: 'telescope', title: 'Télescope Webb', href: '/jwst', desc: 'Galerie des images JWST les plus épiques' },
+            { icon: 'moon-stars', title: 'Ciel ce soir', href: '/ciel', desc: 'Carte du ciel selon ta géolocalisation' },
+            { icon: 'camera', title: 'Photo du Jour', href: '/photo-du-jour', desc: 'APOD — image NASA choisie chaque jour' },
+            { icon: 'exoplanet', title: 'Exoplanètes', href: '/exoplanetes', desc: 'Catalogue NASA des mondes confirmés' },
         ],
     },
     {
         id: 'decouverte',
-        label: '🎓 Découverte',
-        color: '#10b981',
+        label: 'Découverte',
+        color: '#5be3a4',
         pages: [
-            { icon: '📰', title: 'Actualités', href: '/actualites', desc: 'Publications officielles NASA actualisées' },
-            { icon: '🎮', title: 'Quiz spatial', href: '/quiz', desc: 'Teste tes connaissances sur l\'Univers !' },
-            { icon: '🚀', title: 'Passeport spatial', href: '/passeport', desc: 'Tes missions, sur cet appareil seulement' },
-            { icon: '👨‍👩‍👧‍👦', title: 'Parents & enseignants', href: '/parents-enseignants', desc: 'Repères pour accompagner une mission' },
+            { icon: 'news', title: 'Actualités', href: '/actualites', desc: 'Publications officielles NASA actualisées' },
+            { icon: 'quiz', title: 'Quiz spatial', href: '/quiz', desc: 'Teste tes connaissances sur l\'Univers !' },
+            { icon: 'passport', title: 'Passeport spatial', href: '/passeport', desc: 'Tes missions, sur cet appareil seulement' },
+            { icon: 'family', title: 'Parents & enseignants', href: '/parents-enseignants', desc: 'Repères pour accompagner une mission' },
         ],
     },
 ]
 
 const NAV_EN: Record<string, { label: string; pages: Record<string, { title: string; desc: string }> }> = {
     systeme: {
-        label: '🌞 Solar System',
+        label: 'Solar System',
         pages: {
             '/soleil': { title: 'The Sun', desc: 'Space weather, flares and SDO data' },
             '/planetes': { title: 'Planets', desc: 'The 8 planets in 3D + J2000 positions' },
@@ -67,14 +75,14 @@ const NAV_EN: Record<string, { label: string; pages: Record<string, { title: str
         },
     },
     exploration: {
-        label: '🚀 Exploration',
+        label: 'Exploration',
         pages: {
             '/iss': { title: 'ISS Tracker', desc: 'Live position of the Space Station' },
             '/missions': { title: 'Missions', desc: 'From Sputnik to Artemis — 70 years of history' },
         },
     },
     observation: {
-        label: '🔭 Observation',
+        label: 'Observation',
         pages: {
             '/jwst': { title: 'Webb Telescope', desc: 'A gallery of remarkable JWST images' },
             '/ciel': { title: 'Tonight’s sky', desc: 'A sky map for your location' },
@@ -83,7 +91,7 @@ const NAV_EN: Record<string, { label: string; pages: Record<string, { title: str
         },
     },
     decouverte: {
-        label: '🎓 Discover',
+        label: 'Discover',
         pages: {
             '/actualites': { title: 'News', desc: 'Updated official NASA stories' },
             '/quiz': { title: 'Space quiz', desc: 'Test what you know about the Universe!' },
@@ -178,18 +186,14 @@ export default function Navbar() {
 
                     {/* Logo */}
                     <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none', flexShrink: 0 }}>
-                        <div style={{
-                            width: 30, height: 30, borderRadius: 9,
-                            background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            fontSize: '0.9rem', boxShadow: '0 2px 14px rgba(139,92,246,0.5)',
-                        }}>🔭</div>
+                        <svg width="32" height="32" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+                            <circle cx="18" cy="18" r="7" fill="#ff8a3d" />
+                            <ellipse cx="18" cy="18" rx="16" ry="6.5" stroke="#8ec5ff" strokeWidth="2" transform="rotate(-24 18 18)" />
+                            <circle cx="31" cy="11" r="2.4" fill="#eef1fa" />
+                        </svg>
                         <span style={{
-                            fontFamily: 'Outfit, sans-serif', fontWeight: 800, fontSize: '1.05rem',
-                            letterSpacing: '-0.03em',
-                            background: 'linear-gradient(135deg, #f1f5f9 30%, #c4b5fd 100%)',
-                            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-                            whiteSpace: 'nowrap',
+                            fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: '1.3rem',
+                            color: 'var(--text)', whiteSpace: 'nowrap',
                         }}>SolarScope</span>
                     </Link>
 
@@ -201,12 +205,12 @@ export default function Navbar() {
                             display: 'flex', alignItems: 'center', gap: '0.3rem',
                             padding: '6px 11px', borderRadius: '10px', textDecoration: 'none',
                             fontSize: '0.78rem', fontWeight: 600, whiteSpace: 'nowrap',
-                            color: pathname === '/' ? '#fff' : '#6b7280',
-                            background: pathname === '/' ? 'rgba(139,92,246,0.18)' : 'transparent',
-                            border: `1px solid ${pathname === '/' ? 'rgba(139,92,246,0.3)' : 'transparent'}`,
+                            color: pathname === '/' ? 'var(--text)' : 'var(--text-subtle)',
+                            background: pathname === '/' ? '#18214a' : 'transparent',
+                            border: `1px solid ${pathname === '/' ? 'var(--orbit)' : 'transparent'}`,
                             transition: 'all 0.15s',
                         }}>
-                            <span>🏠</span><span>{locale === 'fr' ? 'Accueil' : 'Home'}</span>
+                            <SpaceIcon name="home" size={16} /><span>{locale === 'fr' ? 'Accueil' : 'Home'}</span>
                         </Link>
 
                         {/* Category groups */}
@@ -228,7 +232,7 @@ export default function Navbar() {
                                         display: 'flex', alignItems: 'center', gap: '0.3rem',
                                         padding: '6px 11px', borderRadius: '10px', cursor: 'pointer',
                                         fontSize: '0.78rem', fontWeight: 600, whiteSpace: 'nowrap',
-                                        color: isActive ? '#fff' : isOpen ? '#e2e8f0' : '#6b7280',
+                                        color: isActive || isOpen ? 'var(--text)' : 'var(--text-subtle)',
                                         background: isActive ? `${group.color}22` : isOpen ? 'rgba(255,255,255,0.08)' : 'transparent',
                                         border: `1px solid ${isActive ? `${group.color}44` : 'transparent'}`,
                                         transition: 'all 0.15s',
@@ -237,7 +241,7 @@ export default function Navbar() {
                                         <motion.span
                                             animate={{ rotate: isOpen ? 180 : 0 }}
                                             transition={{ duration: 0.2 }}
-                                            style={{ fontSize: '0.6rem', color: '#475569', display: 'inline-block' }}>▼</motion.span>
+                                            style={{ fontSize: '0.6rem', color: 'var(--text-muted)', display: 'inline-block' }}>▼</motion.span>
                                     </button>
 
                                     {/* Dropdown panel */}
@@ -288,13 +292,13 @@ export default function Navbar() {
                                                                 background: isPageActive ? `${group.color}20` : 'rgba(255,255,255,0.05)',
                                                                 border: `1px solid ${isPageActive ? `${group.color}35` : 'rgba(255,255,255,0.07)'}`,
                                                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                                                fontSize: '1rem',
-                                                            }}>{page.icon}</div>
+                                                                color: isPageActive ? group.color : 'var(--text-subtle)',
+                                                            }}><SpaceIcon name={page.icon} size={18} /></div>
                                                             <div>
-                                                                <div style={{ color: isPageActive ? group.color : '#e2e8f0', fontSize: '0.82rem', fontWeight: 700, fontFamily: 'Outfit', lineHeight: 1.2 }}>
+                                                                <div style={{ color: isPageActive ? group.color : 'var(--text)', fontSize: '0.88rem', fontWeight: 700, fontFamily: 'var(--font-display)', lineHeight: 1.2 }}>
                                                                     {page.title}
                                                                 </div>
-                                                                <div style={{ color: '#475569', fontSize: '0.68rem', lineHeight: 1.3, marginTop: 2 }}>
+                                                                <div style={{ color: 'var(--text-muted)', fontSize: '0.74rem', lineHeight: 1.3, marginTop: 2 }}>
                                                                     {page.desc}
                                                                 </div>
                                                             </div>
@@ -370,12 +374,12 @@ export default function Navbar() {
                             <Link href="/" onClick={() => setMobileOpen(false)} style={{
                                 display: 'flex', alignItems: 'center', gap: '0.75rem',
                                 padding: '0.7rem 0.875rem', borderRadius: '10px', textDecoration: 'none',
-                                background: pathname === '/' ? 'rgba(139,92,246,0.12)' : 'rgba(255,255,255,0.03)',
-                                border: `1px solid ${pathname === '/' ? 'rgba(139,92,246,0.25)' : 'rgba(255,255,255,0.05)'}`,
-                                color: pathname === '/' ? '#c4b5fd' : '#94a3b8',
+                                background: pathname === '/' ? '#18214a' : 'rgba(255,255,255,0.03)',
+                                border: `1px solid ${pathname === '/' ? 'var(--orbit)' : 'rgba(255,255,255,0.05)'}`,
+                                color: pathname === '/' ? 'var(--text)' : 'var(--text-subtle)',
                                 fontSize: '0.82rem', fontWeight: 600, marginBottom: '0.375rem',
                             }}>
-                                <span style={{ fontSize: '1.1rem' }}>🏠</span> {locale === 'fr' ? 'Accueil' : 'Home'}
+                                <SpaceIcon name="home" size={18} /> {locale === 'fr' ? 'Accueil' : 'Home'}
                             </Link>
 
                             {/* Category groups */}
@@ -396,11 +400,11 @@ export default function Navbar() {
                                                 background: isActive ? `${group.color}12` : 'rgba(255,255,255,0.03)',
                                                 border: `1px solid ${isActive ? `${group.color}28` : 'rgba(255,255,255,0.05)'}`,
                                             }}>
-                                            <span style={{ color: isActive ? group.color : '#94a3b8', fontSize: '0.82rem', fontWeight: 700 }}>
+                                            <span style={{ color: isActive ? group.color : 'var(--text-subtle)', fontSize: '0.9rem', fontWeight: 700 }}>
                                                 {group.label}
                                             </span>
                                             <motion.span animate={{ rotate: isGroupOpen ? 180 : 0 }} transition={{ duration: 0.2 }}
-                                                style={{ color: '#475569', fontSize: '0.65rem' }}>▼</motion.span>
+                                                style={{ color: 'var(--text-muted)', fontSize: '0.65rem' }}>▼</motion.span>
                                         </button>
                                         <AnimatePresence>
                                             {isGroupOpen && (
@@ -417,13 +421,13 @@ export default function Navbar() {
                                                                     display: 'flex', alignItems: 'center', gap: '0.625rem',
                                                                     padding: '0.55rem 0.75rem', borderRadius: '9px', textDecoration: 'none',
                                                                     background: active ? `${group.color}12` : 'transparent',
-                                                                    color: active ? group.color : '#64748b',
+                                                                    color: active ? group.color : 'var(--text-subtle)',
                                                                     fontSize: '0.8rem', fontWeight: 600, marginBottom: '0.2rem',
                                                                 }}>
-                                                                <span>{page.icon}</span>
+                                                                <SpaceIcon name={page.icon} size={18} />
                                                                 <div>
                                                                     <div>{page.title}</div>
-                                                                    <div style={{ color: '#334155', fontSize: '0.65rem', fontWeight: 400 }}>{page.desc}</div>
+                                                                    <div style={{ color: 'var(--text-muted)', fontSize: '0.72rem', fontWeight: 400 }}>{page.desc}</div>
                                                                 </div>
                                                             </Link>
                                                         )

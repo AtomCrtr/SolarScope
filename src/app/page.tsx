@@ -1,9 +1,7 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import type { DashboardData } from '@/lib/data/space-data'
 import HomeMissionBoard from '@/components/learning/HomeMissionBoard'
 import { useSiteLocale } from '@/components/layout/LanguageToggle'
@@ -12,33 +10,37 @@ import { useDaysSince } from '@/lib/client/use-client-value'
 const HOME_COPY = {
   fr: {
     title: ['Bonjour explorateur !', 'Choisis ta mission', 'et décolle pour l’espace.'],
+    bubble: 'Salut ! Je suis Cosmo, je t’accompagne dans chaque mission.',
+    dataBandTitle: 'Le ciel en chiffres', dataBandText: 'Chaque chiffre affiche sa source. Si un service ne répond pas, on le dit.',
     intro: 'Apprends, observe et comprends l’Univers avec des missions courtes, des vraies images et des mots simples.',
     sourcesUnavailable: 'Sources momentanément indisponibles', sourcesConnected: 'flux connectés',
     missionKicker: 'COMMENCE ICI', missionTitle: 'Choisis ta première mission.', missionText: 'Chaque mission commence par une question, utilise une image ou une expérience, puis résume trois idées importantes.',
     exploreKicker: 'CARTE D’EXPLORATION', exploreTitle: 'Choisissez votre trajectoire.', exploreText: 'Quatre portes d’entrée, de notre voisinage planétaire jusqu’aux confins observables.',
     trustKicker: 'DONNÉES DE CONFIANCE', trustTitle: 'Pas de chiffres décoratifs.', trustText: 'Les indicateurs volatils sont récupérés côté serveur, mis en cache avec une durée explicite et accompagnés de leur source. Lorsqu’un service ne répond pas, SolarScope l’indique au lieu d’inventer une valeur de remplacement.', trustAction: 'Consulter les publications NASA',
     launch: 'PROCHAIN DÉPART',
-    dataBandLabel: 'Indicateurs spatiaux', live: 'EN DIRECT', missionsLinkLabel: 'Voir les missions',
-    kpis: { exoplanets: 'exoplanètes confirmées', asteroids: 'objets proches catalogués', crew: 'personnes à bord de l’ISS', perseverance: 'sols de Perseverance', perseveranceSince: 'Depuis le 18 février 2021' },
+    live: 'EN DIRECT', missionsLinkLabel: 'Voir les missions',
+    kpis: { exoplanets: 'exoplanètes confirmées', asteroids: 'objets proches catalogués', crew: 'personnes à bord de l’ISS', perseverance: 'jours martiens de Perseverance', perseveranceSince: 'Depuis le 18 février 2021' },
   },
   en: {
     title: ['Hello explorer!', 'Choose a mission', 'and launch into space.'],
+    bubble: 'Hi! I’m Cosmo, I’ll guide you on every mission.',
+    dataBandTitle: 'The sky in numbers', dataBandText: 'Every number shows its source. If a service does not respond, we say so.',
     intro: 'Learn, observe and understand the Universe through short missions, real images and simple words.',
     sourcesUnavailable: 'Sources are temporarily unavailable', sourcesConnected: 'live sources connected',
     missionKicker: 'START HERE', missionTitle: 'Choose your first mission.', missionText: 'Each mission starts with a question, uses an image or an activity, then sums up three important ideas.',
     exploreKicker: 'EXPLORATION MAP', exploreTitle: 'Choose your route.', exploreText: 'Four ways in, from our planetary neighbourhood to the farthest observable space.',
     trustKicker: 'TRUSTED DATA', trustTitle: 'No decorative numbers.', trustText: 'Changing indicators are fetched on the server, cached for a clear duration, and shown with their source. If a service does not respond, SolarScope says so instead of inventing a replacement value.', trustAction: 'Browse NASA updates',
     launch: 'NEXT LAUNCH',
-    dataBandLabel: 'Space indicators', live: 'LIVE', missionsLinkLabel: 'View missions',
+    live: 'LIVE', missionsLinkLabel: 'View missions',
     kpis: { exoplanets: 'confirmed exoplanets', asteroids: 'catalogued near-Earth objects', crew: 'people aboard the ISS', perseverance: 'Perseverance sols', perseveranceSince: 'Since February 18, 2021' },
   },
 } as const
 
 const CATEGORIES = [
   {
-    number: '01', icon: '☀️', title: 'Système solaire',
+    number: '01', icon: 'sun', title: 'Système solaire',
     desc: 'Observer le Soleil, comparer les planètes et suivre les objets qui croisent notre voisinage.',
-    color: '#f59e0b',
+    color: '#FF8A3D',
     pages: [
       { title: 'Soleil', href: '/soleil' }, { title: 'Planètes', href: '/planetes' },
       { title: 'Mars', href: '/mars' }, { title: 'Astéroïdes', href: '/asteroides' },
@@ -46,27 +48,34 @@ const CATEGORIES = [
     ],
   },
   {
-    number: '02', icon: '🚀', title: 'Exploration humaine',
+    number: '02', icon: 'rocket', title: 'Exploration humaine',
     desc: 'Suivre l’ISS presque en temps réel et parcourir les missions qui façonnent l’exploration spatiale.',
-    color: '#38bdf8',
+    color: '#8EC5FF',
     pages: [{ title: 'ISS Tracker', href: '/iss' }, { title: 'Missions', href: '/missions' }],
   },
   {
-    number: '03', icon: '🔭', title: 'Univers profond',
+    number: '03', icon: 'telescope', title: 'Univers profond',
     desc: 'Découvrir Webb, les exoplanètes et le ciel observable depuis votre position.',
-    color: '#a78bfa',
+    color: '#C4B5FD',
     pages: [
       { title: 'Webb', href: '/jwst' }, { title: 'Ciel ce soir', href: '/ciel' },
       { title: 'Photo du jour', href: '/photo-du-jour' }, { title: 'Exoplanètes', href: '/exoplanetes' },
     ],
   },
   {
-    number: '04', icon: '✦', title: 'Apprendre',
+    number: '04', icon: 'book', title: 'Apprendre',
     desc: 'Lire les publications officielles les plus récentes et tester ses connaissances.',
-    color: '#34d399',
+    color: '#5BE3A4',
     pages: [{ title: 'Actualités', href: '/actualites' }, { title: 'Quiz spatial', href: '/quiz' }],
   },
 ]
+
+const CATEGORY_ICONS: Record<string, ReactNode> = {
+  sun: <><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></>,
+  rocket: <><path d="M12 15c-2-2-3-5-3-8a3 3 0 0 1 6 0c0 3-1 6-3 8z" /><path d="M9 12l-3 3 2 2M15 12l3 3-2 2M12 15v6" /></>,
+  telescope: <><path d="M4 14l12-6 2 4-12 6z" /><path d="M10 17l-2 5M12 16l2 6M16 8l2-1 2 4-2 1" /></>,
+  book: <><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z" /><path d="M4 21V5M9 8h6M9 12h4" /></>,
+}
 
 const CATEGORY_EN: Record<string, { title: string; desc: string; pages: Record<string, string> }> = {
   '01': {
@@ -146,10 +155,6 @@ export default function HomePage() {
   }, [])
 
   const countdown = useCountdown(data?.nextLaunch?.net)
-  const activeSources = useMemo(
-    () => data ? Object.values(data.sources).filter(Boolean).length : 0,
-    [data],
-  )
   const dashboardLoading = data === null && !dataError
   const issCrew = data?.crew.filter(member => member.station === 'ISS').length ?? null
   const perseveranceDays = useDaysSince('2021-02-18')
@@ -165,71 +170,46 @@ export default function HomePage() {
   const kpis = [
     {
       value: formatRemoteKpi(data?.exoplanetCount, data?.sources.exoplanets, dashboardLoading, locale),
-      label: copy.kpis.exoplanets, source: 'NASA Exoplanet Archive', color: '#c084fc', live: data?.sources.exoplanets,
+      label: copy.kpis.exoplanets, source: 'NASA Exoplanet Archive', color: '#C4B5FD', live: data?.sources.exoplanets,
     },
     {
       value: formatRemoteKpi(data?.nearEarthObjectCount, data?.sources.asteroids, dashboardLoading, locale),
-      label: copy.kpis.asteroids, source: 'NASA NeoWs', color: '#fb923c', live: data?.sources.asteroids,
+      label: copy.kpis.asteroids, source: 'NASA NeoWs', color: '#FFB27A', live: data?.sources.asteroids,
     },
     {
       value: formatRemoteKpi(issCrew, data?.sources.crew, dashboardLoading, locale),
-      label: copy.kpis.crew, source: 'People in Space', color: '#38bdf8', live: data?.sources.crew,
+      label: copy.kpis.crew, source: 'People in Space', color: '#8EC5FF', live: data?.sources.crew,
     },
     {
       value: perseveranceDays === null
         ? '…'
         : Math.floor(perseveranceDays / EARTH_DAYS_PER_SOL).toLocaleString(locale === 'fr' ? 'fr-FR' : 'en-US'),
-      label: copy.kpis.perseverance, source: copy.kpis.perseveranceSince, color: '#f87171', live: false,
+      label: copy.kpis.perseverance, source: copy.kpis.perseveranceSince, color: '#FF8A7A', live: false,
     },
   ]
 
   return (
     <>
-      <section className="home-storyboard container">
-        <div className="home-story-intro">
-          <span className="home-story-note">{copy.title[0]}</span>
-          <h1 className="home-title">
-            <span>{copy.title[1]}</span>
-            <span>{copy.title[2]}</span>
-          </h1>
-          <p className="home-intro">
-            {copy.intro}
-          </p>
-          <div className="source-health" aria-live="polite">
-            <span>{dataError ? copy.sourcesUnavailable : `${activeSources}/4 ${copy.sourcesConnected}`}</span>
-            <span className="source-health-line" />
-            <span>NASA · IPAC · People in Space · The Space Devs</span>
-          </div>
-          <Image
-            src="/home/discovery-notebook-cutout.png"
-            alt=""
-            width={480}
-            height={480}
-            className="home-discovery-notebook"
-            priority
-          />
-        </div>
-        <HomeMissionBoard locale={locale} />
-      </section>
+      <HomeMissionBoard
+        locale={locale}
+        hero={{ greeting: copy.title[0], title: `${copy.title[1]} ${copy.title[2]}`, intro: copy.intro, bubble: copy.bubble }}
+      />
 
-      <section className="container home-data-band" aria-label={copy.dataBandLabel}>
-        {kpis.map((kpi, index) => (
-          <motion.article
-            key={kpi.label}
-            className="home-kpi"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25 + index * 0.06 }}
-          >
-            <div className="home-kpi-topline">
-              <span>0{index + 1}</span>
-              {kpi.live && <span className="data-live">{copy.live}</span>}
-            </div>
-            <strong className={kpi.value === 'Indisponible' || kpi.value === 'Unavailable' ? 'is-unavailable' : undefined} style={{ color: kpi.color }}>{kpi.value}</strong>
-            <span className="home-kpi-label">{kpi.label}</span>
-            <small>{kpi.source}</small>
-          </motion.article>
-        ))}
+      <section className="container home-data-band" aria-labelledby="home-data-title">
+        <header className="home-data-heading">
+          <h2 id="home-data-title">{copy.dataBandTitle}</h2>
+          {!dataError && <span className="data-live"><span aria-hidden="true" />{copy.live}</span>}
+          <p>{copy.dataBandText}</p>
+        </header>
+        <div className="home-kpi-grid">
+          {kpis.map(kpi => (
+            <article key={kpi.label} className="home-kpi">
+              <strong className={kpi.value === 'Indisponible' || kpi.value === 'Unavailable' ? 'is-unavailable' : undefined} style={{ color: kpi.color }}>{kpi.value}</strong>
+              <span className="home-kpi-label">{kpi.label}</span>
+              <small>{kpi.source}</small>
+            </article>
+          ))}
+        </div>
       </section>
 
       {data?.nextLaunch && (
@@ -259,27 +239,25 @@ export default function HomePage() {
         </header>
 
         <div className="home-category-grid">
-          {categories.map((category, index) => (
-            <motion.article
+          {categories.map(category => (
+            <article
               key={category.title}
               className="home-category-card"
               style={{ '--category-color': category.color } as React.CSSProperties}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35 + index * 0.07 }}
             >
-              <div className="category-card-head">
-                <span>{category.number}</span>
-                <span aria-hidden="true">{category.icon}</span>
-              </div>
+              <span className="category-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  {CATEGORY_ICONS[category.icon]}
+                </svg>
+              </span>
               <h3>{category.title}</h3>
               <p>{category.desc}</p>
               <nav aria-label={category.title}>
                 {category.pages.map(page => (
-                  <Link key={page.href} href={page.href}>{page.title}<span aria-hidden="true">↗</span></Link>
+                  <Link key={page.href} href={page.href}>{page.title}</Link>
                 ))}
               </nav>
-            </motion.article>
+            </article>
           ))}
         </div>
       </section>

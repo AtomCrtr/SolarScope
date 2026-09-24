@@ -130,7 +130,7 @@ export default function MissionsPage() {
                                             </span>
                                             {i === 0 && <span style={{ fontSize: '0.65rem', color: '#10b981', fontWeight: 700 }}>Prochain</span>}
                                         </div>
-                                        <h3 style={{ color: '#e2e8f0', fontSize: '0.85rem', fontWeight: 700, fontFamily: 'Outfit', marginBottom: '0.25rem', lineHeight: 1.3 }}>{l.name}</h3>
+                                        <h3 style={{ color: '#e2e8f0', fontSize: '0.85rem', fontWeight: 700, fontFamily: 'var(--font-display)', marginBottom: '0.25rem', lineHeight: 1.3 }}>{l.name}</h3>
                                         <p style={{ color: '#64748b', fontSize: '0.7rem', marginBottom: '0.375rem' }}>{l.rocket}</p>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                             <span style={{ color: '#475569', fontSize: '0.68rem' }}>🏢 {l.agency.length > 28 ? l.agency.slice(0, 28) + '…' : l.agency}</span>
@@ -209,7 +209,7 @@ export default function MissionsPage() {
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
                                 <span style={{ fontSize: '1.3rem' }}>{m.emoji}</span>
-                                <h3 style={{ color: '#e2e8f0', fontFamily: 'Outfit, sans-serif', fontWeight: 800, fontSize: '1rem' }}>{m.name}</h3>
+                                <h3 style={{ color: '#e2e8f0', fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1rem' }}>{m.name}</h3>
                             </div>
                             <div style={{ display: 'flex', gap: '0.375rem', flexShrink: 0 }}>
                                 <span style={{ fontSize: '0.7rem', padding: '2px 8px', borderRadius: 999, background: `${TYPE_COLORS[m.type]}15`, color: TYPE_COLORS[m.type] }}>{m.type}</span>

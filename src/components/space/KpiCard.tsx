@@ -52,7 +52,7 @@ export default function KpiCard({ emoji, value, label, suffix = '', color = '#8b
                 style={{
                     fontSize: '1.8rem',
                     fontWeight: 800,
-                    fontFamily: 'Outfit, sans-serif',
+                    fontFamily: 'var(--font-display)',
                     background: `linear-gradient(135deg, #e2e8f0, ${color})`,
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',

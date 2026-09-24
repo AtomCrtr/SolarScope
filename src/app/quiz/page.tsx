@@ -135,7 +135,7 @@ export default function QuizPage() {
                     {!level ? (
                         /* Level picker */
                         <div>
-                            <h2 style={{ textAlign: 'center', color: '#e2e8f0', fontFamily: 'Outfit', fontWeight: 800, fontSize: '1.25rem', marginBottom: '0.5rem' }}>
+                            <h2 style={{ textAlign: 'center', color: '#e2e8f0', fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.25rem', marginBottom: '0.5rem' }}>
                                 🎯 Choisis ton niveau
                             </h2>
                             <p style={{ textAlign: 'center', color: '#94a3b8', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
@@ -151,7 +151,7 @@ export default function QuizPage() {
                                             transition: 'all 0.2s',
                                         }}>
                                         <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{lv.label.split(' ')[0]}</div>
-                                        <div style={{ color: lv.color, fontFamily: 'Outfit', fontWeight: 800, fontSize: '1.05rem', marginBottom: '0.25rem' }}>
+                                        <div style={{ color: lv.color, fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.05rem', marginBottom: '0.25rem' }}>
                                             {lv.label.split(' ').slice(1).join(' ')}
                                         </div>
                                         <div style={{ color: '#cbd5e1', fontSize: '0.82rem', marginBottom: '0.75rem' }}>{lv.sublabel}</div>
@@ -177,7 +177,7 @@ export default function QuizPage() {
                             {finished && (
                                 <div className="card" style={{ textAlign: 'center', padding: '1.5rem', marginBottom: '1.5rem', background: totalCorrect >= Math.ceil(questions.length * 0.8) ? 'rgba(16,185,129,0.06)' : 'rgba(251,191,36,0.06)', border: `2px solid ${totalCorrect >= Math.ceil(questions.length * 0.8) ? '#10b981' : '#f59e0b'}30` }}>
                                     <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>{totalCorrect === questions.length ? '🏆' : totalCorrect >= Math.ceil(questions.length * 0.8) ? '🎉' : '💪'}</div>
-                                    <div style={{ fontSize: '1.8rem', fontWeight: 900, fontFamily: 'Outfit', color: '#e2e8f0' }}>{totalCorrect}/{questions.length}</div>
+                                    <div style={{ fontSize: '1.8rem', fontWeight: 900, fontFamily: 'var(--font-display)', color: '#e2e8f0' }}>{totalCorrect}/{questions.length}</div>
                                     <div style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: '0.25rem' }}>
                                         {totalCorrect === questions.length ? 'Parfait ! Tu es un expert de l\'espace ! 🌟' : totalCorrect >= Math.ceil(questions.length * 0.8) ? 'Excellent travail ! Tu maîtrises bien l\'astronomie !' : 'Continue à explorer, tu y arriveras !'}
                                     </div>
@@ -195,7 +195,7 @@ export default function QuizPage() {
                                     const chosen = answers[idx]
                                     return (
                                         <div key={idx} className="card" style={{ padding: '1.5rem' }}>
-                                            <h3 style={{ color: '#e2e8f0', fontFamily: 'Outfit, sans-serif', fontWeight: 700, fontSize: '1rem', marginBottom: '1rem' }}>
+                                            <h3 style={{ color: '#e2e8f0', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1rem', marginBottom: '1rem' }}>
                                                 {q.emoji} Question {idx + 1} — {q.question}
                                             </h3>
                                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.625rem', marginBottom: chosen ? '0.875rem' : 0 }}>
@@ -239,7 +239,7 @@ export default function QuizPage() {
                                     <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>
                                         {totalCorrect === questions.length ? '🏆' : totalCorrect >= questions.length / 2 ? '⭐' : '💪'}
                                     </div>
-                                    <h3 style={{ color: totalCorrect === questions.length ? '#10b981' : totalCorrect >= questions.length / 2 ? '#f59e0b' : '#ef4444', fontFamily: 'Outfit, sans-serif', fontWeight: 900, fontSize: '1.4rem', marginBottom: '0.5rem' }}>
+                                    <h3 style={{ color: totalCorrect === questions.length ? '#10b981' : totalCorrect >= questions.length / 2 ? '#f59e0b' : '#ef4444', fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '1.4rem', marginBottom: '0.5rem' }}>
                                         Score : {totalCorrect}/{questions.length} ({Math.round(totalCorrect / questions.length * 100)}%)
                                     </h3>
                                     <p style={{ color: '#94a3b8', fontSize: '0.875rem' }}>
@@ -258,7 +258,7 @@ export default function QuizPage() {
                         {VIDEOS.map(v => (
                             <div key={v.title} className="card" style={{ padding: '1.25rem', textAlign: 'center' }}>
                                 <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>{v.emoji}</div>
-                                <h3 style={{ color: '#e2e8f0', fontFamily: 'Outfit, sans-serif', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.375rem' }}>{v.title}</h3>
+                                <h3 style={{ color: '#e2e8f0', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.375rem' }}>{v.title}</h3>
                                 <p style={{ color: '#64748b', fontSize: '0.8rem', lineHeight: 1.6, marginBottom: '0.875rem' }}>{v.description}</p>
                                 <span style={{ fontSize: '0.72rem', color: '#a78bfa', background: 'rgba(167,139,250,0.1)', padding: '2px 10px', borderRadius: 999 }}>{v.age}</span>
                                 <br /><br />

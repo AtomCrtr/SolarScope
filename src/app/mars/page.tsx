@@ -338,7 +338,7 @@ export default function MarsPage() {
                                 }}
                             />
                             <div style={{ padding: '0.4rem 0.6rem', background: 'rgba(0,0,0,0.78)', backdropFilter: 'blur(6px)' }}>
-                                <div style={{ color: photo.color, fontSize: '0.65rem', fontWeight: 700, fontFamily: 'Outfit' }}>{photo.rover} · {photo.camera}</div>
+                                <div style={{ color: photo.color, fontSize: '0.65rem', fontWeight: 700, fontFamily: 'var(--font-display)' }}>{photo.rover} · {photo.camera}</div>
                                 <div style={{ color: '#94a3b8', fontSize: '0.6rem', marginTop: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{photo.title}</div>
                             </div>
                             {/* hover overlay */}
@@ -378,7 +378,7 @@ export default function MarsPage() {
                                 style={{ width: '100%', height: 'auto', display: 'block', maxHeight: '65vh', objectFit: 'contain', background: '#000' }} />
                             <div style={{ padding: '1rem 1.5rem', background: '#080816', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
                                 <div>
-                                    <h2 id="mars-dialog-title" style={{ color: MARS_GALLERY[lightboxIdx].color, fontWeight: 700, fontFamily: 'Outfit' }}>{MARS_GALLERY[lightboxIdx].title}</h2>
+                                    <h2 id="mars-dialog-title" style={{ color: MARS_GALLERY[lightboxIdx].color, fontWeight: 700, fontFamily: 'var(--font-display)' }}>{MARS_GALLERY[lightboxIdx].title}</h2>
                                     <div id="mars-dialog-description" style={{ color: '#64748b', fontSize: '0.8rem', marginTop: 2 }}>{MARS_GALLERY[lightboxIdx].desc}</div>
                                     <div style={{ color: '#334155', fontSize: '0.7rem', marginTop: 3 }}>Rover {MARS_GALLERY[lightboxIdx].rover} · {MARS_GALLERY[lightboxIdx].camera} · Sol {MARS_GALLERY[lightboxIdx].sol}</div>
                                 </div>
@@ -414,7 +414,7 @@ export default function MarsPage() {
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
                                 <span style={{ fontSize: '1.6rem' }}>{r.emoji}</span>
                                 <div>
-                                    <h3 style={{ color: r.color, fontWeight: 800, fontFamily: 'Outfit, sans-serif', fontSize: '1.05rem' }}>{r.name}</h3>
+                                    <h3 style={{ color: r.color, fontWeight: 800, fontFamily: 'var(--font-display)', fontSize: '1.05rem' }}>{r.name}</h3>
                                     <div style={{ fontSize: '0.7rem', color: '#64748b' }}>{r.agency}</div>
                                 </div>
                             </div>
@@ -469,7 +469,7 @@ export default function MarsPage() {
                         </div>
                         <div style={{ flex: 1 }}>
                             <div style={{ display: 'flex', gap: '0.625rem', alignItems: 'baseline', flexWrap: 'wrap' }}>
-                                <span style={{ color: '#f87171', fontWeight: 800, fontSize: '0.78rem', fontFamily: 'Outfit, sans-serif', flexShrink: 0 }}>{ev.year}</span>
+                                <span style={{ color: '#f87171', fontWeight: 800, fontSize: '0.78rem', fontFamily: 'var(--font-display)', flexShrink: 0 }}>{ev.year}</span>
                                 <span style={{ color: '#e2e8f0', fontWeight: 600, fontSize: '0.88rem' }}>{ev.event}</span>
                             </div>
                             <p style={{ color: '#64748b', fontSize: '0.775rem', marginTop: '0.2rem', lineHeight: 1.6 }}>{ev.detail}</p>

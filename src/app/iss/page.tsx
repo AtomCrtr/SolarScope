@@ -227,7 +227,7 @@ export default function ISSPage() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
                         <span style={{ fontSize: '1.5rem' }}>🚀</span>
                         <div style={{ flex: 1 }}>
-                            <div style={{ color: '#a5b4fc', fontWeight: 700, fontSize: '0.85rem', fontFamily: 'Outfit' }}>Prochain lancement</div>
+                            <div style={{ color: '#a5b4fc', fontWeight: 700, fontSize: '0.85rem', fontFamily: 'var(--font-display)' }}>Prochain lancement</div>
                             <div style={{ color: '#e2e8f0', fontWeight: 600 }}>{nextLaunch.name}</div>
                             <div style={{ color: '#64748b', fontSize: '0.75rem' }}>{nextLaunch.agency} · {new Date(nextLaunch.net).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
                         </div>

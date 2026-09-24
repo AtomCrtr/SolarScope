@@ -268,7 +268,7 @@ export default function SolarBotPage() {
                                     background: 'rgba(139,92,246,0.06)', border: '1px solid rgba(139,92,246,0.2)',
                                     borderLeft: '4px solid #8b5cf6',
                                 }}>
-                                    <div style={{ color: '#c084fc', fontWeight: 700, fontFamily: 'Outfit, sans-serif', marginBottom: '0.75rem' }}>
+                                    <div style={{ color: '#c084fc', fontWeight: 700, fontFamily: 'var(--font-display)', marginBottom: '0.75rem' }}>
                                         {STORY_THEMES[selectedTheme].emoji} {STORY_THEMES[selectedTheme].label}
                                     </div>
                                     <div style={{ color: '#cbd5e1', lineHeight: 1.85, fontSize: '0.9rem' }}><FormattedText text={story} /></div>

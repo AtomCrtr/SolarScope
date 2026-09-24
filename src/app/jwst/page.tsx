@@ -163,7 +163,7 @@ export default function JWSTPage() {
                 <div style={{ fontSize: '0.62rem', fontWeight: 700, color: h.color, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem' }}>
                   {h.category} · {h.year}
                 </div>
-                <h3 style={{ color: '#e2e8f0', fontSize: '0.88rem', fontWeight: 700, fontFamily: 'Outfit, sans-serif', lineHeight: 1.3 }}>{h.title}</h3>
+                <h3 style={{ color: '#e2e8f0', fontSize: '0.88rem', fontWeight: 700, fontFamily: 'var(--font-display)', lineHeight: 1.3 }}>{h.title}</h3>
               </div>
               <div style={{ position: 'absolute', top: 10, right: 10, background: `${h.color}20`, border: `1px solid ${h.color}40`, borderRadius: 99, padding: '2px 8px', fontSize: '0.65rem', color: h.color, fontWeight: 700 }}>
                 JWST
@@ -215,7 +215,7 @@ export default function JWSTPage() {
                 <div style={{ color: HIGHLIGHTS[selectedHighlight].color, fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.375rem' }}>
                   {HIGHLIGHTS[selectedHighlight].category} · JWST {HIGHLIGHTS[selectedHighlight].year}
                 </div>
-                <h2 id="jwst-dialog-title" style={{ color: '#e2e8f0', fontWeight: 700, fontFamily: 'Outfit', fontSize: '1.1rem', marginBottom: '0.625rem' }}>{HIGHLIGHTS[selectedHighlight].title}</h2>
+                <h2 id="jwst-dialog-title" style={{ color: '#e2e8f0', fontWeight: 700, fontFamily: 'var(--font-display)', fontSize: '1.1rem', marginBottom: '0.625rem' }}>{HIGHLIGHTS[selectedHighlight].title}</h2>
                 <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: 1.7 }}>{HIGHLIGHTS[selectedHighlight].desc}</p>
                 <button onClick={() => setSelectedHighlight(null)} style={{ marginTop: '1rem', padding: '0.5rem 1rem', borderRadius: 99, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8', cursor: 'pointer', fontSize: '0.8rem' }}>✕ Fermer</button>
               </div>
@@ -233,7 +233,7 @@ export default function JWSTPage() {
             style={{ padding: '1.25rem', border: `1px solid ${c.color}18`, display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
             <span style={{ fontSize: '2rem', flexShrink: 0 }}>{c.icon}</span>
             <div>
-              <h3 style={{ color: c.color, fontWeight: 700, fontFamily: 'Outfit', marginBottom: '0.375rem' }}>{c.title}</h3>
+              <h3 style={{ color: c.color, fontWeight: 700, fontFamily: 'var(--font-display)', marginBottom: '0.375rem' }}>{c.title}</h3>
               <p style={{ color: '#64748b', fontSize: '0.82rem', lineHeight: 1.65 }}>{c.desc}</p>
             </div>
           </motion.div>

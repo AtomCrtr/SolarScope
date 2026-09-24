@@ -177,7 +177,7 @@ export default function AsteroidsPage() {
                 {FAMOUS_ASTEROIDS.map(a => (
                     <div key={a.name} className="card" style={{ padding: '1.25rem', borderLeft: `4px solid ${a.color}` }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
-                            <h3 style={{ color: a.color, fontFamily: 'Outfit, sans-serif', fontWeight: 800 }}>{a.name}</h3>
+                            <h3 style={{ color: a.color, fontFamily: 'var(--font-display)', fontWeight: 800 }}>{a.name}</h3>
                             <span style={{ fontSize: '0.72rem', color: '#64748b' }}>{a.size}</span>
                         </div>
                         {a.danger && <div style={{ color: '#ef4444', fontSize: '0.75rem', marginBottom: '0.5rem' }}>⚠️ Potentiellement dangereux</div>}
@@ -192,7 +192,7 @@ export default function AsteroidsPage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
                 {VIDEOS.map(v => (
                     <div key={v.title} className="card" style={{ padding: '1.25rem' }}>
-                        <h3 style={{ color: '#e2e8f0', fontFamily: 'Outfit, sans-serif', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.5rem' }}>{v.title}</h3>
+                        <h3 style={{ color: '#e2e8f0', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.5rem' }}>{v.title}</h3>
                         <p style={{ color: '#64748b', fontSize: '0.8rem', lineHeight: 1.6, marginBottom: '0.75rem' }}>{v.description}</p>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <span style={{ fontSize: '0.72rem', color: '#8b5cf6', background: 'rgba(139,92,246,0.1)', padding: '2px 8px', borderRadius: 999 }}>{v.age}</span>

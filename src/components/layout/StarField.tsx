@@ -112,7 +112,7 @@ export default function StarField() {
             ref={canvasRef}
             aria-hidden="true"
             className="fixed inset-0 pointer-events-none z-0"
-            style={{ background: 'linear-gradient(135deg, #060614 0%, #0d0d2b 50%, #060614 100%)' }}
+            style={{ background: 'var(--bg)' }}
         />
     )
 }

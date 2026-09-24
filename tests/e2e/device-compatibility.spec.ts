@@ -62,7 +62,7 @@ test('the mobile menu remains usable', async ({ page }, testInfo) => {
   await expect(page.locator('#mobile-navigation')).toBeVisible()
   await expect(page.locator('#mobile-navigation').getByRole('link', { name: /Accueil/ })).toBeVisible()
 
-  const solarSystemButton = page.getByRole('button', { name: /Système Solaire/ })
+  const solarSystemButton = page.getByRole('button', { name: /Système solaire/i })
   await expect(solarSystemButton).toHaveAttribute('aria-expanded', 'false')
   await expect(solarSystemButton).toHaveAttribute('aria-controls', 'mobile-navigation-group-systeme')
   await solarSystemButton.click()

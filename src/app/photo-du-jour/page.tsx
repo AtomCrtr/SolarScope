@@ -45,7 +45,7 @@ export default async function ApodPage() {
                         </div>
                         <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                             <div style={{ fontSize: '0.72rem', color: '#22d3ee', fontWeight: 600, letterSpacing: '0.08em', marginBottom: '0.75rem' }}>✨ IMAGE DU JOUR</div>
-                            <h2 style={{ color: '#e2e8f0', fontWeight: 800, fontSize: '1.3rem', fontFamily: 'Outfit, sans-serif', marginBottom: '1rem', lineHeight: 1.3 }}>
+                            <h2 style={{ color: '#e2e8f0', fontWeight: 800, fontSize: '1.3rem', fontFamily: 'var(--font-display)', marginBottom: '1rem', lineHeight: 1.3 }}>
                                 {hero.title}
                             </h2>
                             <p style={{ color: '#94a3b8', lineHeight: 1.75, fontSize: '0.875rem', marginBottom: '1.5rem' }}>

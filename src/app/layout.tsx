@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next'
+import { Atkinson_Hyperlegible, Caveat, Fredoka } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/layout/Navbar'
 import StarField from '@/components/layout/StarField'
@@ -9,6 +10,11 @@ import ProgressTracker from '@/components/learning/ProgressTracker'
 import LanguageAvailabilityNotice from '@/components/layout/LanguageAvailabilityNotice'
 import ServiceWorkerRegistration from '@/components/layout/ServiceWorkerRegistration'
 import { DEFAULT_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/config/site'
+
+// Self-hosted at build time by next/font: no request to Google from the visitor's browser.
+const bodyFont = Atkinson_Hyperlegible({ subsets: ['latin'], weight: ['400', '700'], variable: '--font-body', display: 'swap' })
+const displayFont = Fredoka({ subsets: ['latin'], weight: ['500', '600', '700'], variable: '--font-display', display: 'swap' })
+const noteFont = Caveat({ subsets: ['latin'], weight: ['600', '700'], variable: '--font-note', display: 'swap' })
 
 export const metadata: Metadata = {
   title: {
@@ -50,12 +56,12 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
-  themeColor: '#060614',
+  themeColor: '#0B1026',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" data-theme="dark" suppressHydrationWarning>
+    <html lang="fr" data-theme="dark" className={`${bodyFont.variable} ${displayFont.variable} ${noteFont.variable}`} suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"

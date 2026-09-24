@@ -19,7 +19,7 @@ const PLANETS = [
     { name: 'Jupiter', emoji: '♃', texture: '/textures/jupiter.jpg', color: '#f97316', type: 'Géante gazeuse', gravity: 24.79, meanRadius: 69911, avgTemp: 165, density: 1.33, distSun: 778.5, moons: 101, orbit: 4333, atmosphere: '#f97316', description: 'La plus grande planète ! Sa Grande Tache Rouge est une immense tempête observée depuis très longtemps.', fun: 'La gravité de Jupiter peut éloigner certains petits objets, mais aussi modifier leur route vers l’intérieur du Système solaire.' },
     { name: 'Saturne', emoji: '♄', texture: '/textures/saturn.jpg', color: '#eab308', type: 'Géante gazeuse', gravity: 10.44, meanRadius: 58232, avgTemp: 134, density: 0.69, distSun: 1434, moons: 274, orbit: 10759, atmosphere: '#eab308', hasRings: true, description: 'Célèbre pour ses anneaux faits de milliards de morceaux de glace et de roche. C’est la planète qui possède le plus de lunes connues.', fun: 'Les anneaux s’étendent sur environ 282 000 km, mais ne mesurent souvent qu’une dizaine de mètres d’épaisseur !' },
     { name: 'Uranus', emoji: '♅', texture: null, color: '#67e8f9', type: 'Géante de glace', gravity: 8.69, meanRadius: 25362, avgTemp: 76, density: 1.27, distSun: 2871, moons: 28, orbit: 30687, atmosphere: '#67e8f9', description: 'La planète qui \'roule\' sur le côté. Découverte en 1781. Il y pleut peut-être des diamants.', fun: 'Uranus a une inclinaison de 98° — elle tourne sur le côté comme une toupie !' },
-    { name: 'Neptune', emoji: '♆', texture: '/textures/neptune.jpg', color: '#6366f1', type: 'Géante de glace', gravity: 11.15, meanRadius: 24622, avgTemp: 72, density: 1.64, distSun: 4495, moons: 16, orbit: 60190, atmosphere: '#6366f1', description: 'La plus lointaine et la plus venteuse. Vents à 2 100 km/h ! Découverte en 1846 grâce aux maths.', fun: 'Neptune a été découverte mathématiquement avant même d\'être observée !' },
+    { name: 'Neptune', emoji: '♆', texture: '/textures/neptune.jpg', color: '#818cf8', type: 'Géante de glace', gravity: 11.15, meanRadius: 24622, avgTemp: 72, density: 1.64, distSun: 4495, moons: 16, orbit: 60190, atmosphere: '#6366f1', description: 'La plus lointaine et la plus venteuse. Vents à 2 100 km/h ! Découverte en 1846 grâce aux maths.', fun: 'Neptune a été découverte mathématiquement avant même d\'être observée !' },
 ]
 
 const maxRadius = Math.max(...PLANETS.map(p => p.meanRadius))
@@ -67,7 +67,7 @@ export default function PlanetesPage() {
                         background: selected === i ? `${pl.color}15` : 'rgba(255,255,255,0.03)',
                         border: `2px solid ${selected === i ? pl.color : 'rgba(255,255,255,0.06)'}`,
                         color: selected === i ? pl.color : '#94a3b8', fontWeight: 700,
-                        fontFamily: 'Outfit, sans-serif', transition: 'all 0.2s',
+                        fontFamily: 'var(--font-display)', transition: 'all 0.2s',
                         boxShadow: selected === i ? `0 0 20px ${pl.color}30` : 'none',
                     }}>
                         <div style={{ fontSize: '1.4rem', marginBottom: '0.2rem' }}>{pl.emoji}</div>
@@ -106,7 +106,7 @@ export default function PlanetesPage() {
                     {/* Info */}
                     <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.875rem' }}>
-                            <h2 style={{ color: p.color, fontFamily: 'Outfit, sans-serif', fontWeight: 900, fontSize: '1.6rem', lineHeight: 1 }}>{p.name}</h2>
+                            <h2 style={{ color: p.color, fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '1.6rem', lineHeight: 1 }}>{p.name}</h2>
                             <span style={{ fontSize: '0.72rem', padding: '2px 10px', borderRadius: 999, background: `${p.color}15`, color: p.color, border: `1px solid ${p.color}30` }}>{p.type}</span>
                         </div>
                         <p style={{ color: '#94a3b8', lineHeight: 1.75, marginBottom: '0.875rem', fontSize: '0.85rem' }}>{p.description}</p>
@@ -124,7 +124,7 @@ export default function PlanetesPage() {
                             ].map(s => (
                                 <div key={s.label} style={{ padding: '0.5rem 0.75rem', borderRadius: '0.5rem', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}>
                                     <div style={{ color: '#64748b', fontSize: '0.67rem', marginBottom: '0.1rem' }}>{s.label}</div>
-                                    <div style={{ color: '#e2e8f0', fontWeight: 700, fontFamily: 'Outfit, sans-serif', fontSize: '0.8rem' }}>{s.val}</div>
+                                    <div style={{ color: '#e2e8f0', fontWeight: 700, fontFamily: 'var(--font-display)', fontSize: '0.8rem' }}>{s.val}</div>
                                 </div>
                             ))}
                         </div>
@@ -138,7 +138,7 @@ export default function PlanetesPage() {
                 <p style={{ color: '#94a3b8', lineHeight: 1.8, fontSize: '0.875rem' }}>
                     Notre système solaire compte <strong style={{ color: '#e2e8f0' }}>8 planètes</strong>.
                     Les 4 premières sont des <strong style={{ color: '#f97316' }}>planètes rocheuses</strong> (Mercure, Vénus, Terre, Mars).
-                    Les 4 suivantes sont des <strong style={{ color: '#6366f1' }}>géantes gazeuses ou de glace</strong> (Jupiter, Saturne, Uranus, Neptune).
+                    Les 4 suivantes sont des <strong style={{ color: '#a5b4fc' }}>géantes gazeuses ou de glace</strong> (Jupiter, Saturne, Uranus, Neptune).
                     Les modèles 3D utilisent les <strong style={{ color: '#e2e8f0' }}>textures officielles de la NASA</strong>.
                 </p>
             </div>
@@ -248,7 +248,7 @@ export default function PlanetesPage() {
                             ) : (
                                 <div style={{ fontSize: '3rem', marginBottom: '0.75rem', filter: `drop-shadow(0 0 15px ${pl.color})` }}>{pl.emoji}</div>
                             )}
-                            <h3 style={{ color: pl.color, fontFamily: 'Outfit, sans-serif', fontWeight: 800, marginBottom: '0.625rem' }}>{pl.name}</h3>
+                            <h3 style={{ color: pl.color, fontFamily: 'var(--font-display)', fontWeight: 800, marginBottom: '0.625rem' }}>{pl.name}</h3>
                             {[
                                 { l: 'Rayon', v: `${pl.meanRadius.toLocaleString('fr-FR')} km` },
                                 { l: 'Gravité', v: `${pl.gravity} m/s²` },

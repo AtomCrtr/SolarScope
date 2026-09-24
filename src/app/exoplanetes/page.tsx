@@ -70,7 +70,7 @@ export default function ExoplanetesPage() {
                     { label: 'Vie découverte', val: 'Aucune preuve', color: '#f59e0b' },
                 ].map(s => (
                     <div key={s.label} className="card" style={{ padding: '1.25rem', textAlign: 'center' }}>
-                        <div style={{ fontSize: '1.6rem', fontFamily: 'Outfit, sans-serif', fontWeight: 900, background: s.color, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>{s.val}</div>
+                        <div style={{ fontSize: '1.6rem', fontFamily: 'var(--font-display)', fontWeight: 900, background: s.color, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>{s.val}</div>
                         <div style={{ color: '#64748b', fontSize: '0.75rem', marginTop: 4 }}>{s.label}</div>
                     </div>
                 ))}
@@ -101,8 +101,8 @@ export default function ExoplanetesPage() {
                 {DETECTION_METHODS.map(m => (
                     <div key={m.name} className="card" style={{ padding: '1.25rem', textAlign: 'center', borderLeft: `4px solid ${m.color}` }}>
                         <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{m.emoji}</div>
-                        <h3 style={{ color: m.color, fontFamily: 'Outfit, sans-serif', fontWeight: 800, marginBottom: '0.25rem' }}>{m.name}</h3>
-                        <div style={{ fontSize: '0.78rem', fontWeight: 800, color: m.color, fontFamily: 'Outfit', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{m.usage}</div>
+                        <h3 style={{ color: m.color, fontFamily: 'var(--font-display)', fontWeight: 800, marginBottom: '0.25rem' }}>{m.name}</h3>
+                        <div style={{ fontSize: '0.78rem', fontWeight: 800, color: m.color, fontFamily: 'var(--font-display)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{m.usage}</div>
                         <p style={{ color: '#94a3b8', fontSize: '0.78rem', lineHeight: 1.6 }}>{m.description}</p>
                     </div>
                 ))}
@@ -132,7 +132,7 @@ export default function ExoplanetesPage() {
                 {filtered.map(exo => (
                     <div key={exo.name} className="card" style={{ padding: '1.25rem', borderLeft: `4px solid ${exo.color}` }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
-                            <h3 style={{ color: exo.color, fontFamily: 'Outfit, sans-serif', fontWeight: 800, fontSize: '0.95rem' }}>{exo.name}</h3>
+                            <h3 style={{ color: exo.color, fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '0.95rem' }}>{exo.name}</h3>
                             <span style={{ fontSize: '0.7rem', color: '#64748b', whiteSpace: 'nowrap', marginLeft: '0.5rem' }}>{exo.distance}</span>
                         </div>
                         <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.625rem' }}>
