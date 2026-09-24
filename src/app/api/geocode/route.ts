@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { checkDistributedRateLimit } from '@/lib/security/rate-limit'
+import { getClientIdentifier } from '@/lib/security/client-identifier'
 
 const FALLBACK_CITY = 'Votre position'
 
@@ -7,21 +8,6 @@ function parseCoordinate(value: string | null, min: number, max: number) {
   const parsed = Number(value)
   if (!Number.isFinite(parsed) || parsed < min || parsed > max) return null
   return Number(parsed.toFixed(2))
-}
-
-function firstHeaderValue(request: NextRequest, names: string[]): string | null {
-  for (const name of names) {
-    const value = request.headers.get(name)?.split(',')[0]?.trim()
-    if (value) return value
-  }
-  return null
-}
-
-function clientIdentifier(request: NextRequest): string | null {
-  const headerNames = process.env.VERCEL === '1'
-    ? ['x-vercel-forwarded-for', 'x-forwarded-for', 'x-real-ip']
-    : ['x-forwarded-for', 'x-real-ip']
-  return firstHeaderValue(request, headerNames)
 }
 
 export async function GET(request: NextRequest) {
@@ -32,7 +18,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Coordonnées invalides.' }, { status: 400 })
   }
 
-  const identifier = clientIdentifier(request)
+  const identifier = getClientIdentifier(request)
   if (process.env.VERCEL === '1' && !identifier) {
     return NextResponse.json(
       { error: 'Service de localisation temporairement protégé.' },

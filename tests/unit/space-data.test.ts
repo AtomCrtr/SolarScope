@@ -90,4 +90,19 @@ describe('space data normalization', () => {
 
     expect(articles.map(article => article.date)).toEqual([null, null])
   })
+  it('decodes numeric and named entities from the NASA feed exactly once', () => {
+    const [article] = parseNasaNewsFeed(`
+      <rss><channel>
+        <item>
+          <title>NASA&#8217;s Crew&#8209;13 &amp; Webb</title>
+          <link>https://www.nasa.gov/?p=1&#038;lang=en</link>
+          <description><![CDATA[<p>Read more&#8230; about &amp;lt;tags&amp;gt;&nbsp;here</p>]]></description>
+        </item>
+      </channel></rss>
+    `)
+
+    expect(article.title).toBe('NASA’s Crew‑13 & Webb')
+    expect(article.url).toBe('https://www.nasa.gov/?p=1&lang=en')
+    expect(article.summary).toBe('Read more… about &lt;tags&gt; here')
+  })
 })

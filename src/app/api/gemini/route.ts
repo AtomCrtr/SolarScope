@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { checkDistributedRateLimit } from '@/lib/security/rate-limit'
+import { getClientIdentifier } from '@/lib/security/client-identifier'
 import { readJsonBody } from '@/lib/security/request-body'
 import { solarBotContentIsSafe, SOLARBOT_PRIVACY_REMINDER } from '@/lib/security/solarbot-safety'
 import { formatSolarBotSourceContext, selectSolarBotSources, toPublicSolarBotSources } from '@/lib/content/solarbot-sources'
@@ -13,12 +14,6 @@ interface Message {
 }
 
 type GeminiMode = 'chat' | 'story'
-
-function clientIdentifier(request: NextRequest): string {
-  return request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
-    || request.headers.get('x-real-ip')
-    || 'anonymous'
-}
 
 function fallbackAnswer(question: string, mode: GeminiMode): string {
   if (mode === 'story') {
@@ -64,7 +59,7 @@ async function requestGemini(payload: unknown): Promise<Response> {
 }
 
 export async function POST(request: NextRequest) {
-  const rateLimit = await checkDistributedRateLimit(`gemini:${clientIdentifier(request)}`, {
+  const rateLimit = await checkDistributedRateLimit(`gemini:${getClientIdentifier(request) ?? 'anonymous'}`, {
     namespace: 'gemini',
     limit: 8,
     windowSeconds: 60,

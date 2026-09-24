@@ -214,13 +214,24 @@ export function parseLaunches(payload: unknown, now = Date.now()): LaunchDetails
     .filter((launch): launch is LaunchDetails => launch !== null && Date.parse(launch.net) > now)
 }
 
-export async function getUpcomingLaunches(limit = 8, provider?: string): Promise<LaunchDetails[]> {
+// Launch Library 2 allows ~15 free requests per hour. Only these providers may be
+// requested, and the upstream page size is fixed, so each provider maps to one cache entry.
+export const LAUNCH_PROVIDERS = ['SpaceX'] as const
+export type LaunchProvider = (typeof LAUNCH_PROVIDERS)[number]
+const LAUNCH_UPSTREAM_PAGE_SIZE = 12
+
+export function parseLaunchProvider(value: string | null | undefined): LaunchProvider | null {
+  const normalized = value?.trim().toLowerCase()
+  return LAUNCH_PROVIDERS.find(provider => provider.toLowerCase() === normalized) ?? null
+}
+
+export async function getUpcomingLaunches(limit = 8, provider?: LaunchProvider): Promise<LaunchDetails[]> {
   const requestedLimit = Number.isFinite(limit) ? Math.trunc(limit) : 8
-  const safeLimit = Math.min(Math.max(requestedLimit, 1), 12)
+  const safeLimit = Math.min(Math.max(requestedLimit, 1), LAUNCH_UPSTREAM_PAGE_SIZE)
   const upstream = new URL('https://ll.thespacedevs.com/2.2.0/launch/upcoming/')
-  upstream.searchParams.set('limit', String(Math.min(safeLimit + 4, 12)))
+  upstream.searchParams.set('limit', String(LAUNCH_UPSTREAM_PAGE_SIZE))
   upstream.searchParams.set('format', 'json')
-  if (provider?.trim()) upstream.searchParams.set('lsp__name', provider.trim().slice(0, 40))
+  if (provider) upstream.searchParams.set('lsp__name', provider)
 
   return parseLaunches(await fetchJson(upstream, 900, 'space-launches')).slice(0, safeLimit)
 }
@@ -477,16 +488,38 @@ export async function getSolarFlares(): Promise<SolarFlare[]> {
     .filter((flare): flare is SolarFlare => flare !== null)
 }
 
+const NAMED_ENTITIES: Record<string, string> = {
+  amp: '&',
+  lt: '<',
+  gt: '>',
+  quot: '"',
+  apos: "'",
+  nbsp: ' ',
+  hellip: '…',
+  lsquo: '‘',
+  rsquo: '’',
+  ldquo: '“',
+  rdquo: '”',
+  ndash: '–',
+  mdash: '—',
+}
+
+// Single pass, so "&amp;lt;" becomes "&lt;" and is not decoded twice.
+function decodeEntities(value: string): string {
+  return value.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (match, entity: string) => {
+    if (entity.startsWith('#')) {
+      const codePoint = entity[1].toLowerCase() === 'x'
+        ? Number.parseInt(entity.slice(2), 16)
+        : Number.parseInt(entity.slice(1), 10)
+      return codePoint > 0 && codePoint <= 0x10ffff ? String.fromCodePoint(codePoint) : match
+    }
+    return NAMED_ENTITIES[entity.toLowerCase()] ?? match
+  })
+}
+
 function decodeXml(value: string): string {
-  return value
-    .replace(/^<!\[CDATA\[|\]\]>$/g, '')
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&quot;/g, '"')
-    .replace(/&#039;|&apos;/g, "'")
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
+  const text = value.trim().replace(/^<!\[CDATA\[|\]\]>$/g, '')
+  return decodeEntities(text.replace(/<[^>]+>/g, ' '))
     .replace(/\s+/g, ' ')
     .trim()
 }

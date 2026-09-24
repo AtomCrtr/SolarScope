@@ -36,6 +36,7 @@ export async function GET(request: NextRequest) {
   const jobs = await Promise.allSettled([
     getDashboardData(),
     getUpcomingLaunches(),
+    getUpcomingLaunches(8, 'SpaceX'),
     getAsteroidFeed(),
     getSolarFlares(),
     getNasaNews(),

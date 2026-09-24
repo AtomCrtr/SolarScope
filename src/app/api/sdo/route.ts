@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { checkDistributedRateLimit } from '@/lib/security/rate-limit'
+import { getClientIdentifier } from '@/lib/security/client-identifier'
 
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024
 const ALLOWED_SOURCES = [
@@ -27,8 +28,7 @@ function parseAllowedUrl(value: string) {
 }
 
 export async function GET(req: NextRequest) {
-    const forwardedFor = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
-    const clientId = forwardedFor || req.headers.get('x-real-ip') || 'unknown'
+    const clientId = getClientIdentifier(req) ?? 'unknown'
     const rate = await checkDistributedRateLimit(`sdo:${clientId}`, {
         namespace: 'sdo',
         limit: 30,

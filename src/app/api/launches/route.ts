@@ -1,14 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getUpcomingLaunches } from '@/lib/data/space-data'
+import { getUpcomingLaunches, parseLaunchProvider } from '@/lib/data/space-data'
 
 export async function GET(request: NextRequest) {
   const requestedLimit = Number(request.nextUrl.searchParams.get('limit') || 8)
   const limit = Number.isFinite(requestedLimit)
     ? Math.min(Math.max(Math.trunc(requestedLimit), 1), 12)
     : 8
-  const provider = request.nextUrl.searchParams.get('provider')?.trim()
+  const providerParam = request.nextUrl.searchParams.get('provider')
+  const provider = parseLaunchProvider(providerParam)
+  if (providerParam && !provider) {
+    return NextResponse.json(
+      { launches: [], error: 'Fournisseur de lancement non pris en charge.' },
+      { status: 400, headers: { 'Cache-Control': 'public, s-maxage=86400' } },
+    )
+  }
+
   try {
-    const launches = await getUpcomingLaunches(limit, provider)
+    const launches = await getUpcomingLaunches(limit, provider ?? undefined)
 
     return NextResponse.json(
       { launches, updatedAt: new Date().toISOString() },
@@ -17,7 +25,7 @@ export async function GET(request: NextRequest) {
   } catch {
     return NextResponse.json(
       { launches: [], updatedAt: new Date().toISOString(), error: 'Calendrier indisponible.' },
-      { status: 503 },
+      { status: 503, headers: { 'Cache-Control': 'no-store' } },
     )
   }
 }
