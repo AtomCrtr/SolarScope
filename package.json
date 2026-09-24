@@ -24,7 +24,7 @@
     "@upstash/ratelimit": "2.0.8",
     "@upstash/redis": "1.38.0",
     "framer-motion": "^12.42.2",
-    "next": "16.3.0",
+    "next": "16.3.6",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "three": "^0.184.0"
@@ -37,7 +37,7 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19",
     "eslint": "^9.39.5",
-    "eslint-config-next": "16.3.3",
+    "eslint-config-next": "16.3.6",
     "sharp": "0.35.4",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
