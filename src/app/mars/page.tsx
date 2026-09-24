@@ -258,7 +258,7 @@ export default function MarsPage() {
             <div className="divider" />
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
                 <h2 className="section-title" style={{ color: activeRoverDetail.color, marginBottom: 0 }}>
-                    {activeRoverDetail.emoji} Rover {activeRoverDetail.name}
+                    Rover {activeRoverDetail.name}
                 </h2>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <span aria-hidden="true" style={{ color: '#10b981' }}>●</span>
