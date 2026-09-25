@@ -2,13 +2,26 @@ type CosmoProps = {
   className?: string
   /** Accessible name; omit when the mascot is purely decorative. */
   title?: string
+  /** Passport rank: 1 to 3 gold stars on the suit, plus an orbit ring for the highest rank. */
+  rank?: 0 | 1 | 2 | 3
 }
+
+function star(cx: number, cy: number, r: number) {
+  const points = Array.from({ length: 10 }, (_, index) => {
+    const angle = (Math.PI / 5) * index - Math.PI / 2
+    const radius = index % 2 === 0 ? r : r * 0.45
+    return `${(cx + radius * Math.cos(angle)).toFixed(1)},${(cy + radius * Math.sin(angle)).toFixed(1)}`
+  })
+  return points.join(' ')
+}
+
+const RANK_STARS: Record<1 | 2 | 3, number[]> = { 1: [120], 2: [106, 134], 3: [98, 120, 142] }
 
 /**
  * Cosmo, the SolarScope mascot. Same drawing as public/mascot/cosmonaute.svg,
  * inlined so the waving arm (.cosmo-wave) can be animated in CSS.
  */
-export default function Cosmo({ className, title }: CosmoProps) {
+export default function Cosmo({ className, title, rank = 0 }: CosmoProps) {
   return (
     <svg
       className={className}
@@ -18,6 +31,7 @@ export default function Cosmo({ className, title }: CosmoProps) {
       aria-label={title}
       aria-hidden={title ? undefined : true}
     >
+      {rank === 3 && <ellipse cx="131" cy="130" rx="126" ry="46" transform="rotate(-14 131 130)" stroke="#8EC5FF" strokeWidth="5" strokeDasharray="10 8" opacity="0.9" />}
       <g stroke="#FBF6EC" strokeLinecap="round" strokeLinejoin="round">
         <line x1="152" y1="44" x2="164" y2="20" strokeWidth="16" />
         <path d="M80 160 Q58 176 60 204" strokeWidth="44" />
@@ -40,6 +54,7 @@ export default function Cosmo({ className, title }: CosmoProps) {
       <circle cx="110" cy="184" r="4.5" fill="#FF8A3D" />
       <circle cx="122" cy="184" r="4.5" fill="#8EC5FF" />
       <rect x="129" y="180" width="8" height="8" rx="2" fill="#5BE3A4" />
+      {rank > 0 && RANK_STARS[rank as 1 | 2 | 3].map(x => <polygon key={x} points={star(x, 214, 7)} fill="#FFC24B" stroke="#1C1B2E" strokeWidth="2" strokeLinejoin="round" />)}
 
       <g className="cosmo-wave">
         <path d="M160 160 Q204 152 212 100" stroke="#FBF6EC" strokeWidth="44" strokeLinecap="round" />

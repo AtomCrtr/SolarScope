@@ -60,7 +60,7 @@ Chaque parcours est conçu pour être suivi en quelques étapes :
 2. **Découvrir l’idée essentielle** avec une explication courte.
 3. **Observer et manipuler** une image, une comparaison ou une visualisation.
 4. **Relever un défi** pour vérifier ce que l’on a compris.
-5. **Conserver sa progression** dans son passeport spatial.
+5. **Gagner un tampon** en répondant à une question sur la leçon, puis monter en grade dans son passeport spatial (Cadet·te, Pilote, Commandant·e, Explorateur·rice du Système solaire).
 
 On peut lire les missions dans l’ordre ou simplement choisir le sujet qui donne envie aujourd’hui.
 
@@ -75,7 +75,7 @@ La page [Données et sources](https://solar-scope.vercel.app/sources) permet de 
 ## Pensé pour les enfants et les familles
 
 - Aucun compte enfant n’est nécessaire.
-- Le passeport et la progression restent sur l’appareil utilisé.
+- Le passeport et la progression restent sur l’appareil utilisé. Pour continuer ailleurs, un code de 9 caractères (ou un QR code) recopie les tampons sans passer par un serveur.
 - SolarBot rappelle de ne jamais partager son nom, son adresse, son école, son téléphone ou son e-mail.
 - Les pages sont utilisables sur ordinateur, tablette et téléphone.
 - La navigation est conçue pour rester accessible au clavier et avec les outils d’assistance.
@@ -145,7 +145,7 @@ Les faits stables et les données en direct sont distingués dans le code par un
 ## Choix techniques
 
 - **Application** : Next.js 16 App Router, React 19, TypeScript 5
-- **Interface** : CSS responsive, Framer Motion, composants accessibles
+- **Interface** : CSS responsive, animations CSS (respectent « réduire les animations »), composants accessibles
 - **3D** : Three.js, React Three Fiber et Drei
 - **Données** : routes serveur Next.js, validation des réponses et cache par source
 - **IA** : Gemini côté serveur, réponses de secours, sources et garde-fous enfants

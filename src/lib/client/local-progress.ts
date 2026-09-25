@@ -1,3 +1,4 @@
+import { useSyncExternalStore } from 'react'
 import { readStorage, removeStorage, writeStorage } from './safe-storage'
 
 export const MISSION_IDS = [
@@ -37,6 +38,38 @@ export function readLocalProgress(): LocalProgress {
   } catch {
     return emptyProgress()
   }
+}
+
+const EMPTY_PROGRESS: LocalProgress = emptyProgress()
+let cachedRaw: string | null | undefined
+let cachedProgress: LocalProgress = EMPTY_PROGRESS
+
+// useSyncExternalStore needs the same object while storage has not changed.
+function progressSnapshot(): LocalProgress {
+  const raw = readStorage(STORAGE_KEY)
+  if (raw !== cachedRaw) {
+    cachedRaw = raw
+    cachedProgress = readLocalProgress()
+  }
+  return cachedProgress
+}
+
+function subscribeToProgress(onChange: () => void) {
+  window.addEventListener(PROGRESS_EVENT, onChange)
+  window.addEventListener('storage', onChange)
+  return () => {
+    window.removeEventListener(PROGRESS_EVENT, onChange)
+    window.removeEventListener('storage', onChange)
+  }
+}
+
+/** Current passport, updated live. `null` while the page is prerendered or hydrating. */
+export function useLocalProgress(): LocalProgress | null {
+  return useSyncExternalStore<LocalProgress | null>(subscribeToProgress, progressSnapshot, () => null)
+}
+
+export function replaceLocalProgress(next: LocalProgress) {
+  updateLocalProgress(() => next)
 }
 
 export function updateLocalProgress(update: (current: LocalProgress) => LocalProgress) {

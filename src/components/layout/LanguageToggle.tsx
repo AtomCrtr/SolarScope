@@ -32,7 +32,7 @@ export default function LanguageToggle() {
 
   const setLocale = (nextLocale: SiteLocale) => {
     writeStorage(STORAGE_KEY, nextLocale)
-    document.documentElement.lang = nextLocale === 'en' && pathname === '/' ? 'en' : 'fr'
+    document.documentElement.lang = nextLocale === 'en' && (pathname === '/' || pathname === '/passeport') ? 'en' : 'fr'
     window.dispatchEvent(new Event(LOCALE_EVENT))
   }
 

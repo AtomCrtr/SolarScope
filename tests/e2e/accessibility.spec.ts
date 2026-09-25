@@ -332,6 +332,12 @@ test('SolarBot hides the floating duplicate and reports its real runtime mode', 
   expect(await page.evaluate(() => window.scrollY)).toBeLessThan(10)
 
   await page.goto('/mars', { waitUntil: 'domcontentloaded' })
+  // On a phone the floating bubble covered lesson text: SolarBot lives in the tab bar instead.
+  if ((page.viewportSize()?.width ?? 1280) <= 720) {
+    await expect(page.getByRole('button', { name: 'Ouvrir SolarBot' })).toBeHidden()
+    await expect(page.getByRole('navigation', { name: 'Navigation rapide' }).getByRole('link', { name: 'SolarBot' })).toHaveAttribute('href', '/solarbot')
+    return
+  }
   await page.getByRole('button', { name: 'Ouvrir SolarBot' }).click()
   await expect(page.getByText('Mode de secours', { exact: true })).toBeVisible()
 })
@@ -458,4 +464,23 @@ test('solar KPI render normalized NOAA data', async ({ page }) => {
   await expect(page.getByText('440 km/s', { exact: true })).toBeVisible()
   await expect(page.getByText('8.5 p/cm³', { exact: true })).toBeVisible()
   await expect(page.getByText('-2.0 nT', { exact: true })).toBeVisible()
+})
+
+test('a mission stamp is earned by answering, and erasing the passport asks first', async ({ page }) => {
+  await page.goto('/ciel', { waitUntil: 'domcontentloaded' })
+  await page.getByRole('button', { name: 'Parce que les étoiles tombent' }).click()
+  await expect(page.getByText(/Pas tout à fait/)).toBeVisible()
+  await page.getByRole('button', { name: 'Parce que la Terre tourne sur elle-même' }).click()
+  await expect(page.getByText('Bravo, c’est la bonne réponse !')).toBeVisible()
+
+  await page.goto('/passeport', { waitUntil: 'domcontentloaded' })
+  await expect(page.getByRole('heading', { name: '1/14 tampon' })).toBeVisible()
+  await expect(page.getByRole('button', { name: /Ciel\s*Tamponnée/ })).toBeVisible()
+
+  await page.getByRole('button', { name: 'Effacer mon passeport de cet appareil' }).click()
+  await page.getByRole('button', { name: 'Annuler' }).click()
+  await expect(page.getByRole('heading', { name: '1/14 tampon' })).toBeVisible()
+  await page.getByRole('button', { name: 'Effacer mon passeport de cet appareil' }).click()
+  await page.getByRole('button', { name: 'Oui, tout effacer' }).click()
+  await expect(page.getByRole('heading', { name: '0/14 tampon' })).toBeVisible()
 })

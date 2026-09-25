@@ -5,15 +5,20 @@ import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
 import { useSiteLocale } from '@/components/layout/LanguageToggle'
 
+const FULLY_TRANSLATED = new Set(['/', '/passeport'])
+
 export default function LanguageAvailabilityNotice() {
   const locale = useSiteLocale()
   const pathname = usePathname()
 
-  useEffect(() => {
-    document.documentElement.lang = locale === 'en' && pathname === '/' ? 'en' : 'fr'
-  }, [locale, pathname])
+  // These pages are fully translated; elsewhere only the lesson card is.
+  const fullyTranslated = FULLY_TRANSLATED.has(pathname)
 
-  if (locale !== 'en' || pathname === '/') return null
+  useEffect(() => {
+    document.documentElement.lang = locale === 'en' && fullyTranslated ? 'en' : 'fr'
+  }, [locale, fullyTranslated])
+
+  if (locale !== 'en' || fullyTranslated) return null
 
   return (
     <aside className="language-availability-notice" aria-label="English translation availability">
