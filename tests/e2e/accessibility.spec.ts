@@ -287,7 +287,7 @@ test('the mission action remains inside the notebook at common viewport sizes', 
   }
 })
 
-test('English is presented as a complete home-page preview and a limited lesson translation', async ({ page }) => {
+test('English covers the home page and every lesson card', async ({ page }) => {
   await page.goto('/', { waitUntil: 'domcontentloaded' })
   const english = page.getByRole('button', { name: 'EN preview' })
   await english.click()
@@ -297,7 +297,12 @@ test('English is presented as a complete home-page preview and a limited lesson 
 
   await page.goto('/planetes', { waitUntil: 'domcontentloaded' })
   await expect(page.getByText('English preview', { exact: true })).toBeVisible()
-  await expect(page.getByText('This detailed lesson is currently available in French.')).toBeVisible()
+  await expect(page.getByText(/The lesson card on this page is in English/)).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Why are the eight planets so different?' })).toBeVisible()
+
+  await page.goto('/soleil', { waitUntil: 'domcontentloaded' })
+  await expect(page.getByRole('heading', { name: 'Why is the Sun so important?' })).toBeVisible()
+  await expect(page.locator('.kids-guide')).toHaveAttribute('lang', 'en')
 })
 
 test('SolarBot displays the official sources returned with an answer', async ({ page }) => {

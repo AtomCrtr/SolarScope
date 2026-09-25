@@ -84,9 +84,9 @@ Une page spéciale propose également des repères aux [parents et aux enseignan
 
 ## Et la version anglaise ?
 
-Le français est la langue principale de SolarScope. Une présentation de l’accueil est disponible en anglais, mais les parcours pédagogiques détaillés restent actuellement en français.
+Le français est la langue principale de SolarScope. En anglais, l’accueil, la navigation et les fiches de leçon des 14 missions sont traduits (`src/lib/content/learning-content.en.ts`). Les données, cartes et activités de chaque page restent en français pour le moment, et un bandeau le signale.
 
-Ce choix est volontaire : une bonne traduction pour les enfants doit préserver la simplicité des mots et l’exactitude scientifique, pas seulement traduire les phrases mot à mot.
+Cette traduction attend une relecture humaine : une bonne traduction pour les enfants doit préserver la simplicité des mots et l’exactitude scientifique, pas seulement traduire les phrases mot à mot.
 
 ## Liens utiles
 

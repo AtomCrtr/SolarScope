@@ -19,7 +19,7 @@ export default function LanguageAvailabilityNotice() {
     <aside className="language-availability-notice" aria-label="English translation availability">
       <div>
         <strong>English preview</strong>
-        <span>This detailed lesson is currently available in French. The English home page and navigation remain fully usable.</span>
+        <span>The lesson card on this page is in English. The rest of the page (data, maps and activities) is still in French while the translation is being reviewed.</span>
       </div>
       <Link href="/">Back to the English home page</Link>
     </aside>
