@@ -41,7 +41,7 @@ export default function LanguageToggle() {
       <button type="button" aria-pressed={locale === 'fr'} onClick={() => setLocale('fr')} title="Français">
         FR
       </button>
-      <button type="button" aria-pressed={locale === 'en'} onClick={() => setLocale('en')} title="English preview — detailed lessons remain in French">
+      <button type="button" aria-pressed={locale === 'en'} onClick={() => setLocale('en')} title="English preview — lessons are translated, page data is still in French">
         <span>EN</span><span className="locale-preview-mark" aria-hidden="true">β</span><span className="sr-only"> preview</span>
       </button>
     </div>
