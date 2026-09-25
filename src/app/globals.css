@@ -1876,7 +1876,11 @@ body:has(.home-mission-board) main > div:first-child { display: none; }
   align-items: center;
 }
 
-.breadcrumb { min-height: 32px; }
+.breadcrumb { display: flex; flex-wrap: wrap; min-height: 32px; align-items: center; gap: 0.375rem; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.72rem; font-weight: 500; }
+.breadcrumb-link { color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
+.breadcrumb-link:hover { color: var(--text); }
+.breadcrumb-separator { opacity: 0.6; }
+.breadcrumb-current { color: var(--nebula); font-weight: 600; }
 .source-card a { min-height: 44px; padding-block: 0.55rem; }
 .prose-card p > a:only-child { display: inline-flex; min-height: 44px; align-items: center; }
 .resource-list li { display: flex; flex-wrap: wrap; align-items: center; column-gap: 0.35rem; min-height: 44px; }

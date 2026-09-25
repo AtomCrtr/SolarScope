@@ -3,14 +3,19 @@
 [![Quality](https://github.com/AtomCrtr/SolarScope/actions/workflows/quality.yml/badge.svg)](https://github.com/AtomCrtr/SolarScope/actions/workflows/quality.yml)
 [![External resources](https://github.com/AtomCrtr/SolarScope/actions/workflows/external-resources.yml/badge.svg)](https://github.com/AtomCrtr/SolarScope/actions/workflows/external-resources.yml)
 [![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vercel](https://img.shields.io/badge/Vercel-en%20ligne-000000?logo=vercel)](https://solar-scope.vercel.app)
+[![Code : MIT](https://img.shields.io/badge/code-MIT-blue)](LICENSE)
+[![Contenus : CC BY 4.0](https://img.shields.io/badge/contenus-CC%20BY%204.0-lightgrey)](LICENSE-CONTENT.md)
 
 **SolarScope est un site éducatif gratuit pour découvrir l’Univers avec des mots simples, de vraies images et des missions courtes.**
 
 Il s’adresse d’abord aux enfants de 6 à 12 ans, mais aussi aux adolescents, aux parents, aux enseignants et à toutes les personnes qui veulent comprendre l’espace sans se perdre dans des explications compliquées.
 
 🌐 **Découvrir SolarScope : [solar-scope.vercel.app](https://solar-scope.vercel.app)**
+
+> **In English:** SolarScope is a free, ad-free educational website that helps children aged 6 to 12 discover space with simple words, real NASA, ESA and NOAA data, short missions and a space passport kept on their own device. The site is written in French; the home page, navigation, lessons and passport are also available in English (translation awaiting review). Code under MIT, lesson texts under CC BY 4.0.
 
 ![Aperçu de SolarScope](https://solar-scope.vercel.app/opengraph-image)
 
@@ -43,13 +48,14 @@ L’objectif n’est pas de tout apprendre d’un coup. Il est de donner envie d
 
 Sur SolarScope, on peut notamment :
 
-- comprendre le Soleil et explorer les huit planètes ;
+- comprendre le Soleil et sa météo spatiale en direct ;
+- explorer les huit planètes en 3D, cliquer sur la carte du Système solaire, découvrir leurs lunes et calculer la durée d’un voyage ;
 - suivre les rovers sur Mars et observer Perseverance en 3D ;
-- découvrir les astéroïdes, les météorites et les exoplanètes ;
+- savoir **ce que l’on peut voir ce soir depuis chez soi** : Lune, planètes visibles et prochains passages de l’ISS, calculés sur l’appareil ;
+- trouver les **météorites tombées près de chez soi** et parcourir le vrai catalogue des exoplanètes confirmées ;
 - suivre l’ISS et les prochaines missions spatiales ;
 - admirer les images du télescope James-Webb et la photo astronomique du jour ;
-- préparer une observation du ciel ;
-- répondre à des quiz et remplir un passeport d’explorateur ;
+- répondre à des quiz et gagner les tampons de son passeport spatial ;
 - poser une question à SolarBot et retrouver les sources utilisées.
 
 ## Une mission, comment ça marche ?
@@ -84,7 +90,13 @@ Une page spéciale propose également des repères aux [parents et aux enseignan
 
 ## Et la version anglaise ?
 
-Le français est la langue principale de SolarScope. En anglais, l’accueil, la navigation et les fiches de leçon des 14 missions sont traduits (`src/lib/content/learning-content.en.ts`). Les données, cartes et activités de chaque page restent en français pour le moment, et un bandeau le signale.
+Le français est la langue principale de SolarScope. En anglais, sont traduits :
+
+- l’accueil, la navigation, le fil d’Ariane et la barre d’onglets ;
+- les fiches de leçon des 14 missions (`src/lib/content/learning-content.en.ts`) et leurs questions de validation (`src/lib/content/mission-checks.ts`) ;
+- le passeport spatial en entier.
+
+Les données, cartes et activités des pages de mission restent en français pour le moment, et un bandeau le signale.
 
 Cette traduction attend une relecture humaine : une bonne traduction pour les enfants doit préserver la simplicité des mots et l’exactitude scientifique, pas seulement traduire les phrases mot à mot.
 
@@ -165,10 +177,10 @@ SolarScope est un projet éducatif indépendant et n’est pas un site officiel 
 
 ## Limites connues
 
-- Le français est la langue principale ; l’anglais reste une prévisualisation partielle.
+- Le français est la langue principale ; en anglais, les données et activités des pages de mission restent en français, et la traduction attend une relecture humaine.
 - Les contenus et flux externes peuvent changer sans préavis malgré les contrôles automatisés.
 - Les tests automatisés complètent, mais ne remplacent pas, une validation régulière avec des enfants, parents et enseignants.
-- La progression locale ne se synchronise pas entre plusieurs appareils.
+- La progression ne se synchronise pas toute seule entre appareils : il faut recopier le code du passeport (ou scanner son QR code). Les dates des tampons importés deviennent la date du transfert.
 
 ## Participer au projet
 
@@ -178,7 +190,8 @@ SolarScope est un projet ouvert aux idées et aux améliorations. Une contributi
 - proposer une nouvelle mission ou une activité ;
 - corriger une information ou ajouter une meilleure source ;
 - améliorer l’accessibilité ou l’affichage sur mobile ;
-- aider à préparer une véritable version anglaise.
+- relire la traduction anglaise des leçons et des questions ;
+- réutiliser les leçons en classe : elles sont sous licence CC BY 4.0.
 
 Vous pouvez ouvrir une *issue* sur GitHub pour partager une idée ou signaler un problème.
 
@@ -215,6 +228,24 @@ La CI exécute les contrôles de qualité à chaque push et pull request. Un wor
 Les choix d’organisation du projet sont expliqués dans [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Les principes utilisés pour les contenus destinés aux enfants et les données scientifiques se trouvent dans [docs/LEARNING_AND_DATA.md](docs/LEARNING_AND_DATA.md).
 
 </details>
+
+## Structure du dépôt
+
+| Dossier | Contenu |
+|:---|:---|
+| `src/app/` | Pages (une par mission) et routes API serveur |
+| `src/components/` | Composants d’interface : `learning/` (leçons, passeport), `space/` (visualisations), `layout/` |
+| `src/lib/content/` | Textes pédagogiques : leçons FR/EN, questions du passeport, lunes, planètes |
+| `src/lib/data/` | Adaptateurs des sources scientifiques et registre des sources |
+| `src/lib/astronomy/` | Calculs faits dans le navigateur : ciel du soir, passages de l’ISS, voyages |
+| `tests/unit/`, `tests/e2e/` | Tests Vitest, puis Playwright avec contrôles d’accessibilité axe-core |
+| `docs/` | Architecture, principes pédagogiques et audits |
+
+## Licence
+
+- **Code source** : [MIT](LICENSE). Vous pouvez le réutiliser, le modifier et le redistribuer, y compris pour un usage commercial, en gardant la mention de copyright.
+- **Textes pédagogiques** (leçons, questions, quiz, guides) : [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.fr). Ils sont réutilisables en classe ou ailleurs en citant « SolarScope ».
+- **Images, modèles 3D, textures et données** des agences spatiales et autres sources gardent leurs propres conditions. Le nom, le logo et la mascotte Cosmo ne sont pas couverts par ces licences. Le détail est dans [LICENSE-CONTENT.md](LICENSE-CONTENT.md).
 
 ---
 

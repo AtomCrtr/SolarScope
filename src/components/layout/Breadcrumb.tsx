@@ -2,39 +2,52 @@
 
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
+import { useSiteLocale } from '@/components/layout/LanguageToggle'
 
-// Must mirror NAV_GROUPS from Navbar exactly
-const GROUPS = [
+type Text = { fr: string; en: string }
+
+// Must mirror NAV_GROUPS (and NAV_EN) from Navbar
+const GROUPS: Array<{ id: string; label: Text; pages: Array<{ href: string; title: Text }> }> = [
     {
-        id: 'systeme', label: 'Système Solaire', href: null,
+        id: 'systeme', label: { fr: 'Système Solaire', en: 'Solar System' },
         pages: [
-            { href: '/soleil', title: 'Soleil' }, { href: '/planetes', title: 'Planètes' },
-            { href: '/mars', title: 'Mars' }, { href: '/asteroides', title: 'Astéroïdes' },
-            { href: '/meteorites', title: 'Météorites' },
+            { href: '/soleil', title: { fr: 'Soleil', en: 'The Sun' } },
+            { href: '/planetes', title: { fr: 'Planètes', en: 'Planets' } },
+            { href: '/mars', title: { fr: 'Mars', en: 'Mars' } },
+            { href: '/asteroides', title: { fr: 'Astéroïdes', en: 'Asteroids' } },
+            { href: '/meteorites', title: { fr: 'Météorites', en: 'Meteorites' } },
         ],
     },
     {
-        id: 'exploration', label: 'Exploration', href: null,
-        pages: [{ href: '/iss', title: 'ISS Tracker' }, { href: '/missions', title: 'Missions' }],
-    },
-    {
-        id: 'observation', label: 'Observation', href: null,
+        id: 'exploration', label: { fr: 'Exploration', en: 'Exploration' },
         pages: [
-            { href: '/jwst', title: 'Télescope Webb' }, { href: '/ciel', title: 'Ciel ce soir' },
-            { href: '/photo-du-jour', title: 'Photo du Jour' }, { href: '/exoplanetes', title: 'Exoplanètes' },
+            { href: '/iss', title: { fr: 'ISS Tracker', en: 'ISS Tracker' } },
+            { href: '/missions', title: { fr: 'Missions', en: 'Missions' } },
         ],
     },
     {
-        id: 'decouverte', label: 'Découverte', href: null,
+        id: 'observation', label: { fr: 'Observation', en: 'Observation' },
         pages: [
-            { href: '/actualites', title: 'Actualités' }, { href: '/quiz', title: 'Quiz' },
-            { href: '/passeport', title: 'Passeport spatial' }, { href: '/parents-enseignants', title: 'Parents & enseignants' },
+            { href: '/jwst', title: { fr: 'Télescope Webb', en: 'Webb Telescope' } },
+            { href: '/ciel', title: { fr: 'Ciel ce soir', en: 'Tonight’s sky' } },
+            { href: '/photo-du-jour', title: { fr: 'Photo du Jour', en: 'Picture of the Day' } },
+            { href: '/exoplanetes', title: { fr: 'Exoplanètes', en: 'Exoplanets' } },
+        ],
+    },
+    {
+        id: 'decouverte', label: { fr: 'Découverte', en: 'Discover' },
+        pages: [
+            { href: '/actualites', title: { fr: 'Actualités', en: 'News' } },
+            { href: '/quiz', title: { fr: 'Quiz', en: 'Space quiz' } },
+            { href: '/passeport', title: { fr: 'Passeport spatial', en: 'Space passport' } },
+            { href: '/parents-enseignants', title: { fr: 'Parents & enseignants', en: 'Parents & teachers' } },
         ],
     },
 ]
 
 export default function Breadcrumb() {
     const pathname = usePathname()
+    const locale = useSiteLocale()
 
     // Find which group and page the current path belongs to
     const group = GROUPS.find(g => g.pages.some(p => pathname.startsWith(p.href)))
@@ -44,20 +57,12 @@ export default function Breadcrumb() {
     if (!group || !page || pathname === '/') return null
 
     return (
-        <nav className="breadcrumb" style={{
-            display: 'flex', alignItems: 'center', gap: '0.375rem',
-            fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '0.5rem',
-            fontWeight: 500,
-        }} aria-label="Fil d'Ariane">
-            <Link href="/" className="breadcrumb-link" style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.15s' }}
-                onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = '#64748b')}
-                onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = '#334155')}>
-                SolarScope
-            </Link>
-            <span style={{ color: '#1e293b' }}>›</span>
-            <span style={{ color: 'var(--text-muted)' }}>{group.label}</span>
-            <span style={{ color: '#1e293b' }}>›</span>
-            <span style={{ color: 'var(--nebula)', fontWeight: 600 }}>{page.title}</span>
+        <nav className="breadcrumb" aria-label={locale === 'en' ? 'Breadcrumb' : 'Fil d’Ariane'} lang={locale === 'en' ? 'en' : undefined}>
+            <Link href="/" className="breadcrumb-link">SolarScope</Link>
+            <span className="breadcrumb-separator" aria-hidden="true">›</span>
+            <span>{group.label[locale]}</span>
+            <span className="breadcrumb-separator" aria-hidden="true">›</span>
+            <span className="breadcrumb-current" aria-current="page">{page.title[locale]}</span>
         </nav>
     )
 }

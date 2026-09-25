@@ -1,7 +1,32 @@
 {
   "name": "solarscope-next",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "private": true,
+  "description": "Site éducatif gratuit pour découvrir l’espace avec des données NASA, ESA et NOAA, des missions courtes et un passeport spatial.",
+  "license": "MIT",
+  "author": "Cartier Emeline (https://github.com/AtomCrtr)",
+  "homepage": "https://solar-scope.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AtomCrtr/SolarScope.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AtomCrtr/SolarScope/issues"
+  },
+  "keywords": [
+    "astronomy",
+    "space",
+    "education",
+    "kids",
+    "nasa",
+    "nextjs",
+    "react",
+    "typescript",
+    "threejs",
+    "accessibility",
+    "pwa",
+    "open-data"
+  ],
   "engines": {
     "node": ">=20.9.0"
   },
