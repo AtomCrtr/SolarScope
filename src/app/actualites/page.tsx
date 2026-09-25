@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { motion } from 'framer-motion'
+import SpaceIcon from '@/components/ui/SpaceIcon'
+
 import type { NewsArticle } from '@/lib/data/space-data'
 import KidsGuide from '@/components/learning/KidsGuide'
 
@@ -67,13 +68,13 @@ export default function ActualitesPage() {
 
   return (
     <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
-      <motion.header initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="page-header">
-        <div className="badge">📰 PUBLICATIONS OFFICIELLES</div>
+      <header className="page-header motion-enter">
+        <div className="badge"><SpaceIcon name="news" size={18} className="inline-icon" /> PUBLICATIONS OFFICIELLES</div>
         <h1 className="page-title">Actualités spatiales</h1>
         <p className="page-subtitle">
           Les nouvelles publiées par la NASA, avec leur date et leur source pour pouvoir les vérifier.
         </p>
-      </motion.header>
+      </header>
 
       <KidsGuide topic="actualites" />
 
@@ -144,7 +145,7 @@ export default function ActualitesPage() {
 
       {!loading && error && (
         <div className="card" style={{ padding: '2rem', textAlign: 'center' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📡</div>
+          <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}><SpaceIcon name="signal" size={18} className="inline-icon" /></div>
           <h2 style={{ color: 'var(--text)', font: "700 1.1rem var(--font-display)" }}>Impossible de joindre le flux NASA</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.82rem', marginTop: '0.4rem' }}>Réessayez dans quelques instants ou consultez directement la source officielle.</p>
         </div>
@@ -161,17 +162,7 @@ export default function ActualitesPage() {
           {filtered.map((article, index) => {
             const color = CATEGORY_COLORS[article.category] || '#818cf8'
             return (
-              <motion.a
-                key={`${article.url}-${index}`}
-                href={article.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="card"
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: Math.min(index * 0.035, 0.35) }}
-                style={{ minHeight: 245, padding: '1.4rem', textDecoration: 'none', display: 'flex', flexDirection: 'column' }}
-              >
+              <a key={`${article.url}-${index}`} href={article.url} target="_blank" rel="noopener noreferrer" className="card motion-enter" style={{ animationDelay: `${Math.min(index * 0.035, 0.35)}s`, minHeight: 245, padding: '1.4rem', textDecoration: 'none', display: 'flex', flexDirection: 'column' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.75rem', alignItems: 'center' }}>
                   <span style={{ color, background: `${color}12`, border: `1px solid ${color}30`, borderRadius: 999, padding: '0.2rem 0.65rem', fontSize: '0.64rem', fontWeight: 800 }}>
                     {article.category}
@@ -185,7 +176,7 @@ export default function ActualitesPage() {
                 <div style={{ marginTop: 'auto', paddingTop: '1rem', display: 'flex', justifyContent: 'space-between', color: '#7c8ca4', fontSize: '0.7rem' }}>
                   <span>NASA</span><span style={{ color }}>Lire l’article ↗</span>
                 </div>
-              </motion.a>
+              </a>
             )
           })}
         </div>

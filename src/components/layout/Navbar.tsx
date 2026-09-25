@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, useRef } from 'react'
 import LanguageToggle, { useSiteLocale } from '@/components/layout/LanguageToggle'
 import SpaceIcon, { type SpaceIconName } from '@/components/ui/SpaceIcon'
@@ -162,13 +161,7 @@ export default function Navbar() {
     const activeGroup = navGroups.find(g => g.pages.some(p => pathname.startsWith(p.href)))?.id
 
     return (
-        <motion.header
-            className={pathname === '/' ? 'site-header site-header-home' : 'site-header'}
-            initial={{ y: -80, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-            style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200, height: 'var(--navbar-h)' }}
-        >
+        <header className={`${pathname === '/' ? 'site-header site-header-home' : 'site-header'} motion-enter`} style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200, height: 'var(--navbar-h)' }}>
             {/* Frosted glass bar */}
             <div className="site-navbar-surface" style={{
                 height: '100%',
@@ -238,23 +231,13 @@ export default function Navbar() {
                                         transition: 'all 0.15s',
                                     }}>
                                         <span>{group.label}</span>
-                                        <motion.span
-                                            animate={{ rotate: isOpen ? 180 : 0 }}
-                                            transition={{ duration: 0.2 }}
-                                            style={{ fontSize: '0.6rem', color: 'var(--text-muted)', display: 'inline-block' }}>▼</motion.span>
+                                        <span className="nav-chevron" style={{ fontSize: '0.6rem', color: 'var(--text-muted)', display: 'inline-block', transform: isOpen ? 'rotate(180deg)' : undefined }} aria-hidden="true">▼</span>
                                     </button>
 
                                     {/* Dropdown panel */}
-                                    <AnimatePresence>
+                                    <>
                                         {isOpen && (
-                                            <motion.div
-                                                initial={{ opacity: 0, y: 6, scale: 0.97 }}
-                                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                exit={{ opacity: 0, y: 6, scale: 0.97 }}
-                                                transition={{ duration: 0.16, ease: 'easeOut' }}
-                                                onMouseEnter={() => { if (closeTimer.current) clearTimeout(closeTimer.current) }}
-                                                onMouseLeave={handleMouseLeave}
-                                                style={{
+                                            <div className="motion-enter" onMouseEnter={() => { if (closeTimer.current) clearTimeout(closeTimer.current) }} onMouseLeave={handleMouseLeave} style={{
                                                     position: 'absolute', top: 'calc(100% + 8px)', left: '50%', transform: 'translateX(-50%)',
                                                     background: 'rgba(11,16,38,0.95)', backdropFilter: 'saturate(180%) blur(28px)',
                                                     WebkitBackdropFilter: 'saturate(180%) blur(28px)',
@@ -308,9 +291,9 @@ export default function Navbar() {
                                                         </Link>
                                                     )
                                                 })}
-                                            </motion.div>
+                                            </div>
                                         )}
-                                    </AnimatePresence>
+                                    </>
                                 </div>
                             )
                         })}
@@ -338,30 +321,20 @@ export default function Navbar() {
                                 // Do NOT set display here — let md:hidden do it
                             }}
                         >
-                            <AnimatePresence mode="wait">
-                                <motion.span key={mobileOpen ? 'x' : 'h'}
-                                    initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }}
-                                    exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.15 }}>
+                            <>
+                                <span className="motion-enter" key={mobileOpen ? 'x' : 'h'}>
                                     {mobileOpen ? '✕' : '☰'}
-                                </motion.span>
-                            </AnimatePresence>
+                                </span>
+                            </>
                         </button>
                     </div>
                 </div>
             </div>
 
             {/* ── Mobile menu — grouped accordion ── */}
-            <AnimatePresence>
+            <>
                 {mobileOpen && (
-                    <motion.div
-                        ref={mobileMenuRef}
-                        id="mobile-navigation"
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                        className="md:hidden"
-                        style={{
+                    <div ref={mobileMenuRef} id="mobile-navigation" className="md:hidden motion-enter" style={{
                             position: 'absolute', top: 'var(--navbar-h)', left: 0, right: 0,
                             background: 'rgba(11,16,38,0.97)',
                             backdropFilter: 'saturate(180%) blur(32px)',
@@ -403,15 +376,11 @@ export default function Navbar() {
                                             <span style={{ color: isActive ? group.color : 'var(--text-subtle)', fontSize: '0.9rem', fontWeight: 700 }}>
                                                 {group.label}
                                             </span>
-                                            <motion.span animate={{ rotate: isGroupOpen ? 180 : 0 }} transition={{ duration: 0.2 }}
-                                                style={{ color: 'var(--text-muted)', fontSize: '0.65rem' }}>▼</motion.span>
+                                            <span className="nav-chevron" style={{ color: 'var(--text-muted)', fontSize: '0.65rem', display: 'inline-block', transform: isGroupOpen ? 'rotate(180deg)' : undefined }} aria-hidden="true">▼</span>
                                         </button>
-                                        <AnimatePresence>
+                                        <>
                                             {isGroupOpen && (
-                                                <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }}
-                                                    exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }}
-                                                    id={mobileGroupPanelId}
-                                                    style={{ overflow: 'hidden', paddingLeft: '0.5rem', marginTop: '0.25rem' }}>
+                                                <div className="motion-enter" id={mobileGroupPanelId} style={{ overflow: 'hidden', paddingLeft: '0.5rem', marginTop: '0.25rem' }}>
                                                     {group.pages.map(page => {
                                                         const active = pathname === page.href
                                                         return (
@@ -432,16 +401,16 @@ export default function Navbar() {
                                                             </Link>
                                                         )
                                                     })}
-                                                </motion.div>
+                                                </div>
                                             )}
-                                        </AnimatePresence>
+                                        </>
                                     </div>
                                 )
                             })}
                         </div>
-                    </motion.div>
+                    </div>
                 )}
-            </AnimatePresence>
-        </motion.header>
+            </>
+        </header>
     )
 }

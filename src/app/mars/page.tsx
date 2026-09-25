@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import SpaceIcon, { type SpaceIconName } from '@/components/ui/SpaceIcon'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import KidsGuide from '@/components/learning/KidsGuide'
@@ -63,17 +63,17 @@ const ROVERS_DETAIL = [
 const ACTIVE_ROVERS = ROVERS_DETAIL.filter(r => r.active && r.key) as Array<typeof ROVERS_DETAIL[0] & { key: string }>
 
 const MARS_TIMELINE = [
-    { year: '1965', flag: '🇺🇸', event: 'Mariner 4 — Premier survol', detail: 'Premières photos rapprochées : une surface criblée de cratères, sans canal ni vie visible.' },
-    { year: '1971', flag: '🇺🇸', event: 'Mariner 9 — Premier orbiteur', detail: 'Cartographie complète de Mars. Découverte d\'Olympus Mons et Valles Marineris.' },
-    { year: '1976', flag: '🇺🇸', event: 'Viking 1 & 2 — Atterrissages', detail: 'Premières photos couleur depuis la surface. Tests de biologie : résultats ambigus.' },
-    { year: '1997', flag: '🇺🇸', event: 'Pathfinder + Sojourner', detail: 'Premier rover. Preuves d\'eau liquide ancienne. Révolution dans l\'exploration mobile.' },
-    { year: '2004', flag: '🇺🇸', event: 'Spirit & Opportunity', detail: 'Spirit = silice hydrothermale. Opportunity = sphères « myrtilles » hématite, preuves d\'eau.' },
-    { year: '2008', flag: '🇺🇸', event: 'Phoenix — Pôle Nord', detail: 'Première détection de glace d\'eau pure à la surface (0-5 cm de profondeur).' },
-    { year: '2012', flag: '🇺🇸', event: 'Curiosity — Cratère Gale', detail: 'MSL : laboratoire chimique complet. Conditions habitables confirmées. Méthane détecté.' },
-    { year: '2021', flag: '🇺🇸', event: 'Perseverance + Ingenuity', detail: 'Premier hélicoptère extraterrestre. Production d\'O₂. Collecte d\'échantillons pour retour.' },
-    { year: '2022', flag: '🇦🇪', event: 'Hope Probe — Orbiteur', detail: 'Premier orbiteur des Émirats Arabes Unis. Cartographie de la météo martienne en 3D.' },
-    { year: '2021', flag: '🇨🇳', event: 'Tianwen-1 + Zhurong', detail: 'Premières missions chinoises complètes : orbiteur + atterrisseur + rover.' },
-    { year: '2026', flag: '🌍', event: '🔮 Mars Sample Return', detail: 'La NASA étudie encore plusieurs options pour rapporter les échantillons. Le calendrier définitif n’est pas confirmé.' },
+    { year: '1965', flag: 'USA', event: 'Mariner 4 — Premier survol', detail: 'Premières photos rapprochées : une surface criblée de cratères, sans canal ni vie visible.' },
+    { year: '1971', flag: 'USA', event: 'Mariner 9 — Premier orbiteur', detail: 'Cartographie complète de Mars. Découverte d\'Olympus Mons et Valles Marineris.' },
+    { year: '1976', flag: 'USA', event: 'Viking 1 & 2 — Atterrissages', detail: 'Premières photos couleur depuis la surface. Tests de biologie : résultats ambigus.' },
+    { year: '1997', flag: 'USA', event: 'Pathfinder + Sojourner', detail: 'Premier rover. Preuves d\'eau liquide ancienne. Révolution dans l\'exploration mobile.' },
+    { year: '2004', flag: 'USA', event: 'Spirit & Opportunity', detail: 'Spirit = silice hydrothermale. Opportunity = sphères « myrtilles » hématite, preuves d\'eau.' },
+    { year: '2008', flag: 'USA', event: 'Phoenix — Pôle Nord', detail: 'Première détection de glace d\'eau pure à la surface (0-5 cm de profondeur).' },
+    { year: '2012', flag: 'USA', event: 'Curiosity — Cratère Gale', detail: 'MSL : laboratoire chimique complet. Conditions habitables confirmées. Méthane détecté.' },
+    { year: '2021', flag: 'USA', event: 'Perseverance + Ingenuity', detail: 'Premier hélicoptère extraterrestre. Production d\'O₂. Collecte d\'échantillons pour retour.' },
+    { year: '2022', flag: 'EAU', event: 'Hope Probe — Orbiteur', detail: 'Premier orbiteur des Émirats Arabes Unis. Cartographie de la météo martienne en 3D.' },
+    { year: '2021', flag: 'CHN', event: 'Tianwen-1 + Zhurong', detail: 'Premières missions chinoises complètes : orbiteur + atterrisseur + rover.' },
+    { year: '2026', flag: '', event: 'Mars Sample Return', detail: 'La NASA étudie encore plusieurs options pour rapporter les échantillons. Le calendrier définitif n’est pas confirmé.' },
 ]
 
 
@@ -169,9 +169,9 @@ export default function MarsPage() {
 
             {/* ── HERO ── */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', alignItems: 'center', marginBottom: '2.5rem' }} className="max-sm:grid-cols-1">
-                <motion.div initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }}>
+                <div className="motion-enter">
                     <div className="badge" style={{ background: 'rgba(239,68,68,0.12)', color: '#f87171', borderColor: 'rgba(239,68,68,0.25)' }}>
-                        🤖 ROVERS NASA — MISSIONS VÉRIFIÉES
+                        <SpaceIcon name="robot" size={18} className="inline-icon" /> ROVERS NASA — MISSIONS VÉRIFIÉES
                     </div>
                     <h1 className="page-title">
                         Mars
@@ -191,10 +191,10 @@ export default function MarsPage() {
                             }}>{r.emoji} {r.name}</button>
                         ))}
                     </div>
-                </motion.div>
+                </div>
 
                 {/* 3D Mars globe */}
-                <motion.div initial={{ opacity: 0, scale: 0.88 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, ease: 'easeOut' }}>
+                <div className="motion-enter">
                     <div style={{ position: 'relative' }}>
                         <div style={{
                             height: 340, borderRadius: '1.5rem', overflow: 'hidden',
@@ -207,7 +207,7 @@ export default function MarsPage() {
                         <div style={{
                             position: 'absolute', bottom: 12, left: 0, right: 0, textAlign: 'center',
                             color: 'var(--text-muted)', fontSize: '0.65rem', letterSpacing: '0.05em',
-                        }}>🖱 Maintenir & glisser pour explorer</div>
+                        }}>Maintenir & glisser pour explorer</div>
                         <div style={{
                             position: 'absolute', top: 14, right: 14,
                             background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)',
@@ -218,7 +218,7 @@ export default function MarsPage() {
                             <span style={{ color: '#f87171', fontSize: '0.68rem', fontWeight: 700 }}>NASA · vérifié le 26/07/2026</span>
                         </div>
                     </div>
-                </motion.div>
+                </div>
             </div>
 
             <KidsGuide topic="mars" />
@@ -282,14 +282,14 @@ export default function MarsPage() {
                     </div>
                     <div style={{ display: 'grid', gap: '0.625rem', minWidth: 160 }}>
                         {[
-                            { label: 'Lancement', val: activeRoverDetail.launch, icon: '🚀' },
-                            { label: 'Atterrissage', val: activeRoverDetail.land, icon: '🛬' },
-                            { label: 'Masse', val: activeRoverDetail.mass, icon: '⚖️' },
-                            { label: 'Distance parcourue', val: activeRoverDetail.distance, icon: '📍' },
+                            { label: 'Lancement', val: activeRoverDetail.launch, icon: 'rocket' },
+                            { label: 'Atterrissage', val: activeRoverDetail.land, icon: 'target' },
+                            { label: 'Masse', val: activeRoverDetail.mass, icon: 'scale' },
+                            { label: 'Distance parcourue', val: activeRoverDetail.distance, icon: 'pin' },
                             { label: 'Durée active', val: activeRoverDetail.duration, icon: '⏱' },
                         ].map(d => (
                             <div key={d.label} style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', padding: '0.5rem 0.75rem', borderRadius: '0.5rem', background: 'rgba(255,255,255,0.03)' }}>
-                                <span style={{ fontSize: '1rem' }}>{d.icon}</span>
+                                <SpaceIcon name={d.icon as SpaceIconName} size={18} />
                                 <div>
                                     <div style={{ color: 'var(--text-muted)', fontSize: '0.65rem' }}>{d.label}</div>
                                     <div style={{ color: 'var(--text)', fontSize: '0.8rem', fontWeight: 700 }}>{d.val}</div>
@@ -320,13 +320,10 @@ export default function MarsPage() {
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', marginBottom: '1.25rem' }}>Sélection des photos les plus marquantes — Curiosity, Opportunity &amp; Perseverance</p>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.625rem' }} className="max-sm:grid-cols-2">
                     {MARS_GALLERY.map((photo, i) => (
-                        <motion.button type="button" aria-label={`Agrandir ${photo.title}`} key={i} transition={{ delay: i * 0.03 }}
-                            onClick={event => {
+                        <button type="button" aria-label={`Agrandir ${photo.title}`} key={i} onClick={event => {
                                 lightboxTriggerRef.current = event.currentTarget
                                 setLightboxIdx(i)
-                            }}
-                            style={{ cursor: 'pointer', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)', position: 'relative', padding: 0, textAlign: 'left', background: 'transparent' }}
-                            whileHover={{ scale: 1.04, borderColor: `${photo.color}50` }}>
+                            }} style={{ cursor: 'pointer', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)', position: 'relative', padding: 0, textAlign: 'left', background: 'transparent' }}>
                             <Image src={photo.src} alt={photo.title} width={640} height={400} sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 300px" quality={75}
                                 style={{ width: '100%', height: 160, objectFit: 'cover', display: 'block', background: 'rgba(0,0,0,0.5)' }}
                                 onError={e => {
@@ -341,37 +338,27 @@ export default function MarsPage() {
                             </div>
                             {/* hover overlay */}
                             <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0)', transition: 'background 0.2s', pointerEvents: 'none' }}>
-                                <span style={{ fontSize: '1.5rem', opacity: 0, transition: 'opacity 0.2s' }}>🔍</span>
+                                <span style={{ fontSize: '1.5rem', opacity: 0, transition: 'opacity 0.2s' }}><SpaceIcon name="search" size={18} className="inline-icon" /></span>
                             </div>
-                        </motion.button>
+                        </button>
                     ))}
                 </div>
             </div>
 
             {/* ── LIGHTBOX ── */}
-            <AnimatePresence>
+            <>
                 {lightboxIdx !== null && (
-                    <motion.div
-                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                        onClick={() => setLightboxIdx(null)}
-                        onKeyDown={event => {
+                    <div className="motion-enter" onClick={() => setLightboxIdx(null)} onKeyDown={event => {
                             if (event.key === 'Escape') {
                                 event.preventDefault()
                                 setLightboxIdx(null)
                             }
-                        }}
-                        role="dialog"
-                        aria-modal="true"
-                        aria-labelledby="mars-dialog-title"
-                        aria-describedby="mars-dialog-description"
-                        style={{
+                        }} role="dialog" aria-modal="true" aria-labelledby="mars-dialog-title" aria-describedby="mars-dialog-description" style={{
                             position: 'fixed', inset: 0, zIndex: 9000,
                             background: 'rgba(0,0,0,0.94)', backdropFilter: 'blur(16px)',
                             display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem',
                         }}>
-                        <motion.div ref={lightboxPanelRef} initial={{ scale: 0.88 }} animate={{ scale: 1 }} exit={{ scale: 0.88 }}
-                            onClick={e => e.stopPropagation()}
-                            style={{ maxWidth: 880, width: '100%', borderRadius: '1.25rem', overflow: 'hidden', border: `1px solid ${MARS_GALLERY[lightboxIdx].color}30` }}>
+                        <div ref={lightboxPanelRef} onClick={e => e.stopPropagation()} style={{ maxWidth: 880, width: '100%', borderRadius: '1.25rem', overflow: 'hidden', border: `1px solid ${MARS_GALLERY[lightboxIdx].color}30` }}>
                             <Image src={MARS_GALLERY[lightboxIdx].src} alt={MARS_GALLERY[lightboxIdx].title} width={1400} height={900} sizes="(max-width: 920px) 100vw, 880px" quality={80}
                                 style={{ width: '100%', height: 'auto', display: 'block', maxHeight: '65vh', objectFit: 'contain', background: '#000' }} />
                             <div style={{ padding: '1rem 1.5rem', background: 'var(--card)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
@@ -391,10 +378,10 @@ export default function MarsPage() {
                                     </button>
                                 </div>
                             </div>
-                        </motion.div>
-                    </motion.div>
+                        </div>
+                    </div>
                 )}
-            </AnimatePresence>
+            </>
 
             {/* ── ROVER HISTORY ── */}
             <div className="divider" />
@@ -404,8 +391,7 @@ export default function MarsPage() {
             </p>
             <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))' }}>
                 {ROVERS_DETAIL.map((r, i) => (
-                    <motion.div key={r.name} className="card" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }}
-                        style={{ padding: '1.25rem', border: `1px solid ${r.color}20`, position: 'relative', overflow: 'hidden' }}>
+                    <div key={r.name} className="card motion-enter" style={{ animationDelay: `${Math.min(i * 0.07, 0.6)}s`,  padding: '1.25rem', border: `1px solid ${r.color}20`, position: 'relative', overflow: 'hidden' }}>
                         {/* accent stripe */}
                         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, ${r.color}, transparent)`, borderRadius: '4px 4px 0 0' }} />
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
@@ -427,12 +413,12 @@ export default function MarsPage() {
                         {/* Key stats mini-grid */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.375rem', marginBottom: '0.875rem' }}>
                             {[
-                                { icon: '📅', label: 'Atterrissage', val: r.land },
-                                { icon: '📍', label: 'Distance', val: r.distance },
+                                { icon: 'calendar', label: 'Atterrissage', val: r.land },
+                                { icon: 'pin', label: 'Distance', val: r.distance },
                                 { icon: '⏱', label: 'Durée', val: r.duration },
                             ].map(d => (
                                 <div key={d.label} style={{ textAlign: 'center', background: 'rgba(255,255,255,0.03)', borderRadius: '0.5rem', padding: '0.4rem 0.25rem' }}>
-                                    <div style={{ fontSize: '0.75rem' }}>{d.icon}</div>
+                                    <SpaceIcon name={d.icon as SpaceIconName} size={14} />
                                     <div style={{ color: 'var(--text)', fontWeight: 700, fontSize: '0.68rem' }}>{d.val}</div>
                                     <div style={{ color: 'var(--text-muted)', fontSize: '0.6rem' }}>{d.label}</div>
                                 </div>
@@ -447,7 +433,7 @@ export default function MarsPage() {
                                 </div>
                             ))}
                         </div>
-                    </motion.div>
+                    </div>
                 ))}
             </div>
 
@@ -463,7 +449,7 @@ export default function MarsPage() {
                                 : 'linear-gradient(135deg, #ef4444, #f97316)',
                             fontSize: '0.68rem', fontWeight: 700, minWidth: 32, height: 32,
                         }}>
-                            {i === MARS_TIMELINE.length - 1 ? '🔮' : ev.flag}
+                            {i === MARS_TIMELINE.length - 1 ? <SpaceIcon name="sparkle" size={16} /> : ev.flag}
                         </div>
                         <div style={{ flex: 1 }}>
                             <div style={{ display: 'flex', gap: '0.625rem', alignItems: 'baseline', flexWrap: 'wrap' }}>
@@ -481,15 +467,15 @@ export default function MarsPage() {
                 <h3 className="section-title" style={{ color: '#f87171', fontSize: '1rem' }}>Le savais-tu ?</h3>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '0.75rem' }}>
                     {[
-                        { icon: '🌋', fact: 'Olympus Mons est 3× plus haut que l\'Everest et si large qu\'on ne verrait pas l\'autre côté depuis le sommet.' },
-                        { icon: '🏞️', fact: 'Valles Marineris s\'étend sur 1/5 de la circonférence de Mars — 4× la longueur des États-Unis.' },
-                        { icon: '🌫️', fact: 'L\'atmosphère de Mars est si fine que la pression au sol équivaut à 35 km d\'altitude sur Terre.' },
-                        { icon: '🌡️', fact: 'Les températures varient de -125°C aux pôles en hiver à +20°C à l\'équateur en été.' },
-                        { icon: '🌊', fact: 'Des preuves d\'un ancien océan couvrant 19% de la surface de Mars ont été découvertes par orbiteurs.' },
-                        { icon: '🔴', fact: 'La couleur rouge vient d\'oxyde de fer (rouille) dans la poussière — Mars est littéralement rouillée.' },
+                        { icon: 'mountain', fact: 'Olympus Mons est 3× plus haut que l\'Everest et si large qu\'on ne verrait pas l\'autre côté depuis le sommet.' },
+                        { icon: 'mountain', fact: 'Valles Marineris s\'étend sur 1/5 de la circonférence de Mars — 4× la longueur des États-Unis.' },
+                        { icon: 'wind', fact: 'L\'atmosphère de Mars est si fine que la pression au sol équivaut à 35 km d\'altitude sur Terre.' },
+                        { icon: 'thermometer', fact: 'Les températures varient de -125°C aux pôles en hiver à +20°C à l\'équateur en été.' },
+                        { icon: 'drop', fact: 'Des preuves d\'un ancien océan couvrant 19% de la surface de Mars ont été découvertes par orbiteurs.' },
+                        { icon: 'mars', fact: 'La couleur rouge vient d\'oxyde de fer (rouille) dans la poussière — Mars est littéralement rouillée.' },
                     ].map(f => (
-                        <div key={f.icon} style={{ display: 'flex', gap: '0.625rem', padding: '0.875rem', borderRadius: '0.625rem', background: 'rgba(239,68,68,0.04)', border: '1px solid rgba(239,68,68,0.08)' }}>
-                            <span style={{ fontSize: '1.3rem', flexShrink: 0 }}>{f.icon}</span>
+                        <div key={f.fact} style={{ display: 'flex', gap: '0.625rem', padding: '0.875rem', borderRadius: '0.625rem', background: 'rgba(239,68,68,0.04)', border: '1px solid rgba(239,68,68,0.08)' }}>
+                            <span style={{ flexShrink: 0, color: '#fca5a5' }}><SpaceIcon name={f.icon as SpaceIconName} size={22} /></span>
                             <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', lineHeight: 1.65 }}>{f.fact}</p>
                         </div>
                     ))}

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import SpaceIcon from '@/components/ui/SpaceIcon'
 import type { MarsRoverMission } from '@/lib/content/mars-data'
 
 type MarsMissionProps = {
@@ -25,10 +26,10 @@ export default function MarsMission({ rover, onChooseRover }: MarsMissionProps) 
 
       <div className="mars-mission-rovers" aria-label="Choisir un rover pour la mission">
         <button type="button" aria-pressed={rover.id === 'curiosity'} onClick={() => onChooseRover('curiosity')}>
-          🤖 Curiosity
+          <SpaceIcon name="robot" size={18} className="inline-icon" /> Curiosity
         </button>
         <button type="button" aria-pressed={rover.id === 'perseverance'} onClick={() => onChooseRover('perseverance')}>
-          🚀 Perseverance
+          <SpaceIcon name="rocket" size={18} className="inline-icon" /> Perseverance
         </button>
       </div>
 

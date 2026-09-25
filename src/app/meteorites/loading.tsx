@@ -1,3 +1,5 @@
+import SpaceIcon from '@/components/ui/SpaceIcon'
+
 export default function Loading() {
     return (
         <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
@@ -21,7 +23,7 @@ export default function Loading() {
             {/* Map skeleton */}
             <div style={{ height: 450, borderRadius: '0.875rem', background: 'rgba(249,115,22,0.04)', border: '1px solid rgba(249,115,22,0.1)', marginBottom: '1.5rem', animation: 'pulse 1.6s ease-in-out infinite', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
-                    <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🌍</div>
+                    <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}><SpaceIcon name="globe" size={18} className="inline-icon" /></div>
                     <p style={{ fontSize: '0.82rem' }}>Chargement de la carte…</p>
                 </div>
             </div>

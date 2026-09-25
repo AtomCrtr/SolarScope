@@ -19,7 +19,7 @@ const noteFont = Caveat({ subsets: ['latin'], weight: ['600', '700'], variable: 
 
 export const metadata: Metadata = {
   title: {
-    default: 'SolarScope 🔭 — L’espace expliqué aux enfants',
+    default: 'SolarScope — L’espace expliqué aux enfants',
     template: '%s · SolarScope',
   },
   description: DEFAULT_DESCRIPTION,
@@ -33,12 +33,12 @@ export const metadata: Metadata = {
     locale: 'fr_FR',
     url: SITE_URL,
     siteName: SITE_NAME,
-    title: 'SolarScope 🔭 — L’espace expliqué aux enfants',
+    title: 'SolarScope — L’espace expliqué aux enfants',
     description: DEFAULT_DESCRIPTION,
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'SolarScope 🔭 — L’espace expliqué aux enfants',
+    title: 'SolarScope — L’espace expliqué aux enfants',
     description: DEFAULT_DESCRIPTION,
   },
   icons: {

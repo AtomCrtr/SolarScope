@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
+import SpaceIcon from '@/components/ui/SpaceIcon'
 import { readSpaceWeatherHistoryCache, storeSpaceWeatherHistoryCache } from '@/lib/client/space-weather-history-cache'
 import type { HistorySourceState, KpEntry, SpaceWeatherHistoryPayload } from '@/lib/data/space-weather-history'
 
@@ -163,7 +164,7 @@ export default function KpChart() {
     if (sourceState === 'unavailable' || !current) {
         return (
             <div className="card" style={{ padding: '2rem', textAlign: 'center' }}>
-                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>📡 Données Kp temporairement indisponibles</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}><SpaceIcon name="signal" size={18} className="inline-icon" /> Données Kp temporairement indisponibles</div>
             </div>
         )
     }
@@ -225,7 +226,7 @@ export default function KpChart() {
             </div>
 
             <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '0.75rem', textAlign: 'right' }}>
-                📅 7 derniers jours · Données NOAA/SWPC · {current.time.slice(0, 16)} UTC
+                <SpaceIcon name="calendar" size={18} className="inline-icon" /> 7 derniers jours · Données NOAA/SWPC · {current.time.slice(0, 16)} UTC
             </p>
         </div>
     )

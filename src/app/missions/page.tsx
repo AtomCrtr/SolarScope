@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import SpaceIcon from '@/components/ui/SpaceIcon'
+
 import dynamic from 'next/dynamic'
 import KidsGuide from '@/components/learning/KidsGuide'
 import MetricGrid from '@/components/space/MetricGrid'
@@ -71,13 +72,13 @@ export default function MissionsPage() {
 
     return (
         <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="page-header">
-                <div className="badge">🚀 EXPLORATION SPATIALE</div>
+            <div className="page-header motion-enter">
+                <div className="badge"><SpaceIcon name="rocket" size={18} className="inline-icon" /> EXPLORATION SPATIALE</div>
                 <h1 className="page-title">
                     Missions Spatiales
                 </h1>
                 <p className="page-subtitle">De Spoutnik à Artemis : près de 70 ans d&apos;aventures humaines dans l&apos;espace !</p>
-            </motion.div>
+            </div>
 
             <KidsGuide topic="missions" />
 
@@ -119,27 +120,26 @@ export default function MissionsPage() {
                             const d = new Date(l.net)
                             const daysUntil = Math.floor((d.getTime() - renderedAt) / 86400000)
                             return (
-                                <motion.div key={l.id} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }}
-                                    className="card" style={{ flexShrink: 0, width: 280, padding: '1.1rem', position: 'relative', overflow: 'hidden' }}>
+                                <div key={l.id} className="card motion-enter" style={{ animationDelay: `${Math.min(i * 0.08, 0.6)}s`,  flexShrink: 0, width: 280, padding: '1.1rem', position: 'relative', overflow: 'hidden' }}>
                                     {/* External launch providers use changing image hosts; keep this decorative background unoptimized. */}
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
                                     {l.image && <img src={l.image} alt="" loading="lazy" decoding="async" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.08 }} />}
                                     <div style={{ position: 'relative' }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
                                             <span style={{ fontSize: '0.68rem', fontWeight: 700, padding: '2px 7px', borderRadius: 99, background: 'rgba(99,102,241,0.15)', color: 'var(--nebula)', border: '1px solid rgba(99,102,241,0.2)' }}>
-                                                {daysUntil <= 0 ? '🔴 Imminent' : `Dans ${daysUntil}j`}
+                                                {daysUntil <= 0 ? 'Imminent' : `Dans ${daysUntil}j`}
                                             </span>
                                             {i === 0 && <span style={{ fontSize: '0.65rem', color: '#10b981', fontWeight: 700 }}>Prochain</span>}
                                         </div>
                                         <h3 style={{ color: 'var(--text)', fontSize: '0.85rem', fontWeight: 700, fontFamily: 'var(--font-display)', marginBottom: '0.25rem', lineHeight: 1.3 }}>{l.name}</h3>
                                         <p style={{ color: 'var(--text-muted)', fontSize: '0.7rem', marginBottom: '0.375rem' }}>{l.rocket}</p>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <span style={{ color: 'var(--text-muted)', fontSize: '0.68rem' }}>🏢 {l.agency.length > 28 ? l.agency.slice(0, 28) + '…' : l.agency}</span>
+                                            <span style={{ color: 'var(--text-muted)', fontSize: '0.68rem' }}>{l.agency.length > 28 ? l.agency.slice(0, 28) + '…' : l.agency}</span>
                                             <span style={{ color: 'var(--text-muted)', fontSize: '0.67rem' }}>{d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}</span>
                                         </div>
                                         {l.url && <a href={l.url} target="_blank" rel="noopener noreferrer" className="touch-link touch-link-compact" style={{ display: 'inline-flex', marginTop: '0.35rem', color: 'var(--star)', fontSize: '0.75rem', fontWeight: 700, textDecoration: 'none' }} aria-label={`Fiche du lancement ${l.name} (nouvel onglet)`}>Fiche du lancement ↗</a>}
                                     </div>
-                                </motion.div>
+                                </div>
                             )
                         })}
                     </div>
@@ -198,7 +198,7 @@ export default function MissionsPage() {
                             background: statutFilter === s ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,0.04)',
                             color: statutFilter === s ? '#c7d2fe' : '#a8b3c7',
                             border: statutFilter === s ? '1px solid rgba(99,102,241,0.35)' : '1px solid rgba(255,255,255,0.07)',
-                        }}>{s === 'Active' ? '🟢 Actives' : s === 'Terminée' ? '⚫ Terminées' : '📋 Toutes'}</button>
+                        }}>{s === 'Active' ? 'Actives' : s === 'Terminée' ? 'Terminées' : 'Toutes'}</button>
                     ))}
                 </div>
             </div>
@@ -207,7 +207,7 @@ export default function MissionsPage() {
             <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '1rem' }}>{filtered.length} mission{filtered.length > 1 ? 's' : ''}</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {filtered.map(m => (
-                    <motion.div key={m.name} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="card" style={{ padding: '1.25rem', borderLeft: `4px solid ${TYPE_COLORS[m.type]}` }}>
+                    <div key={m.name} className="card motion-enter" style={{ padding: '1.25rem', borderLeft: `4px solid ${TYPE_COLORS[m.type]}` }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
                                 <span style={{ fontSize: '1.3rem' }}>{m.emoji}</span>
@@ -226,8 +226,8 @@ export default function MissionsPage() {
                         </div>
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginBottom: '0.5rem' }}>{m.annee} · {m.pays}</p>
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.82rem', lineHeight: 1.7, marginBottom: '0.5rem' }}>{m.description}</p>
-                        <p style={{ color: '#f59e0b', fontSize: '0.78rem', lineHeight: 1.6 }}>💡 {m.fun}</p>
-                    </motion.div>
+                        <p style={{ color: '#f59e0b', fontSize: '0.78rem', lineHeight: 1.6 }}><SpaceIcon name="bulb" size={18} className="inline-icon" /> {m.fun}</p>
+                    </div>
                 ))}
             </div>
             <style>{`@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(0.8)}}`}</style>

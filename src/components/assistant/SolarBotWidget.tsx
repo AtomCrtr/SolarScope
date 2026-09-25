@@ -1,7 +1,8 @@
 'use client'
 
 import { Fragment, useState, useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import SpaceIcon from '@/components/ui/SpaceIcon'
+
 import SolarBotSourceLinks, { SolarBotReliabilityNote } from '@/components/assistant/SolarBotSourceLinks'
 import type { PublicSolarBotSource } from '@/lib/content/solarbot-sources'
 import SolarBotStatus, { type SolarBotRuntimeStatus, useSolarBotStatus } from '@/components/assistant/SolarBotStatus'
@@ -30,11 +31,11 @@ async function askSolarBot(question: string, history: Message[]): Promise<SolarB
             body: JSON.stringify({ question, history }),
         })
         const data = await res.json()
-        if (!res.ok) return { text: data.error ?? '🤖 Réessaie !', sources: [], degraded: true, status: 'unavailable' }
+        if (!res.ok) return { text: data.error ?? 'Réessaie !', sources: [], degraded: true, status: 'unavailable' }
         const degraded = Boolean(data.degraded)
-        return { text: data.text ?? '🤖 Réessaie !', sources: Array.isArray(data.sources) ? data.sources : [], degraded, status: degraded ? 'fallback' : 'available' }
+        return { text: data.text ?? 'Réessaie !', sources: Array.isArray(data.sources) ? data.sources : [], degraded, status: degraded ? 'fallback' : 'available' }
     } catch {
-        return { text: '🌐 Erreur de connexion. Réessaie !', sources: [], degraded: true, status: 'unavailable' }
+        return { text: 'Erreur de connexion. Réessaie !', sources: [], degraded: true, status: 'unavailable' }
     }
 }
 
@@ -59,7 +60,7 @@ export default function SolarBotWidget() {
     const { status, updateFromAnswer } = useSolarBotStatus()
     const [open, setOpen] = useState(false)
     const [messages, setMessages] = useState<Message[]>([
-        { role: 'bot', text: "👋 Salut ! Je suis SolarBot 🚀\nPose-moi n'importe quelle question sur l'espace !" }
+        { role: 'bot', text: "Salut ! Je suis SolarBot.\nPose-moi n'importe quelle question sur l'espace !" }
     ])
     const [input, setInput] = useState('')
     const [loading, setLoading] = useState(false)
@@ -98,45 +99,32 @@ export default function SolarBotWidget() {
         <>
             {/* Floating bubble button */}
             <div className="solarbot-launcher" style={{ position: 'fixed', bottom: '1.5rem', right: '1.5rem', zIndex: 1000 }}>
-                <AnimatePresence>
+                <>
                     {!open && pulse && (
-                        <motion.div className="solarbot-tip"
-                            initial={{ scale: 0, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0, opacity: 0 }}
-                            style={{
+                        <div className="solarbot-tip motion-enter" style={{
                                 position: 'absolute', bottom: '110%', right: 0, marginBottom: '0.5rem',
                                 background: 'rgba(11,16,38,0.96)', border: '1px solid var(--orbit)',
                                 backdropFilter: 'blur(12px)', borderRadius: '0.75rem', padding: '0.625rem 0.875rem',
                                 whiteSpace: 'nowrap', color: 'var(--text)', fontSize: '0.8rem', fontWeight: 500,
-                            }}
-                        >
-                            🤖 Pose-moi une question !
+                            }}>
+                            <SpaceIcon name="robot" size={18} className="inline-icon" /> Pose-moi une question !
                             <div style={{ position: 'absolute', bottom: -6, right: 20, width: 12, height: 12, background: 'rgba(11,16,38,0.96)', transform: 'rotate(45deg)', borderRight: '1px solid var(--orbit)', borderBottom: '1px solid var(--orbit)' }} />
-                        </motion.div>
+                        </div>
                     )}
-                </AnimatePresence>
+                </>
 
-                <motion.button className="solarbot-toggle"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => {
+                <button className="solarbot-toggle" onClick={() => {
                         setOpen(!open)
                         if (!open) setPulse(false)
-                    }}
-                    style={{
+                    }} style={{
                         width: 58, height: 58, borderRadius: '50%',
                         background: 'var(--sun)',
                         border: 'none', cursor: 'pointer', fontSize: '1.6rem',
                         boxShadow: '0 6px 24px rgba(255,138,61,0.35), 0 4px 20px rgba(0,0,0,0.4)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         position: 'relative',
-                    }}
-                    aria-label={open ? 'Fermer SolarBot' : 'Ouvrir SolarBot'}
-                    aria-expanded={open}
-                    aria-controls="solarbot-dialog"
-                >
-                    {open ? '✕' : '🤖'}
+                    }} aria-label={open ? 'Fermer SolarBot' : 'Ouvrir SolarBot'} aria-expanded={open} aria-controls="solarbot-dialog">
+                    {open ? '✕' : <SpaceIcon name="robot" size={26} />}
                     {pulse && !open && (
                         <span style={{
                             position: 'absolute', top: 0, right: 0, width: 16, height: 16, borderRadius: '50%',
@@ -144,21 +132,13 @@ export default function SolarBotWidget() {
                             animation: 'ping 1.5s ease-in-out infinite',
                         }} />
                     )}
-                </motion.button>
+                </button>
             </div>
 
             {/* Chat panel */}
-            <AnimatePresence>
+            <>
                 {open && (
-                    <motion.div className="solarbot-dialog"
-                        id="solarbot-dialog"
-                        role="dialog"
-                        aria-label="Discussion avec SolarBot"
-                        initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                        style={{
+                    <div className="solarbot-dialog motion-enter" id="solarbot-dialog" role="dialog" aria-label="Discussion avec SolarBot" style={{
                             position: 'fixed', bottom: '5.5rem', right: '1.5rem', zIndex: 999,
                             width: 340, maxWidth: 'calc(100vw - 2rem)',
                             background: 'rgba(11,16,38,0.97)',
@@ -168,8 +148,7 @@ export default function SolarBotWidget() {
                             boxShadow: '0 12px 48px rgba(0,0,0,0.6)',
                             overflow: 'hidden',
                             display: 'flex', flexDirection: 'column',
-                        }}
-                    >
+                        }}>
                         {/* Header */}
                         <div style={{
                             padding: '0.875rem 1rem',
@@ -182,16 +161,16 @@ export default function SolarBotWidget() {
                                 background: 'var(--sun)',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem',
                                 flexShrink: 0,
-                            }}>🤖</div>
+                            }}><SpaceIcon name="robot" size={18} className="inline-icon" /></div>
                             <div style={{ flex: 1 }}>
                                 <div style={{ color: 'var(--text)', fontWeight: 700, fontSize: '0.9rem', fontFamily: 'var(--font-display)' }}>SolarBot</div>
                                 <SolarBotStatus status={status} compact />
                             </div>
-                            <button onClick={() => setMessages([messages[0]])} aria-label="Effacer la conversation" title="Effacer" style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.8rem', padding: '4px' }}>🗑</button>
+                            <button onClick={() => setMessages([messages[0]])} aria-label="Effacer la conversation" title="Effacer" style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.8rem', padding: '4px' }}><SpaceIcon name="trash" size={18} className="inline-icon" /></button>
                         </div>
 
                         <p id="solarbot-privacy-tip" style={{ padding: '0.55rem 0.875rem', color: '#bfdbfe', background: 'rgba(14,165,233,0.08)', borderBottom: '1px solid rgba(125,211,252,0.14)', fontSize: '0.7rem', lineHeight: 1.45 }}>
-                            <span aria-hidden="true">🔒 </span>Garde ton nom, ton école, ton adresse, ton téléphone et ton e-mail pour toi.
+                            <span aria-hidden="true"><SpaceIcon name="lock" size={18} className="inline-icon" /> </span>Garde ton nom, ton école, ton adresse, ton téléphone et ton e-mail pour toi.
                         </p>
 
                         {/* Messages */}
@@ -199,7 +178,7 @@ export default function SolarBotWidget() {
                             {messages.map((msg, i) => (
                                 <div key={i} style={{ display: 'flex', gap: '0.5rem', justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
                                     {msg.role === 'bot' && (
-                                        <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'var(--sun)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', flexShrink: 0 }}>🤖</div>
+                                        <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'var(--sun)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', flexShrink: 0 }}><SpaceIcon name="robot" size={18} className="inline-icon" /></div>
                                     )}
                                     <div style={{ maxWidth: '80%' }}>
                                         <div style={{
@@ -216,7 +195,7 @@ export default function SolarBotWidget() {
                             ))}
                             {loading && (
                                 <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                    <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'var(--sun)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem' }}>🤖</div>
+                                    <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'var(--sun)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem' }}><SpaceIcon name="robot" size={18} className="inline-icon" /></div>
                                     <div style={{ padding: '0.625rem 0.875rem', borderRadius: '1rem 1rem 1rem 0', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.06)' }}>
                                         <div style={{ display: 'flex', gap: 4 }}>
                                             {[0, 1, 2].map(i => <span key={i} style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--sun)', display: 'inline-block', animation: `botBounce 1s ${i * 0.15}s ease-in-out infinite` }} />)}
@@ -259,11 +238,11 @@ export default function SolarBotWidget() {
                             <button aria-label="Envoyer la question" onClick={() => send()} disabled={loading || !input.trim()} style={{
                                 width: 36, height: 36, borderRadius: 10, background: 'var(--sun)',
                                 border: 'none', cursor: 'pointer', fontSize: '0.9rem', opacity: loading || !input.trim() ? 0.5 : 1,
-                            }}>🚀</button>
+                            }}><SpaceIcon name="rocket" size={18} className="inline-icon" /></button>
                         </div>
-                    </motion.div>
+                    </div>
                 )}
-            </AnimatePresence>
+            </>
 
             <style>{`
         @keyframes ping { 0% { transform: scale(1); opacity: 1; } 75%, 100% { transform: scale(1.8); opacity: 0; } }

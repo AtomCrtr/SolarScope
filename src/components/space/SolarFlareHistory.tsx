@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import SpaceIcon from '@/components/ui/SpaceIcon'
 import { readSpaceWeatherHistoryCache, storeSpaceWeatherHistoryCache } from '@/lib/client/space-weather-history-cache'
 import type { HistorySourceState, PlasmaEntry, SpaceWeatherHistoryPayload } from '@/lib/data/space-weather-history'
 
@@ -103,7 +104,7 @@ export default function SolarFlareHistory() {
                     <div role="status" className="space-data-empty">⏳ Chargement du vent solaire NOAA…</div>
                 ) : windState === 'unavailable' || !windChart.length ? (
                     <div role="status" className="space-data-empty is-unavailable">
-                        📡 Données du vent solaire temporairement indisponibles. Aucune courbe vide n’est présentée comme une mesure réelle.
+                        <SpaceIcon name="signal" size={18} className="inline-icon" /> Données du vent solaire temporairement indisponibles. Aucune courbe vide n’est présentée comme une mesure réelle.
                     </div>
                 ) : <>
                 {/* SVG wind speed chart */}
@@ -157,7 +158,7 @@ export default function SolarFlareHistory() {
                     <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>⏳ Chargement des éruptions...</div>
                 ) : flares.length === 0 ? (
                     <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
-                        <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>☀️</div>
+                        <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}><SpaceIcon name="sun" size={18} className="inline-icon" /></div>
                         Aucune éruption significative ces 30 derniers jours — période calme !
                     </div>
                 ) : (

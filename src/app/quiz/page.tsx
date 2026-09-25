@@ -1,40 +1,41 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import SpaceIcon from '@/components/ui/SpaceIcon'
+
 import KidsGuide from '@/components/learning/KidsGuide'
 import { recordQuizScore } from '@/lib/client/local-progress'
 
 const QUIZ_BANK_DEBUTANT = [
-    { question: 'Quelle est la plus grande planète du Système solaire ?', options: ['🪐 Saturne', '🟠 Jupiter', '🔵 Neptune', '🟦 Uranus'], answer: '🟠 Jupiter', explication: 'Jupiter est tellement grande qu\'elle pourrait contenir 1 300 Terres !', emoji: '🌍' },
-    { question: 'Quelle planète est la plus chaude ?', options: ['⚫ Mercure', '🟡 Vénus', '🔴 Mars', '🟠 Jupiter'], answer: '🟡 Vénus', explication: 'Son atmosphère épaisse piège la chaleur comme une serre géante !', emoji: '🌡️' },
+    { question: 'Quelle est la plus grande planète du Système solaire ?', options: ['Saturne', 'Jupiter', 'Neptune', 'Uranus'], answer: 'Jupiter', explication: 'Jupiter est tellement grande qu\'elle pourrait contenir 1 300 Terres !', emoji: '<SpaceIcon name="globe" size={18} className="inline-icon" />' },
+    { question: 'Quelle planète est la plus chaude ?', options: ['Mercure', 'Vénus', 'Mars', 'Jupiter'], answer: 'Vénus', explication: 'Son atmosphère épaisse piège la chaleur comme une serre géante !', emoji: '🌡️' },
     { question: 'Combien de lunes a Mars ?', options: ['0️⃣ Zéro', '1️⃣ Une', '2️⃣ Deux', '5️⃣ Cinq'], answer: '2️⃣ Deux', explication: 'Phobos (la peur) et Deimos (la terreur) — de petites lunes rocheuses !', emoji: '🌙' },
-    { question: 'Quelle planète a les plus grands anneaux ?', options: ['🟠 Jupiter', '🔵 Uranus', '🪐 Saturne', '🔵 Neptune'], answer: '🪐 Saturne', explication: 'Les anneaux de Saturne s’étendent sur environ 282 000 km, mais leur partie principale ne fait souvent qu’une dizaine de mètres d’épaisseur !', emoji: '💍' },
-    { question: 'Le Soleil est une étoile ?', options: ['✔️ Oui', '❌ Non', '🤷 On ne sait pas'], answer: '✔️ Oui', explication: 'Le Soleil est une étoile de type naine jaune, comme des milliards d\'autres dans l\'Univers !', emoji: '☀️' },
-    { question: 'Combien de planètes dans le Système solaire ?', options: ['7️ 7', '8️ 8', '9️ 9', '🔟 12'], answer: '8️ 8', explication: 'Mercure, Vénus, Terre, Mars, Jupiter, Saturne, Uranus et Neptune !', emoji: '🪐' },
+    { question: 'Quelle planète a les plus grands anneaux ?', options: ['Jupiter', 'Uranus', 'Saturne', 'Neptune'], answer: 'Saturne', explication: 'Les anneaux de Saturne s’étendent sur environ 282 000 km, mais leur partie principale ne fait souvent qu’une dizaine de mètres d’épaisseur !', emoji: '💍' },
+    { question: 'Le Soleil est une étoile ?', options: ['Oui', 'Non', 'On ne sait pas'], answer: 'Oui', explication: 'Le Soleil est une étoile de type naine jaune, comme des milliards d\'autres dans l\'Univers !', emoji: '☀️' },
+    { question: 'Combien de planètes dans le Système solaire ?', options: ['7️ 7', '8️ 8', '9️ 9', '12'], answer: '8️ 8', explication: 'Mercure, Vénus, Terre, Mars, Jupiter, Saturne, Uranus et Neptune !', emoji: '🪐' },
 ]
 
 const QUIZ_BANK_EXPLORATEUR = [
-    { question: "Qu'est-ce qu'une étoile filante ?", options: ['⭐ Une étoile qui tombe', '☄️ Un petit objet qui chauffe dans l’air', '🛰️ Un satellite', '🪐 Une planète lointaine'], answer: '☄️ Un petit objet qui chauffe dans l’air', explication: "Un petit objet spatial chauffe et perd de la matière en traversant l’atmosphère : la traînée lumineuse est un météore.", emoji: '☄️' },
-    { question: 'Combien de temps met la lumière du Soleil pour arriver sur Terre ?', options: ['⚡ 8 secondes', '⏱️ 8 minutes', '🕐 8 heures', '📅 8 jours'], answer: '⏱️ 8 minutes', explication: 'La lumière voyage à 300 000 km/s et le Soleil est à 150 millions de km !', emoji: '☀️' },
-    { question: 'Quel est le plus grand volcan du système solaire ?', options: ["L'Etna", '🏔️ Olympus Mons', '⛰️ Le Mauna Kea', '💨 Le Vésuve'], answer: '🏔️ Olympus Mons', explication: 'Olympus Mons sur Mars culmine à 21 km, soit 3 fois l\'Everest !', emoji: '🌋' },
-    { question: 'De quoi sont faits les anneaux de Saturne ?', options: ['💨 De gaz', '🧣 De glace et de roche', '🌫️ De poussière', '🔩 De métal'], answer: '🧣 De glace et de roche', explication: 'Des milliards de morceaux, du grain de sable à la taille d\'une maison !', emoji: '🪐' },
+    { question: "Qu'est-ce qu'une étoile filante ?", options: ['Une étoile qui tombe', 'Un petit objet qui chauffe dans l’air', 'Un satellite', 'Une planète lointaine'], answer: 'Un petit objet qui chauffe dans l’air', explication: "Un petit objet spatial chauffe et perd de la matière en traversant l’atmosphère : la traînée lumineuse est un météore.", emoji: '☄️' },
+    { question: 'Combien de temps met la lumière du Soleil pour arriver sur Terre ?', options: ['8 secondes', '⏱️ 8 minutes', '8 heures', '8 jours'], answer: '⏱️ 8 minutes', explication: 'La lumière voyage à 300 000 km/s et le Soleil est à 150 millions de km !', emoji: '☀️' },
+    { question: 'Quel est le plus grand volcan du système solaire ?', options: ["L'Etna", 'Olympus Mons', 'Le Mauna Kea', 'Le Vésuve'], answer: 'Olympus Mons', explication: 'Olympus Mons sur Mars culmine à 21 km, soit 3 fois l\'Everest !', emoji: '🌋' },
+    { question: 'De quoi sont faits les anneaux de Saturne ?', options: ['De gaz', 'De glace et de roche', 'De poussière', 'De métal'], answer: 'De glace et de roche', explication: 'Des milliards de morceaux, du grain de sable à la taille d\'une maison !', emoji: '<SpaceIcon name="planet" size={18} className="inline-icon" />' },
     { question: 'Quelle agence a envoyé Perseverance sur Mars ?', options: ['🇪🇺 ESA', '🇺🇸 NASA', '🇷🇺 Roscosmos', '🇨🇳 CNSA'], answer: '🇺🇸 NASA', explication: 'Perseverance a atterri sur Mars en février 2021 avec son hélicoptère Ingenuity !', emoji: '🔴' },
-    { question: 'Qu\'est-ce qu\'une année-lumière ?', options: ['⏱️ Une durée de temps', '🚀 Une distance', '🌟 La luminosité d\'une étoile', '🤔 Un type d\'étoile'], answer: '🚀 Une distance', explication: 'C\'est la distance que la lumière parcourt en un an : environ 9 460 milliards de km !', emoji: '💡' },
+    { question: 'Qu\'est-ce qu\'une année-lumière ?', options: ['⏱️ Une durée de temps', 'Une distance', 'La luminosité d\'une étoile', 'Un type d\'étoile'], answer: 'Une distance', explication: 'C\'est la distance que la lumière parcourt en un an : environ 9 460 milliards de km !', emoji: '<SpaceIcon name="bulb" size={18} className="inline-icon" />' },
 ]
 
 const QUIZ_BANK_EXPERT = [
-    { question: 'Dans nos modèles, que signale la singularité d\'un trou noir ?', options: ['🌀 Une tempête', '🟥 Une limite de nos équations', '🌟 Une nouvelle étoile', '💥 Une explosion'], answer: '🟥 Une limite de nos équations', explication: 'La relativité générale prédit des valeurs infinies. Cela indique surtout que notre modèle ne suffit plus à décrire cette région.', emoji: '⚫' },
-    { question: 'Qu\'est-ce que le rayonnement de Hawking ?', options: ['🌟 Le fond cosmologique', '🟥 Un rayonnement prédit autour des trous noirs', '📅 Les rayons d\'une supernova', '🔴 La lumière de Mars'], answer: '🟥 Un rayonnement prédit autour des trous noirs', explication: 'Stephen Hawking a prédit que des effets quantiques permettent aux trous noirs de perdre très lentement de l\'énergie.', emoji: '⬅️' },
-    { question: 'Environ combien de temps sépare deux oppositions de Jupiter vues depuis la Terre ?', options: ['📅 398 jours', '📅 780 jours', '📅 116 jours', '📅 687 jours'], answer: '📅 398 jours', explication: 'Cette durée s\'appelle la période synodique de Jupiter. Une opposition se produit quand Jupiter apparaît à l\'opposé du Soleil dans notre ciel.', emoji: '🪐' },
-    { question: 'Quelle est la température au cœur du Soleil ?', options: ['🔥 6 000°C', '🔥 150 000°C', '🔥 15 millions °C', '🔥 1 milliard °C'], answer: '🔥 15 millions °C', explication: 'La fusion nucléaire nécessite une température colossale de 15 millions de degrés au cœur !', emoji: '☀️' },
-    { question: 'Qu\'est-ce que le décalage vers le rouge (redshift) ?', options: ['🟥 La couleur de Mars', '🌌 L\'allongement de longueur d\'onde d\'une source qui s\'éloigne', '💥 L\'énergie libérée par une supernova', '🔭 L\'effet de la gravité sur la lumière'], answer: '🌌 L\'allongement de longueur d\'onde d\'une source qui s\'éloigne', explication: 'L\'Univers est en expansion : plus une galaxie est loin, plus son écart vers le rouge est grand (loi de Hubble) !', emoji: '🌌' },
+    { question: 'Dans nos modèles, que signale la singularité d\'un trou noir ?', options: ['Une tempête', 'Une limite de nos équations', 'Une nouvelle étoile', 'Une explosion'], answer: 'Une limite de nos équations', explication: 'La relativité générale prédit des valeurs infinies. Cela indique surtout que notre modèle ne suffit plus à décrire cette région.', emoji: '' },
+    { question: 'Qu\'est-ce que le rayonnement de Hawking ?', options: ['Le fond cosmologique', 'Un rayonnement prédit autour des trous noirs', 'Les rayons d\'une supernova', 'La lumière de Mars'], answer: 'Un rayonnement prédit autour des trous noirs', explication: 'Stephen Hawking a prédit que des effets quantiques permettent aux trous noirs de perdre très lentement de l\'énergie.', emoji: '⬅️' },
+    { question: 'Environ combien de temps sépare deux oppositions de Jupiter vues depuis la Terre ?', options: ['398 jours', '780 jours', '116 jours', '687 jours'], answer: '398 jours', explication: 'Cette durée s\'appelle la période synodique de Jupiter. Une opposition se produit quand Jupiter apparaît à l\'opposé du Soleil dans notre ciel.', emoji: '🪐' },
+    { question: 'Quelle est la température au cœur du Soleil ?', options: ['6 000°C', '150 000°C', '15 millions °C', '1 milliard °C'], answer: '15 millions °C', explication: 'La fusion nucléaire nécessite une température colossale de 15 millions de degrés au cœur !', emoji: '☀️' },
+    { question: 'Qu\'est-ce que le décalage vers le rouge (redshift) ?', options: ['La couleur de Mars', 'L\'allongement de longueur d\'onde d\'une source qui s\'éloigne', 'L\'énergie libérée par une supernova', 'L\'effet de la gravité sur la lumière'], answer: 'L\'allongement de longueur d\'onde d\'une source qui s\'éloigne', explication: 'L\'Univers est en expansion : plus une galaxie est loin, plus son écart vers le rouge est grand (loi de Hubble) !', emoji: '🌌' },
 ]
 
 const LEVELS = [
-    { id: 'debutant', label: '👶 Débutant', sublabel: '6 — 8 ans', color: '#34d399', bank: QUIZ_BANK_DEBUTANT },
-    { id: 'explorateur', label: '💡 Explorateur', sublabel: '9 — 11 ans', color: '#60a5fa', bank: QUIZ_BANK_EXPLORATEUR },
-    { id: 'expert', label: '🔭 Expert', sublabel: '12+ ans', color: '#c084fc', bank: QUIZ_BANK_EXPERT },
+    { id: 'debutant', label: 'Débutant', sublabel: '6 — 8 ans', color: '#34d399', bank: QUIZ_BANK_DEBUTANT },
+    { id: 'explorateur', label: 'Explorateur', sublabel: '9 — 11 ans', color: '#60a5fa', bank: QUIZ_BANK_EXPLORATEUR },
+    { id: 'expert', label: 'Expert', sublabel: '12+ ans', color: '#c084fc', bank: QUIZ_BANK_EXPERT },
 ]
 
 
@@ -60,7 +61,7 @@ const VIDEOS = [
     { title: 'Paxi — Le Système Solaire (ESA)', url: 'https://www.youtube.com/watch?v=shQJd3oGYn8', fallback: 'https://spaceplace.nasa.gov/menu/solar-system/', fallbackLabel: 'Découvrir le Système solaire avec la NASA', emoji: '🌍', age: '5-10 ans', description: 'L\'animation officielle de l\'Agence Spatiale Européenne pour découvrir les planètes !' },
     { title: 'Le Système Solaire CM1‑CM2 — Maître Lucas', url: 'https://www.youtube.com/watch?v=jdInvnIkwIk', fallback: 'https://science.nasa.gov/solar-system/', fallbackLabel: 'Lire le guide NASA du Système solaire', emoji: '🌟', age: '7-12 ans', description: 'Cours complet sur les 8 planètes, le Soleil et les satellites naturels.' },
     { title: 'Les Étoiles — National Geographic France', url: 'https://www.youtube.com/watch?v=CDy6kEEClK0', fallback: 'https://science.nasa.gov/universe/stars/', fallbackLabel: 'Explorer les étoiles avec la NASA', emoji: '★', age: '8-14 ans', description: 'Documentaire de qualité sur la naissance, la vie et la mort des étoiles.' },
-    { title: 'L’Espace pour les enfants — Les étoiles 🚀', url: 'https://www.youtube.com/watch?v=q_03QQmiR9Y', fallback: 'https://spaceplace.nasa.gov/', fallbackLabel: 'Découvrir l’espace avec NASA Space Place', emoji: '🔭', age: '6-12 ans', description: 'Voyage à travers les étoiles et l’Univers, expliqué simplement pour les ados.' },
+    { title: 'L’Espace pour les enfants — Les étoiles', url: 'https://www.youtube.com/watch?v=q_03QQmiR9Y', fallback: 'https://spaceplace.nasa.gov/', fallbackLabel: 'Découvrir l’espace avec NASA Space Place', emoji: '🔭', age: '6-12 ans', description: 'Voyage à travers les étoiles et l’Univers, expliqué simplement pour les ados.' },
     { title: 'James Webb — Les premières images révolutionnaires (NASA)', url: 'https://www.youtube.com/watch?v=1C_zuHf6lP4', fallback: 'https://science.nasa.gov/mission/webb/', fallbackLabel: 'Voir la mission Webb sur le site NASA', emoji: '🔭', age: '8-14 ans', description: 'Une sélection officielle d’images qui ont changé notre vision de l’Univers.' },
     { title: 'Mission Perseverance sur Mars (NASA)', url: 'https://www.youtube.com/watch?v=5qqsMjy8Rx0', fallback: 'https://science.nasa.gov/mission/mars-2020-perseverance/', fallbackLabel: 'Suivre Perseverance avec la NASA', emoji: '🔴', age: '6-12 ans', description: 'La NASA explore Mars avec son rover et son hélicoptère Ingenuity.' },
 ]
@@ -107,19 +108,19 @@ export default function QuizPage() {
 
     return (
         <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="page-header">
-                <div className="badge">🎮 COIN DES CURIEUX</div>
+            <div className="page-header motion-enter">
+                <div className="badge"><SpaceIcon name="quiz" size={18} className="inline-icon" /> COIN DES CURIEUX</div>
                 <h1 className="page-title">
                     Le Coin des Curieux
                 </h1>
                 <p className="page-subtitle">Vidéos, quiz, anecdotes et événements célestes pour les jeunes explorateurs !</p>
-            </motion.div>
+            </div>
 
             <KidsGuide topic="quiz" />
 
             {/* Tab bar */}
             <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '2rem' }}>
-                {[{ id: 'quiz', label: '🧠 Quiz' }, { id: 'videos', label: '🎬 Vidéos' }, { id: 'events', label: '📅 Événements' }, { id: 'anecdotes', label: '💡 Anecdotes' }].map(t => (
+                {[{ id: 'quiz', label: 'Quiz' }, { id: 'videos', label: 'Vidéos' }, { id: 'events', label: 'Événements' }, { id: 'anecdotes', label: 'Anecdotes' }].map(t => (
                     <button key={t.id} onClick={() => setTab(t.id as typeof tab)} style={{
                         padding: '0.6rem 1.25rem', borderRadius: 10, fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer',
                         background: tab === t.id ? 'var(--sun)' : 'rgba(255,255,255,0.04)',
@@ -131,7 +132,7 @@ export default function QuizPage() {
             </div>
 
             {tab === 'quiz' && (
-                <motion.div key="quiz" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <div className="motion-enter" key="quiz">
                     {!level ? (
                         /* Level picker */
                         <div>
@@ -143,9 +144,7 @@ export default function QuizPage() {
                             </p>
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
                                 {LEVELS.map(lv => (
-                                    <motion.button key={lv.id} onClick={() => startLevel(lv.id)}
-                                        whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                                        style={{
+                                    <button key={lv.id} onClick={() => startLevel(lv.id)} style={{
                                             padding: '1.5rem', borderRadius: '1rem', cursor: 'pointer', textAlign: 'center',
                                             background: `${lv.color}10`, border: `2px solid ${lv.color}30`,
                                             transition: 'all 0.2s',
@@ -158,7 +157,7 @@ export default function QuizPage() {
                                         <div style={{ padding: '0.375rem 0.75rem', borderRadius: 99, background: `${lv.color}20`, color: lv.color, fontSize: '0.72rem', fontWeight: 700 }}>
                                             {lv.bank.length} questions
                                         </div>
-                                    </motion.button>
+                                    </button>
                                 ))}
                             </div>
                         </div>
@@ -169,22 +168,22 @@ export default function QuizPage() {
                                 <div style={{ padding: '0.3rem 0.875rem', borderRadius: 99, background: `${currentLevel!.color}18`, border: `1px solid ${currentLevel!.color}35`, color: currentLevel!.color, fontSize: '0.75rem', fontWeight: 700 }}>
                                     {currentLevel!.label} · {currentLevel!.sublabel}
                                 </div>
-                                <button onClick={reset} className="btn-primary" style={{ fontSize: '0.8rem', padding: '0.5rem 1rem' }}>🔄 Changer de niveau</button>
-                                {finished && <button onClick={reset} style={{ padding: '0.5rem 1rem', borderRadius: 12, background: 'rgba(239,68,68,0.1)', color: '#f87171', border: '1px solid rgba(239,68,68,0.2)', cursor: 'pointer', fontWeight: 700, fontSize: '0.8rem' }}>🔄 Recommencer</button>}
+                                <button onClick={reset} className="btn-primary" style={{ fontSize: '0.8rem', padding: '0.5rem 1rem' }}><SpaceIcon name="refresh" size={18} className="inline-icon" /> Changer de niveau</button>
+                                {finished && <button onClick={reset} style={{ padding: '0.5rem 1rem', borderRadius: 12, background: 'rgba(239,68,68,0.1)', color: '#f87171', border: '1px solid rgba(239,68,68,0.2)', cursor: 'pointer', fontWeight: 700, fontSize: '0.8rem' }}><SpaceIcon name="refresh" size={18} className="inline-icon" /> Recommencer</button>}
                             </div>
 
                             {/* Score banner when finished */}
                             {finished && (
                                 <div className="card" style={{ textAlign: 'center', padding: '1.5rem', marginBottom: '1.5rem', background: totalCorrect >= Math.ceil(questions.length * 0.8) ? 'rgba(16,185,129,0.06)' : 'rgba(251,191,36,0.06)', border: `2px solid ${totalCorrect >= Math.ceil(questions.length * 0.8) ? '#10b981' : '#f59e0b'}30` }}>
-                                    <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>{totalCorrect === questions.length ? '🏆' : totalCorrect >= Math.ceil(questions.length * 0.8) ? '🎉' : '💪'}</div>
+                                    <div style={{ marginBottom: '0.5rem', color: 'var(--gold)' }}><SpaceIcon name={totalCorrect === questions.length ? 'trophy' : totalCorrect >= Math.ceil(questions.length * 0.8) ? 'sparkle' : 'target'} size={48} /></div>
                                     <div style={{ fontSize: '1.8rem', fontWeight: 900, fontFamily: 'var(--font-display)', color: 'var(--text)' }}>{totalCorrect}/{questions.length}</div>
                                     <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '0.25rem' }}>
-                                        {totalCorrect === questions.length ? 'Parfait ! Tu es un expert de l\'espace ! 🌟' : totalCorrect >= Math.ceil(questions.length * 0.8) ? 'Excellent travail ! Tu maîtrises bien l\'astronomie !' : 'Continue à explorer, tu y arriveras !'}
+                                        {totalCorrect === questions.length ? 'Parfait ! Tu es un expert de l\'espace !' : totalCorrect >= Math.ceil(questions.length * 0.8) ? 'Excellent travail ! Tu maîtrises bien l\'astronomie !' : 'Continue à explorer, tu y arriveras !'}
                                     </div>
                                     {suggestedLevel && <div className="adaptive-quiz-next" data-adaptive-quiz>
                                         <p>{suggestionText}</p>
                                         <button type="button" onClick={() => startLevel(suggestedLevel.id)}>
-                                            {suggestedLevel.id === currentLevel!.id ? '🔁 Refaire ce niveau' : `🚀 Essayer ${suggestedLevel.label}`}
+                                            {suggestedLevel.id === currentLevel!.id ? 'Refaire ce niveau' : `Essayer ${suggestedLevel.label}`}
                                         </button>
                                     </div>}
                                 </div>
@@ -220,7 +219,7 @@ export default function QuizPage() {
                                             {chosen && (
                                                 <div style={{ padding: '0.75rem 1rem', borderRadius: '0.625rem', background: chosen === q.answer ? 'rgba(16,185,129,0.08)' : 'rgba(239,68,68,0.08)', borderLeft: `3px solid ${chosen === q.answer ? '#10b981' : '#f87171'}` }}>
                                                     <span style={{ color: chosen === q.answer ? '#10b981' : '#f87171', fontWeight: 700 }}>
-                                                        {chosen === q.answer ? '✅ Bravo !' : `❌ Raté ! Bonne réponse : ${q.answer}`}
+                                                        {chosen === q.answer ? 'Bravo !' : `Raté ! Bonne réponse : ${q.answer}`}
                                                     </span>
                                                     <span style={{ color: 'var(--text-muted)', fontSize: '0.82rem', marginLeft: '0.5rem' }}>{q.explication}</span>
                                                 </div>
@@ -231,29 +230,29 @@ export default function QuizPage() {
                             </div>
 
                             {finished && (
-                                <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} style={{
+                                <div className="motion-enter" style={{
                                     marginTop: '2rem', padding: '2rem', borderRadius: '1.25rem', textAlign: 'center',
                                     background: totalCorrect === questions.length ? 'linear-gradient(135deg, rgba(16,185,129,0.1),rgba(99,102,241,0.1))' : 'rgba(255,255,255,0.04)',
                                     border: `2px solid ${totalCorrect === questions.length ? '#10b981' : totalCorrect >= questions.length / 2 ? '#f59e0b' : '#f87171'}`,
                                 }}>
                                     <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>
-                                        {totalCorrect === questions.length ? '🏆' : totalCorrect >= questions.length / 2 ? '⭐' : '💪'}
+                                        <SpaceIcon name={totalCorrect === questions.length ? 'trophy' : totalCorrect >= questions.length / 2 ? 'sparkle' : 'target'} size={40} />
                                     </div>
                                     <h3 style={{ color: totalCorrect === questions.length ? '#10b981' : totalCorrect >= questions.length / 2 ? '#f59e0b' : '#f87171', fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '1.4rem', marginBottom: '0.5rem' }}>
                                         Score : {totalCorrect}/{questions.length} ({Math.round(totalCorrect / questions.length * 100)}%)
                                     </h3>
                                     <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-                                        {totalCorrect === questions.length ? 'Score parfait ! Tu es un vrai astronome ! 🌟' : totalCorrect >= questions.length / 2 ? 'Continue comme ça, explore les autres pages pour en apprendre plus !' : 'Pas de panique ! Explore les pages du site et reviens tenter ta chance !'}
+                                        {totalCorrect === questions.length ? 'Score parfait ! Tu es un vrai astronome !' : totalCorrect >= questions.length / 2 ? 'Continue comme ça, explore les autres pages pour en apprendre plus !' : 'Pas de panique ! Explore les pages du site et reviens tenter ta chance !'}
                                     </p>
-                                </motion.div>
+                                </div>
                             )}
                         </div>
                     )}
-                </motion.div>
+                </div>
             )}
 
             {tab === 'videos' && (
-                <motion.div key="videos" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <div className="motion-enter" key="videos">
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
                         {VIDEOS.map(v => (
                             <div key={v.title} className="card" style={{ padding: '1.25rem', textAlign: 'center' }}>
@@ -267,11 +266,11 @@ export default function QuizPage() {
                             </div>
                         ))}
                     </div>
-                </motion.div>
+                </div>
             )}
 
             {tab === 'events' && (
-                <motion.div key="events" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <div className="motion-enter" key="events">
                     <p style={{ color: 'var(--text-subtle)', marginBottom: '1rem', lineHeight: 1.7 }}>
                         Les calendriers astronomiques évoluent chaque année. Ces liens officiels remplacent l’ancien
                         calendrier figé afin de toujours afficher les dates les plus récentes.
@@ -286,21 +285,21 @@ export default function QuizPage() {
                             </a>
                         ))}
                     </div>
-                </motion.div>
+                </div>
             )}
 
             {tab === 'anecdotes' && (
-                <motion.div key="anecdotes" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <div className="motion-enter" key="anecdotes">
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
                         {anecdotes.map((a, i) => (
-                            <motion.div key={i} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="card" style={{ padding: '1.5rem', textAlign: 'center', borderTop: '4px solid #a78bfa' }}>
+                            <div key={i} className="card motion-enter" style={{ animationDelay: `${Math.min(i * 0.1, 0.6)}s`,  padding: '1.5rem', textAlign: 'center', borderTop: '4px solid #a78bfa' }}>
                                 <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{a.emoji}</div>
                                 <strong style={{ color: 'var(--nebula)', display: 'block', marginBottom: '0.625rem' }}>{a.title}</strong>
                                 <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', lineHeight: 1.7 }}>{a.text}</p>
-                            </motion.div>
+                            </div>
                         ))}
                     </div>
-                </motion.div>
+                </div>
             )}
         </div>
     )

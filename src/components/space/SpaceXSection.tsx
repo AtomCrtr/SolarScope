@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import SpaceIcon from '@/components/ui/SpaceIcon'
+
 
 interface Launch {
   id: string
@@ -61,7 +62,7 @@ export default function SpaceXSection() {
     <section style={{ paddingTop: '3rem' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '1rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
         <div>
-          <div className="badge" style={{ marginBottom: '0.75rem' }}>🛸 SPACEX · CALENDRIER LIVE</div>
+          <div className="badge" style={{ marginBottom: '0.75rem' }}><SpaceIcon name="satellite" size={18} className="inline-icon" /> SPACEX · CALENDRIER LIVE</div>
           <h2 style={{ color: 'var(--text)', font: "800 clamp(1.8rem, 4vw, 2.8rem)/1 var(--font-display)", letterSpacing: '-0.035em' }}>
             Lancements à venir
           </h2>
@@ -91,21 +92,14 @@ export default function SpaceXSection() {
 
       {!loading && error && (
         <div className="card" style={{ padding: '1.5rem', color: '#f59e0b', textAlign: 'center' }}>
-          📡 Le calendrier SpaceX est temporairement indisponible.
+          <SpaceIcon name="signal" size={18} className="inline-icon" /> Le calendrier SpaceX est temporairement indisponible.
         </div>
       )}
 
       {!loading && !error && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.75rem' }}>
           {launches.map((launch, index) => (
-            <motion.article
-              key={launch.id}
-              className="card"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.04 }}
-              style={{ padding: '1.1rem', display: 'flex', flexDirection: 'column', minHeight: 195 }}
-            >
+            <article key={launch.id} className="card motion-enter" style={{ animationDelay: `${Math.min(index * 0.04, 0.6)}s`,  padding: '1.1rem', display: 'flex', flexDirection: 'column', minHeight: 195 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
                 <time dateTime={launch.net} style={{ color: 'var(--nebula)', fontSize: '0.68rem', fontWeight: 800 }}>
                   {new Date(launch.net).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
@@ -121,7 +115,7 @@ export default function SpaceXSection() {
                 {launch.url && <a href={launch.url} target="_blank" rel="noopener noreferrer" className="touch-link touch-link-compact" style={{ color: 'var(--star)', textDecoration: 'none' }} aria-label={`Fiche du lancement ${launch.name} (nouvel onglet)`}>Fiche ↗</a>}
                 {launch.webcast && <a href={launch.webcast} target="_blank" rel="noopener noreferrer" className="touch-link touch-link-compact" style={{ color: 'var(--nebula)', textDecoration: 'none' }}>Diffusion ↗</a>}
               </div>
-            </motion.article>
+            </article>
           ))}
         </div>
       )}

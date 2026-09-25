@@ -1,7 +1,8 @@
 'use client'
 
 import { Fragment, useState, useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import SpaceIcon from '@/components/ui/SpaceIcon'
+
 import KidsGuide from '@/components/learning/KidsGuide'
 import SolarBotSourceLinks, { SolarBotReliabilityNote } from '@/components/assistant/SolarBotSourceLinks'
 import type { PublicSolarBotSource } from '@/lib/content/solarbot-sources'
@@ -44,16 +45,16 @@ async function askSolarBot(question: string, history: Message[], mode: 'chat' | 
             body: JSON.stringify({ question, history, mode }),
         })
         const data = await res.json()
-        if (!res.ok) return { text: data.error ?? '🤖 SolarBot réfléchit encore... Réessaie !', sources: [], degraded: true, status: 'unavailable' }
+        if (!res.ok) return { text: data.error ?? 'SolarBot réfléchit encore... Réessaie !', sources: [], degraded: true, status: 'unavailable' }
         const degraded = Boolean(data.degraded)
         return {
-            text: data.text ?? '🤖 SolarBot réfléchit encore... Réessaie !',
+            text: data.text ?? 'SolarBot réfléchit encore... Réessaie !',
             sources: Array.isArray(data.sources) ? data.sources : [],
             degraded,
             status: degraded ? 'fallback' : 'available',
         }
     } catch {
-        return { text: '🌐 Erreur de connexion. Vérifie ta connexion Internet et réessaie.', sources: [], degraded: true, status: 'unavailable' }
+        return { text: 'Erreur de connexion. Vérifie ta connexion Internet et réessaie.', sources: [], degraded: true, status: 'unavailable' }
     }
 }
 
@@ -77,7 +78,7 @@ function FormattedText({ text }: { text: string }) {
 export default function SolarBotPage() {
     const { status, updateFromAnswer } = useSolarBotStatus()
     const [messages, setMessages] = useState<Message[]>([
-        { role: 'bot', text: '👋 Bonjour ! Je suis **SolarBot**, ton compagnon spatial. 🚀\n\nPose une question à la fois et je l\'expliquerai avec des mots simples. Je peux parfois me tromper : vérifie les faits importants et ne partage jamais ton nom complet, ton adresse ou ton école.', time: 'maintenant' }
+        { role: 'bot', text: 'Bonjour ! Je suis **SolarBot**, ton compagnon spatial.\n\nPose une question à la fois et je l\'expliquerai avec des mots simples. Je peux parfois me tromper : vérifie les faits importants et ne partage jamais ton nom complet, ton adresse ou ton école.', time: 'maintenant' }
     ])
     const [input, setInput] = useState('')
     const [loading, setLoading] = useState(false)
@@ -121,21 +122,21 @@ export default function SolarBotPage() {
 
     return (
         <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem', maxWidth: 860 }}>
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="page-header">
+            <div className="page-header motion-enter">
                 <div className="badge solarbot-hero-status" style={{ background: 'rgba(139,92,246,0.12)', color: 'var(--nebula)', borderColor: 'rgba(139,92,246,0.25)' }}>
-                    🤖 <SolarBotStatus status={status} />
+                    <SpaceIcon name="robot" size={18} className="inline-icon" /> <SolarBotStatus status={status} />
                 </div>
                 <h1 className="page-title">
                     SolarBot
                 </h1>
                 <p className="page-subtitle">Pose une question et demande une explication courte, une comparaison ou une histoire clairement annoncée.</p>
-            </motion.div>
+            </div>
 
             <KidsGuide topic="solarbot" />
 
             {/* Tabs */}
             <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', marginBottom: '2rem' }}>
-                {[{ id: 'chat', label: '💬 Chat' }, { id: 'story', label: '📖 Histoires IA' }].map(t => (
+                {[{ id: 'chat', label: 'Chat' }, { id: 'story', label: 'Histoires IA' }].map(t => (
                     <button key={t.id} onClick={() => setTab(t.id as 'chat' | 'story')} style={{
                         padding: '0.6rem 1.5rem', borderRadius: 10, fontWeight: 700, fontSize: '0.875rem', cursor: 'pointer',
                         background: tab === t.id ? 'var(--sun)' : 'rgba(255,255,255,0.04)',
@@ -146,9 +147,9 @@ export default function SolarBotPage() {
                 ))}
             </div>
 
-            <AnimatePresence mode="wait">
+            <>
                 {tab === 'chat' ? (
-                    <motion.div key="chat" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
+                    <div className="motion-enter" key="chat">
                         {/* Quick questions */}
                         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '1.5rem' }}>
                             {QUICK_QUESTIONS.map(q => (
@@ -166,17 +167,14 @@ export default function SolarBotPage() {
                             {/* Messages */}
                             <div ref={messagesRef} aria-live="polite" aria-busy={loading} style={{ height: 420, overflowY: 'auto', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                                 {messages.map((msg, i) => (
-                                    <motion.div key={i}
-                                        initial={{ opacity: 0, y: 10, scale: 0.96 }}
-                                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                                        style={{ display: 'flex', flexDirection: msg.role === 'user' ? 'row-reverse' : 'row', gap: '0.75rem', alignItems: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
+                                    <div className="motion-enter" key={i} style={{ display: 'flex', flexDirection: msg.role === 'user' ? 'row-reverse' : 'row', gap: '0.75rem', alignItems: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
                                         <div style={{
                                             width: 36, height: 36, borderRadius: '50%', flexShrink: 0,
                                             background: msg.role === 'bot' ? 'var(--sun)' : 'linear-gradient(135deg, #0f172a, #1e293b)',
                                             border: msg.role === 'bot' ? '2px solid rgba(99,102,241,0.4)' : '2px solid rgba(255,255,255,0.1)',
                                             display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem'
                                         }}>
-                                            {msg.role === 'bot' ? '🤖' : '👦'}
+                                            <SpaceIcon name={msg.role === 'bot' ? 'robot' : 'child'} size={20} />
                                         </div>
                                         <div style={{ maxWidth: '75%' }}>
                                             <div style={{
@@ -189,11 +187,11 @@ export default function SolarBotPage() {
                                             {msg.role === 'bot' && <SolarBotSourceLinks sources={msg.sources} />}
                                             <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: '0.25rem', textAlign: msg.role === 'user' ? 'right' : 'left' }}>{msg.time}</div>
                                         </div>
-                                    </motion.div>
+                                    </div>
                                 ))}
                                 {loading && (
                                     <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-end' }}>
-                                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--sun)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🤖</div>
+                                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--sun)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><SpaceIcon name="robot" size={18} className="inline-icon" /></div>
                                         <div style={{ padding: '0.875rem 1rem', borderRadius: '1rem 1rem 1rem 0', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.07)' }}>
                                             <div style={{ display: 'flex', gap: 4 }}>
                                                 {[0, 1, 2].map(i => (
@@ -226,20 +224,20 @@ export default function SolarBotPage() {
                                     background: 'var(--sun)',
                                     color: 'var(--ink)', border: 'none', cursor: 'pointer', fontSize: '1rem',
                                     opacity: loading || !input.trim() ? 0.5 : 1,
-                                }}>🚀</button>
+                                }}><SpaceIcon name="rocket" size={18} className="inline-icon" /></button>
                                 {messages.length > 1 && (
                                     <button aria-label="Effacer la conversation" onClick={() => setMessages([messages[0]])} title="Effacer" style={{
                                         padding: '0.75rem', borderRadius: 12, background: 'rgba(239,68,68,0.1)',
                                         color: '#f87171', border: '1px solid rgba(239,68,68,0.2)', cursor: 'pointer',
-                                    }}>🗑</button>
+                                    }}><SpaceIcon name="trash" size={18} className="inline-icon" /></button>
                                 )}
                             </div>
                         </div>
 
                         <style>{`@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }`}</style>
-                    </motion.div>
+                    </div>
                 ) : (
-                    <motion.div key="story" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                    <div className="motion-enter" key="story">
                         <div className="card" style={{ padding: '2rem', marginBottom: '1.5rem' }}>
                             <h2 className="section-title" style={{ color: '#c084fc' }}>Histoires spatiales assistées</h2>
                             <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>Choisis un thème. Gemini écrit l’aventure lorsqu’il est disponible ; sinon SolarBot propose une histoire de secours clairement signalée.</p>
@@ -259,11 +257,11 @@ export default function SolarBotPage() {
                             </div>
 
                             <button onClick={generateStory} disabled={storyLoading} className="btn-primary" style={{ width: '100%', justifyContent: 'center', opacity: storyLoading ? 0.7 : 1 }}>
-                                {storyLoading ? '✨ SolarBot écrit…' : '✨ Générer l\'histoire !'}
+                                {storyLoading ? 'SolarBot écrit…' : 'Générer l\'histoire !'}
                             </button>
 
                             {story && (
-                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{
+                                <div className="motion-enter" style={{
                                     marginTop: '1.5rem', padding: '1.5rem', borderRadius: '1rem',
                                     background: 'rgba(139,92,246,0.06)', border: '1px solid var(--orbit)',
                                     borderLeft: '4px solid var(--sun)',
@@ -274,12 +272,12 @@ export default function SolarBotPage() {
                                     <div style={{ color: 'var(--text-subtle)', lineHeight: 1.85, fontSize: '0.9rem' }}><FormattedText text={story} /></div>
                                     <SolarBotReliabilityNote degraded={storyDegraded} />
                                     <SolarBotSourceLinks sources={storySources} />
-                                </motion.div>
+                                </div>
                             )}
                         </div>
-                    </motion.div>
+                    </div>
                 )}
-            </AnimatePresence>
+            </>
 
             {/* API key note */}
             <div style={{
@@ -287,7 +285,7 @@ export default function SolarBotPage() {
                 background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.15)',
             }}>
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem', lineHeight: 1.6 }}>
-                    🔒 Ne partage jamais ton nom complet, ton adresse ou ton école. SolarBot peut se tromper : vérifie
+                    <SpaceIcon name="lock" size={18} className="inline-icon" /> Ne partage jamais ton nom complet, ton adresse ou ton école. SolarBot peut se tromper : vérifie
                     les informations importantes grâce aux sources scientifiques proposées sur le site.
                 </p>
             </div>

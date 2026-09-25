@@ -1,7 +1,8 @@
 'use client'
 
-import { motion } from 'framer-motion'
+
 import dynamic from 'next/dynamic'
+import SpaceIcon from '@/components/ui/SpaceIcon'
 import Image from 'next/image'
 import KidsGuide from '@/components/learning/KidsGuide'
 import MetricGrid from '@/components/space/MetricGrid'
@@ -20,10 +21,10 @@ function sdoProxy(file: string) {
 }
 
 const SDO_IMAGES = [
-    { src: sdoProxy('latest_512_0171.jpg'), label: '🔵 Ultraviolet 171Å', desc: 'Boucles de plasma chaud — 600 000°C', wavelength: '17,1 nm' },
-    { src: sdoProxy('latest_512_0304.jpg'), label: '🔴 Hélium 304Å', desc: 'Chromosphère — 50 000°C', wavelength: '30,4 nm' },
-    { src: sdoProxy('latest_512_HMIB.jpg'), label: '⚫ Magnétogramme HMI', desc: 'Champ magnétique en surface', wavelength: '617,3 nm' },
-    { src: sdoProxy('latest_512_0094.jpg'), label: '💚 Flare 094Å', desc: 'Détecte les éruptions X — 6 millions°C', wavelength: '9,4 nm' },
+    { src: sdoProxy('latest_512_0171.jpg'), label: 'Ultraviolet 171Å', desc: 'Boucles de plasma chaud — 600 000°C', wavelength: '17,1 nm' },
+    { src: sdoProxy('latest_512_0304.jpg'), label: 'Hélium 304Å', desc: 'Chromosphère — 50 000°C', wavelength: '30,4 nm' },
+    { src: sdoProxy('latest_512_HMIB.jpg'), label: 'Magnétogramme HMI', desc: 'Champ magnétique en surface', wavelength: '617,3 nm' },
+    { src: sdoProxy('latest_512_0094.jpg'), label: 'Flare 094Å', desc: 'Détecte les éruptions X — 6 millions°C', wavelength: '9,4 nm' },
 ]
 
 const FACTS = [
@@ -53,13 +54,13 @@ export default function SoleilPage() {
         <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
 
             {/* ── HEADER ── */}
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="page-header">
+            <div className="page-header motion-enter">
                 <div className="badge" style={{ background: 'rgba(245,158,11,0.12)', color: '#fbbf24', borderColor: 'rgba(245,158,11,0.25)' }}>
-                    🛸 DONNÉES SDO & NOAA — EN DIRECT
+                    <SpaceIcon name="satellite" size={18} className="inline-icon" /> DONNÉES SDO & NOAA — EN DIRECT
                 </div>
                 <h1 className="page-title">Le Soleil</h1>
                 <p className="page-subtitle">Notre étoile — à 150 millions de km, source de toute vie sur Terre</p>
-            </motion.div>
+            </div>
 
             <KidsGuide topic="soleil" />
 
@@ -67,17 +68,15 @@ export default function SoleilPage() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', alignItems: 'center', marginBottom: '3rem' }}
                 className="max-md:grid-cols-1">
 
-                <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.2 }}
-                    style={{ height: 420, borderRadius: '1rem', overflow: 'hidden', background: 'radial-gradient(ellipse at center, rgba(20,5,0,0.9) 0%, rgba(0,0,0,0.97) 100%)' }}>
+                <div className="motion-enter" style={{ height: 420, borderRadius: '1rem', overflow: 'hidden', background: 'radial-gradient(ellipse at center, rgba(20,5,0,0.9) 0%, rgba(0,0,0,0.97) 100%)' }}>
                     <Sun3D height={420} />
-                </motion.div>
+                </div>
 
                 <div>
                     <h2 className="section-title" style={{ color: '#fbbf24' }}>Images SDO en direct</h2>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                         {SDO_IMAGES.map((img, i) => (
-                            <motion.div key={img.src} className="card" style={{ overflow: 'hidden', padding: 0 }}
-                                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.1 }}>
+                            <div key={img.src} className="card motion-enter" style={{ animationDelay: `${Math.min(0.1 + i * 0.1, 0.6)}s`,  overflow: 'hidden', padding: 0 }}>
                                 <div style={{ position: 'relative' }}>
                                     <Image src={img.src} alt={img.label} width={512} height={512} unoptimized style={{ width: '100%', height: 120, objectFit: 'cover', display: 'block' }} />
                                     <div style={{ position: 'absolute', top: 6, right: 6, background: 'rgba(0,0,0,0.7)', borderRadius: 4, padding: '1px 6px', fontSize: '0.65rem', color: '#fbbf24', fontWeight: 600 }}>{img.wavelength}</div>
@@ -86,7 +85,7 @@ export default function SoleilPage() {
                                     <p style={{ color: '#fcd34d', fontWeight: 700, fontSize: '0.75rem' }}>{img.label}</p>
                                     <p style={{ color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: 2 }}>{img.desc}</p>
                                 </div>
-                            </motion.div>
+                            </div>
                         ))}
                     </div>
                     <p style={{ color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: '0.5rem', textAlign: 'right' }}>

@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import SpaceIcon from '@/components/ui/SpaceIcon'
+
 import KidsGuide from '@/components/learning/KidsGuide'
 import ExoplanetCatalog from '@/components/space/ExoplanetCatalog'
 
@@ -34,13 +35,13 @@ export default function ExoplanetesPage() {
 
     return (
         <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="page-header">
-                <div className="badge">🌟 EXPLORATION GALACTIQUE</div>
+            <div className="page-header motion-enter">
+                <div className="badge"><SpaceIcon name="sparkle" size={18} className="inline-icon" /> EXPLORATION GALACTIQUE</div>
                 <h1 className="page-title">
                     Exoplanètes
                 </h1>
                 <p className="page-subtitle">Pars à la recherche des planètes qui tournent autour d&apos;autres étoiles.</p>
-            </motion.div>
+            </div>
 
             <KidsGuide topic="exoplanetes" />
 
@@ -57,7 +58,7 @@ export default function ExoplanetesPage() {
                 </p>
                 <div style={{ padding: '0.75rem 1rem', borderRadius: '0.75rem', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)' }}>
                     <p style={{ color: '#f59e0b', fontSize: '0.82rem' }}>
-                        🏆 En 1995, <strong>Michel Mayor et Didier Queloz</strong> ont découvert la première exoplanète autour d’une étoile semblable au Soleil. Les premières exoplanètes connues avaient été trouvées autour d’un pulsar en 1992.
+                        <SpaceIcon name="trophy" size={18} className="inline-icon" /> En 1995, <strong>Michel Mayor et Didier Queloz</strong> ont découvert la première exoplanète autour d’une étoile semblable au Soleil. Les premières exoplanètes connues avaient été trouvées autour d’un pulsar en 1992.
                     </p>
                 </div>
             </div>
@@ -119,7 +120,7 @@ export default function ExoplanetesPage() {
                     color: habitableZoneOnly ? '#10b981' : 'var(--text-muted)',
                     transition: 'all 0.2s',
                 }}>
-                    <span>{habitableZoneOnly ? '🌿' : '🌍'}</span>
+                    <SpaceIcon name="globe" size={18} />
                     {habitableZoneOnly ? 'Zone habitable uniquement' : 'Toutes les exoplanètes'}
                     <span style={{ fontSize: '0.65rem', padding: '1px 6px', borderRadius: 99, background: habitableZoneOnly ? '#10b98120' : 'rgba(255,255,255,0.06)', color: habitableZoneOnly ? '#10b981' : 'var(--text-muted)' }}>
                         {habitableZoneOnly ? FAMOUS_EXOPLANETS.filter(p => p.inHabitableZone).length : FAMOUS_EXOPLANETS.length}
@@ -140,10 +141,10 @@ export default function ExoplanetesPage() {
                         </div>
                         <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.625rem' }}>
                             <span style={{ fontSize: '0.72rem', color: 'var(--nebula)', background: 'rgba(196,181,253,0.12)', padding: '2px 8px', borderRadius: 999 }}>{exo.type}</span>
-                            {exo.inHabitableZone && <span style={{ fontSize: '0.72rem', color: '#10b981', background: 'rgba(16,185,129,0.1)', padding: '2px 8px', borderRadius: 999 }}>🌿 Dans la zone habitable</span>}
+                            {exo.inHabitableZone && <span style={{ fontSize: '0.72rem', color: '#10b981', background: 'rgba(16,185,129,0.1)', padding: '2px 8px', borderRadius: 999 }}><SpaceIcon name="globe" size={18} className="inline-icon" /> Dans la zone habitable</span>}
                         </div>
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.82rem', lineHeight: 1.7, marginBottom: '0.625rem' }}>{exo.description}</p>
-                        <p style={{ color: '#f59e0b', fontSize: '0.78rem', lineHeight: 1.6 }}>💡 {exo.fun}</p>
+                        <p style={{ color: '#f59e0b', fontSize: '0.78rem', lineHeight: 1.6 }}><SpaceIcon name="bulb" size={18} className="inline-icon" /> {exo.fun}</p>
                     </div>
                 ))}
             </div>

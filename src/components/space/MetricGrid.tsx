@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import SpaceIcon, { type SpaceIconName } from '@/components/ui/SpaceIcon'
 
 export interface MetricItem {
   label: string
@@ -24,7 +25,7 @@ export default function MetricGrid({ items, ariaLabel, className = '' }: MetricG
 
         return (
           <dl key={item.label} className={`card stat-card metric-card${item.icon ? ' has-icon' : ''}`}>
-            {item.icon && <dd className="metric-icon" aria-hidden="true">{item.icon}</dd>}
+            {item.icon && <dd className="metric-icon" aria-hidden="true">{typeof item.icon === 'string' ? <SpaceIcon name={item.icon as SpaceIconName} size={22} /> : item.icon}</dd>}
             <dt className="stat-label metric-label">{item.label}</dt>
             <dd
               className="stat-value metric-value"

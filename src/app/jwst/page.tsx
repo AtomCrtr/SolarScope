@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import SpaceIcon, { type SpaceIconName } from '@/components/ui/SpaceIcon'
+
 import Image from 'next/image'
 import KidsGuide from '@/components/learning/KidsGuide'
 import DataSourceNote from '@/components/learning/DataSourceNote'
@@ -58,21 +59,21 @@ const HIGHLIGHTS = [
 ]
 
 const SCIENCE_STATS = [
-  { icon: '🔭', val: '6,5 m', label: 'Diamètre miroir' },
-  { icon: '🌡️', val: '-233°C', label: 'Temp. fonctionnement' },
-  { icon: '📡', val: '1 500 000 km', label: 'Distance de la Terre' },
-  { icon: '🌟', val: '≈6×', label: 'Surface collectrice vs Hubble' },
-  { icon: '💰', val: '10 Md$', label: 'Coût total' },
-  { icon: '📅', val: '25 ans', label: 'De conception à lancement' },
-  { icon: '🛡️', val: '5 couches', label: 'Pare-soleil' },
-  { icon: '🔬', val: '0,6–28,5 µm', label: 'Lumière observée' },
+  { icon: 'telescope', val: '6,5 m', label: 'Diamètre miroir' },
+  { icon: 'thermometer', val: '-233°C', label: 'Temp. fonctionnement' },
+  { icon: 'signal', val: '1 500 000 km', label: 'Distance de la Terre' },
+  { icon: 'sparkle', val: '≈6×', label: 'Surface collectrice vs Hubble' },
+  { icon: 'coin', val: '10 Md$', label: 'Coût total' },
+  { icon: 'calendar', val: '25 ans', label: 'De conception à lancement' },
+  { icon: 'shield', val: '5 couches', label: 'Pare-soleil' },
+  { icon: 'search', val: '0,6–28,5 µm', label: 'Lumière observée' },
 ]
 
 const CATEGORIES = [
-  { icon: '🌌', title: 'Premières galaxies', desc: 'Détecte des galaxies formées quelques centaines de millions d’années après le Big Bang.', color: '#a5b4fc' },
-  { icon: '⭐', title: 'Formation d\'étoiles', desc: 'Révèle les nurseries stellaires cachées dans les nébuleuses, impossible à voir en lumière visible.', color: '#f97316' },
-  { icon: '🪐', title: 'Atmosphères exoplanètes', desc: 'Analyse la composition chimique des atmosphères de planètes à des dizaines d\'années-lumière.', color: '#10b981' },
-  { icon: '🕳️', title: 'Trous noirs', desc: 'Observe les disques d\'accrétion et les jets de matière des trous noirs supermassifs en IR.', color: '#c084fc' },
+  { icon: 'sparkle', title: 'Premières galaxies', desc: 'Détecte des galaxies formées quelques centaines de millions d’années après le Big Bang.', color: '#a5b4fc' },
+  { icon: 'sparkle', title: 'Formation d\'étoiles', desc: 'Révèle les nurseries stellaires cachées dans les nébuleuses, impossible à voir en lumière visible.', color: '#f97316' },
+  { icon: 'planet', title: 'Atmosphères exoplanètes', desc: 'Analyse la composition chimique des atmosphères de planètes à des dizaines d\'années-lumière.', color: '#10b981' },
+  { icon: 'target', title: 'Trous noirs', desc: 'Observe les disques d\'accrétion et les jets de matière des trous noirs supermassifs en IR.', color: '#c084fc' },
 ]
 
 export default function JWSTPage() {
@@ -104,9 +105,9 @@ export default function JWSTPage() {
     <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
 
       {/* HERO */}
-      <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="page-header">
+      <div className="page-header motion-enter">
         <div className="badge" style={{ background: 'rgba(99,102,241,0.12)', color: 'var(--nebula)', borderColor: 'rgba(99,102,241,0.25)' }}>
-          🔭 JAMES WEBB SPACE TELESCOPE
+          <SpaceIcon name="telescope" size={18} className="inline-icon" /> JAMES WEBB SPACE TELESCOPE
         </div>
         <h1 className="page-title">
           Télescope Webb
@@ -114,7 +115,7 @@ export default function JWSTPage() {
         <p className="page-subtitle">
           Un immense œil dans l&apos;espace qui capte une lumière invisible et observe des galaxies très anciennes.
         </p>
-      </motion.div>
+      </div>
 
       <KidsGuide topic="jwst" />
       <DataSourceNote
@@ -142,7 +143,7 @@ export default function JWSTPage() {
             border: `1px solid ${activeTab === tab ? 'rgba(99,102,241,0.45)' : 'rgba(255,255,255,0.07)'}`,
             color: activeTab === tab ? 'var(--nebula)' : 'var(--text-muted)', transition: 'all 0.2s',
           }}>
-            {tab === 'gallery' ? '🌌 Images iconiques Webb' : '🛰️ Galerie NASA live'}
+            {tab === 'gallery' ? 'Images iconiques Webb' : 'Galerie NASA live'}
           </button>
         ))}
       </div>
@@ -151,10 +152,7 @@ export default function JWSTPage() {
       {activeTab === 'gallery' && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem', marginBottom: '2rem' }} className="max-sm:grid-cols-1">
           {HIGHLIGHTS.map((h, i) => (
-            <motion.button type="button" aria-label={`Agrandir ${h.title}`} key={h.title} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.06 }}
-              onClick={() => setSelectedHighlight(i)}
-              style={{ cursor: 'pointer', borderRadius: '1rem', overflow: 'hidden', border: `1px solid ${h.color}20`, position: 'relative', padding: 0, textAlign: 'left', background: 'transparent' }}
-              whileHover={{ scale: 1.02 }}>
+            <button className="motion-enter" type="button" aria-label={`Agrandir ${h.title}`} key={h.title} onClick={() => setSelectedHighlight(i)} style={{ animationDelay: `${Math.min(i * 0.06, 0.6)}s`,  cursor: 'pointer', borderRadius: '1rem', overflow: 'hidden', border: `1px solid ${h.color}20`, position: 'relative', padding: 0, textAlign: 'left', background: 'transparent' }}>
               <Image src={h.img} alt={h.title} width={800} height={440}
                 style={{ width: '100%', height: 220, objectFit: 'cover', display: 'block' }}
                 onError={e => { e.currentTarget.style.visibility = 'hidden' }} />
@@ -168,7 +166,7 @@ export default function JWSTPage() {
               <div style={{ position: 'absolute', top: 10, right: 10, background: `${h.color}20`, border: `1px solid ${h.color}40`, borderRadius: 99, padding: '2px 8px', fontSize: '0.65rem', color: h.color, fontWeight: 700 }}>
                 JWST
               </div>
-            </motion.button>
+            </button>
           ))}
         </div>
       )}
@@ -182,34 +180,24 @@ export default function JWSTPage() {
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.625rem', marginBottom: '2rem' }} className="max-sm:grid-cols-2">
             {nasaImages.map((img, i) => (
-              <motion.a key={img.nasa_id} href={img.href} target="_blank" rel="noopener noreferrer" aria-label={`${img.title} — voir la fiche sur le site de la NASA (nouvel onglet)`}
-                initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.03 }}
-                style={{ display: 'block', textDecoration: 'none', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid rgba(99,102,241,0.12)' }}
-                whileHover={{ scale: 1.04 }}>
+              <a className="motion-enter" key={img.nasa_id} href={img.href} target="_blank" rel="noopener noreferrer" aria-label={`${img.title} — voir la fiche sur le site de la NASA (nouvel onglet)`} style={{ animationDelay: `${Math.min(i * 0.03, 0.6)}s`,  display: 'block', textDecoration: 'none', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid rgba(99,102,241,0.12)' }}>
                 <Image src={img.thumb} alt={img.title} width={600} height={400} style={{ width: '100%', height: 170, objectFit: 'cover', display: 'block' }}
                   onError={e => { e.currentTarget.style.visibility = 'hidden' }} />
                 <div style={{ padding: '0.5rem 0.625rem', background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)' }}>
                   <div style={{ color: '#c7d2fe', fontSize: '0.65rem', fontWeight: 600, lineHeight: 1.3 }}>{img.title?.slice(0, 55)}{img.title?.length > 55 ? '…' : ''}</div>
                   <div style={{ color: 'var(--text-muted)', fontSize: '0.6rem', marginTop: 2 }}>{img.date_created}</div>
                 </div>
-              </motion.a>
+              </a>
             ))}
           </div>
         )
       )}
 
       {/* Lightbox */}
-      <AnimatePresence>
+      <>
         {selectedHighlight !== null && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            onClick={() => setSelectedHighlight(null)}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="jwst-dialog-title"
-            style={{ position: 'fixed', inset: 0, zIndex: 9000, background: 'rgba(0,0,0,0.93)', backdropFilter: 'blur(20px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-            <motion.div initial={{ scale: 0.88 }} animate={{ scale: 1 }} exit={{ scale: 0.88 }}
-              onClick={e => e.stopPropagation()}
-              style={{ maxWidth: 900, width: '100%', borderRadius: '1.25rem', overflow: 'hidden', border: '1px solid rgba(99,102,241,0.2)' }}>
+          <div className="motion-enter" onClick={() => setSelectedHighlight(null)} role="dialog" aria-modal="true" aria-labelledby="jwst-dialog-title" style={{ position: 'fixed', inset: 0, zIndex: 9000, background: 'rgba(0,0,0,0.93)', backdropFilter: 'blur(20px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+            <div onClick={e => e.stopPropagation()} style={{ maxWidth: 900, width: '100%', borderRadius: '1.25rem', overflow: 'hidden', border: '1px solid rgba(99,102,241,0.2)' }}>
               <Image src={HIGHLIGHTS[selectedHighlight].img} alt={HIGHLIGHTS[selectedHighlight].title} width={1400} height={900} style={{ width: '100%', height: 'auto', maxHeight: '60vh', objectFit: 'contain', background: '#000', display: 'block' }} />
               <div style={{ padding: '1.25rem 1.5rem', background: 'var(--card)' }}>
                 <div style={{ color: HIGHLIGHTS[selectedHighlight].color, fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.375rem' }}>
@@ -219,24 +207,23 @@ export default function JWSTPage() {
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: 1.7 }}>{HIGHLIGHTS[selectedHighlight].desc}</p>
                 <button onClick={() => setSelectedHighlight(null)} style={{ marginTop: '1rem', padding: '0.5rem 1rem', borderRadius: 99, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.8rem' }}>✕ Fermer</button>
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         )}
-      </AnimatePresence>
+      </>
 
       {/* Science categories */}
       <div className="divider" />
       <h2 className="section-title" style={{ color: 'var(--text)' }}>Domaines de recherche de Webb</h2>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.875rem', marginBottom: '2rem' }} className="max-sm:grid-cols-1">
         {CATEGORIES.map((c, i) => (
-          <motion.div key={c.title} className="card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }}
-            style={{ padding: '1.25rem', border: `1px solid ${c.color}18`, display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-            <span style={{ fontSize: '2rem', flexShrink: 0 }}>{c.icon}</span>
+          <div key={c.title} className="card motion-enter" style={{ animationDelay: `${Math.min(i * 0.07, 0.6)}s`,  padding: '1.25rem', border: `1px solid ${c.color}18`, display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+            <span style={{ flexShrink: 0, color: c.color }}><SpaceIcon name={c.icon as SpaceIconName} size={32} /></span>
             <div>
               <h3 style={{ color: c.color, fontWeight: 700, fontFamily: 'var(--font-display)', marginBottom: '0.375rem' }}>{c.title}</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.82rem', lineHeight: 1.65 }}>{c.desc}</p>
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
 
@@ -252,7 +239,7 @@ export default function JWSTPage() {
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
             <thead>
               <tr>
-                {['Caractéristique', '🔭 Hubble', '🌌 James Webb'].map(h => (
+                {['Caractéristique', 'Hubble', 'James Webb'].map(h => (
                   <th key={h} style={{ padding: '0.75rem 1rem', textAlign: 'left', color: 'var(--text-muted)', fontWeight: 600, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>{h}</th>
                 ))}
               </tr>

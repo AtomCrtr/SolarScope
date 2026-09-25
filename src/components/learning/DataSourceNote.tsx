@@ -1,4 +1,5 @@
 import { formatCheckedOn, type SourceCadence } from '@/lib/data/source-registry'
+import SpaceIcon from '@/components/ui/SpaceIcon'
 
 type DataSourceNoteProps = {
   source: string
@@ -19,7 +20,7 @@ export default function DataSourceNote({
 
   return (
     <aside className="source-note" aria-label="Source des données">
-      <span aria-hidden="true">🔎</span>
+      <span aria-hidden="true"><SpaceIcon name="search" size={18} className="inline-icon" /></span>
       <p>
         <strong>{dataLabel} :</strong> {refreshed}. Les chiffres de cette page viennent de{' '}
         <a href={href} target="_blank" rel="noopener noreferrer">{source}</a>

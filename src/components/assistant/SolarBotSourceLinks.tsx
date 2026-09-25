@@ -1,4 +1,5 @@
 import type { PublicSolarBotSource } from '@/lib/content/solarbot-sources'
+import SpaceIcon from '@/components/ui/SpaceIcon'
 
 export default function SolarBotSourceLinks({ sources, compact = false }: { sources?: PublicSolarBotSource[]; compact?: boolean }) {
   if (!sources?.length) return null
@@ -24,7 +25,7 @@ export function SolarBotReliabilityNote({ degraded, compact = false }: { degrade
 
   return (
     <p className={compact ? 'solarbot-reliability is-compact' : 'solarbot-reliability'} role="status">
-      <span aria-hidden="true">⚠️ </span>
+      <span aria-hidden="true"><SpaceIcon name="alert" size={18} className="inline-icon" /> </span>
       Réponse de secours : vérifie les repères officiels ci-dessous.
     </p>
   )

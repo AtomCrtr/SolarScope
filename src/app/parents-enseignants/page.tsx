@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import SpaceIcon from '@/components/ui/SpaceIcon'
 import PrintableGuidesButton from '@/components/learning/PrintableGuidesButton'
 import { createPageMetadata } from '@/lib/config/site'
 
@@ -20,7 +21,7 @@ export default function ParentsTeachersPage() {
   return (
     <div className="container prose-page parent-page">
       <header className="page-header">
-        <div className="badge">👨‍👩‍👧‍👦 ACCOMPAGNER</div>
+        <div className="badge"><SpaceIcon name="family" size={18} className="inline-icon" /> ACCOMPAGNER</div>
         <h1 className="page-title">Parents et enseignants</h1>
         <p className="page-subtitle">Des repères simples pour explorer l’espace avec un enfant, sans compte et sans collecte de données personnelles.</p>
       </header>

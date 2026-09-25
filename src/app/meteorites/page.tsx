@@ -1,7 +1,8 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { motion } from 'framer-motion'
+import SpaceIcon, { type SpaceIconName } from '@/components/ui/SpaceIcon'
+
 import KidsGuide from '@/components/learning/KidsGuide'
 import MetricGrid from '@/components/space/MetricGrid'
 import MeteoritesNearMe from '@/components/space/MeteoritesNearMe'
@@ -171,7 +172,7 @@ export default function MeteoritesPage() {
     return (
         <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
 
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="page-header">
+            <div className="page-header motion-enter">
                 <div className="badge" style={{ background: 'rgba(249,115,22,0.12)', color: '#fb923c', borderColor: 'rgba(249,115,22,0.25)' }}>
                     ARCHIVE NASA · METEORITICAL SOCIETY
                 </div>
@@ -181,7 +182,7 @@ export default function MeteoritesPage() {
                 <p className="page-subtitle">
                     Chaque point montre une pierre venue de l&apos;espace et retrouvée sur Terre.
                 </p>
-            </motion.div>
+            </div>
 
             <KidsGuide topic="meteorites" />
 
@@ -201,10 +202,10 @@ export default function MeteoritesPage() {
                         ariaLabel="Chiffres clés des météorites"
                         className="meteorite-metrics"
                         items={[
-                            { icon: '☄️', value: stats.total.toLocaleString('fr-FR'), label: 'Météorites localisées', color: '#fdba74' },
-                            { icon: '⚖️', value: stats.heaviest ? `${(parseFloat(stats.heaviest.mass) / 1000).toFixed(0)} kg` : '—', label: `La plus lourde (${stats.heaviest?.name || 'inconnue'})`, color: '#fdba74' },
-                            { icon: '🌍', value: '6 continents', label: 'Zones d’impact', color: '#fdba74' },
-                            { icon: '📅', value: '860+', label: 'Années de données', color: '#fdba74' },
+                            { icon: 'asteroid', value: stats.total.toLocaleString('fr-FR'), label: 'Météorites localisées', color: '#fdba74' },
+                            { icon: 'scale', value: stats.heaviest ? `${(parseFloat(stats.heaviest.mass) / 1000).toFixed(0)} kg` : '—', label: `La plus lourde (${stats.heaviest?.name || 'inconnue'})`, color: '#fdba74' },
+                            { icon: 'globe', value: '6 continents', label: 'Zones d’impact', color: '#fdba74' },
+                            { icon: 'calendar', value: '860+', label: 'Années de données', color: '#fdba74' },
                         ]}
                     />
                 </section>
@@ -215,7 +216,7 @@ export default function MeteoritesPage() {
                 <span className="meteorite-filter-label">Filtrer la carte</span>
                 {CLASS_CHIPS.map(chip => (
                     <button key={chip} type="button" className={classFilter === chip ? 'is-active' : ''} aria-pressed={classFilter === chip} onClick={() => setClassFilter(chip)}>
-                        {chip === 'Tous' ? '☄️ Tous' : chip}
+                        {chip === 'Tous' ? 'Tous' : chip}
                     </button>
                 ))}
                 {classFilter !== 'Tous' && (
@@ -229,7 +230,7 @@ export default function MeteoritesPage() {
             <section className="card meteorite-map-card" aria-labelledby="meteorite-map-title">
                 <header className="meteorite-map-heading">
                     <div>
-                        <span className="meteorite-panel-icon" aria-hidden="true">🗺️</span>
+                        <span className="meteorite-panel-icon" aria-hidden="true"><SpaceIcon name="map" size={18} className="inline-icon" /></span>
                         <div>
                             <span className="meteorite-kicker">LOCALISATION</span>
                             <h2 id="meteorite-map-title">Carte mondiale des découvertes</h2>
@@ -252,7 +253,7 @@ export default function MeteoritesPage() {
                 {loading ? (
                     <div style={{ height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
                         <div style={{ textAlign: 'center' }}>
-                            <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🔄</div>
+                            <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}><SpaceIcon name="refresh" size={18} className="inline-icon" /></div>
                             <p>Chargement de la base NASA…</p>
                         </div>
                     </div>
@@ -340,7 +341,7 @@ export default function MeteoritesPage() {
                 <article className="card meteorite-ranking-card">
                     <header className="meteorite-panel-heading">
                         <div>
-                            <span className="meteorite-panel-icon" aria-hidden="true">🏆</span>
+                            <span className="meteorite-panel-icon" aria-hidden="true"><SpaceIcon name="trophy" size={18} className="inline-icon" /></span>
                             <div>
                                 <span className="meteorite-kicker">CATALOGUE</span>
                                 <h2>Top météorites</h2>
@@ -349,7 +350,7 @@ export default function MeteoritesPage() {
                         <div className="meteorite-sort-controls" aria-label="Trier les météorites">
                             {(['mass', 'year'] as const).map(s => (
                                 <button key={s} type="button" className={sortBy === s ? 'is-active' : ''} aria-pressed={sortBy === s} onClick={() => setSortBy(s)}>
-                                    {s === 'mass' ? '⚖️ Masse' : '📅 Récentes'}
+                                    {s === 'mass' ? 'Masse' : 'Récentes'}
                                 </button>
                             ))}
                         </div>
@@ -383,7 +384,7 @@ export default function MeteoritesPage() {
                 <article className="card meteorite-classes-card">
                     <header className="meteorite-panel-heading">
                         <div>
-                            <span className="meteorite-panel-icon" aria-hidden="true">📊</span>
+                            <span className="meteorite-panel-icon" aria-hidden="true"><SpaceIcon name="chart" size={18} className="inline-icon" /></span>
                             <div>
                                 <span className="meteorite-kicker">COMPOSITION</span>
                                 <h2>Répartition par classe</h2>
@@ -411,13 +412,13 @@ export default function MeteoritesPage() {
                     )}
                     <div className="meteorite-type-grid">
                         {[
-                            { icon: '🪨', title: 'Chondrites', desc: 'Les plus communes — restent depuis la formation du système solaire (4,6 Ga)' },
-                            { icon: '⚙️', title: 'Sidérites', desc: 'Métalliques (Fer/Nickel) — proviennent du noyau d\'astéroïdes fracturés' },
-                            { icon: '🌕', title: 'Lunaires', desc: 'Éjectées par des impacts sur la Lune puis capturées par la Terre' },
-                            { icon: '🔴', title: 'Martiennes', desc: 'Extraites de Mars par des impacts — 300 identifiées dans le monde' },
+                            { icon: 'asteroid', title: 'Chondrites', desc: 'Les plus communes — restent depuis la formation du système solaire (4,6 Ga)' },
+                            { icon: 'refresh', title: 'Sidérites', desc: 'Métalliques (Fer/Nickel) — proviennent du noyau d\'astéroïdes fracturés' },
+                            { icon: 'moon-stars', title: 'Lunaires', desc: 'Éjectées par des impacts sur la Lune puis capturées par la Terre' },
+                            { icon: 'mars', title: 'Martiennes', desc: 'Extraites de Mars par des impacts — 300 identifiées dans le monde' },
                         ].map(t => (
                             <div key={t.title}>
-                                <span aria-hidden="true">{t.icon}</span>
+                                <SpaceIcon name={t.icon as SpaceIconName} size={20} />
                                 <strong>{t.title}</strong>
                                 <p>{t.desc}</p>
                             </div>

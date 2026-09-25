@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import SpaceIcon from '@/components/ui/SpaceIcon'
+
 import KidsGuide from '@/components/learning/KidsGuide'
 import MetricGrid from '@/components/space/MetricGrid'
 
@@ -66,13 +67,13 @@ export default function AsteroidsPage() {
 
     return (
         <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="page-header">
-                <div className="badge">☄️ DÉFENSE PLANÉTAIRE</div>
+            <div className="page-header motion-enter">
+                <div className="badge"><SpaceIcon name="asteroid" size={18} className="inline-icon" /> DÉFENSE PLANÉTAIRE</div>
                 <h1 className="page-title">
                     Astéroïdes
                 </h1>
                 <p className="page-subtitle">Découvre les roches spatiales que la NASA surveille près de notre planète.</p>
-            </motion.div>
+            </div>
 
             <KidsGuide topic="asteroides" />
 
@@ -90,7 +91,7 @@ export default function AsteroidsPage() {
                 </p>
                 <div style={{ padding: '0.75rem 1rem', borderRadius: '0.75rem', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)' }}>
                     <p style={{ color: '#f59e0b', fontSize: '0.82rem' }}>
-                        🛡️ <strong>Programme de défense planétaire :</strong> depuis la mission <strong>DART</strong> en 2022, l&apos;humanité sait dévier un astéroïde en le percutant avec une sonde. Première fois qu&apos;on modifie l&apos;orbite d&apos;un objet céleste !
+                        <SpaceIcon name="shield" size={18} className="inline-icon" /> <strong>Programme de défense planétaire :</strong> depuis la mission <strong>DART</strong> en 2022, l&apos;humanité sait dévier un astéroïde en le percutant avec une sonde. Première fois qu&apos;on modifie l&apos;orbite d&apos;un objet céleste !
                     </p>
                 </div>
             </div>
@@ -116,7 +117,7 @@ export default function AsteroidsPage() {
                 {loading ? (
                     <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>⏳ Chargement des données NASA...</div>
                 ) : error ? (
-                    <div style={{ textAlign: 'center', padding: '2rem', color: '#f59e0b' }}>📡 Le service NASA NeoWs est temporairement indisponible.</div>
+                    <div style={{ textAlign: 'center', padding: '2rem', color: '#f59e0b' }}><SpaceIcon name="signal" size={18} className="inline-icon" /> Le service NASA NeoWs est temporairement indisponible.</div>
                 ) : (
                     <div
                         style={{ overflow: 'auto' }}
@@ -140,7 +141,7 @@ export default function AsteroidsPage() {
                                         <td style={{ padding: '0.625rem 0.875rem', color: 'var(--text)' }}>{parseInt(a.distKm).toLocaleString('fr-FR')}</td>
                                         <td style={{ padding: '0.625rem 0.875rem', color: 'var(--text)' }}>{a.diamMin}</td>
                                         <td style={{ padding: '0.625rem 0.875rem' }}>
-                                            {a.dangerous ? <span style={{ color: '#f87171', fontWeight: 700 }}>⚠️ Oui</span> : <span style={{ color: '#10b981' }}>✅ Non</span>}
+                                            {a.dangerous ? <span style={{ color: '#f87171', fontWeight: 700 }}><SpaceIcon name="alert" size={18} className="inline-icon" /> Oui</span> : <span style={{ color: '#10b981' }}><SpaceIcon name="check" size={18} className="inline-icon" /> Non</span>}
                                         </td>
                                     </tr>
                                 ))}
@@ -159,12 +160,7 @@ export default function AsteroidsPage() {
                         <div key={s.label} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                             <div style={{ width: 200, color: 'var(--text-muted)', fontSize: '0.78rem', flexShrink: 0 }}>{s.label}</div>
                             <div style={{ flex: 1, background: 'rgba(255,255,255,0.04)', borderRadius: 6, overflow: 'hidden', height: 14 }}>
-                                <motion.div
-                                    initial={{ width: 0 }}
-                                    animate={{ width: `${Math.log10(s.size + 1) / Math.log10(maxSize + 1) * 100}%` }}
-                                    transition={{ duration: 0.8 }}
-                                    style={{ height: '100%', background: `linear-gradient(90deg, ${s.color}80, ${s.color})`, borderRadius: 6 }}
-                                />
+                                <div className="bar-grow" style={{ width: `${Math.log10(s.size + 1) / Math.log10(maxSize + 1) * 100}%`, height: '100%', background: `linear-gradient(90deg, ${s.color}80, ${s.color})`, borderRadius: 6 }} />
                             </div>
                         </div>
                     ))}
@@ -180,9 +176,9 @@ export default function AsteroidsPage() {
                             <h3 style={{ color: a.color, fontFamily: 'var(--font-display)', fontWeight: 800 }}>{a.name}</h3>
                             <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{a.size}</span>
                         </div>
-                        {a.danger && <div style={{ color: '#f87171', fontSize: '0.75rem', marginBottom: '0.5rem' }}>⚠️ Potentiellement dangereux</div>}
+                        {a.danger && <div style={{ color: '#f87171', fontSize: '0.75rem', marginBottom: '0.5rem' }}><SpaceIcon name="alert" size={18} className="inline-icon" /> Potentiellement dangereux</div>}
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.82rem', lineHeight: 1.7, marginBottom: '0.75rem' }}>{a.description}</p>
-                        <p style={{ color: '#f59e0b', fontSize: '0.8rem', lineHeight: 1.6 }}>💡 {a.fun}</p>
+                        <p style={{ color: '#f59e0b', fontSize: '0.8rem', lineHeight: 1.6 }}><SpaceIcon name="bulb" size={18} className="inline-icon" /> {a.fun}</p>
                     </div>
                 ))}
             </div>

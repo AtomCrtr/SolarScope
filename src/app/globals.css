@@ -252,14 +252,14 @@ video {
 }
 
 .locale-switcher button {
-  min-width: 30px;
-  min-height: 27px;
-  padding: 0 0.4rem;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 0.5rem;
   border: 0;
   border-radius: 6px;
   background: transparent;
   color: #7c8aa0;
-  font: 800 0.62rem/1 Inter, ui-sans-serif, system-ui, sans-serif;
+  font: 800 0.8rem/1 Inter, ui-sans-serif, system-ui, sans-serif;
   letter-spacing: 0.06em;
   cursor: pointer;
   display: inline-flex;
@@ -279,7 +279,7 @@ video {
   outline-offset: 2px;
 }
 
-.locale-preview-mark { color: #c4b5fd; font-size: 0.55rem; line-height: 1; }
+.locale-preview-mark { color: #c4b5fd; font-size: 0.75rem; line-height: 1; }
 
 .language-availability-notice {
   display: flex;
@@ -1896,7 +1896,7 @@ body:has(.home-mission-board) main > div:first-child { display: none; }
     left: max(0.6rem, env(safe-area-inset-left));
     z-index: 900;
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     height: 66px;
     padding: 0 0.35rem;
     border: 1px solid var(--orbit);
@@ -1923,22 +1923,9 @@ body:has(.home-mission-board) main > div:first-child { display: none; }
   .mobile-tab-bar a:focus-visible { outline: 3px solid var(--sun); outline-offset: -3px; }
 }
 
-/* Keep the assistant available without covering a lesson on a phone. */
+/* On a phone the floating assistant covered lesson text: SolarBot moves into the tab bar instead. */
 @media (max-width: 720px) {
-  .solarbot-launcher {
-    right: max(0.75rem, env(safe-area-inset-right)) !important;
-    bottom: calc(max(0.6rem, env(safe-area-inset-bottom)) + 76px) !important;
-  }
-  .solarbot-tip { display: none !important; }
-  .solarbot-toggle {
-    width: 48px !important;
-    height: 48px !important;
-    font-size: 1.3rem !important;
-  }
-  .solarbot-dialog {
-    right: max(0.75rem, env(safe-area-inset-right)) !important;
-    bottom: calc(max(0.6rem, env(safe-area-inset-bottom)) + 136px) !important;
-  }
+  .solarbot-launcher, .solarbot-dialog { display: none !important; }
 }
 
 /* Planet explorer: short, guided interactions for young learners. */
@@ -2149,3 +2136,23 @@ body:has(.home-mission-board) main > div:first-child { display: none; }
   .max-sm\:grid-cols-1 { grid-template-columns: minmax(0, 1fr) !important; }
   .max-sm\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
 }
+
+/* Entrance and ambient animations (CSS only: content stays visible without JavaScript). */
+@keyframes enter-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes bar-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes gauge-fill { from { stroke-dashoffset: 226.2; } }
+@keyframes soft-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.25); } }
+@keyframes spin-once { to { transform: rotate(360deg); } }
+.motion-enter { animation: enter-up 0.45s ease-out both; }
+.bar-grow { transform-origin: left center; animation: bar-grow 0.8s ease-out both; }
+.gauge-arc { animation: gauge-fill 1.2s ease-out both; }
+.gauge-slide { transition: left 1.2s ease-out; }
+.anim-pulse { animation: soft-pulse 2s ease-in-out infinite; }
+.anim-spin { animation: spin-once 1s linear infinite; }
+.nav-chevron { transition: transform 0.2s ease; }
+@media (prefers-reduced-motion: reduce) {
+  .motion-enter, .bar-grow, .gauge-arc, .anim-pulse, .anim-spin { animation: none; }
+  .gauge-slide, .nav-chevron { transition: none; }
+}
+.inline-icon { display: inline-block; flex-shrink: 0; vertical-align: -0.2em; margin-right: 0.15em; }
+.badge .inline-icon { width: 1.1em; height: 1.1em; }

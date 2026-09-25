@@ -17,16 +17,16 @@ type GeminiMode = 'chat' | 'story'
 
 function fallbackAnswer(question: string, mode: GeminiMode): string {
   if (mode === 'story') {
-    return 'SolarBot recharge ses circuits. En attendant, imagine une petite sonde quittant la Terre, saluant la Lune puis suivant la lumière du Soleil. Elle découvre que chaque planète est un monde différent et rapporte une idée essentielle : dans l’espace, la curiosité est le meilleur moteur. 🚀'
+    return 'SolarBot recharge ses circuits. En attendant, imagine une petite sonde quittant la Terre, saluant la Lune puis suivant la lumière du Soleil. Elle découvre que chaque planète est un monde différent et rapporte une idée essentielle : dans l’espace, la curiosité est le meilleur moteur.'
   }
 
   const value = question.toLowerCase()
-  if (/soleil|étoile/.test(value)) return 'Le Soleil est l’étoile au centre de notre système. Sa lumière met environ 8 minutes et 20 secondes pour atteindre la Terre. ☀️'
-  if (/mars|perseverance|curiosity/.test(value)) return 'Mars est une planète rocheuse froide, reconnaissable à l’oxyde de fer de son sol. Curiosity et Perseverance y étudient son histoire et son potentiel passé pour la vie. 🔴'
-  if (/iss|station spatiale/.test(value)) return 'L’ISS est un laboratoire habité qui tourne autour de la Terre à environ 400 km d’altitude. Elle effectue presque 16 orbites par jour. 🛰️'
-  if (/trou noir/.test(value)) return 'Un trou noir est une région où la gravité est si intense que la lumière ne peut plus s’échapper au-delà de son horizon. On le détecte grâce à ses effets sur la matière voisine. ⚫'
-  if (/lune/.test(value)) return 'La Lune est le satellite naturel de la Terre. Elle nous présente presque toujours la même face et accomplit un tour autour de la Terre en environ 27 jours. 🌕'
-  return 'SolarBot est momentanément limité, mais les pages de SolarScope restent disponibles. Essaie une question sur le Soleil, Mars, la Lune, l’ISS ou les trous noirs. 🔭'
+  if (/soleil|étoile/.test(value)) return 'Le Soleil est l’étoile au centre de notre système. Sa lumière met environ 8 minutes et 20 secondes pour atteindre la Terre.'
+  if (/mars|perseverance|curiosity/.test(value)) return 'Mars est une planète rocheuse froide, reconnaissable à l’oxyde de fer de son sol. Curiosity et Perseverance y étudient son histoire et son potentiel passé pour la vie.'
+  if (/iss|station spatiale/.test(value)) return 'L’ISS est un laboratoire habité qui tourne autour de la Terre à environ 400 km d’altitude. Elle effectue presque 16 orbites par jour.'
+  if (/trou noir/.test(value)) return 'Un trou noir est une région où la gravité est si intense que la lumière ne peut plus s’échapper au-delà de son horizon. On le détecte grâce à ses effets sur la matière voisine.'
+  if (/lune/.test(value)) return 'La Lune est le satellite naturel de la Terre. Elle nous présente presque toujours la même face et accomplit un tour autour de la Terre en environ 27 jours.'
+  return 'SolarBot est momentanément limité, mais les pages de SolarScope restent disponibles. Essaie une question sur le Soleil, Mars, la Lune, l’ISS ou les trous noirs.'
 }
 
 async function wait(milliseconds: number) {

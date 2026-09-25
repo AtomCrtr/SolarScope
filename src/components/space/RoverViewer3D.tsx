@@ -1,6 +1,7 @@
 'use client'
 
 import { Component, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import SpaceIcon from '@/components/ui/SpaceIcon'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useGLTF, OrbitControls, Html } from '@react-three/drei'
 import Image from 'next/image'
@@ -61,7 +62,7 @@ function CanvasLoader() {
     return (
         <Html center>
             <div style={{ color: 'var(--nebula)', fontSize: '0.75rem', textAlign: 'center', pointerEvents: 'none' }}>
-                <div style={{ fontSize: '1.5rem', marginBottom: 6 }}>⚙️</div>
+                <div style={{ fontSize: '1.5rem', marginBottom: 6 }}><SpaceIcon name="refresh" size={18} className="inline-icon" /></div>
                 Chargement modèle 3D…
             </div>
         </Html>
@@ -115,7 +116,7 @@ function CuriosityDisplay({ height }: { height: number }) {
                 }}
             />
             <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', textAlign: 'center', marginTop: '0.25rem' }}>
-                🎨 Rendu 3D officiel NASA/JPL · Curiosity MSL · Cratère Gale
+                Rendu 3D officiel NASA/JPL · Curiosity MSL · Cratère Gale
             </p>
         </div>
     )
@@ -172,7 +173,7 @@ export default function RoverViewer3D({ rover, height = 340 }: RoverViewer3DProp
                     border: `1px solid ${meta.color}30`,
                     display: 'flex', alignItems: 'center', gap: 6,
                 }}>
-                    <span style={{ fontSize: '0.65rem' }}>🛸</span>
+                    <span style={{ fontSize: '0.65rem' }}><SpaceIcon name="satellite" size={18} className="inline-icon" /></span>
                     <span style={{ fontSize: '0.68rem', fontWeight: 700, color: meta.color, fontFamily: 'var(--font-display)' }}>{meta.name}</span>
                     <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>
                         {meta.has3D && !glbError ? 'Modèle 3D interactif' : 'Rendu officiel NASA/JPL'}
@@ -197,7 +198,7 @@ export default function RoverViewer3D({ rover, height = 340 }: RoverViewer3DProp
             {/* Controls hint for 3D */}
             {rover === 'perseverance' && !glbError && (
                 <div style={{ position: 'absolute', bottom: 8, right: 12, fontSize: '0.7rem', color: 'var(--text-muted)', pointerEvents: 'none' }}>
-                    🖱 Clic + glisser · Scroll pour zoomer
+                    Clic + glisser · Scroll pour zoomer
                 </div>
             )}
         </div>

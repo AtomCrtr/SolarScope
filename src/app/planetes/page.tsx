@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, Suspense, lazy } from 'react'
-import { motion } from 'framer-motion'
+import SpaceIcon from '@/components/ui/SpaceIcon'
 import dynamic from 'next/dynamic'
 import KidsGuide from '@/components/learning/KidsGuide'
 import DataSourceNote from '@/components/learning/DataSourceNote'
@@ -34,13 +34,13 @@ export default function PlanetesPage() {
 
     return (
         <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="page-header">
-                <div className="badge">🪐 SYSTÈME SOLAIRE</div>
+            <div className="page-header motion-enter">
+                <div className="badge"><SpaceIcon name="planet" size={18} className="inline-icon" /> SYSTÈME SOLAIRE</div>
                 <h1 className="page-title">
                     Planètes & Lunes
                 </h1>
                 <p className="page-subtitle">Observe, fais tourner et compare les huit mondes qui voyagent autour du Soleil.</p>
-            </motion.div>
+            </div>
 
             <KidsGuide topic="planetes" />
             <DataSourceNote
@@ -78,7 +78,7 @@ export default function PlanetesPage() {
             </div>
 
             {/* 3D viewer + info panel */}
-            <motion.div key={selected} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="card" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
+            <div key={selected} className="card motion-enter" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', alignItems: 'center' }} className="max-sm:grid-cols-1">
                     {/* 3D Globe */}
                     <div style={{ height: 280, borderRadius: '1rem', overflow: 'hidden', background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.95) 100%)', position: 'relative' }}>
@@ -100,7 +100,7 @@ export default function PlanetesPage() {
                                 <span style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>Texture non disponible</span>
                             </div>
                         )}
-                        <div style={{ position: 'absolute', bottom: '0.625rem', left: '50%', transform: 'translateX(-50%)', color: 'var(--text-muted)', fontSize: '0.65rem', whiteSpace: 'nowrap' }}>🖱 Faire glisser pour tourner</div>
+                        <div style={{ position: 'absolute', bottom: '0.625rem', left: '50%', transform: 'translateX(-50%)', color: 'var(--text-muted)', fontSize: '0.65rem', whiteSpace: 'nowrap' }}>Faire glisser pour tourner</div>
                     </div>
 
                     {/* Info */}
@@ -111,16 +111,16 @@ export default function PlanetesPage() {
                         </div>
                         <p style={{ color: 'var(--text-muted)', lineHeight: 1.75, marginBottom: '0.875rem', fontSize: '0.85rem' }}>{p.description}</p>
                         <div style={{ padding: '0.75rem 1rem', borderRadius: '0.75rem', background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.18)', marginBottom: '1rem' }}>
-                            <p style={{ color: '#f59e0b', fontSize: '0.78rem', lineHeight: 1.6 }}>💡 <strong>Le savais-tu ?</strong> {p.fun}</p>
+                            <p style={{ color: '#f59e0b', fontSize: '0.78rem', lineHeight: 1.6 }}><SpaceIcon name="bulb" size={18} className="inline-icon" /> <strong>Le savais-tu ?</strong> {p.fun}</p>
                         </div>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.4rem' }}>
                             {[
-                                { label: '⚖️ Gravité', val: `${p.gravity} m/s²` },
-                                { label: '📏 Rayon', val: `${p.meanRadius.toLocaleString('fr-FR')} km` },
-                                { label: '🌡️ Temp.', val: `${p.avgTemp} K` },
-                                { label: '💎 Densité', val: `${p.density} g/cm³` },
-                                { label: '☀️ Distance', val: `${p.distSun} M km` },
-                                { label: '🔄 Orbite', val: `${p.orbit.toLocaleString('fr-FR')} j` },
+                                { label: 'Gravité', val: `${p.gravity} m/s²` },
+                                { label: 'Rayon', val: `${p.meanRadius.toLocaleString('fr-FR')} km` },
+                                { label: 'Temp.', val: `${p.avgTemp} K` },
+                                { label: 'Densité', val: `${p.density} g/cm³` },
+                                { label: 'Distance', val: `${p.distSun} M km` },
+                                { label: 'Orbite', val: `${p.orbit.toLocaleString('fr-FR')} j` },
                             ].map(s => (
                                 <div key={s.label} style={{ padding: '0.5rem 0.75rem', borderRadius: '0.5rem', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}>
                                     <div style={{ color: 'var(--text-muted)', fontSize: '0.67rem', marginBottom: '0.1rem' }}>{s.label}</div>
@@ -130,7 +130,7 @@ export default function PlanetesPage() {
                         </div>
                     </div>
                 </div>
-            </motion.div>
+            </div>
 
             {/* Intro text */}
             <div className="card" style={{ padding: '1.25rem', marginBottom: '2rem' }}>
@@ -151,10 +151,7 @@ export default function PlanetesPage() {
                         <div key={pl.name} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }} onClick={() => setSelected(PLANETS.indexOf(pl))}>
                             <div style={{ width: 72, color: selected === PLANETS.indexOf(pl) ? pl.color : 'var(--text-muted)', fontSize: '0.75rem', textAlign: 'right', flexShrink: 0, fontWeight: 600 }}>{pl.emoji} {pl.name}</div>
                             <div style={{ flex: 1, background: 'rgba(255,255,255,0.04)', borderRadius: 6, overflow: 'hidden', height: 18 }}>
-                                <motion.div
-                                    initial={{ width: 0 }} animate={{ width: `${(pl.meanRadius / maxRadius) * 100}%` }} transition={{ duration: 0.8 }}
-                                    style={{ height: '100%', background: `linear-gradient(90deg, ${pl.color}70, ${pl.color})`, borderRadius: 6 }}
-                                />
+                                <div className="bar-grow" style={{ width: `${(pl.meanRadius / maxRadius) * 100}%`, height: '100%', background: `linear-gradient(90deg, ${pl.color}70, ${pl.color})`, borderRadius: 6 }} />
                             </div>
                             <div style={{ width: 84, color: 'var(--text-muted)', fontSize: '0.68rem', flexShrink: 0 }}>{pl.meanRadius.toLocaleString('fr-FR')} km</div>
                         </div>
@@ -184,7 +181,7 @@ export default function PlanetesPage() {
                                         boxShadow: selected === i ? `0 0 22px ${pl.color}55` : isEarth ? `0 0 10px ${pl.color}35` : 'none',
                                         transition: 'all 0.2s',
                                     }} />
-                                    {isEarth && <div style={{ position: 'absolute', top: -5, right: -5, background: '#1d4ed8', borderRadius: 99, padding: '1px 4px', fontSize: '0.48rem', color: '#fff', fontWeight: 700 }}>🌍 REF</div>}
+                                    {isEarth && <div style={{ position: 'absolute', top: -5, right: -5, background: '#1d4ed8', borderRadius: 99, padding: '1px 4px', fontSize: '0.48rem', color: '#fff', fontWeight: 700 }}><SpaceIcon name="globe" size={18} className="inline-icon" /> REF</div>}
                                 </div>
                                 <div style={{ textAlign: 'center' }}>
                                     <div style={{ fontSize: '0.65rem', color: pl.color, fontWeight: 700 }}>{pl.name}</div>
@@ -267,7 +264,7 @@ export default function PlanetesPage() {
                                 </div>
                             )}
                             <div style={{ marginTop: '0.5rem', padding: '0.5rem 0.75rem', borderRadius: '0.5rem', background: `${pl.color}08`, border: `1px solid ${pl.color}15`, fontSize: '0.68rem', color: 'var(--text-muted)', lineHeight: 1.5, textAlign: 'left' }}>
-                                💡 {pl.fun}
+                                <SpaceIcon name="bulb" size={18} className="inline-icon" /> {pl.fun}
                             </div>
                         </div>
                     ))}
@@ -280,7 +277,7 @@ export default function PlanetesPage() {
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem', minWidth: 700 }}>
                     <thead>
                         <tr style={{ background: 'rgba(0,0,0,0.3)', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-                            {['Planète', 'Type', 'Rayon (km)', 'Gravité', 'Temp (K)', 'Densité', 'Dist. ☀️', 'Lunes', 'Orbite'].map(h => (
+                            {['Planète', 'Type', 'Rayon (km)', 'Gravité', 'Temp (K)', 'Densité', 'Dist.', 'Lunes', 'Orbite'].map(h => (
                                 <th key={h} style={{ padding: '0.675rem 0.875rem', textAlign: 'left', color: 'var(--text-muted)', fontWeight: 600, whiteSpace: 'nowrap' }}>{h}</th>
                             ))}
                         </tr>

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import SpaceIcon from '@/components/ui/SpaceIcon'
 import { SCIENTIFIC_SOURCES, formatCheckedOn } from '@/lib/data/source-registry'
 import { createPageMetadata } from '@/lib/config/site'
 
@@ -15,7 +16,7 @@ export default function SourcesPage() {
   return (
     <div className="container prose-page sources-page">
       <header className="page-header">
-        <div className="badge">🔎 DONNÉES EXPLIQUÉES</div>
+        <div className="badge"><SpaceIcon name="search" size={18} className="inline-icon" /> DONNÉES EXPLIQUÉES</div>
         <h1 className="page-title">Comment savons-nous cela ?</h1>
         <p className="page-subtitle">Chaque chiffre important indique sa source, son type et sa dernière vérification.</p>
       </header>

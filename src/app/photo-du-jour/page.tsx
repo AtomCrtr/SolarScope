@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import KidsGuide from '@/components/learning/KidsGuide'
+import SpaceIcon from '@/components/ui/SpaceIcon'
 import { getApodWithFallback, type ApodEntry } from '@/lib/data/apod'
 
 export default async function ApodPage() {
@@ -11,7 +12,7 @@ export default async function ApodPage() {
         <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
             <div className="page-header">
                 <div className="badge" style={{ background: 'rgba(6,182,212,0.12)', color: '#22d3ee', borderColor: 'rgba(6,182,212,0.25)' }}>
-                    🌠 NASA APOD — CHAQUE JOUR
+                    <SpaceIcon name="camera" size={18} className="inline-icon" /> NASA APOD — CHAQUE JOUR
                 </div>
                 <h1 className="page-title">
                     Photo du Jour
@@ -23,7 +24,7 @@ export default async function ApodPage() {
 
             {source === 'fallback' && (
                 <div role="status" className="apod-fallback-note">
-                    <strong>📡 NASA APOD ne répond pas actuellement.</strong>
+                    <strong><SpaceIcon name="signal" size={18} className="inline-icon" /> NASA APOD ne répond pas actuellement.</strong>
                     <span>SolarScope affiche la dernière photo de référence conservée, datée du {new Date(hero.date).toLocaleDateString('fr-FR')}.</span>
                 </div>
             )}
@@ -44,7 +45,7 @@ export default async function ApodPage() {
                             )}
                         </div>
                         <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                            <div style={{ fontSize: '0.72rem', color: '#22d3ee', fontWeight: 600, letterSpacing: '0.08em', marginBottom: '0.75rem' }}>✨ IMAGE DU JOUR</div>
+                            <div style={{ fontSize: '0.72rem', color: '#22d3ee', fontWeight: 600, letterSpacing: '0.08em', marginBottom: '0.75rem' }}><SpaceIcon name="sparkle" size={18} className="inline-icon" /> IMAGE DU JOUR</div>
                             <h2 style={{ color: 'var(--text)', fontWeight: 800, fontSize: '1.3rem', fontFamily: 'var(--font-display)', marginBottom: '1rem', lineHeight: 1.3 }}>
                                 {hero.title}
                             </h2>
@@ -59,9 +60,9 @@ export default async function ApodPage() {
                                     className="btn-primary"
                                     style={{ fontSize: '0.85rem', padding: '0.65rem 1.5rem' }}
                                 >
-                                    {hero.media_type === 'video' ? '▶ Voir la vidéo' : '🚀 Voir sur NASA.gov'}
+                                    {hero.media_type === 'video' ? '▶ Voir la vidéo' : 'Voir sur NASA.gov'}
                                 </a>
-                                {hero.date && <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>📅 {hero.date}</span>}
+                                {hero.date && <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}><SpaceIcon name="calendar" size={18} className="inline-icon" /> {hero.date}</span>}
                                 {hero.copyright && <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>© {hero.copyright}</span>}
                             </div>
                         </div>
@@ -77,7 +78,7 @@ export default async function ApodPage() {
                         <Image src={p.url} alt={p.title} width={600} height={400} sizes="(max-width: 768px) 50vw, 25vw" style={{ width: '100%', height: '160px', objectFit: 'cover' }} />
                         <div style={{ padding: '0.75rem' }}>
                             <p style={{ color: 'var(--text)', fontSize: '0.78rem', fontWeight: 600, lineHeight: 1.4 }}>{p.title?.slice(0, 50)}{p.title?.length > 50 ? '…' : ''}</p>
-                            <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', marginTop: '0.3rem' }}>📅 {p.date}</p>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', marginTop: '0.3rem' }}><SpaceIcon name="calendar" size={18} className="inline-icon" /> {p.date}</p>
                         </div>
                     </div>
                 ))}

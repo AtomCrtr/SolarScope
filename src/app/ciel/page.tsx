@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import SpaceIcon, { type SpaceIconName } from '@/components/ui/SpaceIcon'
+
 import KidsGuide from '@/components/learning/KidsGuide'
 import TonightSky from '@/components/space/TonightSky'
 
@@ -72,9 +73,9 @@ export default function CielPage() {
     return (
         <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
 
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="page-header">
+            <div className="page-header motion-enter">
                 <div className="badge" style={{ background: 'rgba(14,165,233,0.12)', color: '#38bdf8', borderColor: 'rgba(14,165,233,0.25)' }}>
-                    🌌 CIEL EN DIRECT
+                    <SpaceIcon name="sparkle" size={18} className="inline-icon" /> CIEL EN DIRECT
                 </div>
                 <h1 className="page-title">
                     Carte du Ciel
@@ -82,13 +83,13 @@ export default function CielPage() {
                 <p className="page-subtitle">
                     Qu&apos;est-ce qu&apos;on voit <strong style={{ color: '#38bdf8' }}>ce soir</strong> depuis chez toi ? La Lune, les planètes et les passages de la Station spatiale, calculés pour ta zone.
                 </p>
-            </motion.div>
+            </div>
 
             <KidsGuide topic="ciel" />
 
             {/* Location banner */}
             <div className="card" style={{ padding: '0.875rem 1.25rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-                <span style={{ fontSize: '1.25rem' }}>📍</span>
+                <span style={{ fontSize: '1.25rem' }}><SpaceIcon name="pin" size={18} className="inline-icon" /></span>
                 <div style={{ flex: 1 }}>
                     {geoLoading ? (
                         <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Détection de ta position…</span>
@@ -145,13 +146,13 @@ export default function CielPage() {
                 <h3 className="section-title" style={{ color: '#38bdf8', fontSize: '1rem' }}>Conseils pour observer le ciel</h3>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem' }}>
                     {[
-                        { icon: '🌑', tip: 'Observe quand la Lune est absente ou en croissant — elle éclaire trop le ciel sinon.' },
-                        { icon: '🏙️', tip: 'Éloigne-toi des lumières de la ville. 30 min de route changent tout pour voir la Voie lactée !' },
-                        { icon: '👁️', tip: 'Laisse 20 minutes à tes yeux pour s\'adapter au noir. N\'allume pas de téléphone blanc.' },
-                        { icon: '🔭', tip: 'Commence à l\'œil nu, puis avec des jumelles 10×50 — idéales pour débuter l\'observation.' },
+                        { icon: 'moon-stars', tip: 'Observe quand la Lune est absente ou en croissant — elle éclaire trop le ciel sinon.' },
+                        { icon: 'bulb', tip: 'Éloigne-toi des lumières de la ville. 30 min de route changent tout pour voir la Voie lactée !' },
+                        { icon: 'eye', tip: 'Laisse 20 minutes à tes yeux pour s\'adapter au noir. N\'allume pas de téléphone blanc.' },
+                        { icon: 'telescope', tip: 'Commence à l\'œil nu, puis avec des jumelles 10×50 — idéales pour débuter l\'observation.' },
                     ].map(t => (
-                        <div key={t.icon} style={{ display: 'flex', gap: '0.5rem', padding: '0.75rem', borderRadius: '0.5rem', background: 'rgba(14,165,233,0.05)', border: '1px solid rgba(14,165,233,0.08)' }}>
-                            <span style={{ fontSize: '1.1rem', flexShrink: 0 }}>{t.icon}</span>
+                        <div key={t.tip} style={{ display: 'flex', gap: '0.5rem', padding: '0.75rem', borderRadius: '0.5rem', background: 'rgba(14,165,233,0.05)', border: '1px solid rgba(14,165,233,0.08)' }}>
+                            <span style={{ flexShrink: 0, color: '#7dd3fc' }}><SpaceIcon name={t.icon as SpaceIconName} size={20} /></span>
                             <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem', lineHeight: 1.6 }}>{t.tip}</p>
                         </div>
                     ))}

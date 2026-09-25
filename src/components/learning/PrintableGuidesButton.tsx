@@ -1,4 +1,5 @@
 'use client'
+import SpaceIcon from '@/components/ui/SpaceIcon'
 
 export default function PrintableGuidesButton() {
   return (
@@ -8,7 +9,7 @@ export default function PrintableGuidesButton() {
       onClick={() => window.print()}
       data-printable-guides
     >
-      🖨️ Imprimer les fiches express
+      <SpaceIcon name="print" size={18} className="inline-icon" /> Imprimer les fiches express
     </button>
   )
 }

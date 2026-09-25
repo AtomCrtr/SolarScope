@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import SpaceIcon, { type SpaceIconName } from '@/components/ui/SpaceIcon'
+
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import type { DashboardData, IssPosition } from '@/lib/data/space-data'
@@ -95,9 +96,9 @@ export default function ISSPage() {
         <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
 
             {/* Header */}
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="page-header">
+            <div className="page-header motion-enter">
                 <div className="badge" style={{ background: 'rgba(59,130,246,0.12)', color: '#60a5fa', borderColor: 'rgba(59,130,246,0.25)' }}>
-                    🛰️ STATION SPATIALE — POSITION EN DIRECT
+                    <SpaceIcon name="satellite" size={18} className="inline-icon" /> STATION SPATIALE — POSITION EN DIRECT
                 </div>
                 <h1 className="page-title">
                     ISS Tracker
@@ -105,7 +106,7 @@ export default function ISSPage() {
                 <p className="page-subtitle">
                     La Station Spatiale Internationale se déplace à <strong style={{ color: '#60a5fa' }}>28 000 km/h</strong> — elle fait le tour de la Terre en 92 minutes !
                 </p>
-            </motion.div>
+            </div>
 
             <KidsGuide topic="iss" />
             <DataSourceNote source="NASA / Human Spaceflight" href="https://www.nasa.gov/international-space-station/" refreshed="Position mise à jour par le site ; les repères restent affichés si le flux est indisponible" />
@@ -126,10 +127,10 @@ export default function ISSPage() {
                     ariaLabel="Position et vitesse actuelles de l’ISS"
                     className="iss-live-metrics"
                     items={[
-                        { icon: '📍', label: 'Latitude', value: issPos ? formatLatLng(issPos.latitude, 'N', 'S') : missingPosition, color: '#bfdbfe', monospace: true },
-                        { icon: '↔️', label: 'Longitude', value: issPos ? formatLatLng(issPos.longitude, 'E', 'O') : missingPosition, color: '#bfdbfe', monospace: true },
-                        { icon: '🚀', label: 'Altitude', value: issPos ? `${issPos.altitude.toFixed(1)} km` : missingPosition, color: '#bfdbfe', monospace: true },
-                        { icon: '⚡', label: 'Vitesse', value: issPos ? `${issPos.velocity.toFixed(0)} km/h` : missingPosition, color: '#bfdbfe', monospace: true },
+                        { icon: 'pin', label: 'Latitude', value: issPos ? formatLatLng(issPos.latitude, 'N', 'S') : missingPosition, color: '#bfdbfe', monospace: true },
+                        { icon: 'compass', label: 'Longitude', value: issPos ? formatLatLng(issPos.longitude, 'E', 'O') : missingPosition, color: '#bfdbfe', monospace: true },
+                        { icon: 'rocket', label: 'Altitude', value: issPos ? `${issPos.altitude.toFixed(1)} km` : missingPosition, color: '#bfdbfe', monospace: true },
+                        { icon: 'bolt', label: 'Vitesse', value: issPos ? `${issPos.velocity.toFixed(0)} km/h` : missingPosition, color: '#bfdbfe', monospace: true },
                     ]}
                 />
             </section>
@@ -138,7 +139,7 @@ export default function ISSPage() {
                 <article className="card iss-orbit-card">
                     <header className="iss-panel-heading">
                         <div>
-                            <span className="iss-panel-icon" aria-hidden="true">🌍</span>
+                            <span className="iss-panel-icon" aria-hidden="true"><SpaceIcon name="globe" size={18} className="inline-icon" /></span>
                             <div>
                                 <span className="iss-kicker">CARTE 3D</span>
                                 <h2>Position orbitale</h2>
@@ -165,7 +166,7 @@ export default function ISSPage() {
                     <section className="card iss-crew-card" aria-labelledby="iss-crew-title">
                         <header className="iss-panel-heading">
                             <div>
-                                <span className="iss-panel-icon" aria-hidden="true">👨‍🚀</span>
+                                <span className="iss-panel-icon" aria-hidden="true"><SpaceIcon name="family" size={18} className="inline-icon" /></span>
                                 <div>
                                     <span className="iss-kicker">À BORD</span>
                                     <h2 id="iss-crew-title">Équipage actuel</h2>
@@ -187,13 +188,13 @@ export default function ISSPage() {
                     <section className="card iss-facts-card" aria-labelledby="iss-facts-title">
                         <h2 id="iss-facts-title" className="sr-only">Repères sur la station</h2>
                         {[
-                            { icon: '📅', val: daysOnOrbit === null ? '…' : `${daysOnOrbit} j.`, label: 'En orbite' },
-                            { icon: '🏗️', val: '420 t', label: 'Masse' },
-                            { icon: '📐', val: '109 m', label: 'Envergure' },
-                            { icon: '🔄', val: '16/j', label: 'Tours/jour' },
+                            { icon: 'calendar', val: daysOnOrbit === null ? '…' : `${daysOnOrbit} j.`, label: 'En orbite' },
+                            { icon: 'scale', val: '420 t', label: 'Masse' },
+                            { icon: 'ruler', val: '109 m', label: 'Envergure' },
+                            { icon: 'refresh', val: '16/j', label: 'Tours/jour' },
                         ].map(f => (
                             <div key={f.label}>
-                                <span aria-hidden="true">{f.icon}</span>
+                                <SpaceIcon name={f.icon as SpaceIconName} size={20} />
                                 <strong>{f.val}</strong>
                                 <small>{f.label}</small>
                             </div>
@@ -207,13 +208,13 @@ export default function ISSPage() {
                 <h2 className="section-title" style={{ color: '#60a5fa', fontSize: '1rem' }}>Le savais-tu ?</h2>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '0.75rem' }}>
                     {[
-                        { icon: '🌅', fact: 'Les astronautes voient le Soleil se lever et se coucher 16 fois par jour en orbite !' },
-                        { icon: '💧', fact: 'Sur l\'ISS, l\'eau (dont l\'urine !) est recyclée à 90%. Chaque goutte compte !' },
-                        { icon: '👁️', fact: 'L\'ISS est visible à l\'œil nu depuis la Terre. Elle brille comme Vénus lors de ses passages !' },
-                        { icon: '🔬', fact: '+3 000 expériences scientifiques ont été réalisées à bord depuis 2000.' },
+                        { icon: 'sun', fact: 'Les astronautes voient le Soleil se lever et se coucher 16 fois par jour en orbite !' },
+                        { icon: 'drop', fact: 'Sur l\'ISS, l\'eau (dont l\'urine !) est recyclée à 90%. Chaque goutte compte !' },
+                        { icon: 'eye', fact: 'L\'ISS est visible à l\'œil nu depuis la Terre. Elle brille comme Vénus lors de ses passages !' },
+                        { icon: 'search', fact: '+3 000 expériences scientifiques ont été réalisées à bord depuis 2000.' },
                     ].map(f => (
-                        <div key={f.icon} style={{ display: 'flex', gap: '0.5rem', padding: '0.75rem', borderRadius: '0.625rem', background: 'rgba(59,130,246,0.05)', border: '1px solid rgba(59,130,246,0.1)' }}>
-                            <span style={{ fontSize: '1.2rem', flexShrink: 0 }}>{f.icon}</span>
+                        <div key={f.fact} style={{ display: 'flex', gap: '0.5rem', padding: '0.75rem', borderRadius: '0.625rem', background: 'rgba(59,130,246,0.05)', border: '1px solid rgba(59,130,246,0.1)' }}>
+                            <span style={{ flexShrink: 0, color: '#93c5fd' }}><SpaceIcon name={f.icon as SpaceIconName} size={20} /></span>
                             <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', lineHeight: 1.6 }}>{f.fact}</p>
                         </div>
                     ))}
@@ -224,7 +225,7 @@ export default function ISSPage() {
             {nextLaunch && (
                 <div className="card iss-next-launch">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-                        <span style={{ fontSize: '1.5rem' }}>🚀</span>
+                        <span style={{ fontSize: '1.5rem' }}><SpaceIcon name="rocket" size={18} className="inline-icon" /></span>
                         <div style={{ flex: 1 }}>
                             <div style={{ color: 'var(--nebula)', fontWeight: 700, fontSize: '0.85rem', fontFamily: 'var(--font-display)' }}>Prochain lancement</div>
                             <div style={{ color: 'var(--text)', fontWeight: 600 }}>{nextLaunch.name}</div>
