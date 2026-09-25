@@ -44,6 +44,8 @@ export default function SourcesPage() {
       </section>
 
       <section className="card prose-card">
+        <h2>Images et textures des planètes</h2>
+        <p>Les cartes 3D de Jupiter, Saturne et Neptune viennent de <a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noopener noreferrer">Solar System Scope</a>, sous licence <a href="https://creativecommons.org/licenses/by/4.0/deed.fr" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>, d’après des images de la NASA. Les textures de Mercure et d’Uranus sont des illustrations créées pour SolarScope, pas des photographies.</p>
         <h2>Une donnée absente n’est pas inventée</h2>
         <p>Lorsqu’une source en direct est temporairement indisponible, SolarScope préfère l’indiquer clairement. Cela évite de faire passer une ancienne valeur ou une estimation pour une observation actuelle.</p>
         <p><Link href="/parents-enseignants">← Conseils pour les parents et enseignants</Link></p>

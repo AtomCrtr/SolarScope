@@ -137,6 +137,7 @@ Lorsqu’une source distante ne répond pas, SolarScope affiche soit la dernièr
 | [Where the ISS at?](https://wheretheiss.at/) | Position et télémétrie de l’ISS |
 | [Launch Library 2](https://thespacedevs.com/llapi) · [Space Launch Now](https://spacelaunchnow.app/) | Prochains lancements spatiaux et leur fiche |
 | [Nominatim / OpenStreetMap](https://nominatim.org/) | Nom de la zone d’observation à partir d’une position |
+| [Solar System Scope](https://www.solarsystemscope.com/textures/) | Textures 3D de Jupiter, Saturne et Neptune (CC BY 4.0) |
 | [Google Gemini](https://ai.google.dev/) | Réponses optionnelles de SolarBot, avec repli local |
 
 Les faits stables et les données en direct sont distingués dans le code par un [registre de sources](src/lib/data/source-registry.ts). Chaque donnée importante peut afficher sa provenance, sa date de vérification et son comportement en cas d’indisponibilité.
