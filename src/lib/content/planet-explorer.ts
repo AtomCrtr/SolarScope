@@ -25,7 +25,7 @@ export type ExplorerPlanet = {
 
 export const PLANET_EXPLORER_PLANETS: ExplorerPlanet[] = [
   {
-    id: 'mercury', name: 'Mercure', emoji: '☿', color: '#a8b3c7', texture: null, kind: 'Planète rocheuse', radiusKm: 2439.7, distanceMillionKm: 57.9, moons: 0,
+    id: 'mercury', name: 'Mercure', emoji: '☿', color: '#a8b3c7', texture: '/textures/mercury.jpg', kind: 'Planète rocheuse', radiusKm: 2439.7, distanceMillionKm: 57.9, moons: 0,
     description: 'La plus petite planète et la plus proche du Soleil.',
     funFact: 'Sur Mercure, un jour est plus long qu’une année !',
     focuses: {
@@ -97,7 +97,7 @@ export const PLANET_EXPLORER_PLANETS: ExplorerPlanet[] = [
     challenge: { question: 'De quoi sont surtout faits les anneaux de Saturne ?', choices: ['De glace et de roche', 'De coton', 'De lumière solide'], answer: 'De glace et de roche', explanation: 'Les anneaux regroupent d’innombrables morceaux de glace et de roche.' },
   },
   {
-    id: 'uranus', name: 'Uranus', emoji: '♅', color: '#67e8f9', texture: null, kind: 'Géante de glace', radiusKm: 25362, distanceMillionKm: 2871, moons: 28,
+    id: 'uranus', name: 'Uranus', emoji: '♅', color: '#67e8f9', texture: '/textures/uranus.jpg', kind: 'Géante de glace', radiusKm: 25362, distanceMillionKm: 2871, moons: 28,
     description: 'Une planète bleutée qui tourne presque couchée sur le côté.',
     funFact: 'Son axe est tellement incliné qu’elle semble rouler autour du Soleil.',
     focuses: {

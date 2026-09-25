@@ -1,21 +1,26 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { CSSProperties } from 'react'
 import { PLANET_EXPLORER_PLANETS, PLANET_FOCUS_ORDER, type PlanetFocus } from '@/lib/content/planet-explorer'
+import { PLANET_MOONS } from '@/lib/content/moons'
+import { formatDistance, travelTimes } from '@/lib/astronomy/travel'
+import SpaceIcon, { type SpaceIconName } from '@/components/ui/SpaceIcon'
 
 const Planet3D = dynamic(() => import('@/components/space/Planet3D'), {
   ssr: false,
   loading: () => <div className="planet-explorer-loading">Chargement du globe…</div>,
 })
 
-const FOCUS_ICONS: Record<PlanetFocus, string> = {
-  identity: '🔎',
-  air: '💨',
-  moons: '🌙',
-  journey: '🛰️',
+const FOCUS_ICONS: Record<PlanetFocus, SpaceIconName> = {
+  identity: 'target',
+  air: 'planet',
+  moons: 'moon-stars',
+  journey: 'rocket',
 }
+
+const PLANET_HASH = /^#planete-([a-z]+)$/
 
 function PlanetFallback({ emoji, color, name }: { emoji: string; color: string; name: string }) {
   return (
@@ -31,6 +36,8 @@ export default function PlanetExplorer() {
   const [viewerKey, setViewerKey] = useState(0)
   const [showComparison, setShowComparison] = useState(false)
   const [answer, setAnswer] = useState<string | null>(null)
+  const [moonTexture, setMoonTexture] = useState<{ planetId: string; texture: string; name: string } | null>(null)
+  const [distance, setDistance] = useState<{ planetId: string; km: number } | null>(null)
 
   const planet = useMemo(
     () => PLANET_EXPLORER_PLANETS.find(item => item.id === selectedId) ?? PLANET_EXPLORER_PLANETS[2],
@@ -46,13 +53,50 @@ export default function PlanetExplorer() {
     setFocus('identity')
     setViewerKey(value => value + 1)
     setAnswer(null)
+    setMoonTexture(null)
   }
 
+  // The solar-system map links to #planete-<id>: open that planet here.
+  useEffect(() => {
+    const openFromHash = () => {
+      const id = window.location.hash.match(PLANET_HASH)?.[1]
+      if (!id || !PLANET_EXPLORER_PLANETS.some(item => item.id === id)) return
+      setSelectedId(id)
+      setFocus('identity')
+      setViewerKey(value => value + 1)
+      setAnswer(null)
+      setMoonTexture(null)
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      document.getElementById('explorateur')?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' })
+    }
+    const frame = window.requestAnimationFrame(openFromHash)
+    window.addEventListener('hashchange', openFromHash)
+    return () => {
+      window.cancelAnimationFrame(frame)
+      window.removeEventListener('hashchange', openFromHash)
+    }
+  }, [])
+
+  // Real Earth–planet distance for today; the astronomy code is loaded on demand.
+  useEffect(() => {
+    if (selectedId === 'earth') return
+    let cancelled = false
+    import('@/lib/astronomy/planet-distance').then(({ distanceFromEarthKm }) => {
+      const km = distanceFromEarthKm(selectedId, new Date())
+      if (!cancelled && km !== null) setDistance({ planetId: selectedId, km })
+    })
+    return () => { cancelled = true }
+  }, [selectedId])
+
+  const moons = PLANET_MOONS[planet.id] ?? []
+  const viewerTexture = moonTexture?.planetId === planet.id ? moonTexture.texture : planet.texture
+  const todayDistance = distance?.planetId === planet.id ? distance.km : null
+
   return (
-    <section className="planet-explorer" aria-labelledby="planet-explorer-title" data-planet-explorer>
+    <section className="planet-explorer" id="explorateur" aria-labelledby="planet-explorer-title" data-planet-explorer>
       <div className="planet-explorer-heading">
         <div>
-          <span className="planet-explorer-kicker">🧭 EXPLORATEUR INTERACTIF · 5 MIN</span>
+          <span className="planet-explorer-kicker">EXPLORATEUR INTERACTIF · 5 MIN</span>
           <h2 id="planet-explorer-title">Choisis une planète, puis joue au détective.</h2>
           <p>Tu peux tourner le globe, ouvrir une seule idée à la fois et finir par un mini-défi.</p>
         </div>
@@ -78,14 +122,14 @@ export default function PlanetExplorer() {
       <div className="planet-explorer-main">
         <div className="planet-explorer-viewer">
           <div className="planet-explorer-model" key={viewerKey}>
-            {planet.texture ? (
+            {viewerTexture ? (
               <Planet3D
-                textureUrl={planet.texture}
-                size={planet.hasRings ? 1.55 : 1.9}
-                hasRings={planet.hasRings}
-                atmosphereColor={planet.atmosphereColor}
+                textureUrl={viewerTexture}
+                size={planet.hasRings && !moonTexture ? 1.55 : 1.9}
+                hasRings={planet.hasRings && !moonTexture}
+                atmosphereColor={moonTexture ? undefined : planet.atmosphereColor}
                 rotationSpeed={0.0025}
-                label={planet.name}
+                label={moonTexture?.planetId === planet.id ? moonTexture.name : planet.name}
               />
             ) : <PlanetFallback emoji={planet.emoji} color={planet.color} name={planet.name} />}
           </div>
@@ -114,24 +158,24 @@ export default function PlanetExplorer() {
                 aria-selected={focus === item}
                 onClick={() => setFocus(item)}
               >
-                <span aria-hidden="true">{FOCUS_ICONS[item]}</span>
+                <SpaceIcon name={FOCUS_ICONS[item]} size={16} />
                 {planet.focuses[item].label}
               </button>
             ))}
           </div>
 
           <div className="planet-explorer-focus-card" role="tabpanel">
-            <span aria-hidden="true">{FOCUS_ICONS[focus]}</span>
+            <SpaceIcon name={FOCUS_ICONS[focus]} size={22} />
             <p>{planet.focuses[focus].text}</p>
           </div>
 
           <div className="planet-explorer-fun-fact">
-            <span aria-hidden="true">💡</span>
+            <SpaceIcon name="bulb" size={22} />
             <p><strong>Le savais-tu ?</strong> {planet.funFact}</p>
           </div>
 
           <button type="button" className="planet-explorer-compare-toggle" onClick={() => setShowComparison(value => !value)} aria-expanded={showComparison}>
-            ⚖️ {showComparison ? 'Fermer la comparaison' : 'Comparer avec la Terre'}
+            {showComparison ? 'Fermer la comparaison' : 'Comparer avec la Terre'}
           </button>
         </article>
       </div>
@@ -150,9 +194,52 @@ export default function PlanetExplorer() {
         </div>
       )}
 
+      <div className="planet-explorer-extra">
+        <section className="planet-explorer-panel" aria-labelledby="planet-travel-title">
+          <h3 id="planet-travel-title"><SpaceIcon name="rocket" size={20} />{planet.id === 'earth' ? 'Tu es ici !' : `Voyage vers ${planet.name}`}</h3>
+          {planet.id === 'earth' ? (
+            <p>La Terre est notre point de départ. Choisis une autre planète pour calculer le voyage depuis chez nous.</p>
+          ) : todayDistance === null ? (
+            <p role="status">Calcul de la distance du jour…</p>
+          ) : (
+            <>
+              <p>Aujourd’hui, {planet.name} est à <strong>{formatDistance(todayDistance)}</strong> de la Terre. Combien de temps faudrait-il pour y aller en ligne droite ?</p>
+              <ul className="planet-travel-list">
+                {travelTimes(todayDistance).map(mode => (
+                  <li key={mode.id}><span>{mode.label}</span><strong>{mode.duration}</strong></li>
+                ))}
+              </ul>
+              <small>Les planètes bougent : la distance change chaque jour. Les vraies sondes suivent une trajectoire courbe, plus longue.</small>
+            </>
+          )}
+        </section>
+
+        <section className="planet-explorer-panel" aria-labelledby="planet-moons-title">
+          <h3 id="planet-moons-title"><SpaceIcon name="moon-stars" size={20} />{moons.length ? `Ses lunes principales` : 'Pas de lune'}</h3>
+          {moons.length ? (
+            <ul className="planet-moon-list">
+              {moons.map(moon => (
+                <li key={moon.name}>
+                  <strong>{moon.name}</strong>
+                  <span>{moon.diameterKm.toLocaleString('fr-FR')} km de diamètre · {moon.fact}</span>
+                  {moon.texture && (
+                    moonTexture?.planetId === planet.id
+                      ? <button type="button" onClick={() => { setMoonTexture(null); setViewerKey(value => value + 1) }}>Revenir à {planet.name}</button>
+                      : <button type="button" onClick={() => { setMoonTexture({ planetId: planet.id, texture: moon.texture!, name: moon.name }); setViewerKey(value => value + 1) }}>Voir {moon.name.toLowerCase()} en 3D</button>
+                  )}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>{planet.name} n’a aucune lune connue.</p>
+          )}
+          <small>{planet.moons} lune{planet.moons > 1 ? 's' : ''} recensée{planet.moons > 1 ? 's' : ''} au total · source : NASA Science.</small>
+        </section>
+      </div>
+
       <div className="planet-explorer-challenge" aria-labelledby="planet-explorer-challenge-title">
         <div>
-          <span className="planet-explorer-kicker">🎯 DÉFI EXPRESS</span>
+          <span className="planet-explorer-kicker">DÉFI EXPRESS</span>
           <h3 id="planet-explorer-challenge-title">{planet.challenge.question}</h3>
         </div>
         <div className="planet-explorer-choices">

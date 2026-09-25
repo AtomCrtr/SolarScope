@@ -1,17 +1,19 @@
 'use client'
 
 import { useMemo } from 'react'
+import { distanceFromEarthKm } from '@/lib/astronomy/planet-distance'
+import { formatDistance } from '@/lib/astronomy/travel'
 
 /* ── J2000 Keplerian orbital elements (simplified) ── */
 const PLANET_ELEMENTS = [
-    { name: 'Mercure', symbol: '☿', color: '#94a3b8', a: 0.387, L0: 252.2509, n: 4.092317, emoji: '☿', r: 5 },
-    { name: 'Vénus', symbol: '♀', color: '#f59e0b', a: 0.723, L0: 181.9798, n: 1.602130, emoji: '♀', r: 7 },
-    { name: 'Terre', symbol: '🌍', color: '#60a5fa', a: 1.000, L0: 100.4644, n: 0.985647, emoji: '🌍', r: 7 },
-    { name: 'Mars', symbol: '♂', color: '#f87171', a: 1.524, L0: 355.4330, n: 0.524039, emoji: '♂', r: 6 },
-    { name: 'Jupiter', symbol: '♃', color: '#f97316', a: 5.203, L0: 34.3966, n: 0.083091, emoji: '♃', r: 11 },
-    { name: 'Saturne', symbol: '♄', color: '#eab308', a: 9.537, L0: 50.0775, n: 0.033460, emoji: '♄', r: 9 },
-    { name: 'Uranus', symbol: '♅', color: '#67e8f9', a: 19.19, L0: 314.0550, n: 0.011725, emoji: '♅', r: 8 },
-    { name: 'Neptune', symbol: '♆', color: '#a5b4fc', a: 30.07, L0: 304.3487, n: 0.006020, emoji: '♆', r: 8 },
+    { id: 'mercury', name: 'Mercure', symbol: '☿', color: '#94a3b8', a: 0.387, L0: 252.2509, n: 4.092317, emoji: '☿', r: 5 },
+    { id: 'venus', name: 'Vénus', symbol: '♀', color: '#f59e0b', a: 0.723, L0: 181.9798, n: 1.602130, emoji: '♀', r: 7 },
+    { id: 'earth', name: 'Terre', symbol: '🌍', color: '#60a5fa', a: 1.000, L0: 100.4644, n: 0.985647, emoji: '🌍', r: 7 },
+    { id: 'mars', name: 'Mars', symbol: '♂', color: '#f87171', a: 1.524, L0: 355.4330, n: 0.524039, emoji: '♂', r: 6 },
+    { id: 'jupiter', name: 'Jupiter', symbol: '♃', color: '#f97316', a: 5.203, L0: 34.3966, n: 0.083091, emoji: '♃', r: 11 },
+    { id: 'saturn', name: 'Saturne', symbol: '♄', color: '#eab308', a: 9.537, L0: 50.0775, n: 0.033460, emoji: '♄', r: 9 },
+    { id: 'uranus', name: 'Uranus', symbol: '♅', color: '#67e8f9', a: 19.19, L0: 314.0550, n: 0.011725, emoji: '♅', r: 8 },
+    { id: 'neptune', name: 'Neptune', symbol: '♆', color: '#a5b4fc', a: 30.07, L0: 304.3487, n: 0.006020, emoji: '♆', r: 8 },
 ]
 
 function julianDate(date: Date): number {
@@ -26,7 +28,7 @@ function julianDate(date: Date): number {
 }
 
 interface PlanetPos {
-    name: string; symbol: string; color: string; emoji: string; r: number
+    id: string; name: string; symbol: string; color: string; emoji: string; r: number
     angle: number; x: number; y: number; a: number
 }
 
@@ -42,7 +44,7 @@ function computePositions(svgW: number, svgH: number, scale: number): PlanetPos[
         const angleRad = (L * Math.PI) / 180
         const dist = p.a * scale
         return {
-            name: p.name, symbol: p.symbol, color: p.color, emoji: p.emoji, r: p.r,
+            id: p.id, name: p.name, symbol: p.symbol, color: p.color, emoji: p.emoji, r: p.r,
             angle: L,
             a: p.a,
             x: cx + dist * Math.cos(angleRad),
@@ -62,6 +64,8 @@ export default function SolarSystem2D() {
     const cy = H / 2
 
     const planets = useMemo(() => computePositions(W, H, SCALE), [])
+    // Real Earth–planet distances for today (computed once, like the positions).
+    const distances = useMemo(() => new Map(PLANET_ELEMENTS.map(p => [p.id, distanceFromEarthKm(p.id, new Date())])), [])
     const innerPlanets = useMemo(() => {
         // Inner system view: 0-2 AU
         const S2 = 145
@@ -94,7 +98,7 @@ export default function SolarSystem2D() {
                 {/* Full view */}
                 <div style={{ background: 'rgba(0,0,16,0.95)', borderRadius: '1rem', border: '1px solid rgba(255,255,255,0.06)', overflow: 'hidden', position: 'relative' }}>
                     <div style={{ position: 'absolute', top: 8, left: 12, color: 'var(--text-muted)', fontSize: '0.62rem' }}>Système complet</div>
-                    <svg role="img" aria-label="Position calculée des planètes dans le système solaire" width="100%" viewBox={`0 0 ${W} ${H}`} style={{ display: 'block' }}>
+                    <svg role="group" aria-label="Carte du Système solaire : touche une planète pour l’explorer" width="100%" viewBox={`0 0 ${W} ${H}`} style={{ display: 'block' }}>
                         {/* Stars BG */}
                         {Array.from({ length: 100 }, (_, i) => (
                             <circle key={i} cx={Math.sin(i * 137.5) * W / 2 + cx} cy={Math.cos(i * 137.5) * H / 2 + cy}
@@ -117,7 +121,7 @@ export default function SolarSystem2D() {
                         <text x={cx} y={cy + 24} textAnchor="middle" fill="#fbbf24" fontSize="9" fontWeight="bold">☀</text>
                         {/* Planets */}
                         {planets.map(p => (
-                            <g key={p.name}>
+                            <a key={p.name} href={`#planete-${p.id}`} aria-label={`Explorer ${p.name}`} className="solar-map-planet">
                                 {/* Connector line from orbit to planet */}
                                 <line x1={cx} y1={cy} x2={p.x} y2={p.y} stroke={p.color} strokeWidth="0.3" strokeOpacity="0.15" />
                                 <circle cx={p.x} cy={p.y} r={p.r}
@@ -125,7 +129,9 @@ export default function SolarSystem2D() {
                                 <text x={p.x} y={p.y - p.r - 3} textAnchor="middle" fill={p.color} fontSize="8.5" fontWeight="bold" opacity={0.9}>
                                     {p.name.slice(0, 3).toUpperCase()}
                                 </text>
-                            </g>
+                                {/* Larger invisible target so small planets are easy to tap. */}
+                                <circle cx={p.x} cy={p.y} r={Math.max(p.r + 10, 18)} fill="transparent" />
+                            </a>
                         ))}
                     </svg>
                 </div>
@@ -133,7 +139,7 @@ export default function SolarSystem2D() {
                 {/* Inner planets zoom */}
                 <div style={{ background: 'rgba(0,0,16,0.95)', borderRadius: '1rem', border: '1px solid rgba(255,255,255,0.06)', overflow: 'hidden', position: 'relative' }}>
                     <div style={{ position: 'absolute', top: 8, left: 12, color: 'var(--text-muted)', fontSize: '0.62rem' }}>Planètes intérieures (zoom)</div>
-                    <svg role="img" aria-label="Position calculée des quatre planètes intérieures" width="100%" viewBox="0 0 400 400" style={{ display: 'block' }}>
+                    <svg role="group" aria-label="Zoom sur les quatre planètes intérieures : touche une planète pour l’explorer" width="100%" viewBox="0 0 400 400" style={{ display: 'block' }}>
                         {[0.387, 0.723, 1.0, 1.524].map((a, i) => (
                             <circle key={i} cx={200} cy={200} r={a * 145} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="0.8" />
                         ))}
@@ -146,32 +152,34 @@ export default function SolarSystem2D() {
                         </defs>
                         <text x={200} y={220} textAnchor="middle" fill="#fbbf24" fontSize="10" fontWeight="bold">☀</text>
                         {innerPlanets.map(p => (
-                            <g key={p.name}>
+                            <a key={p.name} href={`#planete-${p.id}`} aria-label={`Explorer ${p.name}`} className="solar-map-planet">
                                 <circle cx={p.x} cy={p.y} r={p.r + 2} fill={p.color} filter={`drop-shadow(0 0 ${p.r + 3}px ${p.color})`} />
                                 <text x={p.x} y={p.y - p.r - 4} textAnchor="middle" fill={p.color} fontSize="9" fontWeight="bold">
                                     {p.name.slice(0, 3).toUpperCase()}
                                 </text>
                                 <line x1={200} y1={200} x2={p.x} y2={p.y} stroke={p.color} strokeWidth="0.4" strokeOpacity="0.2" />
-                            </g>
+                                <circle cx={p.x} cy={p.y} r={Math.max(p.r + 12, 18)} fill="transparent" />
+                            </a>
                         ))}
                     </svg>
                 </div>
             </div>
 
-            {/* Planet angle table */}
-            <div style={{ marginTop: '1rem', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.375rem' }} className="max-sm:grid-cols-2">
-                {planets.map(p => (
-                    <div key={p.name} style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '0.5rem', padding: '0.5rem 0.75rem', border: `1px solid ${p.color}15` }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
-                            <span style={{ fontSize: '0.85rem', color: p.color }}>{p.symbol}</span>
-                            <span style={{ color: 'var(--text)', fontSize: '0.75rem', fontWeight: 700 }}>{p.name}</span>
-                        </div>
-                        <div style={{ color: 'var(--text-muted)', fontSize: '0.65rem', marginTop: 2 }}>
-                            {p.angle.toFixed(1)}° écliptique · {p.a} UA
-                        </div>
-                    </div>
-                ))}
-            </div>
+            {/* Planet cards: today's real distance, opening the explorer. */}
+            <p style={{ marginTop: '1rem', color: 'var(--text-subtle)', fontSize: '0.9rem' }}>Touche une planète pour l’explorer en 3D.</p>
+            <ul className="solar-map-cards">
+                {planets.map(p => {
+                    const km = distances.get(p.id) ?? null
+                    return (
+                        <li key={p.name}>
+                            <a href={`#planete-${p.id}`} style={{ '--planet-color': p.color } as React.CSSProperties}>
+                                <span className="solar-map-card-name"><span aria-hidden="true" style={{ color: p.color }}>{p.symbol}</span>{p.name}</span>
+                                <span className="solar-map-card-meta">{km === null ? 'Tu es ici' : `à ${formatDistance(km)} de nous`}</span>
+                            </a>
+                        </li>
+                    )
+                })}
+            </ul>
         </div>
     )
 }
