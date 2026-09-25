@@ -251,7 +251,8 @@ video {
   background: rgba(255, 255, 255, 0.04);
 }
 
-.locale-switcher button {
+.locale-switcher a {
+  text-decoration: none;
   min-width: 44px;
   min-height: 44px;
   padding: 0 0.5rem;
@@ -268,13 +269,13 @@ video {
   gap: 0.12rem;
 }
 
-.locale-switcher button[aria-pressed="true"] {
+.locale-switcher a[aria-current="page"] {
   background: rgba(139, 92, 246, 0.24);
   color: #f5f3ff;
   box-shadow: 0 1px 8px rgba(99, 102, 241, 0.25);
 }
 
-.locale-switcher button:focus-visible {
+.locale-switcher a:focus-visible {
   outline: 2px solid #a5b4fc;
   outline-offset: 2px;
 }

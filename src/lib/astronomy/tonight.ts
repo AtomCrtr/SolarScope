@@ -1,5 +1,5 @@
 import { Body, Equator, Horizon, Illumination, MoonPhase, Observer, SearchRiseSet } from 'astronomy-engine'
-import { compassDirection, heightLabel, moonPhaseName, type Compass } from './sky-words'
+import { brightnessLabel, compassDirection, heightLabel, moonPhaseName, type Compass } from './sky-words'
 
 export { compassDirection, fromDirection, heightLabel, moonPhaseName, towards, type Compass } from './sky-words'
 
@@ -7,13 +7,6 @@ export { compassDirection, fromDirection, heightLabel, moonPhaseName, towards, t
 export const DARK_SUN_ALTITUDE = -6
 /** Objects lower than this are usually hidden by buildings, trees or haze. */
 export const MIN_VISIBLE_ALTITUDE = 8
-
-function brightnessLabel(magnitude: number): string {
-  if (magnitude < -3) return 'très brillante, impossible à rater'
-  if (magnitude < -1) return 'très brillante'
-  if (magnitude < 1) return 'brillante'
-  return 'visible à l’œil nu'
-}
 
 function horizontal(body: Body, date: Date, observer: Observer) {
   const equatorial = Equator(body, date, observer, true, true)
@@ -48,6 +41,9 @@ export type TonightSky = {
   sunrise: Date | null
   moon: {
     phaseName: string
+    /** 0° new moon, 180° full moon: lets the page name the phase in any language. */
+    phaseAngle: number
+    altitude: number
     illuminatedPercent: number
     /** Lit side grows (waxing) or shrinks (waning): decides which side is drawn lit. */
     waxing: boolean
@@ -78,6 +74,8 @@ export function computeTonight(now: Date, latitude: number, longitude: number): 
   const phaseAngle = MoonPhase(observedAt)
   const moon = {
     phaseName: moonPhaseName(phaseAngle),
+    phaseAngle,
+    altitude: moonPosition.altitude,
     waxing: phaseAngle < 180,
     illuminatedPercent: Math.round(Illumination(Body.Moon, observedAt).phase_fraction * 100),
     isUp: moonUp,

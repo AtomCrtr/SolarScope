@@ -38,3 +38,46 @@ export function moonPhaseName(phaseDegrees: number): string {
   if (phase < 292.5) return 'Dernier quartier'
   return 'Dernier croissant'
 }
+
+// ── English wording, and a single entry point that picks the language ──
+
+const COMPASS_EN: Record<Compass, string> = {
+  Nord: 'north', 'Nord-Est': 'north-east', Est: 'east', 'Sud-Est': 'south-east',
+  Sud: 'south', 'Sud-Ouest': 'south-west', Ouest: 'west', 'Nord-Ouest': 'north-west',
+}
+
+function moonPhaseNameEn(phaseDegrees: number): string {
+  const phase = ((phaseDegrees % 360) + 360) % 360
+  if (phase < 22.5 || phase >= 337.5) return 'New moon'
+  if (phase < 67.5) return 'Waxing crescent'
+  if (phase < 112.5) return 'First quarter'
+  if (phase < 157.5) return 'Waxing gibbous'
+  if (phase < 202.5) return 'Full moon'
+  if (phase < 247.5) return 'Waning gibbous'
+  if (phase < 292.5) return 'Last quarter'
+  return 'Waning crescent'
+}
+
+export function brightnessLabel(magnitude: number, locale: 'fr' | 'en' = 'fr'): string {
+  if (locale === 'en') {
+    if (magnitude < -3) return 'very bright, impossible to miss'
+    if (magnitude < -1) return 'very bright'
+    if (magnitude < 1) return 'bright'
+    return 'visible to the naked eye'
+  }
+  if (magnitude < -3) return 'très brillante, impossible à rater'
+  if (magnitude < -1) return 'très brillante'
+  if (magnitude < 1) return 'brillante'
+  return 'visible à l’œil nu'
+}
+
+export function skyWords(locale: 'fr' | 'en') {
+  if (locale === 'fr') return { towards, fromDirection, heightLabel, moonPhaseName, brightness: (magnitude: number) => brightnessLabel(magnitude, 'fr') }
+  return {
+    towards: (direction: Compass) => `towards the ${COMPASS_EN[direction]}`,
+    fromDirection: (direction: Compass) => `from the ${COMPASS_EN[direction]}`,
+    heightLabel: (altitudeDegrees: number) => (altitudeDegrees < 20 ? 'low on the horizon' : altitudeDegrees < 45 ? 'halfway up' : 'high in the sky'),
+    moonPhaseName: moonPhaseNameEn,
+    brightness: (magnitude: number) => brightnessLabel(magnitude, 'en'),
+  }
+}

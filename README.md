@@ -17,7 +17,7 @@ Il s’adresse d’abord aux enfants de 6 à 12 ans, mais aussi aux adolescents,
 
 🌐 **Découvrir SolarScope : [solar-scope.vercel.app](https://solar-scope.vercel.app)**
 
-> **In English:** SolarScope is a free, ad-free educational website that helps children aged 6 to 12 discover space with simple words, real NASA, ESA and NOAA data, short missions and a space passport kept on their own device. The site is written in French; the home page, navigation, lessons and passport are also available in English (translation awaiting review). Code under MIT, lesson texts under CC BY 4.0.
+> **In English:** SolarScope is a free, ad-free educational website that helps children aged 6 to 12 discover space with simple words, real NASA, ESA and NOAA data, short missions and a space passport kept on their own device. The whole site is available in French and in English at [solar-scope.vercel.app/en](https://solar-scope.vercel.app/en) (English translation awaiting review). Code under MIT, lesson texts under CC BY 4.0.
 
 
 ## D’un projet de fin d’études à une application web complète
@@ -52,7 +52,7 @@ Sur SolarScope, on peut notamment :
 - comprendre le Soleil et sa météo spatiale en direct ;
 - explorer les huit planètes en 3D, cliquer sur la carte du Système solaire, découvrir leurs lunes et calculer la durée d’un voyage ;
 - suivre les rovers sur Mars et observer Perseverance en 3D ;
-- savoir **ce que l’on peut voir ce soir depuis chez soi** : Lune, planètes visibles et prochains passages de l’ISS, calculés sur l’appareil ;
+- savoir **ce que l’on peut voir ce soir depuis chez soi** : Lune, planètes visibles et prochains passages de l’ISS, calculés sur l’appareil, puis les cocher dans son carnet d’observation ;
 - trouver les **météorites tombées près de chez soi** et parcourir le vrai catalogue des exoplanètes confirmées ;
 - suivre l’ISS et les prochaines missions spatiales ;
 - admirer les images du télescope James-Webb et la photo astronomique du jour ;
@@ -84,20 +84,16 @@ La page [Données et sources](https://solar-scope.vercel.app/sources) permet de 
 - Aucun compte enfant n’est nécessaire.
 - Le passeport et la progression restent sur l’appareil utilisé. Pour continuer ailleurs, un code de 9 caractères (ou un QR code) recopie les tampons sans passer par un serveur.
 - SolarBot rappelle de ne jamais partager son nom, son adresse, son école, son téléphone ou son e-mail.
-- Les pages sont utilisables sur ordinateur, tablette et téléphone.
+- Les pages sont utilisables sur ordinateur, tablette et téléphone. Sur les petits appareils, un mode léger remplace la 3D par des images fixes (on peut toujours l’activer ou la désactiver).
 - La navigation est conçue pour rester accessible au clavier et avec les outils d’assistance.
 
 Une page spéciale propose également des repères aux [parents et aux enseignants](https://solar-scope.vercel.app/parents-enseignants) pour accompagner une mission ou lancer une discussion.
 
 ## Et la version anglaise ?
 
-Le français est la langue principale de SolarScope. En anglais, sont traduits :
+Tout le site existe en anglais, à sa propre adresse : `/en`, `/en/soleil`, `/en/planetes`… Le bouton FR/EN passe d’une langue à l’autre sur la même page, et chaque page déclare sa version dans l’autre langue (`hreflang`) pour les moteurs de recherche.
 
-- l’accueil, la navigation, le fil d’Ariane et la barre d’onglets ;
-- les fiches de leçon des 14 missions (`src/lib/content/learning-content.en.ts`) et leurs questions de validation (`src/lib/content/mission-checks.ts`) ;
-- le passeport spatial en entier.
-
-Les données, cartes et activités des pages de mission restent en français pour le moment, et un bandeau le signale.
+Sont traduits : l’accueil, la navigation, les leçons et leurs questions, le passeport, les données et activités des 14 missions (explorateur de planètes, rover, quiz, ciel du soir, météo spatiale…), SolarBot et les pages d’information. Les textes officiels de la NASA (photo du jour, actualités) restent dans leur langue d’origine.
 
 Cette traduction attend une relecture humaine : une bonne traduction pour les enfants doit préserver la simplicité des mots et l’exactitude scientifique, pas seulement traduire les phrases mot à mot.
 
@@ -157,7 +153,7 @@ Les faits stables et les données en direct sont distingués dans le code par un
 
 ## Choix techniques
 
-- **Application** : Next.js 16 App Router, React 19, TypeScript 5
+- **Application** : Next.js 16 App Router, React 19, TypeScript 6
 - **Interface** : CSS responsive, animations CSS (respectent « réduire les animations »), composants accessibles
 - **3D** : Three.js, React Three Fiber et Drei
 - **Données** : routes serveur Next.js, validation des réponses et cache par source
@@ -169,7 +165,8 @@ Les faits stables et les données en direct sont distingués dans le code par un
 ## Respect de la vie privée
 
 - Aucun compte enfant n’est demandé.
-- La progression reste sur l’appareil et peut être effacée depuis le site.
+- La progression et le carnet d’observation restent sur l’appareil et peuvent être effacés depuis le site.
+- Les statistiques de visite (Vercel Web Analytics) sont anonymes, sans cookie, et ne gardent ni les paramètres d’adresse ni les ancres.
 - SolarBot demande de ne jamais partager nom, adresse, école, téléphone ou e-mail.
 - Les clés NASA, Gemini, Redis et cron restent exclusivement côté serveur.
 - La politique complète est disponible sur la page [Confidentialité](https://solar-scope.vercel.app/confidentialite).
@@ -178,7 +175,7 @@ SolarScope est un projet éducatif indépendant et n’est pas un site officiel 
 
 ## Limites connues
 
-- Le français est la langue principale ; en anglais, les données et activités des pages de mission restent en français, et la traduction attend une relecture humaine.
+- La traduction anglaise attend une relecture humaine.
 - Les contenus et flux externes peuvent changer sans préavis malgré les contrôles automatisés.
 - Les tests automatisés complètent, mais ne remplacent pas, une validation régulière avec des enfants, parents et enseignants.
 - La progression ne se synchronise pas toute seule entre appareils : il faut recopier le code du passeport (ou scanner son QR code). Les dates des tampons importés deviennent la date du transfert.
@@ -191,7 +188,7 @@ SolarScope est un projet ouvert aux idées et aux améliorations. Une contributi
 - proposer une nouvelle mission ou une activité ;
 - corriger une information ou ajouter une meilleure source ;
 - améliorer l’accessibilité ou l’affichage sur mobile ;
-- relire la traduction anglaise des leçons et des questions ;
+- relire la traduction anglaise ;
 - réutiliser les leçons en classe : elles sont sous licence CC BY 4.0.
 
 Vous pouvez ouvrir une *issue* sur GitHub pour partager une idée ou signaler un problème.

@@ -1,8 +1,7 @@
 'use client'
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { useSiteLocale } from '@/components/layout/LanguageToggle'
+import Link from '@/components/ui/LocaleLink'
+import { usePagePath, useSiteLocale } from '@/components/layout/LanguageToggle'
 import SpaceIcon, { type SpaceIconName } from '@/components/ui/SpaceIcon'
 
 const TABS: Array<{ href: string; icon: SpaceIconName; label: { fr: string; en: string } }> = [
@@ -15,7 +14,7 @@ const TABS: Array<{ href: string; icon: SpaceIconName; label: { fr: string; en: 
 
 /** Thumb-reachable navigation on phones; hidden from 721 px (see .mobile-tab-bar). */
 export default function MobileTabBar() {
-  const pathname = usePathname()
+  const pathname = usePagePath()
   const locale = useSiteLocale()
 
   return (

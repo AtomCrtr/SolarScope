@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 import SpaceIcon from '@/components/ui/SpaceIcon'
+import { useSiteLocale } from '@/components/layout/LanguageToggle'
 import { readSpaceWeatherHistoryCache, storeSpaceWeatherHistoryCache } from '@/lib/client/space-weather-history-cache'
 import type { HistorySourceState, KpEntry, SpaceWeatherHistoryPayload } from '@/lib/data/space-weather-history'
 
@@ -15,16 +16,17 @@ function getKpColor(kp: number): string {
     return '#10b981'
 }
 
-function getKpLabel(kp: number): string {
-    if (kp >= 8) return 'Tempête G4-G5 — Sévère'
-    if (kp >= 6) return 'Tempête G3 — Forte'
-    if (kp >= 5) return 'Tempête G1-G2 — Modérée'
-    if (kp >= 4) return 'Active — Aurores possibles'
-    if (kp >= 3) return 'Légèrement perturbé'
-    return 'Calme'
+function getKpLabel(kp: number, en = false): string {
+    if (kp >= 8) return en ? 'G4-G5 storm — Severe' : 'Tempête G4-G5 — Sévère'
+    if (kp >= 6) return en ? 'G3 storm — Strong' : 'Tempête G3 — Forte'
+    if (kp >= 5) return en ? 'G1-G2 storm — Moderate' : 'Tempête G1-G2 — Modérée'
+    if (kp >= 4) return en ? 'Active — auroras possible' : 'Active — Aurores possibles'
+    if (kp >= 3) return en ? 'Slightly unsettled' : 'Légèrement perturbé'
+    return en ? 'Quiet' : 'Calme'
 }
 
 export default function KpChart() {
+    const en = useSiteLocale() === 'en'
     const [data, setData] = useState<KpEntry[]>([])
     const [current, setCurrent] = useState<KpEntry | null>(null)
     const [loading, setLoading] = useState(true)
@@ -156,7 +158,7 @@ export default function KpChart() {
     if (loading) {
         return (
             <div className="card" style={{ padding: '2rem', textAlign: 'center' }}>
-                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>⏳ Chargement des données Kp NOAA...</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>⏳ {en ? 'Loading NOAA Kp data…' : 'Chargement des données Kp NOAA…'}</div>
             </div>
         )
     }
@@ -164,7 +166,7 @@ export default function KpChart() {
     if (sourceState === 'unavailable' || !current) {
         return (
             <div className="card" style={{ padding: '2rem', textAlign: 'center' }}>
-                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}><SpaceIcon name="signal" size={18} className="inline-icon" /> Données Kp temporairement indisponibles</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}><SpaceIcon name="signal" size={18} className="inline-icon" /> {en ? 'Kp data temporarily unavailable' : 'Données Kp temporairement indisponibles'}</div>
             </div>
         )
     }
@@ -175,16 +177,16 @@ export default function KpChart() {
         <div className="card" style={{ padding: '1.75rem', marginBottom: '2rem' }}>
             {sourceState === 'cached' && (
                 <div role="status" className="space-data-status is-cached">
-                    <strong>Dernières valeurs connues</strong>
-                    <span>Le flux NOAA est momentanément indisponible. Ces données ne sont pas en direct{cachedAt ? ` · cache du ${new Date(cachedAt).toLocaleString('fr-FR')}` : ''}.</span>
+                    <strong>{en ? 'Last known values' : 'Dernières valeurs connues'}</strong>
+                    <span>{en ? 'The NOAA feed is briefly unavailable. This data is not live' : 'Le flux NOAA est momentanément indisponible. Ces données ne sont pas en direct'}{cachedAt ? ` · ${en ? 'cached on' : 'cache du'} ${new Date(cachedAt).toLocaleString(en ? 'en-GB' : 'fr-FR')}` : ''}.</span>
                 </div>
             )}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
                 <div>
                     <h2 className="section-title" style={{ color: '#fbbf24', marginBottom: '0.25rem' }}>
-                        Indice Kp — Météo spatiale {sourceState === 'cached' ? 'en cache' : 'en direct'}
+                        {en ? `Kp index — ${sourceState === 'cached' ? 'cached' : 'live'} space weather` : `Indice Kp — Météo spatiale ${sourceState === 'cached' ? 'en cache' : 'en direct'}`}
                     </h2>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Source : NOAA SWPC — mis à jour toutes les 3h</p>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>{en ? 'Source: NOAA SWPC — updated every 3 hours' : 'Source : NOAA SWPC — mis à jour toutes les 3h'}</p>
                 </div>
                 {/* Current Kp gauge */}
                 <div style={{
@@ -194,15 +196,15 @@ export default function KpChart() {
                 }}>
                     <div style={{ color: 'var(--text-muted)', fontSize: '0.72rem', fontWeight: 600, letterSpacing: '0.06em', marginBottom: '0.25rem' }}>KP ACTUEL</div>
                     <div style={{ color: kpColor, fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '2.8rem', lineHeight: 1, textShadow: `0 0 20px ${kpColor}` }}>{current.kp.toFixed(1)}</div>
-                    <div style={{ color: kpColor, fontSize: '0.72rem', fontWeight: 600, marginTop: '0.3rem' }}>{getKpLabel(current.kp)}</div>
+                    <div style={{ color: kpColor, fontSize: '0.72rem', fontWeight: 600, marginTop: '0.3rem' }}>{getKpLabel(current.kp, en)}</div>
                 </div>
             </div>
 
             {/* Chart Scale Legend */}
             <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
                 {[
-                    { label: 'Kp 0-2 Calme', color: '#10b981' },
-                    { label: 'Kp 3-4 Actif', color: '#eab308' },
+                    { label: en ? 'Kp 0-2 Quiet' : 'Kp 0-2 Calme', color: '#10b981' },
+                    { label: en ? 'Kp 3-4 Active' : 'Kp 3-4 Actif', color: '#eab308' },
                     { label: 'Kp 5-6 G1-G2', color: '#f97316' },
                     { label: 'Kp 7+ G3+', color: '#f87171' },
                 ].map(s => (
@@ -218,7 +220,7 @@ export default function KpChart() {
                 <canvas
                     ref={canvasRef}
                     role="img"
-                    aria-label="Évolution de l'indice géomagnétique Kp sur sept jours"
+                    aria-label={en ? 'Geomagnetic Kp index over seven days' : 'Évolution de l’indice géomagnétique Kp sur sept jours'}
                     width={760}
                     height={200}
                     style={{ width: '100%', height: 'auto', display: 'block' }}
@@ -226,7 +228,7 @@ export default function KpChart() {
             </div>
 
             <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '0.75rem', textAlign: 'right' }}>
-                <SpaceIcon name="calendar" size={18} className="inline-icon" /> 7 derniers jours · Données NOAA/SWPC · {current.time.slice(0, 16)} UTC
+                <SpaceIcon name="calendar" size={18} className="inline-icon" /> {en ? 'Last 7 days · NOAA/SWPC data' : '7 derniers jours · Données NOAA/SWPC'} · {current.time.slice(0, 16)} UTC
             </p>
         </div>
     )

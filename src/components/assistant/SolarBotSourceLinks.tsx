@@ -1,12 +1,16 @@
+'use client'
+
 import type { PublicSolarBotSource } from '@/lib/content/solarbot-sources'
+import { useSiteLocale } from '@/components/layout/LanguageToggle'
 import SpaceIcon from '@/components/ui/SpaceIcon'
 
 export default function SolarBotSourceLinks({ sources, compact = false }: { sources?: PublicSolarBotSource[]; compact?: boolean }) {
+  const en = useSiteLocale() === 'en'
   if (!sources?.length) return null
 
   return (
-    <aside className={compact ? 'solarbot-sources is-compact' : 'solarbot-sources'} aria-label="Repères officiels associés à la réponse">
-      <strong>Repères officiels</strong>
+    <aside className={compact ? 'solarbot-sources is-compact' : 'solarbot-sources'} aria-label={en ? 'Official references for this answer' : 'Repères officiels associés à la réponse'}>
+      <strong>{en ? 'Official references' : 'Repères officiels'}</strong>
       <ul>
         {sources.map((source, index) => (
           <li key={source.id}>
@@ -21,12 +25,13 @@ export default function SolarBotSourceLinks({ sources, compact = false }: { sour
 }
 
 export function SolarBotReliabilityNote({ degraded, compact = false }: { degraded?: boolean; compact?: boolean }) {
+  const en = useSiteLocale() === 'en'
   if (!degraded) return null
 
   return (
     <p className={compact ? 'solarbot-reliability is-compact' : 'solarbot-reliability'} role="status">
       <span aria-hidden="true"><SpaceIcon name="alert" size={18} className="inline-icon" /> </span>
-      Réponse de secours : vérifie les repères officiels ci-dessous.
+      {en ? 'Backup answer: check the official references below.' : 'Réponse de secours : vérifie les repères officiels ci-dessous.'}
     </p>
   )
 }

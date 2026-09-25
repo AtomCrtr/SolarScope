@@ -3,9 +3,11 @@ const PERSONAL_INFORMATION_PATTERNS = [
   /\b(?:\+33|0033|0)[1-9](?:[\s.-]?\d{2}){4}\b/,
   /\b\d{1,4}\s+(?:rue|avenue|boulevard|chemin|impasse|place|all[eé]e)\b/i,
   /\b(?:je m['’]appelle|mon nom(?: complet)? est|j['’]habite|mon adresse|mon code postal|mon (?:num[eé]ro|t[eé]l[eé]phone)|mon [eé]cole)\b/i,
+  /\b(?:my (?:full )?name is|i live (?:at|in|on)|my address|my (?:phone|phone number|school) is|my postcode|my zip code)\b/i,
 ]
 
 export const SOLARBOT_PRIVACY_REMINDER = 'Pour ta sécurité, ne partage pas ton nom, ton école, ton adresse, ton téléphone ou ton e-mail. Pose plutôt ta question sans information personnelle.'
+export const SOLARBOT_PRIVACY_REMINDER_EN = 'To stay safe, do not share your name, school, address, phone number or email. Ask your question without any personal information.'
 
 export function containsSensitivePersonalInformation(value: string): boolean {
   return PERSONAL_INFORMATION_PATTERNS.some((pattern) => pattern.test(value))

@@ -1,4 +1,4 @@
-import { createPageMetadata } from '@/lib/config/site'
+import { pageMetadata } from '@/lib/config/site'
 
-export const metadata = createPageMetadata('Le Soleil et la météo spatiale', 'Comprends notre étoile et observe des images et mesures de la NASA et de la NOAA.', '/soleil')
+export const metadata = pageMetadata('/soleil')
 export default function Layout({ children }: { children: React.ReactNode }) { return children }

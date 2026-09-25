@@ -27,6 +27,19 @@ const METHOD_NAMES: Record<string, string> = {
   Imaging: 'Image directe : la planète est photographiée',
 }
 
+// The API sends the French labels above; pages translate them with this table.
+const METHOD_NAMES_EN: Record<string, string> = {
+  'Transit : la planète passe devant son étoile': 'Transit: the planet passes in front of its star',
+  'Vitesse radiale : l’étoile « tremble »': 'Radial velocity: the star “wobbles”',
+  'Microlentille : la lumière d’une étoile est déviée': 'Microlensing: a star’s light is bent',
+  'Image directe : la planète est photographiée': 'Direct imaging: the planet is photographed',
+  'Autres méthodes': 'Other methods',
+}
+
+export function methodLabelFor(label: string, locale: 'fr' | 'en'): string {
+  return locale === 'en' ? METHOD_NAMES_EN[label] ?? label : label
+}
+
 export function methodLabel(method: string): string {
   return METHOD_NAMES[method] ?? 'Autres méthodes'
 }

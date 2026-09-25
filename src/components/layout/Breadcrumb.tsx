@@ -1,8 +1,7 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
-import Link from 'next/link'
-import { useSiteLocale } from '@/components/layout/LanguageToggle'
+import Link from '@/components/ui/LocaleLink'
+import { usePagePath, useSiteLocale } from '@/components/layout/LanguageToggle'
 
 type Text = { fr: string; en: string }
 
@@ -46,7 +45,7 @@ const GROUPS: Array<{ id: string; label: Text; pages: Array<{ href: string; titl
 ]
 
 export default function Breadcrumb() {
-    const pathname = usePathname()
+    const pathname = usePagePath()
     const locale = useSiteLocale()
 
     // Find which group and page the current path belongs to

@@ -1,161 +1,150 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import SpaceIcon from '@/components/ui/SpaceIcon'
-
+import SpaceIcon, { type SpaceIconName } from '@/components/ui/SpaceIcon'
 import KidsGuide from '@/components/learning/KidsGuide'
+import { useSiteLocale } from '@/components/layout/LanguageToggle'
 import { recordQuizScore } from '@/lib/client/local-progress'
+import { ANECDOTES, QUIZ_LEVELS, quizBank, type QuizLevelId } from '@/lib/content/quiz-bank'
+import type { SiteLocale } from '@/lib/i18n/paths'
 
-const QUIZ_BANK_DEBUTANT = [
-    { question: 'Quelle est la plus grande planète du Système solaire ?', options: ['Saturne', 'Jupiter', 'Neptune', 'Uranus'], answer: 'Jupiter', explication: 'Jupiter est tellement grande qu\'elle pourrait contenir 1 300 Terres !', emoji: '<SpaceIcon name="globe" size={18} className="inline-icon" />' },
-    { question: 'Quelle planète est la plus chaude ?', options: ['Mercure', 'Vénus', 'Mars', 'Jupiter'], answer: 'Vénus', explication: 'Son atmosphère épaisse piège la chaleur comme une serre géante !', emoji: '🌡️' },
-    { question: 'Combien de lunes a Mars ?', options: ['0️⃣ Zéro', '1️⃣ Une', '2️⃣ Deux', '5️⃣ Cinq'], answer: '2️⃣ Deux', explication: 'Phobos (la peur) et Deimos (la terreur) — de petites lunes rocheuses !', emoji: '🌙' },
-    { question: 'Quelle planète a les plus grands anneaux ?', options: ['Jupiter', 'Uranus', 'Saturne', 'Neptune'], answer: 'Saturne', explication: 'Les anneaux de Saturne s’étendent sur environ 282 000 km, mais leur partie principale ne fait souvent qu’une dizaine de mètres d’épaisseur !', emoji: '💍' },
-    { question: 'Le Soleil est une étoile ?', options: ['Oui', 'Non', 'On ne sait pas'], answer: 'Oui', explication: 'Le Soleil est une étoile de type naine jaune, comme des milliards d\'autres dans l\'Univers !', emoji: '☀️' },
-    { question: 'Combien de planètes dans le Système solaire ?', options: ['7️ 7', '8️ 8', '9️ 9', '12'], answer: '8️ 8', explication: 'Mercure, Vénus, Terre, Mars, Jupiter, Saturne, Uranus et Neptune !', emoji: '🪐' },
+type Text = Record<SiteLocale, string>
+
+const OBSERVATION_RESOURCES: Array<{ icon: SpaceIconName; name: Text; detail: Text; url: string }> = [
+    { icon: 'moon-stars', name: { fr: 'Phases de la Lune', en: 'Moon phases' }, detail: { fr: 'Calendrier quotidien et phases calculées par la NASA.', en: 'Daily calendar and phases worked out by NASA.' }, url: 'https://science.nasa.gov/moon/daily-moon-guide/' },
+    { icon: 'sun', name: { fr: 'Prochaines éclipses', en: 'Upcoming eclipses' }, detail: { fr: 'Dates, zones de visibilité et consignes de sécurité officielles.', en: 'Dates, where to see them and official safety advice.' }, url: 'https://science.nasa.gov/eclipses/future-eclipses/' },
+    { icon: 'meteorite', name: { fr: 'Pluies de météores', en: 'Meteor showers' }, detail: { fr: 'Guides d’observation régulièrement mis à jour.', en: 'Regularly updated viewing guides.' }, url: 'https://science.nasa.gov/solar-system/meteors-meteorites/meteor-showers/' },
+    { icon: 'telescope', name: { fr: 'Le ciel ce mois-ci', en: 'This month’s sky' }, detail: { fr: 'Le guide mensuel « What’s Up » du Jet Propulsion Laboratory.', en: 'The Jet Propulsion Laboratory’s monthly “What’s Up” guide.' }, url: 'https://science.nasa.gov/skywatching/whats-up/' },
 ]
 
-const QUIZ_BANK_EXPLORATEUR = [
-    { question: "Qu'est-ce qu'une étoile filante ?", options: ['Une étoile qui tombe', 'Un petit objet qui chauffe dans l’air', 'Un satellite', 'Une planète lointaine'], answer: 'Un petit objet qui chauffe dans l’air', explication: "Un petit objet spatial chauffe et perd de la matière en traversant l’atmosphère : la traînée lumineuse est un météore.", emoji: '☄️' },
-    { question: 'Combien de temps met la lumière du Soleil pour arriver sur Terre ?', options: ['8 secondes', '⏱️ 8 minutes', '8 heures', '8 jours'], answer: '⏱️ 8 minutes', explication: 'La lumière voyage à 300 000 km/s et le Soleil est à 150 millions de km !', emoji: '☀️' },
-    { question: 'Quel est le plus grand volcan du système solaire ?', options: ["L'Etna", 'Olympus Mons', 'Le Mauna Kea', 'Le Vésuve'], answer: 'Olympus Mons', explication: 'Olympus Mons sur Mars culmine à 21 km, soit 3 fois l\'Everest !', emoji: '🌋' },
-    { question: 'De quoi sont faits les anneaux de Saturne ?', options: ['De gaz', 'De glace et de roche', 'De poussière', 'De métal'], answer: 'De glace et de roche', explication: 'Des milliards de morceaux, du grain de sable à la taille d\'une maison !', emoji: '<SpaceIcon name="planet" size={18} className="inline-icon" />' },
-    { question: 'Quelle agence a envoyé Perseverance sur Mars ?', options: ['🇪🇺 ESA', '🇺🇸 NASA', '🇷🇺 Roscosmos', '🇨🇳 CNSA'], answer: '🇺🇸 NASA', explication: 'Perseverance a atterri sur Mars en février 2021 avec son hélicoptère Ingenuity !', emoji: '🔴' },
-    { question: 'Qu\'est-ce qu\'une année-lumière ?', options: ['⏱️ Une durée de temps', 'Une distance', 'La luminosité d\'une étoile', 'Un type d\'étoile'], answer: 'Une distance', explication: 'C\'est la distance que la lumière parcourt en un an : environ 9 460 milliards de km !', emoji: '<SpaceIcon name="bulb" size={18} className="inline-icon" />' },
+const VIDEOS: Array<{ title: Text; url: string; fallback: string; fallbackLabel: Text; icon: SpaceIconName; age: Text; description: Text }> = [
+    { title: { fr: 'Paxi — Le Système solaire (ESA)', en: 'Paxi — The Solar System (ESA, in French)' }, url: 'https://www.youtube.com/watch?v=shQJd3oGYn8', fallback: 'https://spaceplace.nasa.gov/menu/solar-system/', fallbackLabel: { fr: 'Découvrir le Système solaire avec la NASA', en: 'Discover the Solar System with NASA' }, icon: 'globe', age: { fr: '5-10 ans', en: 'Ages 5-10' }, description: { fr: 'L’animation officielle de l’Agence spatiale européenne pour découvrir les planètes !', en: 'The European Space Agency’s official cartoon to discover the planets!' } },
+    { title: { fr: 'Le Système solaire CM1-CM2 — Maître Lucas', en: 'The Solar System — Maître Lucas (in French)' }, url: 'https://www.youtube.com/watch?v=jdInvnIkwIk', fallback: 'https://science.nasa.gov/solar-system/', fallbackLabel: { fr: 'Lire le guide NASA du Système solaire', en: 'Read NASA’s Solar System guide' }, icon: 'book', age: { fr: '7-12 ans', en: 'Ages 7-12' }, description: { fr: 'Une leçon complète sur les 8 planètes, le Soleil et les satellites naturels.', en: 'A full lesson on the 8 planets, the Sun and natural satellites.' } },
+    { title: { fr: 'Les étoiles — National Geographic France', en: 'Stars — National Geographic France (in French)' }, url: 'https://www.youtube.com/watch?v=CDy6kEEClK0', fallback: 'https://science.nasa.gov/universe/stars/', fallbackLabel: { fr: 'Explorer les étoiles avec la NASA', en: 'Explore the stars with NASA' }, icon: 'sparkle', age: { fr: '8-14 ans', en: 'Ages 8-14' }, description: { fr: 'Un documentaire sur la naissance, la vie et la mort des étoiles.', en: 'A documentary on the birth, life and death of stars.' } },
+    { title: { fr: 'L’espace pour les enfants — Les étoiles', en: 'Space for kids — Stars (in French)' }, url: 'https://www.youtube.com/watch?v=q_03QQmiR9Y', fallback: 'https://spaceplace.nasa.gov/', fallbackLabel: { fr: 'Découvrir l’espace avec NASA Space Place', en: 'Discover space with NASA Space Place' }, icon: 'telescope', age: { fr: '6-12 ans', en: 'Ages 6-12' }, description: { fr: 'Un voyage à travers les étoiles et l’Univers, expliqué simplement.', en: 'A journey through the stars and the Universe, explained simply.' } },
+    { title: { fr: 'James Webb — les premières images (NASA)', en: 'James Webb — the first images (NASA)' }, url: 'https://www.youtube.com/watch?v=1C_zuHf6lP4', fallback: 'https://science.nasa.gov/mission/webb/', fallbackLabel: { fr: 'Voir la mission Webb sur le site de la NASA', en: 'See the Webb mission on NASA’s website' }, icon: 'telescope', age: { fr: '8-14 ans', en: 'Ages 8-14' }, description: { fr: 'Une sélection officielle d’images qui ont changé notre vision de l’Univers.', en: 'An official selection of images that changed how we see the Universe.' } },
+    { title: { fr: 'La mission Perseverance sur Mars (NASA)', en: 'The Perseverance mission on Mars (NASA)' }, url: 'https://www.youtube.com/watch?v=5qqsMjy8Rx0', fallback: 'https://science.nasa.gov/mission/mars-2020-perseverance/', fallbackLabel: { fr: 'Suivre Perseverance avec la NASA', en: 'Follow Perseverance with NASA' }, icon: 'mars', age: { fr: '6-12 ans', en: 'Ages 6-12' }, description: { fr: 'La NASA explore Mars avec son rover et son hélicoptère Ingenuity.', en: 'NASA explores Mars with its rover and its Ingenuity helicopter.' } },
 ]
 
-const QUIZ_BANK_EXPERT = [
-    { question: 'Dans nos modèles, que signale la singularité d\'un trou noir ?', options: ['Une tempête', 'Une limite de nos équations', 'Une nouvelle étoile', 'Une explosion'], answer: 'Une limite de nos équations', explication: 'La relativité générale prédit des valeurs infinies. Cela indique surtout que notre modèle ne suffit plus à décrire cette région.', emoji: '' },
-    { question: 'Qu\'est-ce que le rayonnement de Hawking ?', options: ['Le fond cosmologique', 'Un rayonnement prédit autour des trous noirs', 'Les rayons d\'une supernova', 'La lumière de Mars'], answer: 'Un rayonnement prédit autour des trous noirs', explication: 'Stephen Hawking a prédit que des effets quantiques permettent aux trous noirs de perdre très lentement de l\'énergie.', emoji: '⬅️' },
-    { question: 'Environ combien de temps sépare deux oppositions de Jupiter vues depuis la Terre ?', options: ['398 jours', '780 jours', '116 jours', '687 jours'], answer: '398 jours', explication: 'Cette durée s\'appelle la période synodique de Jupiter. Une opposition se produit quand Jupiter apparaît à l\'opposé du Soleil dans notre ciel.', emoji: '🪐' },
-    { question: 'Quelle est la température au cœur du Soleil ?', options: ['6 000°C', '150 000°C', '15 millions °C', '1 milliard °C'], answer: '15 millions °C', explication: 'La fusion nucléaire nécessite une température colossale de 15 millions de degrés au cœur !', emoji: '☀️' },
-    { question: 'Qu\'est-ce que le décalage vers le rouge (redshift) ?', options: ['La couleur de Mars', 'L\'allongement de longueur d\'onde d\'une source qui s\'éloigne', 'L\'énergie libérée par une supernova', 'L\'effet de la gravité sur la lumière'], answer: 'L\'allongement de longueur d\'onde d\'une source qui s\'éloigne', explication: 'L\'Univers est en expansion : plus une galaxie est loin, plus son écart vers le rouge est grand (loi de Hubble) !', emoji: '🌌' },
-]
+const COPY = {
+    fr: {
+        badge: 'COIN DES CURIEUX', title: 'Le coin des curieux', subtitle: 'Quiz, vidéos, anecdotes et événements célestes pour les jeunes explorateurs !',
+        tabs: { quiz: 'Quiz', videos: 'Vidéos', events: 'Événements', anecdotes: 'Anecdotes' },
+        chooseLevel: 'Choisis ton niveau', levelText: 'Chaque niveau a ses propres questions : tu peux changer à tout moment !', questions: (n: number) => `${n} questions`,
+        changeLevel: 'Changer de niveau', restart: 'Recommencer', perfect: 'Parfait ! Tu es un as de l’espace !', great: 'Excellent travail ! Tu maîtrises bien l’astronomie !', keepGoing: 'Continue à explorer, tu vas y arriver !',
+        again: 'Refais ce niveau : tu vas consolider tes découvertes !', ready: (name: string) => `Prêt pour le niveau ${name} ?`, easier: (name: string) => `Essaie le niveau ${name} pour reprendre confiance.`,
+        redo: 'Refaire ce niveau', tryLevel: (name: string) => `Essayer le niveau ${name}`, question: (n: number) => `Question ${n}`,
+        right: 'Bravo !', wrong: (answer: string) => `Raté ! Bonne réponse : ${answer}`, score: (ok: number, total: number, percent: number) => `Score : ${ok}/${total} (${percent} %)`,
+        perfectEnd: 'Score parfait ! Tu es un vrai astronome !', middleEnd: 'Continue comme ça, explore les autres pages pour en apprendre plus !', lowEnd: 'Pas de panique ! Explore les pages du site et reviens tenter ta chance !',
+        watch: '▶ Regarder sur YouTube', unavailable: (label: string) => `Si la vidéo est indisponible : ${label} ↗`,
+        eventsText: 'Les calendriers astronomiques changent chaque année. Ces liens officiels donnent toujours les dates les plus récentes.', openNasa: 'Ouvrir la source NASA ↗',
+    },
+    en: {
+        badge: 'CURIOUS CORNER', title: 'The curious corner', subtitle: 'Quizzes, videos, fun facts and sky events for young explorers!',
+        tabs: { quiz: 'Quiz', videos: 'Videos', events: 'Events', anecdotes: 'Fun facts' },
+        chooseLevel: 'Choose your level', levelText: 'Each level has its own questions: you can switch at any time!', questions: (n: number) => `${n} questions`,
+        changeLevel: 'Change level', restart: 'Start again', perfect: 'Perfect! You are a space ace!', great: 'Great work! You know your astronomy!', keepGoing: 'Keep exploring, you will get there!',
+        again: 'Try this level again: it will help the ideas stick!', ready: (name: string) => `Ready for the ${name} level?`, easier: (name: string) => `Try the ${name} level to build your confidence.`,
+        redo: 'Try this level again', tryLevel: (name: string) => `Try the ${name} level`, question: (n: number) => `Question ${n}`,
+        right: 'Well done!', wrong: (answer: string) => `Not this time! The right answer: ${answer}`, score: (ok: number, total: number, percent: number) => `Score: ${ok}/${total} (${percent}%)`,
+        perfectEnd: 'Perfect score! You are a real astronomer!', middleEnd: 'Keep it up, and explore the other pages to learn more!', lowEnd: 'Don’t worry! Explore the site and come back to try again!',
+        watch: '▶ Watch on YouTube', unavailable: (label: string) => `If the video is unavailable: ${label} ↗`,
+        eventsText: 'Sky calendars change every year. These official links always give the latest dates.', openNasa: 'Open the NASA source ↗',
+    },
+}
 
-const LEVELS = [
-    { id: 'debutant', label: 'Débutant', sublabel: '6 — 8 ans', color: '#34d399', bank: QUIZ_BANK_DEBUTANT },
-    { id: 'explorateur', label: 'Explorateur', sublabel: '9 — 11 ans', color: '#60a5fa', bank: QUIZ_BANK_EXPLORATEUR },
-    { id: 'expert', label: 'Expert', sublabel: '12+ ans', color: '#c084fc', bank: QUIZ_BANK_EXPERT },
-]
+function shuffledIndexes(length: number): number[] {
+    return Array.from({ length }, (_, index) => index).sort(() => Math.random() - 0.5)
+}
 
-
-const ANECDOTES = [
-    { emoji: '🪐', title: 'Saturne est très légère', text: 'Sa densité moyenne est plus faible que celle de l’eau. Dans une piscine imaginaire assez grande, Saturne flotterait.' },
-    { emoji: '⏰', title: 'Un jour sur Vénus', text: 'Vénus tourne si lentement qu’une rotation dure plus longtemps que son année. Elle tourne aussi dans le sens opposé à la plupart des planètes.' },
-    { emoji: '👣', title: 'Empreintes éternelles', text: 'Les empreintes des astronautes sur la Lune sont toujours là. Sans vent ni pluie, elles dureront des millions d\'années.' },
-    { emoji: '🌋', title: 'Le plus grand volcan', text: 'Olympus Mons sur Mars = 21 km de haut, soit 3 fois l\'Everest !' },
-    { emoji: '💎', title: 'Pluie de diamants ?', text: 'Des expériences et des modèles suggèrent que du carbone pourrait former des diamants très loin sous les nuages de Neptune.' },
-    { emoji: '🌊', title: 'Océan caché', text: 'Europe (lune de Jupiter) cache un océan sous sa glace, peut-être plus grand que tous les océans terrestres !' },
-    { emoji: '💧', title: 'Mars était bleue', text: 'Il y a des milliards d\'années, Mars avait des rivières et peut-être un océan entier.' },
-    { emoji: '⚖️', title: 'Le Soleil perd du poids', text: 'Le Soleil perd 4 millions de tonnes par seconde... mais il lui reste du carburant pour 5 milliards d\'années !' },
-]
-
-const OBSERVATION_RESOURCES = [
-    { emoji: '🌕', name: 'Phases de la Lune', detail: 'Calendrier quotidien et phases calculées par la NASA.', url: 'https://science.nasa.gov/moon/daily-moon-guide/' },
-    { emoji: '🌑☀️', name: 'Prochaines éclipses', detail: 'Dates, zones de visibilité et consignes de sécurité officielles.', url: 'https://science.nasa.gov/eclipses/future-eclipses/' },
-    { emoji: '☄️', name: 'Pluies de météores', detail: 'Guides d’observation régulièrement actualisés.', url: 'https://science.nasa.gov/solar-system/meteors-meteorites/meteor-showers/' },
-    { emoji: '🔭', name: 'Le ciel ce mois-ci', detail: 'Le guide mensuel « What’s Up » du Jet Propulsion Laboratory.', url: 'https://science.nasa.gov/skywatching/whats-up/' },
-]
-
-const VIDEOS = [
-    { title: 'Paxi — Le Système Solaire (ESA)', url: 'https://www.youtube.com/watch?v=shQJd3oGYn8', fallback: 'https://spaceplace.nasa.gov/menu/solar-system/', fallbackLabel: 'Découvrir le Système solaire avec la NASA', emoji: '🌍', age: '5-10 ans', description: 'L\'animation officielle de l\'Agence Spatiale Européenne pour découvrir les planètes !' },
-    { title: 'Le Système Solaire CM1‑CM2 — Maître Lucas', url: 'https://www.youtube.com/watch?v=jdInvnIkwIk', fallback: 'https://science.nasa.gov/solar-system/', fallbackLabel: 'Lire le guide NASA du Système solaire', emoji: '🌟', age: '7-12 ans', description: 'Cours complet sur les 8 planètes, le Soleil et les satellites naturels.' },
-    { title: 'Les Étoiles — National Geographic France', url: 'https://www.youtube.com/watch?v=CDy6kEEClK0', fallback: 'https://science.nasa.gov/universe/stars/', fallbackLabel: 'Explorer les étoiles avec la NASA', emoji: '★', age: '8-14 ans', description: 'Documentaire de qualité sur la naissance, la vie et la mort des étoiles.' },
-    { title: 'L’Espace pour les enfants — Les étoiles', url: 'https://www.youtube.com/watch?v=q_03QQmiR9Y', fallback: 'https://spaceplace.nasa.gov/', fallbackLabel: 'Découvrir l’espace avec NASA Space Place', emoji: '🔭', age: '6-12 ans', description: 'Voyage à travers les étoiles et l’Univers, expliqué simplement pour les ados.' },
-    { title: 'James Webb — Les premières images révolutionnaires (NASA)', url: 'https://www.youtube.com/watch?v=1C_zuHf6lP4', fallback: 'https://science.nasa.gov/mission/webb/', fallbackLabel: 'Voir la mission Webb sur le site NASA', emoji: '🔭', age: '8-14 ans', description: 'Une sélection officielle d’images qui ont changé notre vision de l’Univers.' },
-    { title: 'Mission Perseverance sur Mars (NASA)', url: 'https://www.youtube.com/watch?v=5qqsMjy8Rx0', fallback: 'https://science.nasa.gov/mission/mars-2020-perseverance/', fallbackLabel: 'Suivre Perseverance avec la NASA', emoji: '🔴', age: '6-12 ans', description: 'La NASA explore Mars avec son rover et son hélicoptère Ingenuity.' },
-]
-
-function shuffle<T>(arr: T[]): T[] { return [...arr].sort(() => Math.random() - 0.5) }
+type Tab = 'quiz' | 'videos' | 'events' | 'anecdotes'
 
 export default function QuizPage() {
-    const [level, setLevel] = useState<string | null>(null)
-    const [questions, setQuestions] = useState(shuffle(QUIZ_BANK_DEBUTANT).slice(0, 5))
-    const [answers, setAnswers] = useState<Record<number, string>>({})
-    const [anecdotes] = useState(shuffle(ANECDOTES).slice(0, 4))
-    const [tab, setTab] = useState<'quiz' | 'videos' | 'events' | 'anecdotes'>('quiz')
+    const locale = useSiteLocale()
+    const t = COPY[locale]
+    const [level, setLevel] = useState<QuizLevelId | null>(null)
+    // Question order and answers are stored as indexes, so they stay valid in both languages.
+    const [order, setOrder] = useState<number[]>([])
+    const [answers, setAnswers] = useState<Record<number, number>>({})
+    const [anecdoteOrder, setAnecdoteOrder] = useState<number[]>(() => ANECDOTES.map((_, index) => index).slice(0, 4))
+    const [tab, setTab] = useState<Tab>('quiz')
 
-    const startLevel = (id: string) => {
-        const lv = LEVELS.find(l => l.id === id)!
+    const startLevel = (id: QuizLevelId) => {
         setLevel(id)
-        setQuestions(shuffle(lv.bank))
+        setOrder(shuffledIndexes(quizBank(id, locale).length))
         setAnswers({})
     }
-    const currentLevel = LEVELS.find(l => l.id === level)
+    const currentLevel = QUIZ_LEVELS.find(item => item.id === level)
+    const bank = level ? quizBank(level, locale) : []
+    const questions = order.map(index => bank[index]).filter(Boolean)
 
     const totalAnswered = Object.keys(answers).length
-    const totalCorrect = Object.entries(answers).filter(([i, a]) => a === questions[parseInt(i)].answer).length
-    const finished = totalAnswered === questions.length
-    const currentLevelIndex = LEVELS.findIndex(item => item.id === currentLevel?.id)
+    const totalCorrect = Object.entries(answers).filter(([position, option]) => questions[Number(position)]?.options[option] === questions[Number(position)]?.answer).length
+    const finished = questions.length > 0 && totalAnswered === questions.length
+    const currentLevelIndex = QUIZ_LEVELS.findIndex(item => item.id === level)
     const suggestedLevel = !finished || !currentLevel ? null
-        : totalCorrect >= Math.ceil(questions.length * 0.8) && currentLevelIndex < LEVELS.length - 1
-            ? LEVELS[currentLevelIndex + 1]
+        : totalCorrect >= Math.ceil(questions.length * 0.8) && currentLevelIndex < QUIZ_LEVELS.length - 1
+            ? QUIZ_LEVELS[currentLevelIndex + 1]
             : totalCorrect <= Math.floor(questions.length / 2) && currentLevelIndex > 0
-                ? LEVELS[currentLevelIndex - 1]
+                ? QUIZ_LEVELS[currentLevelIndex - 1]
                 : currentLevel
     const suggestionText = !currentLevel || !suggestedLevel ? ''
         : suggestedLevel.id === currentLevel.id
-            ? 'Refais ce niveau : tu vas consolider tes découvertes !'
-            : suggestedLevel.id === LEVELS[currentLevelIndex + 1]?.id
-                ? `Prêt pour le niveau ${suggestedLevel.label.split(' ').slice(1).join(' ')} ?`
-                : `Essaie le niveau ${suggestedLevel.label.split(' ').slice(1).join(' ')} pour reprendre confiance.`
+            ? t.again
+            : suggestedLevel.id === QUIZ_LEVELS[currentLevelIndex + 1]?.id
+                ? t.ready(suggestedLevel.label[locale])
+                : t.easier(suggestedLevel.label[locale])
 
     useEffect(() => {
         if (finished) recordQuizScore(Math.round(totalCorrect / questions.length * 100))
     }, [finished, questions.length, totalCorrect])
 
-    const reset = () => { setQuestions(shuffle(currentLevel?.bank ?? QUIZ_BANK_DEBUTANT)); setLevel(null); setAnswers({}) }
+    const reset = () => { setLevel(null); setOrder([]); setAnswers({}) }
+    const openAnecdotes = () => {
+        setAnecdoteOrder(shuffledIndexes(ANECDOTES.length).slice(0, 4))
+        setTab('anecdotes')
+    }
+    const percent = questions.length ? Math.round(totalCorrect / questions.length * 100) : 0
 
     return (
         <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
             <div className="page-header motion-enter">
-                <div className="badge"><SpaceIcon name="quiz" size={18} className="inline-icon" /> COIN DES CURIEUX</div>
-                <h1 className="page-title">
-                    Le Coin des Curieux
-                </h1>
-                <p className="page-subtitle">Vidéos, quiz, anecdotes et événements célestes pour les jeunes explorateurs !</p>
+                <div className="badge"><SpaceIcon name="quiz" size={18} className="inline-icon" /> {t.badge}</div>
+                <h1 className="page-title">{t.title}</h1>
+                <p className="page-subtitle">{t.subtitle}</p>
             </div>
 
             <KidsGuide topic="quiz" />
 
             {/* Tab bar */}
             <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '2rem' }}>
-                {[{ id: 'quiz', label: 'Quiz' }, { id: 'videos', label: 'Vidéos' }, { id: 'events', label: 'Événements' }, { id: 'anecdotes', label: 'Anecdotes' }].map(t => (
-                    <button key={t.id} onClick={() => setTab(t.id as typeof tab)} style={{
+                {(['quiz', 'videos', 'events', 'anecdotes'] as const).map(id => (
+                    <button key={id} aria-pressed={tab === id} onClick={() => (id === 'anecdotes' ? openAnecdotes() : setTab(id))} style={{
                         padding: '0.6rem 1.25rem', borderRadius: 10, fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer',
-                        background: tab === t.id ? 'var(--sun)' : 'rgba(255,255,255,0.04)',
-                        color: tab === t.id ? 'var(--ink)' : 'var(--text-muted)',
-                        border: tab === t.id ? 'none' : '1px solid rgba(255,255,255,0.07)',
-                        boxShadow: 'none',
-                    }}>{t.label}</button>
+                        background: tab === id ? 'var(--sun)' : 'rgba(255,255,255,0.04)',
+                        color: tab === id ? 'var(--ink)' : 'var(--text-muted)',
+                        border: tab === id ? 'none' : '1px solid rgba(255,255,255,0.07)',
+                    }}>{t.tabs[id]}</button>
                 ))}
             </div>
 
             {tab === 'quiz' && (
                 <div className="motion-enter" key="quiz">
-                    {!level ? (
-                        /* Level picker */
+                    {!currentLevel ? (
                         <div>
-                            <h2 style={{ textAlign: 'center', color: 'var(--text)', fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.25rem', marginBottom: '0.5rem' }}>
-                                Choisis ton niveau
-                            </h2>
-                            <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
-                                Chaque niveau a ses propres questions — tu peux changer à tout moment !
-                            </p>
+                            <h2 style={{ textAlign: 'center', color: 'var(--text)', fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.25rem', marginBottom: '0.5rem' }}>{t.chooseLevel}</h2>
+                            <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>{t.levelText}</p>
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
-                                {LEVELS.map(lv => (
+                                {QUIZ_LEVELS.map(lv => (
                                     <button key={lv.id} onClick={() => startLevel(lv.id)} style={{
-                                            padding: '1.5rem', borderRadius: '1rem', cursor: 'pointer', textAlign: 'center',
-                                            background: `${lv.color}10`, border: `2px solid ${lv.color}30`,
-                                            transition: 'all 0.2s',
-                                        }}>
-                                        <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{lv.label.split(' ')[0]}</div>
-                                        <div style={{ color: lv.color, fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.05rem', marginBottom: '0.25rem' }}>
-                                            {lv.label.split(' ').slice(1).join(' ')}
-                                        </div>
-                                        <div style={{ color: 'var(--text-subtle)', fontSize: '0.82rem', marginBottom: '0.75rem' }}>{lv.sublabel}</div>
+                                        padding: '1.5rem', borderRadius: '1rem', cursor: 'pointer', textAlign: 'center',
+                                        background: `${lv.color}10`, border: `2px solid ${lv.color}30`, transition: 'all 0.2s',
+                                    }}>
+                                        <div style={{ color: lv.color, marginBottom: '0.5rem' }}><SpaceIcon name={lv.icon} size={36} /></div>
+                                        <div style={{ color: lv.color, fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.05rem', marginBottom: '0.25rem' }}>{lv.label[locale]}</div>
+                                        <div style={{ color: 'var(--text-subtle)', fontSize: '0.82rem', marginBottom: '0.75rem' }}>{lv.ages[locale]}</div>
                                         <div style={{ padding: '0.375rem 0.75rem', borderRadius: 99, background: `${lv.color}20`, color: lv.color, fontSize: '0.72rem', fontWeight: 700 }}>
-                                            {lv.bank.length} questions
+                                            {t.questions(lv.bank[locale].length)}
                                         </div>
                                     </button>
                                 ))}
@@ -165,11 +154,11 @@ export default function QuizPage() {
                         <div>
                             {/* Level badge + controls */}
                             <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
-                                <div style={{ padding: '0.3rem 0.875rem', borderRadius: 99, background: `${currentLevel!.color}18`, border: `1px solid ${currentLevel!.color}35`, color: currentLevel!.color, fontSize: '0.75rem', fontWeight: 700 }}>
-                                    {currentLevel!.label} · {currentLevel!.sublabel}
+                                <div style={{ padding: '0.3rem 0.875rem', borderRadius: 99, background: `${currentLevel.color}18`, border: `1px solid ${currentLevel.color}35`, color: currentLevel.color, fontSize: '0.75rem', fontWeight: 700 }}>
+                                    {currentLevel.label[locale]} · {currentLevel.ages[locale]}
                                 </div>
-                                <button onClick={reset} className="btn-primary" style={{ fontSize: '0.8rem', padding: '0.5rem 1rem' }}><SpaceIcon name="refresh" size={18} className="inline-icon" /> Changer de niveau</button>
-                                {finished && <button onClick={reset} style={{ padding: '0.5rem 1rem', borderRadius: 12, background: 'rgba(239,68,68,0.1)', color: '#f87171', border: '1px solid rgba(239,68,68,0.2)', cursor: 'pointer', fontWeight: 700, fontSize: '0.8rem' }}><SpaceIcon name="refresh" size={18} className="inline-icon" /> Recommencer</button>}
+                                <button onClick={reset} className="btn-primary" style={{ fontSize: '0.8rem', padding: '0.5rem 1rem' }}><SpaceIcon name="refresh" size={18} className="inline-icon" /> {t.changeLevel}</button>
+                                {finished && <button onClick={() => startLevel(currentLevel.id)} style={{ padding: '0.5rem 1rem', borderRadius: 12, background: 'rgba(239,68,68,0.1)', color: '#f87171', border: '1px solid rgba(239,68,68,0.2)', cursor: 'pointer', fontWeight: 700, fontSize: '0.8rem' }}><SpaceIcon name="refresh" size={18} className="inline-icon" /> {t.restart}</button>}
                             </div>
 
                             {/* Score banner when finished */}
@@ -178,12 +167,12 @@ export default function QuizPage() {
                                     <div style={{ marginBottom: '0.5rem', color: 'var(--gold)' }}><SpaceIcon name={totalCorrect === questions.length ? 'trophy' : totalCorrect >= Math.ceil(questions.length * 0.8) ? 'sparkle' : 'target'} size={48} /></div>
                                     <div style={{ fontSize: '1.8rem', fontWeight: 900, fontFamily: 'var(--font-display)', color: 'var(--text)' }}>{totalCorrect}/{questions.length}</div>
                                     <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '0.25rem' }}>
-                                        {totalCorrect === questions.length ? 'Parfait ! Tu es un expert de l\'espace !' : totalCorrect >= Math.ceil(questions.length * 0.8) ? 'Excellent travail ! Tu maîtrises bien l\'astronomie !' : 'Continue à explorer, tu y arriveras !'}
+                                        {totalCorrect === questions.length ? t.perfect : totalCorrect >= Math.ceil(questions.length * 0.8) ? t.great : t.keepGoing}
                                     </div>
                                     {suggestedLevel && <div className="adaptive-quiz-next" data-adaptive-quiz>
                                         <p>{suggestionText}</p>
                                         <button type="button" onClick={() => startLevel(suggestedLevel.id)}>
-                                            {suggestedLevel.id === currentLevel!.id ? 'Refaire ce niveau' : `Essayer ${suggestedLevel.label}`}
+                                            {suggestedLevel.id === currentLevel.id ? t.redo : t.tryLevel(suggestedLevel.label[locale])}
                                         </button>
                                     </div>}
                                 </div>
@@ -192,36 +181,35 @@ export default function QuizPage() {
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                                 {questions.map((q, idx) => {
                                     const chosen = answers[idx]
+                                    const answered = chosen !== undefined
+                                    const correct = answered && q.options[chosen] === q.answer
                                     return (
-                                        <div key={idx} className="card" style={{ padding: '1.5rem' }}>
-                                            <h3 style={{ color: 'var(--text)', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1rem', marginBottom: '1rem' }}>
-                                                {q.emoji} Question {idx + 1} — {q.question}
+                                        <div key={`${level}-${order[idx]}`} className="card" style={{ padding: '1.5rem' }}>
+                                            <h3 style={{ color: 'var(--text)', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1rem', marginBottom: '1rem', display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
+                                                <SpaceIcon name={q.icon} size={20} className="inline-icon" />
+                                                <span>{t.question(idx + 1)} — {q.question}</span>
                                             </h3>
-                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.625rem', marginBottom: chosen ? '0.875rem' : 0 }}>
-                                                {q.options.map((opt) => {
+                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.625rem', marginBottom: answered ? '0.875rem' : 0 }}>
+                                                {q.options.map((opt, optionIndex) => {
                                                     let bg = 'rgba(255,255,255,0.04)', border = '1px solid rgba(255,255,255,0.07)', color = '#94a3b8'
-                                                    if (chosen) {
+                                                    if (answered) {
                                                         if (opt === q.answer) { bg = 'rgba(16,185,129,0.12)'; border = '2px solid #10b981'; color = '#10b981' }
-                                                        else if (opt === chosen) { bg = 'rgba(239,68,68,0.12)'; border = '2px solid #ef4444'; color = '#f87171' }
-                                                        else { color = '#94a3b8' }
+                                                        else if (optionIndex === chosen) { bg = 'rgba(239,68,68,0.12)'; border = '2px solid #ef4444'; color = '#f87171' }
                                                     }
-                                                    return chosen ? (
+                                                    return answered ? (
                                                         <div key={opt} style={{ padding: '0.75rem 1rem', borderRadius: 10, background: bg, border, color, fontWeight: 600, fontSize: '0.85rem' }}>{opt}</div>
                                                     ) : (
-                                                        <button key={opt} onClick={() => setAnswers(prev => ({ ...prev, [idx]: opt }))} style={{
+                                                        <button key={opt} onClick={() => setAnswers(prev => ({ ...prev, [idx]: optionIndex }))} style={{
                                                             padding: '0.75rem 1rem', borderRadius: 10, background: bg, border, color,
-                                                            fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer', textAlign: 'left',
-                                                            transition: 'all 0.15s',
+                                                            fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s',
                                                         }}>{opt}</button>
                                                     )
                                                 })}
                                             </div>
-                                            {chosen && (
-                                                <div style={{ padding: '0.75rem 1rem', borderRadius: '0.625rem', background: chosen === q.answer ? 'rgba(16,185,129,0.08)' : 'rgba(239,68,68,0.08)', borderLeft: `3px solid ${chosen === q.answer ? '#10b981' : '#f87171'}` }}>
-                                                    <span style={{ color: chosen === q.answer ? '#10b981' : '#f87171', fontWeight: 700 }}>
-                                                        {chosen === q.answer ? 'Bravo !' : `Raté ! Bonne réponse : ${q.answer}`}
-                                                    </span>
-                                                    <span style={{ color: 'var(--text-muted)', fontSize: '0.82rem', marginLeft: '0.5rem' }}>{q.explication}</span>
+                                            {answered && (
+                                                <div style={{ padding: '0.75rem 1rem', borderRadius: '0.625rem', background: correct ? 'rgba(16,185,129,0.08)' : 'rgba(239,68,68,0.08)', borderLeft: `3px solid ${correct ? '#10b981' : '#f87171'}` }}>
+                                                    <span style={{ color: correct ? '#10b981' : '#f87171', fontWeight: 700 }}>{correct ? t.right : t.wrong(q.answer)}</span>
+                                                    <span style={{ color: 'var(--text-muted)', fontSize: '0.82rem', marginLeft: '0.5rem' }}>{q.explanation}</span>
                                                 </div>
                                             )}
                                         </div>
@@ -235,14 +223,14 @@ export default function QuizPage() {
                                     background: totalCorrect === questions.length ? 'linear-gradient(135deg, rgba(16,185,129,0.1),rgba(99,102,241,0.1))' : 'rgba(255,255,255,0.04)',
                                     border: `2px solid ${totalCorrect === questions.length ? '#10b981' : totalCorrect >= questions.length / 2 ? '#f59e0b' : '#f87171'}`,
                                 }}>
-                                    <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>
+                                    <div style={{ marginBottom: '0.5rem' }}>
                                         <SpaceIcon name={totalCorrect === questions.length ? 'trophy' : totalCorrect >= questions.length / 2 ? 'sparkle' : 'target'} size={40} />
                                     </div>
                                     <h3 style={{ color: totalCorrect === questions.length ? '#10b981' : totalCorrect >= questions.length / 2 ? '#f59e0b' : '#f87171', fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '1.4rem', marginBottom: '0.5rem' }}>
-                                        Score : {totalCorrect}/{questions.length} ({Math.round(totalCorrect / questions.length * 100)}%)
+                                        {t.score(totalCorrect, questions.length, percent)}
                                     </h3>
                                     <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-                                        {totalCorrect === questions.length ? 'Score parfait ! Tu es un vrai astronome !' : totalCorrect >= questions.length / 2 ? 'Continue comme ça, explore les autres pages pour en apprendre plus !' : 'Pas de panique ! Explore les pages du site et reviens tenter ta chance !'}
+                                        {totalCorrect === questions.length ? t.perfectEnd : totalCorrect >= questions.length / 2 ? t.middleEnd : t.lowEnd}
                                     </p>
                                 </div>
                             )}
@@ -255,14 +243,14 @@ export default function QuizPage() {
                 <div className="motion-enter" key="videos">
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
                         {VIDEOS.map(v => (
-                            <div key={v.title} className="card" style={{ padding: '1.25rem', textAlign: 'center' }}>
-                                <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>{v.emoji}</div>
-                                <h3 style={{ color: 'var(--text)', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.375rem' }}>{v.title}</h3>
-                                <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', lineHeight: 1.6, marginBottom: '0.875rem' }}>{v.description}</p>
-                                <span style={{ fontSize: '0.72rem', color: 'var(--nebula)', background: 'rgba(167,139,250,0.1)', padding: '2px 10px', borderRadius: 999 }}>{v.age}</span>
+                            <div key={v.url} className="card" style={{ padding: '1.25rem', textAlign: 'center' }}>
+                                <div style={{ color: 'var(--nebula)', marginBottom: '0.5rem' }}><SpaceIcon name={v.icon} size={36} /></div>
+                                <h3 style={{ color: 'var(--text)', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.375rem' }}>{v.title[locale]}</h3>
+                                <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', lineHeight: 1.6, marginBottom: '0.875rem' }}>{v.description[locale]}</p>
+                                <span style={{ fontSize: '0.72rem', color: 'var(--nebula)', background: 'rgba(167,139,250,0.1)', padding: '2px 10px', borderRadius: 999 }}>{v.age[locale]}</span>
                                 <br /><br />
-                                <a href={v.url} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ textDecoration: 'none', display: 'inline-flex' }}>▶ Regarder sur YouTube</a>
-                                <a href={v.fallback} target="_blank" rel="noopener noreferrer" className="video-fallback">Si la vidéo est indisponible : {v.fallbackLabel} ↗</a>
+                                <a href={v.url} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ textDecoration: 'none', display: 'inline-flex' }}>{t.watch}</a>
+                                <a href={v.fallback} target="_blank" rel="noopener noreferrer" className="video-fallback">{t.unavailable(v.fallbackLabel[locale])}</a>
                             </div>
                         ))}
                     </div>
@@ -271,17 +259,14 @@ export default function QuizPage() {
 
             {tab === 'events' && (
                 <div className="motion-enter" key="events">
-                    <p style={{ color: 'var(--text-subtle)', marginBottom: '1rem', lineHeight: 1.7 }}>
-                        Les calendriers astronomiques évoluent chaque année. Ces liens officiels remplacent l’ancien
-                        calendrier figé afin de toujours afficher les dates les plus récentes.
-                    </p>
+                    <p style={{ color: 'var(--text-subtle)', marginBottom: '1rem', lineHeight: 1.7 }}>{t.eventsText}</p>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
                         {OBSERVATION_RESOURCES.map(resource => (
-                            <a key={resource.name} href={resource.url} target="_blank" rel="noopener noreferrer" className="card" style={{ padding: '1.25rem', textAlign: 'center', borderTop: '4px solid #6366f1', textDecoration: 'none' }}>
-                                <div aria-hidden="true" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{resource.emoji}</div>
-                                <strong style={{ color: 'var(--text)', display: 'block', marginBottom: '0.25rem' }}>{resource.name}</strong>
-                                <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>{resource.detail}</p>
-                                <span style={{ color: 'var(--nebula)', fontSize: '0.72rem', display: 'inline-block', marginTop: '0.75rem' }}>Ouvrir la source NASA ↗</span>
+                            <a key={resource.url} href={resource.url} target="_blank" rel="noopener noreferrer" className="card" style={{ padding: '1.25rem', textAlign: 'center', borderTop: '4px solid #6366f1', textDecoration: 'none' }}>
+                                <div aria-hidden="true" style={{ color: 'var(--nebula)', marginBottom: '0.5rem' }}><SpaceIcon name={resource.icon} size={32} /></div>
+                                <strong style={{ color: 'var(--text)', display: 'block', marginBottom: '0.25rem' }}>{resource.name[locale]}</strong>
+                                <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>{resource.detail[locale]}</p>
+                                <span style={{ color: 'var(--nebula)', fontSize: '0.72rem', display: 'inline-block', marginTop: '0.75rem' }}>{t.openNasa}</span>
                             </a>
                         ))}
                     </div>
@@ -291,13 +276,16 @@ export default function QuizPage() {
             {tab === 'anecdotes' && (
                 <div className="motion-enter" key="anecdotes">
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
-                        {anecdotes.map((a, i) => (
-                            <div key={i} className="card motion-enter" style={{ animationDelay: `${Math.min(i * 0.1, 0.6)}s`,  padding: '1.5rem', textAlign: 'center', borderTop: '4px solid #a78bfa' }}>
-                                <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{a.emoji}</div>
-                                <strong style={{ color: 'var(--nebula)', display: 'block', marginBottom: '0.625rem' }}>{a.title}</strong>
-                                <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', lineHeight: 1.7 }}>{a.text}</p>
-                            </div>
-                        ))}
+                        {anecdoteOrder.map((index, i) => {
+                            const a = ANECDOTES[index]
+                            return (
+                                <div key={a.title.fr} className="card motion-enter" style={{ animationDelay: `${Math.min(i * 0.1, 0.6)}s`, padding: '1.5rem', textAlign: 'center', borderTop: '4px solid #a78bfa' }}>
+                                    <div style={{ color: 'var(--nebula)', marginBottom: '0.5rem' }}><SpaceIcon name={a.icon} size={32} /></div>
+                                    <strong style={{ color: 'var(--nebula)', display: 'block', marginBottom: '0.625rem' }}>{a.title[locale]}</strong>
+                                    <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', lineHeight: 1.7 }}>{a.text[locale]}</p>
+                                </div>
+                            )
+                        })}
                     </div>
                 </div>
             )}

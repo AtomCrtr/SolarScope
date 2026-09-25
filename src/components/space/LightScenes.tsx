@@ -34,9 +34,10 @@ function useStill() {
 type PlanetProps = ComponentProps<typeof Planet3D>
 
 /** A texture-mapped disc with shading: reads as a planet, costs one image. */
-function PlanetStill({ textureUrl, hasRings, ringColor = '#c8a96e', atmosphereColor, label = 'planète', fallbackColor = '#64748b' }: PlanetProps) {
+function PlanetStill({ textureUrl, hasRings, ringColor = '#c8a96e', atmosphereColor, label, fallbackColor = '#64748b' }: PlanetProps) {
+  const locale = useSiteLocale()
   return (
-    <div className="planet-still" role="img" aria-label={label}>
+    <div className="planet-still" role="img" aria-label={label ?? (locale === 'en' ? 'Planet' : 'Planète')}>
       {hasRings && <span className="planet-still-ring" style={{ borderColor: ringColor }} />}
       <span
         className="planet-still-disc"
@@ -57,23 +58,25 @@ export function PlanetScene(props: PlanetProps) {
 
 export function SunScene(props: ComponentProps<typeof Sun3D>) {
   const { still, offer3d } = useStill()
+  const locale = useSiteLocale()
   if (!still) return <Sun3D {...props} />
   return (
     <Still offer3d={offer3d}>
-      <div className="sun-still" style={{ height: props.height ?? 480 }} role="img" aria-label="Le Soleil"><span /></div>
+      <div className="sun-still" style={{ height: props.height ?? 480 }} role="img" aria-label={locale === 'en' ? 'The Sun' : 'Le Soleil'}><span /></div>
     </Still>
   )
 }
 
 export function RoverScene(props: ComponentProps<typeof RoverViewer3D>) {
   const { still, offer3d } = useStill()
+  const locale = useSiteLocale()
   if (!still) return <RoverViewer3D {...props} />
   const name = props.rover === 'curiosity' ? 'Curiosity' : 'Perseverance'
   return (
     <Still offer3d={offer3d}>
       <div className="rover-still" style={{ height: props.height ?? 340 }}>
         {/* eslint-disable-next-line @next/next/no-img-element -- local illustration, sized by CSS */}
-        <img src={`/rovers/${props.rover}.png`} alt={`Le rover ${name}`} loading="lazy" />
+        <img src={`/rovers/${props.rover}.png`} alt={locale === 'en' ? `The ${name} rover` : `Le rover ${name}`} loading="lazy" />
       </div>
     </Still>
   )
@@ -81,12 +84,15 @@ export function RoverScene(props: ComponentProps<typeof RoverViewer3D>) {
 
 export function ISSGlobeScene(props: ComponentProps<typeof ISSGlobe>) {
   const { still, offer3d } = useStill()
+  const locale = useSiteLocale()
   if (!still) return <ISSGlobe {...props} />
   const position = props.issPos
   return (
     <Still offer3d={offer3d}>
       {/* A flat world map (equirectangular texture) with the station's point. */}
-      <div className="iss-still" role="img" aria-label={position ? `Position de l’ISS : latitude ${position.latitude.toFixed(1)}, longitude ${position.longitude.toFixed(1)}` : 'Carte du monde'}>
+      <div className="iss-still" role="img" aria-label={position
+        ? (locale === 'en' ? `ISS position: latitude ${position.latitude.toFixed(1)}, longitude ${position.longitude.toFixed(1)}` : `Position de l’ISS : latitude ${position.latitude.toFixed(1)}, longitude ${position.longitude.toFixed(1)}`)
+        : (locale === 'en' ? 'World map' : 'Carte du monde')}>
         {position && <span style={{ left: `${((position.longitude + 180) / 360) * 100}%`, top: `${((90 - position.latitude) / 180) * 100}%` }} />}
       </div>
     </Still>

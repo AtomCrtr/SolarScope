@@ -1,4 +1,4 @@
-import { createPageMetadata } from '@/lib/config/site'
+import { pageMetadata } from '@/lib/config/site'
 
-export const metadata = createPageMetadata('Exoplanètes', 'Découvre les planètes qui tournent autour d’autres étoiles que le Soleil.', '/exoplanetes')
+export const metadata = pageMetadata('/exoplanetes')
 export default function Layout({ children }: { children: React.ReactNode }) { return children }

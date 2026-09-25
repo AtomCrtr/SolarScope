@@ -1,5 +1,8 @@
+'use client'
+
 import { formatCheckedOn, type SourceCadence } from '@/lib/data/source-registry'
 import SpaceIcon from '@/components/ui/SpaceIcon'
+import { useSiteLocale } from '@/components/layout/LanguageToggle'
 
 type DataSourceNoteProps = {
   source: string
@@ -9,22 +12,22 @@ type DataSourceNoteProps = {
   cadence?: SourceCadence
 }
 
-export default function DataSourceNote({
-  source,
-  href,
-  refreshed = 'Source institutionnelle consultable',
-  checkedOn,
-  cadence = 'reference',
-}: DataSourceNoteProps) {
-  const dataLabel = cadence === 'live' ? 'Donnée mise à jour' : 'Fait de référence'
+const COPY = {
+  fr: { fallback: 'Source institutionnelle consultable', live: 'Donnée mise à jour', reference: 'Fait de référence', label: 'Source des données', from: 'Les chiffres de cette page viennent de', checked: 'vérifié le', colon: ' :' },
+  en: { fallback: 'Official source you can check', live: 'Updated data', reference: 'Reference fact', label: 'Data source', from: 'The figures on this page come from', checked: 'checked on', colon: ':' },
+}
+
+export default function DataSourceNote({ source, href, refreshed, checkedOn, cadence = 'reference' }: DataSourceNoteProps) {
+  const locale = useSiteLocale()
+  const copy = COPY[locale]
 
   return (
-    <aside className="source-note" aria-label="Source des données">
+    <aside className="source-note" aria-label={copy.label}>
       <span aria-hidden="true"><SpaceIcon name="search" size={18} className="inline-icon" /></span>
       <p>
-        <strong>{dataLabel} :</strong> {refreshed}. Les chiffres de cette page viennent de{' '}
+        <strong>{cadence === 'live' ? copy.live : copy.reference}{copy.colon}</strong> {refreshed ?? copy.fallback}. {copy.from}{' '}
         <a href={href} target="_blank" rel="noopener noreferrer">{source}</a>
-        {checkedOn && <> · vérifié le <time dateTime={checkedOn}>{formatCheckedOn(checkedOn)}</time></>}.
+        {checkedOn && <> · {copy.checked} <time dateTime={checkedOn}>{formatCheckedOn(checkedOn, locale)}</time></>}.
       </p>
     </aside>
   )

@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import Link from '@/components/ui/LocaleLink'
 import { useState } from 'react'
 import { clearLocalProgress, SKY_OBJECT_IDS, useLocalProgress, type LocalProgress, type MissionId, type SkyObjectId } from '@/lib/client/local-progress'
 import { SITE_URL } from '@/lib/config/site'

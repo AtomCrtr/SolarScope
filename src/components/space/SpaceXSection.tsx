@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import SpaceIcon from '@/components/ui/SpaceIcon'
+import { useSiteLocale } from '@/components/layout/LanguageToggle'
 
 
 interface Launch {
@@ -20,20 +21,27 @@ interface Launch {
 
 const VEHICLES = [
   {
-    name: 'Falcon 9', status: 'Opérationnel', color: '#38bdf8',
-    detail: 'Lanceur orbital à premier étage réutilisable, utilisé pour les satellites, Dragon et les missions scientifiques.',
+    name: 'Falcon 9', color: '#38bdf8', status: { fr: 'Opérationnel', en: 'Operational' },
+    detail: { fr: 'Lanceur orbital dont le premier étage est réutilisable, utilisé pour les satellites, la capsule Dragon et des missions scientifiques.', en: 'An orbital rocket with a reusable first stage, used for satellites, the Dragon capsule and science missions.' },
   },
   {
-    name: 'Falcon Heavy', status: 'Opérationnel', color: '#818cf8',
-    detail: 'Architecture à trois corps dérivée de Falcon 9 pour les charges lourdes et les missions à haute énergie.',
+    name: 'Falcon Heavy', color: '#818cf8', status: { fr: 'Opérationnel', en: 'Operational' },
+    detail: { fr: 'Trois corps de Falcon 9 assemblés, pour les charges lourdes et les missions qui vont très loin.', en: 'Three Falcon 9 cores joined together, for heavy loads and missions that go very far.' },
   },
   {
-    name: 'Starship', status: 'Développement', color: '#a78bfa',
-    detail: 'Système super-lourd entièrement réutilisable en campagne d’essais. Les performances évoluent avec le programme.',
+    name: 'Starship', color: '#a78bfa', status: { fr: 'En développement', en: 'In development' },
+    detail: { fr: 'Un très gros système entièrement réutilisable, encore en phase d’essais. Ses performances évoluent avec le programme.', en: 'A very large, fully reusable system still being tested. Its performance changes as the programme goes on.' },
   },
 ]
 
+const COPY = {
+  fr: { badge: 'SPACEX · CALENDRIER EN DIRECT', title: 'Lancements à venir', source: 'Calendrier fourni par Launch Library 2 · aucune statistique annuelle figée', updated: (time: string) => `Actualisé à ${time}`, connecting: 'Connexion…', down: 'Le calendrier SpaceX est temporairement indisponible.', details: 'Fiche ↗', detailsLabel: (name: string) => `Fiche du lancement ${name} (nouvel onglet)`, webcast: 'Diffusion ↗', vehicles: 'Caractéristiques officielles des véhicules ↗', date: 'fr-FR' },
+  en: { badge: 'SPACEX · LIVE SCHEDULE', title: 'Upcoming launches', source: 'Schedule provided by Launch Library 2 · no fixed yearly statistics', updated: (time: string) => `Updated at ${time}`, connecting: 'Connecting…', down: 'The SpaceX schedule is temporarily unavailable.', details: 'Details ↗', detailsLabel: (name: string) => `Launch details for ${name} (new tab)`, webcast: 'Webcast ↗', vehicles: 'Official vehicle specifications ↗', date: 'en-GB' },
+}
+
 export default function SpaceXSection() {
+  const locale = useSiteLocale()
+  const t = COPY[locale]
   const [launches, setLaunches] = useState<Launch[]>([])
   const [updatedAt, setUpdatedAt] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
@@ -62,17 +70,17 @@ export default function SpaceXSection() {
     <section style={{ paddingTop: '3rem' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '1rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
         <div>
-          <div className="badge" style={{ marginBottom: '0.75rem' }}><SpaceIcon name="satellite" size={18} className="inline-icon" /> SPACEX · CALENDRIER LIVE</div>
+          <div className="badge" style={{ marginBottom: '0.75rem' }}><SpaceIcon name="satellite" size={18} className="inline-icon" /> {t.badge}</div>
           <h2 style={{ color: 'var(--text)', font: "800 clamp(1.8rem, 4vw, 2.8rem)/1 var(--font-display)", letterSpacing: '-0.035em' }}>
-            Lancements à venir
+            {t.title}
           </h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem', marginTop: '0.55rem' }}>
-            Calendrier fourni par Launch Library 2 · aucune statistique annuelle figée
+            {t.source}
           </p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', color: 'var(--text-muted)', fontSize: '0.68rem' }}>
           <span className={error ? 'live-orb is-loading' : 'live-orb'} />
-          {updatedAt ? `Actualisé à ${new Date(updatedAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}` : 'Connexion…'}
+          {updatedAt ? t.updated(new Date(updatedAt).toLocaleTimeString(t.date, { hour: '2-digit', minute: '2-digit' })) : t.connecting}
         </div>
       </div>
 
@@ -81,9 +89,9 @@ export default function SpaceXSection() {
           <article key={vehicle.name} className="card" style={{ padding: '1.2rem', borderTop: `2px solid ${vehicle.color}` }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.75rem', alignItems: 'center' }}>
               <h3 style={{ color: 'var(--text)', font: "750 1rem var(--font-display)" }}>{vehicle.name}</h3>
-              <span style={{ color: vehicle.color, fontSize: '0.62rem', fontWeight: 800 }}>{vehicle.status}</span>
+              <span style={{ color: vehicle.color, fontSize: '0.62rem', fontWeight: 800 }}>{vehicle.status[locale]}</span>
             </div>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.74rem', lineHeight: 1.65, marginTop: '0.75rem' }}>{vehicle.detail}</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.74rem', lineHeight: 1.65, marginTop: '0.75rem' }}>{vehicle.detail[locale]}</p>
           </article>
         ))}
       </div>
@@ -92,7 +100,7 @@ export default function SpaceXSection() {
 
       {!loading && error && (
         <div className="card" style={{ padding: '1.5rem', color: '#f59e0b', textAlign: 'center' }}>
-          <SpaceIcon name="signal" size={18} className="inline-icon" /> Le calendrier SpaceX est temporairement indisponible.
+          <SpaceIcon name="signal" size={18} className="inline-icon" /> {t.down}
         </div>
       )}
 
@@ -102,7 +110,7 @@ export default function SpaceXSection() {
             <article key={launch.id} className="card motion-enter" style={{ animationDelay: `${Math.min(index * 0.04, 0.6)}s`,  padding: '1.1rem', display: 'flex', flexDirection: 'column', minHeight: 195 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
                 <time dateTime={launch.net} style={{ color: 'var(--nebula)', fontSize: '0.68rem', fontWeight: 800 }}>
-                  {new Date(launch.net).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  {new Date(launch.net).toLocaleDateString(t.date, { day: 'numeric', month: 'short', year: 'numeric' })}
                 </time>
                 <span style={{ color: launch.live ? '#34d399' : 'var(--text-muted)', fontSize: '0.6rem', fontWeight: 800 }}>
                   {launch.live ? '● LIVE' : launch.status.toUpperCase()}
@@ -111,9 +119,9 @@ export default function SpaceXSection() {
               <h3 style={{ marginTop: '0.8rem', color: 'var(--text)', font: "730 0.92rem/1.45 var(--font-display)" }}>{launch.name}</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.68rem', lineHeight: 1.6, marginTop: '0.45rem' }}>{launch.rocket} · {launch.location}</p>
               <div style={{ marginTop: 'auto', paddingTop: '0.9rem', display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', fontSize: '0.65rem' }}>
-                <span>{new Date(launch.net).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>
-                {launch.url && <a href={launch.url} target="_blank" rel="noopener noreferrer" className="touch-link touch-link-compact" style={{ color: 'var(--star)', textDecoration: 'none' }} aria-label={`Fiche du lancement ${launch.name} (nouvel onglet)`}>Fiche ↗</a>}
-                {launch.webcast && <a href={launch.webcast} target="_blank" rel="noopener noreferrer" className="touch-link touch-link-compact" style={{ color: 'var(--nebula)', textDecoration: 'none' }}>Diffusion ↗</a>}
+                <span>{new Date(launch.net).toLocaleTimeString(t.date, { hour: '2-digit', minute: '2-digit' })}</span>
+                {launch.url && <a href={launch.url} target="_blank" rel="noopener noreferrer" className="touch-link touch-link-compact" style={{ color: 'var(--star)', textDecoration: 'none' }} aria-label={t.detailsLabel(launch.name)}>{t.details}</a>}
+                {launch.webcast && <a href={launch.webcast} target="_blank" rel="noopener noreferrer" className="touch-link touch-link-compact" style={{ color: 'var(--nebula)', textDecoration: 'none' }}>{t.webcast}</a>}
               </div>
             </article>
           ))}
@@ -122,7 +130,7 @@ export default function SpaceXSection() {
 
       <div style={{ marginTop: '1rem', textAlign: 'right' }}>
         <a href="https://www.spacex.com/vehicles/" target="_blank" rel="noopener noreferrer" className="touch-link touch-link-compact" style={{ color: 'var(--text-muted)', fontSize: '0.75rem', textDecoration: 'underline', textUnderlineOffset: 3 }}>
-          Caractéristiques officielles des véhicules ↗
+          {t.vehicles}
         </a>
       </div>
     </section>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import SpaceIcon from '@/components/ui/SpaceIcon'
+import { useSiteLocale } from '@/components/layout/LanguageToggle'
 import { readSpaceWeatherHistoryCache, storeSpaceWeatherHistoryCache } from '@/lib/client/space-weather-history-cache'
 import type { HistorySourceState, PlasmaEntry, SpaceWeatherHistoryPayload } from '@/lib/data/space-weather-history'
 
@@ -21,14 +22,15 @@ function getFlareColor(cls: string): string {
     return '#64748b'
 }
 
-function getFlareDesc(cls: string): string {
-    if (cls.startsWith('X')) return 'Majeure — radio blackout possible'
-    if (cls.startsWith('M')) return 'Modérée — perturbations radio'
-    if (cls.startsWith('C')) return 'Faible — effet mineur'
-    return 'Minimale'
+function getFlareDesc(cls: string, en = false): string {
+    if (cls.startsWith('X')) return en ? 'Major — possible radio blackout' : 'Majeure — radio blackout possible'
+    if (cls.startsWith('M')) return en ? 'Moderate — radio disruption' : 'Modérée — perturbations radio'
+    if (cls.startsWith('C')) return en ? 'Weak — minor effect' : 'Faible — effet mineur'
+    return en ? 'Minimal' : 'Minimale'
 }
 
 export default function SolarFlareHistory() {
+    const en = useSiteLocale() === 'en'
     const [flares, setFlares] = useState<SolarFlare[]>([])
     const [wind, setWind] = useState<PlasmaEntry[]>([])
     const [flareLoading, setFlareLoading] = useState(true)
@@ -75,16 +77,18 @@ export default function SolarFlareHistory() {
             <div className="card" style={{ padding: '1.75rem', marginBottom: '2rem' }}>
                 {windState === 'cached' && (
                     <div role="status" className="space-data-status is-cached">
-                        <strong>Dernières valeurs connues</strong>
-                        <span>Le vent solaire n’est pas actualisé{windCachedAt ? ` · cache du ${new Date(windCachedAt).toLocaleString('fr-FR')}` : ''}.</span>
+                        <strong>{en ? 'Last known values' : 'Dernières valeurs connues'}</strong>
+                        <span>{en ? 'Solar wind data is not up to date' : 'Le vent solaire n’est pas actualisé'}{windCachedAt ? ` · ${en ? 'cached on' : 'cache du'} ${new Date(windCachedAt).toLocaleString(en ? 'en-GB' : 'fr-FR')}` : ''}.</span>
                     </div>
                 )}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
                     <div>
                         <h2 className="section-title" style={{ color: '#60a5fa', marginBottom: '0.25rem' }}>
-                            Vent Solaire — Données ACE/DSCOVR
+                            {en ? 'Solar wind — ACE/DSCOVR data' : 'Vent Solaire — Données ACE/DSCOVR'}
                         </h2>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Mesures {windState === 'cached' ? 'mises en cache' : 'en temps réel'} à 1,5 million km de la Terre (L1)</p>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>{en
+                            ? `${windState === 'cached' ? 'Cached' : 'Real-time'} measurements 1.5 million km from Earth (L1)`
+                            : `Mesures ${windState === 'cached' ? 'mises en cache' : 'en temps réel'} à 1,5 million km de la Terre (L1)`}</p>
                     </div>
                     {latestWind && (
                         <div style={{ display: 'flex', gap: '1rem' }}>
@@ -104,7 +108,7 @@ export default function SolarFlareHistory() {
                     <div role="status" className="space-data-empty">⏳ Chargement du vent solaire NOAA…</div>
                 ) : windState === 'unavailable' || !windChart.length ? (
                     <div role="status" className="space-data-empty is-unavailable">
-                        <SpaceIcon name="signal" size={18} className="inline-icon" /> Données du vent solaire temporairement indisponibles. Aucune courbe vide n’est présentée comme une mesure réelle.
+                        <SpaceIcon name="signal" size={18} className="inline-icon" /> {en ? 'Solar wind data temporarily unavailable. No empty curve is shown as a real measurement.' : 'Données du vent solaire temporairement indisponibles. Aucune courbe vide n’est présentée comme une mesure réelle.'}
                     </div>
                 ) : <>
                 {/* SVG wind speed chart */}
@@ -138,9 +142,9 @@ export default function SolarFlareHistory() {
                     </svg>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.4rem', fontSize: '0.7rem', color: 'var(--text-muted)' }}>
-                    <span>Il y a 12h</span>
-                    <span style={{ color: '#f97316' }}>— seuil 500 km/s</span>
-                    <span>{windState === 'cached' ? 'Dernière mesure' : 'Maintenant'}</span>
+                    <span>{en ? '12h ago' : 'Il y a 12h'}</span>
+                    <span style={{ color: '#f97316' }}>{en ? '— 500 km/s threshold' : '— seuil 500 km/s'}</span>
+                    <span>{windState === 'cached' ? (en ? 'Last measurement' : 'Dernière mesure') : (en ? 'Now' : 'Maintenant')}</span>
                 </div>
                 </>}
             </div>
@@ -148,18 +152,18 @@ export default function SolarFlareHistory() {
             {/* Flare history */}
             <div className="card" style={{ padding: '1.75rem', marginBottom: '2rem' }}>
                 <h2 className="section-title" style={{ color: '#fbbf24', marginBottom: '1.25rem' }}>
-                    Historique Éruptions Solaires — 30 derniers jours
+                    {en ? 'Solar flare history — last 30 days' : 'Historique Éruptions Solaires — 30 derniers jours'}
                 </h2>
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '1.25rem' }}>
-                    Source : NASA DONKI (Database Of Notifications, Knowledge, Information) · Actualisé chaque heure
+                    {en ? 'Source: NASA DONKI (Database Of Notifications, Knowledge, Information) · Updated every hour' : 'Source : NASA DONKI (Database Of Notifications, Knowledge, Information) · Actualisé chaque heure'}
                 </p>
 
                 {flareLoading ? (
-                    <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>⏳ Chargement des éruptions...</div>
+                    <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>⏳ {en ? 'Loading flares…' : 'Chargement des éruptions…'}</div>
                 ) : flares.length === 0 ? (
                     <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
                         <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}><SpaceIcon name="sun" size={18} className="inline-icon" /></div>
-                        Aucune éruption significative ces 30 derniers jours — période calme !
+                        {en ? 'No significant flares in the last 30 days — a quiet period!' : 'Aucune éruption significative ces 30 derniers jours — période calme !'}
                     </div>
                 ) : (
                     <>
@@ -172,7 +176,7 @@ export default function SolarFlareHistory() {
                                 return (
                                     <div key={cls} style={{ padding: '0.5rem 1rem', borderRadius: '0.625rem', background: `${color}12`, border: `1px solid ${color}30`, textAlign: 'center' }}>
                                         <div style={{ color, fontWeight: 900, fontFamily: 'var(--font-display)', fontSize: '1.4rem', lineHeight: 1 }}>{count}</div>
-                                        <div style={{ color, fontSize: '0.72rem', fontWeight: 700 }}>Classe {cls}</div>
+                                        <div style={{ color, fontSize: '0.72rem', fontWeight: 700 }}>{en ? 'Class' : 'Classe'} {cls}</div>
                                     </div>
                                 )
                             })}
@@ -183,7 +187,7 @@ export default function SolarFlareHistory() {
                             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
                                 <thead>
                                     <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.07)', background: 'rgba(0,0,0,0.2)' }}>
-                                        {['Classe', 'Début (UTC)', 'Pic', 'Fin', 'Région', 'Impact'].map(h => (
+                                        {(en ? ['Class', 'Start (UTC)', 'Peak', 'End', 'Region', 'Impact'] : ['Classe', 'Début (UTC)', 'Pic', 'Fin', 'Région', 'Impact']).map(h => (
                                             <th key={h} style={{ padding: '0.75rem 1rem', textAlign: 'left', color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.75rem', letterSpacing: '0.03em' }}>{h}</th>
                                         ))}
                                     </tr>
@@ -213,7 +217,7 @@ export default function SolarFlareHistory() {
                                                     {f.sourceLocation || '—'}
                                                 </td>
                                                 <td style={{ padding: '0.7rem 1rem' }}>
-                                                    <span style={{ color, fontSize: '0.72rem', fontWeight: 500 }}>{getFlareDesc(f.classType || '')}</span>
+                                                    <span style={{ color, fontSize: '0.72rem', fontWeight: 500 }}>{getFlareDesc(f.classType || '', en)}</span>
                                                 </td>
                                             </tr>
                                         )

@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from '@/components/ui/LocaleLink'
 import { useEffect, useMemo, useState } from 'react'
 import { MISSION_IDS, PROGRESS_EVENT, readLocalProgress, visitMission, type LocalProgress, type MissionId } from '@/lib/client/local-progress'
 import { readStorage, writeStorage } from '@/lib/client/safe-storage'

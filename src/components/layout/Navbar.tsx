@@ -1,9 +1,8 @@
 'use client'
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import Link from '@/components/ui/LocaleLink'
 import { useState, useEffect, useRef } from 'react'
-import LanguageToggle, { useSiteLocale } from '@/components/layout/LanguageToggle'
+import LanguageToggle, { useSiteLocale, usePagePath } from '@/components/layout/LanguageToggle'
 import SpaceIcon, { type SpaceIconName } from '@/components/ui/SpaceIcon'
 
 /* ─────────────────────────────────────────────
@@ -101,7 +100,7 @@ const NAV_EN: Record<string, { label: string; pages: Record<string, { title: str
 }
 
 export default function Navbar() {
-    const pathname = usePathname()
+    const pathname = usePagePath()
     const locale = useSiteLocale()
     const [openGroup, setOpenGroup] = useState<string | null>(null)
     const [mobileOpen, setMobileOpen] = useState(false)
@@ -306,7 +305,7 @@ export default function Navbar() {
                         <button
                             ref={mobileButtonRef}
                             onClick={() => setMobileOpen(!mobileOpen)}
-                            aria-label={mobileOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+                            aria-label={locale === 'en' ? (mobileOpen ? 'Close the menu' : 'Open the menu') : (mobileOpen ? 'Fermer le menu' : 'Ouvrir le menu')}
                             aria-expanded={mobileOpen}
                             aria-controls="mobile-navigation"
                             type="button"

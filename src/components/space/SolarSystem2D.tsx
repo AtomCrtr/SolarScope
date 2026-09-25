@@ -1,5 +1,6 @@
 'use client'
 
+import { useSiteLocale } from '@/components/layout/LanguageToggle'
 import { useMemo } from 'react'
 import { distanceFromEarthKm } from '@/lib/astronomy/planet-distance'
 import { formatDistance } from '@/lib/astronomy/travel'
@@ -53,13 +54,23 @@ function computePositions(svgW: number, svgH: number, scale: number): PlanetPos[
     })
 }
 
+const EN_NAMES: Record<string, string> = { mercury: 'Mercury', venus: 'Venus', earth: 'Earth', mars: 'Mars', jupiter: 'Jupiter', saturn: 'Saturn', uranus: 'Uranus', neptune: 'Neptune' }
+
+const COPY = {
+    fr: { title: 'Système solaire aujourd’hui', computed: (date: string) => `Positions calculées par éphémérides J2000 pour le ${date}`, real: 'Positions réelles', whole: 'Système complet', inner: 'Planètes intérieures (zoom)', mapLabel: 'Carte du Système solaire : touche une planète pour l’explorer', innerLabel: 'Zoom sur les quatre planètes intérieures : touche une planète pour l’explorer', explore: (name: string) => `Explorer ${name}`, hint: 'Touche une planète pour l’explorer en 3D.', here: 'Tu es ici', away: (distance: string) => `à ${distance} de nous`, date: 'fr-FR' },
+    en: { title: 'The Solar System today', computed: (date: string) => `Positions worked out from J2000 ephemerides for ${date}`, real: 'Real positions', whole: 'Whole system', inner: 'Inner planets (zoom)', mapLabel: 'Map of the Solar System: tap a planet to explore it', innerLabel: 'Zoom on the four inner planets: tap a planet to explore it', explore: (name: string) => `Explore ${name}`, hint: 'Tap a planet to explore it in 3D.', here: 'You are here', away: (distance: string) => `${distance} away`, date: 'en-GB' },
+}
+
 export default function SolarSystem2D() {
+    const locale = useSiteLocale()
+    const t = COPY[locale]
+    const pname = (planet: { id: string; name: string }) => (locale === 'en' ? EN_NAMES[planet.id] : planet.name)
     const W = 680
     const H = 680
     const SCALE = 28 // px per AU for full diagram
 
     const today = new Date()
-    const dateStr = today.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+    const dateStr = today.toLocaleDateString(t.date, { day: 'numeric', month: 'long', year: 'numeric' })
     const cx = W / 2
     const cy = H / 2
 
@@ -84,12 +95,12 @@ export default function SolarSystem2D() {
         <div style={{ padding: '1.5rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                 <div>
-                    <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '0.25rem' }}>Système Solaire — Aujourd&apos;hui</h2>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>Positions calculées par éphémérides J2000 pour le {dateStr}</p>
+                    <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '0.25rem' }}>{t.title}</h2>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{t.computed(dateStr)}</p>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                     <span className="pulse-dot" />
-                    <span style={{ color: '#10b981', fontSize: '0.7rem', fontWeight: 600 }}>Positions réelles</span>
+                    <span style={{ color: '#10b981', fontSize: '0.7rem', fontWeight: 600 }}>{t.real}</span>
                 </div>
             </div>
 
@@ -97,8 +108,8 @@ export default function SolarSystem2D() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 {/* Full view */}
                 <div style={{ background: 'rgba(0,0,16,0.95)', borderRadius: '1rem', border: '1px solid rgba(255,255,255,0.06)', overflow: 'hidden', position: 'relative' }}>
-                    <div style={{ position: 'absolute', top: 8, left: 12, color: 'var(--text-muted)', fontSize: '0.62rem' }}>Système complet</div>
-                    <svg role="group" aria-label="Carte du Système solaire : touche une planète pour l’explorer" width="100%" viewBox={`0 0 ${W} ${H}`} style={{ display: 'block' }}>
+                    <div style={{ position: 'absolute', top: 8, left: 12, color: 'var(--text-muted)', fontSize: '0.62rem' }}>{t.whole}</div>
+                    <svg role="group" aria-label={t.mapLabel} width="100%" viewBox={`0 0 ${W} ${H}`} style={{ display: 'block' }}>
                         {/* Stars BG */}
                         {Array.from({ length: 100 }, (_, i) => (
                             <circle key={i} cx={Math.sin(i * 137.5) * W / 2 + cx} cy={Math.cos(i * 137.5) * H / 2 + cy}
@@ -121,13 +132,13 @@ export default function SolarSystem2D() {
                         <text x={cx} y={cy + 24} textAnchor="middle" fill="#fbbf24" fontSize="9" fontWeight="bold">☀</text>
                         {/* Planets */}
                         {planets.map(p => (
-                            <a key={p.name} href={`#planete-${p.id}`} aria-label={`Explorer ${p.name}`} className="solar-map-planet">
+                            <a key={p.name} href={`#planete-${p.id}`} aria-label={t.explore(pname(p))} className="solar-map-planet">
                                 {/* Connector line from orbit to planet */}
                                 <line x1={cx} y1={cy} x2={p.x} y2={p.y} stroke={p.color} strokeWidth="0.3" strokeOpacity="0.15" />
                                 <circle cx={p.x} cy={p.y} r={p.r}
                                     fill={p.color} filter={`drop-shadow(0 0 ${p.r}px ${p.color})`} opacity={0.9} />
                                 <text x={p.x} y={p.y - p.r - 3} textAnchor="middle" fill={p.color} fontSize="8.5" fontWeight="bold" opacity={0.9}>
-                                    {p.name.slice(0, 3).toUpperCase()}
+                                    {pname(p).slice(0, 3).toUpperCase()}
                                 </text>
                                 {/* Larger invisible target so small planets are easy to tap. */}
                                 <circle cx={p.x} cy={p.y} r={Math.max(p.r + 10, 18)} fill="transparent" />
@@ -138,8 +149,8 @@ export default function SolarSystem2D() {
 
                 {/* Inner planets zoom */}
                 <div style={{ background: 'rgba(0,0,16,0.95)', borderRadius: '1rem', border: '1px solid rgba(255,255,255,0.06)', overflow: 'hidden', position: 'relative' }}>
-                    <div style={{ position: 'absolute', top: 8, left: 12, color: 'var(--text-muted)', fontSize: '0.62rem' }}>Planètes intérieures (zoom)</div>
-                    <svg role="group" aria-label="Zoom sur les quatre planètes intérieures : touche une planète pour l’explorer" width="100%" viewBox="0 0 400 400" style={{ display: 'block' }}>
+                    <div style={{ position: 'absolute', top: 8, left: 12, color: 'var(--text-muted)', fontSize: '0.62rem' }}>{t.inner}</div>
+                    <svg role="group" aria-label={t.innerLabel} width="100%" viewBox="0 0 400 400" style={{ display: 'block' }}>
                         {[0.387, 0.723, 1.0, 1.524].map((a, i) => (
                             <circle key={i} cx={200} cy={200} r={a * 145} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="0.8" />
                         ))}
@@ -152,10 +163,10 @@ export default function SolarSystem2D() {
                         </defs>
                         <text x={200} y={220} textAnchor="middle" fill="#fbbf24" fontSize="10" fontWeight="bold">☀</text>
                         {innerPlanets.map(p => (
-                            <a key={p.name} href={`#planete-${p.id}`} aria-label={`Explorer ${p.name}`} className="solar-map-planet">
+                            <a key={p.name} href={`#planete-${p.id}`} aria-label={t.explore(pname(p))} className="solar-map-planet">
                                 <circle cx={p.x} cy={p.y} r={p.r + 2} fill={p.color} filter={`drop-shadow(0 0 ${p.r + 3}px ${p.color})`} />
                                 <text x={p.x} y={p.y - p.r - 4} textAnchor="middle" fill={p.color} fontSize="9" fontWeight="bold">
-                                    {p.name.slice(0, 3).toUpperCase()}
+                                    {pname(p).slice(0, 3).toUpperCase()}
                                 </text>
                                 <line x1={200} y1={200} x2={p.x} y2={p.y} stroke={p.color} strokeWidth="0.4" strokeOpacity="0.2" />
                                 <circle cx={p.x} cy={p.y} r={Math.max(p.r + 12, 18)} fill="transparent" />
@@ -166,15 +177,15 @@ export default function SolarSystem2D() {
             </div>
 
             {/* Planet cards: today's real distance, opening the explorer. */}
-            <p style={{ marginTop: '1rem', color: 'var(--text-subtle)', fontSize: '0.9rem' }}>Touche une planète pour l’explorer en 3D.</p>
+            <p style={{ marginTop: '1rem', color: 'var(--text-subtle)', fontSize: '0.9rem' }}>{t.hint}</p>
             <ul className="solar-map-cards">
                 {planets.map(p => {
                     const km = distances.get(p.id) ?? null
                     return (
                         <li key={p.name}>
                             <a href={`#planete-${p.id}`} style={{ '--planet-color': p.color } as React.CSSProperties}>
-                                <span className="solar-map-card-name"><span aria-hidden="true" style={{ color: p.color }}>{p.symbol}</span>{p.name}</span>
-                                <span className="solar-map-card-meta">{km === null ? 'Tu es ici' : `à ${formatDistance(km)} de nous`}</span>
+                                <span className="solar-map-card-name"><span aria-hidden="true" style={{ color: p.color }}>{p.symbol}</span>{pname(p)}</span>
+                                <span className="solar-map-card-meta">{km === null ? t.here : t.away(formatDistance(km, locale))}</span>
                             </a>
                         </li>
                     )

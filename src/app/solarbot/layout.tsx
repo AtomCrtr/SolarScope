@@ -1,4 +1,4 @@
-import { createPageMetadata } from '@/lib/config/site'
+import { pageMetadata } from '@/lib/config/site'
 
-export const metadata = createPageMetadata('SolarBot', 'Pose une question sur l’espace et reçois une réponse courte avec les mots expliqués.', '/solarbot')
+export const metadata = pageMetadata('/solarbot')
 export default function Layout({ children }: { children: React.ReactNode }) { return children }

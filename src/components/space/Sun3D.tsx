@@ -4,6 +4,7 @@ import { useRef, Suspense } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Stars } from '@react-three/drei'
 import * as THREE from 'three'
+import { useSiteLocale } from '@/components/layout/LanguageToggle'
 
 function SunMesh() {
     const coreRef = useRef<THREE.Mesh>(null)
@@ -159,10 +160,11 @@ interface Sun3DProps {
 }
 
 export default function Sun3D({ height = 480 }: Sun3DProps) {
+    const locale = useSiteLocale()
     return (
         <Canvas
             role="img"
-            aria-label="Représentation interactive du Soleil en trois dimensions"
+            aria-label={locale === 'en' ? 'Interactive 3D view of the Sun' : 'Représentation interactive du Soleil en trois dimensions'}
             style={{ height, background: 'transparent' }}
             camera={{ position: [0, 0, 7.5], fov: 40 }}
             gl={{ antialias: true, alpha: true }}

@@ -1,7 +1,7 @@
 'use client'
 
+import { usePagePath } from '@/components/layout/LanguageToggle'
 import { useEffect } from 'react'
-import { usePathname } from 'next/navigation'
 import { type MissionId, visitMission } from '@/lib/client/local-progress'
 
 const PATH_TO_MISSION: Record<string, MissionId> = {
@@ -22,7 +22,7 @@ const PATH_TO_MISSION: Record<string, MissionId> = {
 }
 
 export default function ProgressTracker() {
-  const pathname = usePathname()
+  const pathname = usePagePath()
 
   useEffect(() => {
     const mission = PATH_TO_MISSION[pathname]

@@ -1,4 +1,4 @@
-import { createPageMetadata } from '@/lib/config/site'
+import { pageMetadata } from '@/lib/config/site'
 
-export const metadata = createPageMetadata('Mars et ses rovers', 'Pars sur Mars avec les rovers Curiosity et Perseverance et comprends leur mission.', '/mars')
+export const metadata = pageMetadata('/mars')
 export default function Layout({ children }: { children: React.ReactNode }) { return children }

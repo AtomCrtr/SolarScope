@@ -5,7 +5,9 @@ import SpaceIcon from '@/components/ui/SpaceIcon'
 
 import SolarBotSourceLinks, { SolarBotReliabilityNote } from '@/components/assistant/SolarBotSourceLinks'
 import type { PublicSolarBotSource } from '@/lib/content/solarbot-sources'
-import SolarBotStatus, { type SolarBotRuntimeStatus, useSolarBotStatus } from '@/components/assistant/SolarBotStatus'
+import SolarBotStatus, { useSolarBotStatus } from '@/components/assistant/SolarBotStatus'
+import { askSolarBot } from '@/components/assistant/ask-solarbot'
+import { useSiteLocale } from '@/components/layout/LanguageToggle'
 
 interface Message {
     role: 'user' | 'bot'
@@ -14,29 +16,19 @@ interface Message {
     degraded?: boolean
 }
 
-type SolarBotAnswer = { text: string; sources: PublicSolarBotSource[]; degraded: boolean; status: Exclude<SolarBotRuntimeStatus, 'checking'> }
-
-const QUICK_QUESTIONS = [
-    'Pourquoi les étoiles brillent ?',
-    "C'est quoi un trou noir ?",
-    'Vie sur Mars ?',
-    'Combien de planètes ?',
-]
-
-async function askSolarBot(question: string, history: Message[]): Promise<SolarBotAnswer> {
-    try {
-        const res = await fetch('/api/gemini', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ question, history }),
-        })
-        const data = await res.json()
-        if (!res.ok) return { text: data.error ?? 'Réessaie !', sources: [], degraded: true, status: 'unavailable' }
-        const degraded = Boolean(data.degraded)
-        return { text: data.text ?? 'Réessaie !', sources: Array.isArray(data.sources) ? data.sources : [], degraded, status: degraded ? 'fallback' : 'available' }
-    } catch {
-        return { text: 'Erreur de connexion. Réessaie !', sources: [], degraded: true, status: 'unavailable' }
-    }
+const COPY = {
+    fr: {
+        quick: ['Pourquoi les étoiles brillent ?', 'C’est quoi un trou noir ?', 'Vie sur Mars ?', 'Combien de planètes ?'],
+        welcome: 'Salut ! Je suis SolarBot.\nPose-moi n’importe quelle question sur l’espace !', tip: 'Pose-moi une question !',
+        open: 'Ouvrir SolarBot', close: 'Fermer SolarBot', dialog: 'Discussion avec SolarBot', clear: 'Effacer la conversation', clearTitle: 'Effacer',
+        privacy: 'Garde ton nom, ton école, ton adresse, ton téléphone et ton e-mail pour toi.', placeholder: 'Ta question sur l’espace…', inputLabel: 'Question pour SolarBot', send: 'Envoyer la question',
+    },
+    en: {
+        quick: ['Why do stars shine?', 'What is a black hole?', 'Life on Mars?', 'How many planets?'],
+        welcome: 'Hi! I am SolarBot.\nAsk me any question about space!', tip: 'Ask me a question!',
+        open: 'Open SolarBot', close: 'Close SolarBot', dialog: 'Chat with SolarBot', clear: 'Clear the conversation', clearTitle: 'Clear',
+        privacy: 'Keep your name, school, address, phone number and email to yourself.', placeholder: 'Your question about space…', inputLabel: 'Question for SolarBot', send: 'Send the question',
+    },
 }
 
 function FormattedText({ text }: { text: string }) {
@@ -57,11 +49,13 @@ function FormattedText({ text }: { text: string }) {
 }
 
 export default function SolarBotWidget() {
+    const locale = useSiteLocale()
+    const t = COPY[locale]
     const { status, updateFromAnswer } = useSolarBotStatus()
     const [open, setOpen] = useState(false)
-    const [messages, setMessages] = useState<Message[]>([
-        { role: 'bot', text: "Salut ! Je suis SolarBot.\nPose-moi n'importe quelle question sur l'espace !" }
-    ])
+    // The welcome message is not stored: it follows the page language.
+    const [conversation, setConversation] = useState<Message[]>([])
+    const messages: Message[] = [{ role: 'bot', text: t.welcome }, ...conversation]
     const [input, setInput] = useState('')
     const [loading, setLoading] = useState(false)
     const [pulse, setPulse] = useState(true)
@@ -70,7 +64,7 @@ export default function SolarBotWidget() {
 
     useEffect(() => {
         if (open) bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-    }, [messages, open])
+    }, [conversation, open])
 
     useEffect(() => {
         if (!open) return
@@ -87,11 +81,11 @@ export default function SolarBotWidget() {
         if (!q || loading) return
         setInput('')
         const userMsg: Message = { role: 'user', text: q }
-        setMessages(prev => [...prev, userMsg])
+        setConversation(prev => [...prev, userMsg])
         setLoading(true)
-        const answer = await askSolarBot(q, messages)
+        const answer = await askSolarBot(q, conversation, locale)
         updateFromAnswer(answer.status)
-        setMessages(prev => [...prev, { role: 'bot', text: answer.text, sources: answer.sources, degraded: answer.degraded }])
+        setConversation(prev => [...prev, { role: 'bot', text: answer.text, sources: answer.sources, degraded: answer.degraded }])
         setLoading(false)
     }
 
@@ -107,7 +101,7 @@ export default function SolarBotWidget() {
                                 backdropFilter: 'blur(12px)', borderRadius: '0.75rem', padding: '0.625rem 0.875rem',
                                 whiteSpace: 'nowrap', color: 'var(--text)', fontSize: '0.8rem', fontWeight: 500,
                             }}>
-                            <SpaceIcon name="robot" size={18} className="inline-icon" /> Pose-moi une question !
+                            <SpaceIcon name="robot" size={18} className="inline-icon" /> {t.tip}
                             <div style={{ position: 'absolute', bottom: -6, right: 20, width: 12, height: 12, background: 'rgba(11,16,38,0.96)', transform: 'rotate(45deg)', borderRight: '1px solid var(--orbit)', borderBottom: '1px solid var(--orbit)' }} />
                         </div>
                     )}
@@ -123,7 +117,7 @@ export default function SolarBotWidget() {
                         boxShadow: '0 6px 24px rgba(255,138,61,0.35), 0 4px 20px rgba(0,0,0,0.4)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         position: 'relative',
-                    }} aria-label={open ? 'Fermer SolarBot' : 'Ouvrir SolarBot'} aria-expanded={open} aria-controls="solarbot-dialog">
+                    }} aria-label={open ? t.close : t.open} aria-expanded={open} aria-controls="solarbot-dialog">
                     {open ? '✕' : <SpaceIcon name="robot" size={26} />}
                     {pulse && !open && (
                         <span style={{
@@ -138,7 +132,7 @@ export default function SolarBotWidget() {
             {/* Chat panel */}
             <>
                 {open && (
-                    <div className="solarbot-dialog motion-enter" id="solarbot-dialog" role="dialog" aria-label="Discussion avec SolarBot" style={{
+                    <div className="solarbot-dialog motion-enter" id="solarbot-dialog" role="dialog" aria-label={t.dialog} style={{
                             position: 'fixed', bottom: '5.5rem', right: '1.5rem', zIndex: 999,
                             width: 340, maxWidth: 'calc(100vw - 2rem)',
                             background: 'rgba(11,16,38,0.97)',
@@ -166,11 +160,11 @@ export default function SolarBotWidget() {
                                 <div style={{ color: 'var(--text)', fontWeight: 700, fontSize: '0.9rem', fontFamily: 'var(--font-display)' }}>SolarBot</div>
                                 <SolarBotStatus status={status} compact />
                             </div>
-                            <button onClick={() => setMessages([messages[0]])} aria-label="Effacer la conversation" title="Effacer" style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.8rem', padding: '4px' }}><SpaceIcon name="trash" size={18} className="inline-icon" /></button>
+                            <button onClick={() => setConversation([])} aria-label={t.clear} title={t.clearTitle} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.8rem', padding: '4px' }}><SpaceIcon name="trash" size={18} className="inline-icon" /></button>
                         </div>
 
                         <p id="solarbot-privacy-tip" style={{ padding: '0.55rem 0.875rem', color: '#bfdbfe', background: 'rgba(14,165,233,0.08)', borderBottom: '1px solid rgba(125,211,252,0.14)', fontSize: '0.7rem', lineHeight: 1.45 }}>
-                            <span aria-hidden="true"><SpaceIcon name="lock" size={18} className="inline-icon" /> </span>Garde ton nom, ton école, ton adresse, ton téléphone et ton e-mail pour toi.
+                            <span aria-hidden="true"><SpaceIcon name="lock" size={18} className="inline-icon" /> </span>{t.privacy}
                         </p>
 
                         {/* Messages */}
@@ -208,7 +202,7 @@ export default function SolarBotWidget() {
 
                         {/* Quick questions */}
                         <div style={{ padding: '0.5rem 0.875rem', display: 'flex', gap: '0.375rem', flexWrap: 'wrap', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-                            {QUICK_QUESTIONS.map(q => (
+                            {t.quick.map(q => (
                                 <button key={q} onClick={() => send(q)} disabled={loading} style={{
                                     padding: '0.3rem 0.625rem', borderRadius: 999, fontSize: '0.7rem', cursor: 'pointer',
                                     background: 'var(--card-2)', color: 'var(--nebula)',
@@ -224,8 +218,8 @@ export default function SolarBotWidget() {
                                 value={input}
                                 onChange={e => setInput(e.target.value)}
                                 onKeyDown={e => e.key === 'Enter' && send()}
-                                placeholder="Ta question sur l'espace..."
-                                aria-label="Question pour SolarBot"
+                                placeholder={t.placeholder}
+                                aria-label={t.inputLabel}
                                 aria-describedby="solarbot-privacy-tip"
                                 maxLength={1000}
                                 disabled={loading}
@@ -235,7 +229,7 @@ export default function SolarBotWidget() {
                                     color: 'var(--text)', outline: 'none',
                                 }}
                             />
-                            <button aria-label="Envoyer la question" onClick={() => send()} disabled={loading || !input.trim()} style={{
+                            <button aria-label={t.send} onClick={() => send()} disabled={loading || !input.trim()} style={{
                                 width: 36, height: 36, borderRadius: 10, background: 'var(--sun)',
                                 border: 'none', cursor: 'pointer', fontSize: '0.9rem', opacity: loading || !input.trim() ? 0.5 : 1,
                             }}><SpaceIcon name="rocket" size={18} className="inline-icon" /></button>

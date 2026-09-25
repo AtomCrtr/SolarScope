@@ -2,7 +2,7 @@
 // fresh cache and the activate step removes the previous one.
 const VERSION = new URL(self.location.href).searchParams.get('v') || 'dev'
 const CACHE_NAME = `solarscope-shell-${VERSION}`
-const APP_SHELL = ['/', '/offline', '/manifest.webmanifest', '/solarscope-icon-192.png', '/solarscope-icon-512.png']
+const APP_SHELL = ['/', '/en', '/offline', '/manifest.webmanifest', '/solarscope-icon-192.png', '/solarscope-icon-512.png']
 
 self.addEventListener('install', event => {
   event.waitUntil(

@@ -5,6 +5,7 @@ import SpaceIcon from '@/components/ui/SpaceIcon'
 
 import type { NewsArticle } from '@/lib/data/space-data'
 import KidsGuide from '@/components/learning/KidsGuide'
+import { useSiteLocale } from '@/components/layout/LanguageToggle'
 
 const CATEGORY_COLORS: Record<string, string> = {
   'Système solaire': '#ffb27a',
@@ -17,9 +18,36 @@ const CATEGORY_COLORS: Record<string, string> = {
   Sciences: '#38bdf8',
 }
 
-function formatDate(date: string | null) {
-  if (!date) return 'Date inconnue'
-  return new Date(date).toLocaleDateString('fr-FR', {
+// Categories are computed in French by the server; English pages translate them for display.
+const CATEGORY_EN: Record<string, string> = {
+  'Système solaire': 'Solar System', Mars: 'Mars', Univers: 'Universe', Astéroïdes: 'Asteroids',
+  Exploration: 'Exploration', Soleil: 'Sun', Terre: 'Earth', Sciences: 'Science',
+}
+
+const COPY = {
+  fr: {
+    date: 'fr-FR', unknownDate: 'Date inconnue', all: 'Toutes', badge: 'PUBLICATIONS OFFICIELLES', title: 'Actualités spatiales',
+    subtitle: 'Les nouvelles publiées par la NASA, avec leur date et leur source pour pouvoir les vérifier.',
+    feedDown: 'Flux temporairement indisponible', feedOk: 'Flux officiel NASA connecté', updated: (time: string) => `Actualisé à ${time}`, syncing: 'Synchronisation en cours', english: 'Articles en anglais',
+    checkSource: 'Vérifier la source ↗', searchLabel: 'Rechercher dans les articles', search: 'Rechercher dans les publications…', loading: 'Chargement…', count: (n: number) => `${n} publication${n > 1 ? 's' : ''}`,
+    loadingLabel: 'Chargement des actualités', downTitle: 'Impossible de joindre le flux NASA', downText: 'Réessayez dans quelques instants ou consultez directement la source officielle.',
+    empty: 'Aucun article ne correspond à cette recherche.', read: 'Lire l’article ↗',
+  },
+  en: {
+    date: 'en-GB', unknownDate: 'Unknown date', all: 'All', badge: 'OFFICIAL PUBLICATIONS', title: 'Space news',
+    subtitle: 'News published by NASA, with its date and source so you can check it.',
+    feedDown: 'Feed temporarily unavailable', feedOk: 'Official NASA feed connected', updated: (time: string) => `Updated at ${time}`, syncing: 'Syncing', english: 'Articles in English',
+    checkSource: 'Check the source ↗', searchLabel: 'Search the articles', search: 'Search the publications…', loading: 'Loading…', count: (n: number) => `${n} publication${n === 1 ? '' : 's'}`,
+    loadingLabel: 'Loading the news', downTitle: 'Cannot reach the NASA feed', downText: 'Try again in a few moments, or go straight to the official source.',
+    empty: 'No article matches this search.', read: 'Read the article ↗',
+  },
+}
+
+type Copy = (typeof COPY)['fr']
+
+function formatDate(date: string | null, copy: Copy) {
+  if (!date) return copy.unknownDate
+  return new Date(date).toLocaleDateString(copy.date, {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
@@ -27,12 +55,15 @@ function formatDate(date: string | null) {
 }
 
 export default function ActualitesPage() {
+  const locale = useSiteLocale()
+  const t = COPY[locale]
+  const categoryName = (category: string) => (locale === 'en' ? CATEGORY_EN[category] ?? category : category)
   const [articles, setArticles] = useState<NewsArticle[]>([])
   const [updatedAt, setUpdatedAt] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [search, setSearch] = useState('')
-  const [category, setCategory] = useState('Tous')
+  const [category, setCategory] = useState('all')
 
   useEffect(() => {
     const controller = new AbortController()
@@ -54,14 +85,14 @@ export default function ActualitesPage() {
   }, [])
 
   const categories = useMemo(
-    () => ['Tous', ...Array.from(new Set(articles.map(article => article.category)))],
+    () => ['all', ...Array.from(new Set(articles.map(article => article.category)))],
     [articles],
   )
 
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase()
     return articles.filter(article =>
-      (category === 'Tous' || article.category === category) &&
+      (category === 'all' || article.category === category) &&
       (!query || `${article.title} ${article.summary}`.toLowerCase().includes(query)),
     )
   }, [articles, category, search])
@@ -69,11 +100,9 @@ export default function ActualitesPage() {
   return (
     <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
       <header className="page-header motion-enter">
-        <div className="badge"><SpaceIcon name="news" size={18} className="inline-icon" /> PUBLICATIONS OFFICIELLES</div>
-        <h1 className="page-title">Actualités spatiales</h1>
-        <p className="page-subtitle">
-          Les nouvelles publiées par la NASA, avec leur date et leur source pour pouvoir les vérifier.
-        </p>
+        <div className="badge"><SpaceIcon name="news" size={18} className="inline-icon" /> {t.badge}</div>
+        <h1 className="page-title">{t.title}</h1>
+        <p className="page-subtitle">{t.subtitle}</p>
       </header>
 
       <KidsGuide topic="actualites" />
@@ -83,25 +112,25 @@ export default function ActualitesPage() {
           <span className={error ? 'live-orb is-loading' : 'live-orb'} />
           <div>
             <div style={{ color: 'var(--text)', fontSize: '0.8rem', fontWeight: 700 }}>
-              {error ? 'Flux temporairement indisponible' : 'Flux officiel NASA connecté'}
+              {error ? t.feedDown : t.feedOk}
             </div>
             <div style={{ color: 'var(--text-muted)', fontSize: '0.68rem' }}>
-              {updatedAt ? `Actualisé à ${new Date(updatedAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}` : 'Synchronisation en cours'} · Articles en anglais
+              {updatedAt ? t.updated(new Date(updatedAt).toLocaleTimeString(t.date, { hour: '2-digit', minute: '2-digit' })) : t.syncing} · {t.english}
             </div>
           </div>
         </div>
         <a href="https://www.nasa.gov/rss-feeds/" target="_blank" rel="noopener noreferrer" className="btn-ghost" style={{ padding: '0.55rem 1rem', fontSize: '0.75rem' }}>
-          Vérifier la source ↗
+          {t.checkSource}
         </a>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(220px, 1fr) auto', gap: '0.75rem', alignItems: 'center', marginBottom: '1.25rem' }} className="max-sm:grid-cols-1">
         <label style={{ position: 'relative' }}>
-          <span className="sr-only">Rechercher dans les articles</span>
+          <span className="sr-only">{t.searchLabel}</span>
           <input
             value={search}
             onChange={event => setSearch(event.target.value)}
-            placeholder="Rechercher dans les publications…"
+            placeholder={t.search}
             style={{
               width: '100%', padding: '0.8rem 1rem 0.8rem 2.6rem', borderRadius: '0.85rem',
               background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)',
@@ -111,7 +140,7 @@ export default function ActualitesPage() {
           <span aria-hidden="true" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>⌕</span>
         </label>
         <span style={{ color: 'var(--text-muted)', fontSize: '0.72rem', textAlign: 'right' }} aria-live="polite">
-          {loading ? 'Chargement…' : `${filtered.length} publication${filtered.length > 1 ? 's' : ''}`}
+          {loading ? t.loading : t.count(filtered.length)}
         </span>
       </div>
 
@@ -131,14 +160,14 @@ export default function ActualitesPage() {
                 color: selected ? color : 'var(--text-muted)', fontSize: '0.7rem', fontWeight: 700,
               }}
             >
-              {item}
+              {item === 'all' ? t.all : categoryName(item)}
             </button>
           )
         })}
       </div>
 
       {loading && (
-        <div className="grid-3" role="status" aria-label="Chargement des actualités" aria-busy="true">
+        <div className="grid-3" role="status" aria-label={t.loadingLabel} aria-busy="true">
           {[0, 1, 2, 3, 4, 5].map(index => <div key={index} className="skeleton-card" style={{ height: 240 }} />)}
         </div>
       )}
@@ -146,14 +175,14 @@ export default function ActualitesPage() {
       {!loading && error && (
         <div className="card" style={{ padding: '2rem', textAlign: 'center' }}>
           <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}><SpaceIcon name="signal" size={18} className="inline-icon" /></div>
-          <h2 style={{ color: 'var(--text)', font: "700 1.1rem var(--font-display)" }}>Impossible de joindre le flux NASA</h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.82rem', marginTop: '0.4rem' }}>Réessayez dans quelques instants ou consultez directement la source officielle.</p>
+          <h2 style={{ color: 'var(--text)', font: "700 1.1rem var(--font-display)" }}>{t.downTitle}</h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.82rem', marginTop: '0.4rem' }}>{t.downText}</p>
         </div>
       )}
 
       {!loading && !error && filtered.length === 0 && (
         <div className="card" style={{ padding: '2rem', color: 'var(--text-muted)', textAlign: 'center' }}>
-          Aucun article ne correspond à cette recherche.
+          {t.empty}
         </div>
       )}
 
@@ -165,16 +194,16 @@ export default function ActualitesPage() {
               <a key={`${article.url}-${index}`} href={article.url} target="_blank" rel="noopener noreferrer" className="card motion-enter" style={{ animationDelay: `${Math.min(index * 0.035, 0.35)}s`, minHeight: 245, padding: '1.4rem', textDecoration: 'none', display: 'flex', flexDirection: 'column' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.75rem', alignItems: 'center' }}>
                   <span style={{ color, background: `${color}12`, border: `1px solid ${color}30`, borderRadius: 999, padding: '0.2rem 0.65rem', fontSize: '0.64rem', fontWeight: 800 }}>
-                    {article.category}
+                    {categoryName(article.category)}
                   </span>
-                  <time dateTime={article.date ?? undefined} style={{ color: 'var(--text-muted)', fontSize: '0.65rem' }}>{formatDate(article.date)}</time>
+                  <time dateTime={article.date ?? undefined} style={{ color: 'var(--text-muted)', fontSize: '0.65rem' }}>{formatDate(article.date, t)}</time>
                 </div>
-                <h2 style={{ margin: '1rem 0 0.6rem', color: 'var(--text)', font: "750 1rem/1.45 var(--font-display)" }}>{article.title}</h2>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.77rem', lineHeight: 1.65, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                <h2 lang="en" style={{ margin: '1rem 0 0.6rem', color: 'var(--text)', font: "750 1rem/1.45 var(--font-display)" }}>{article.title}</h2>
+                <p lang="en" style={{ color: 'var(--text-muted)', fontSize: '0.77rem', lineHeight: 1.65, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                   {article.summary}
                 </p>
                 <div style={{ marginTop: 'auto', paddingTop: '1rem', display: 'flex', justifyContent: 'space-between', color: '#7c8ca4', fontSize: '0.7rem' }}>
-                  <span>NASA</span><span style={{ color }}>Lire l’article ↗</span>
+                  <span>NASA</span><span style={{ color }}>{t.read}</span>
                 </div>
               </a>
             )

@@ -1,49 +1,33 @@
 'use client'
 
-import { useSyncExternalStore } from 'react'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { readStorage, writeStorage } from '@/lib/client/safe-storage'
+import { localeFromPath, localizedHref, stripLocale, type SiteLocale } from '@/lib/i18n/paths'
 
-export type SiteLocale = 'fr' | 'en'
+export type { SiteLocale }
 
-const STORAGE_KEY = 'solarscope-locale'
-const LOCALE_EVENT = 'solarscope-locale-change'
-
-function readLocale(): SiteLocale {
-  return readStorage(STORAGE_KEY) === 'en' ? 'en' : 'fr'
-}
-
-function subscribeToLocale(onChange: () => void) {
-  window.addEventListener(LOCALE_EVENT, onChange)
-  window.addEventListener('storage', onChange)
-  return () => {
-    window.removeEventListener(LOCALE_EVENT, onChange)
-    window.removeEventListener('storage', onChange)
-  }
-}
-
+/** The language comes from the address: /soleil is French, /en/soleil is English. Works during prerendering too. */
 export function useSiteLocale(): SiteLocale {
-  return useSyncExternalStore(subscribeToLocale, readLocale, () => 'fr')
+  return localeFromPath(usePathname())
+}
+
+/** Current page without its language prefix, to compare with « /soleil » whatever the language. */
+export function usePagePath(): string {
+  return stripLocale(usePathname() ?? '/')
 }
 
 export default function LanguageToggle() {
-  const locale = useSiteLocale()
-  const pathname = usePathname()
-
-  const setLocale = (nextLocale: SiteLocale) => {
-    writeStorage(STORAGE_KEY, nextLocale)
-    document.documentElement.lang = nextLocale === 'en' && (pathname === '/' || pathname === '/passeport') ? 'en' : 'fr'
-    window.dispatchEvent(new Event(LOCALE_EVENT))
-  }
+  const pathname = usePathname() ?? '/'
+  const locale = localeFromPath(pathname)
 
   return (
-    <div className="locale-switcher" aria-label="Choisir la langue / Choose language">
-      <button type="button" aria-pressed={locale === 'fr'} onClick={() => setLocale('fr')} title="Français">
+    <nav className="locale-switcher" aria-label={locale === 'en' ? 'Language' : 'Langue'}>
+      <Link href={localizedHref(pathname, 'fr')} hrefLang="fr" lang="fr" aria-current={locale === 'fr' ? 'page' : undefined} title="Français">
         FR
-      </button>
-      <button type="button" aria-pressed={locale === 'en'} onClick={() => setLocale('en')} title="English preview — lessons are translated, page data is still in French">
-        <span>EN</span><span className="locale-preview-mark" aria-hidden="true">β</span><span className="sr-only"> preview</span>
-      </button>
-    </div>
+      </Link>
+      <Link href={localizedHref(pathname, 'en')} hrefLang="en" lang="en" aria-current={locale === 'en' ? 'page' : undefined} title="English">
+        EN
+      </Link>
+    </nav>
   )
 }

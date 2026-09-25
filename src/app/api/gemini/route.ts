@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { checkDistributedRateLimit } from '@/lib/security/rate-limit'
 import { getClientIdentifier } from '@/lib/security/client-identifier'
 import { readJsonBody } from '@/lib/security/request-body'
-import { solarBotContentIsSafe, SOLARBOT_PRIVACY_REMINDER } from '@/lib/security/solarbot-safety'
+import { solarBotContentIsSafe, SOLARBOT_PRIVACY_REMINDER, SOLARBOT_PRIVACY_REMINDER_EN } from '@/lib/security/solarbot-safety'
 import { formatSolarBotSourceContext, selectSolarBotSources, toPublicSolarBotSources } from '@/lib/content/solarbot-sources'
 import { getGeminiConfig } from '@/lib/server/gemini-health'
 
@@ -14,8 +14,28 @@ interface Message {
 }
 
 type GeminiMode = 'chat' | 'story'
+type Locale = 'fr' | 'en'
 
-function fallbackAnswer(question: string, mode: GeminiMode): string {
+const ERRORS = {
+  fr: { busy: 'SolarBot se protège un instant. Réessaie bientôt.', tooMany: 'Trop de questions rapprochées. Réessaie dans un instant.', tooLarge: 'Requête trop volumineuse.', invalid: 'Corps de requête invalide.', empty: 'Question vide.', tooLong: 'Question trop longue.', privacy: SOLARBOT_PRIVACY_REMINDER },
+  en: { busy: 'SolarBot is taking a short break. Try again soon.', tooMany: 'Too many questions in a row. Try again in a moment.', tooLarge: 'Request too large.', invalid: 'Invalid request body.', empty: 'Empty question.', tooLong: 'Question too long.', privacy: SOLARBOT_PRIVACY_REMINDER_EN },
+}
+
+function fallbackAnswerEn(question: string, mode: GeminiMode): string {
+  if (mode === 'story') {
+    return 'SolarBot is recharging its circuits. Meanwhile, imagine a small probe leaving Earth, waving to the Moon, then following the Sun’s light. It finds that every planet is a different world, and brings back one big idea: in space, curiosity is the best engine.'
+  }
+  const value = question.toLowerCase()
+  if (/\bsun\b|\bstar/.test(value)) return 'The Sun is the star at the centre of our Solar System. Its light takes about 8 minutes and 20 seconds to reach Earth.'
+  if (/mars|perseverance|curiosity/.test(value)) return 'Mars is a cold rocky planet, known for the iron oxide in its soil. Curiosity and Perseverance study its history and whether it could once have supported life.'
+  if (/\biss\b|space station/.test(value)) return 'The ISS is a crewed laboratory travelling around Earth about 400 km up. It goes around Earth almost 16 times a day.'
+  if (/black hole/.test(value)) return 'A black hole is a region where gravity is so strong that light cannot escape beyond its edge, called the horizon. We detect it through its effects on the matter around it.'
+  if (/\bmoon\b/.test(value)) return 'The Moon is Earth’s natural satellite. It almost always shows us the same face and goes around Earth in about 27 days.'
+  return 'SolarBot is limited right now, but SolarScope’s pages are still available. Try a question about the Sun, Mars, the Moon, the ISS or black holes.'
+}
+
+function fallbackAnswer(question: string, mode: GeminiMode, locale: Locale = 'fr'): string {
+  if (locale === 'en') return fallbackAnswerEn(question, mode)
   if (mode === 'story') {
     return 'SolarBot recharge ses circuits. En attendant, imagine une petite sonde quittant la Terre, saluant la Lune puis suivant la lumière du Soleil. Elle découvre que chaque planète est un monde différent et rapporte une idée essentielle : dans l’espace, la curiosité est le meilleur moteur.'
   }
@@ -59,6 +79,8 @@ async function requestGemini(payload: unknown): Promise<Response> {
 }
 
 export async function POST(request: NextRequest) {
+  const locale: Locale = request.headers.get('x-solarscope-locale') === 'en' ? 'en' : 'fr'
+  const errors = ERRORS[locale]
   const rateLimit = await checkDistributedRateLimit(`gemini:${getClientIdentifier(request) ?? 'anonymous'}`, {
     namespace: 'gemini',
     limit: 8,
@@ -66,13 +88,13 @@ export async function POST(request: NextRequest) {
   })
   if (rateLimit.unavailable) {
     return NextResponse.json(
-      { error: 'SolarBot se protège un instant. Réessaie bientôt.' },
+      { error: errors.busy },
       { status: 503, headers: { 'Cache-Control': 'no-store' } },
     )
   }
   if (!rateLimit.allowed) {
     return NextResponse.json(
-      { error: 'Trop de questions rapprochées. Réessaie dans un instant.' },
+      { error: errors.tooMany },
       {
         status: 429,
         headers: {
@@ -86,10 +108,10 @@ export async function POST(request: NextRequest) {
 
   const body = await readJsonBody(request, MAX_BODY_BYTES)
   if (body.kind === 'too-large') {
-    return NextResponse.json({ error: 'Requête trop volumineuse.' }, { status: 413 })
+    return NextResponse.json({ error: errors.tooLarge }, { status: 413 })
   }
   if (body.kind !== 'ok' || !body.value || typeof body.value !== 'object' || Array.isArray(body.value)) {
-    return NextResponse.json({ error: 'Corps de requête invalide.' }, { status: 400 })
+    return NextResponse.json({ error: errors.invalid }, { status: 400 })
   }
 
   const record = body.value as Record<string, unknown>
@@ -97,12 +119,16 @@ export async function POST(request: NextRequest) {
   const mode: GeminiMode = record.mode === 'story' ? 'story' : 'chat'
   const history = Array.isArray(record.history) ? record.history : []
 
-  if (!question) return NextResponse.json({ error: 'Question vide.' }, { status: 400 })
-  if (question.length > 1_000) return NextResponse.json({ error: 'Question trop longue.' }, { status: 400 })
+  if (!question) return NextResponse.json({ error: errors.empty }, { status: 400 })
+  if (question.length > 1_000) return NextResponse.json({ error: errors.tooLong }, { status: 400 })
 
-  const systemPrompt = mode === 'story'
-    ? 'Tu es SolarBot, conteur spatial pour enfants de 8 à 12 ans. Écris en français une histoire éducative, poétique et scientifiquement prudente de 180 à 220 mots. Commence par annoncer clairement qu’il s’agit d’une histoire. N’invente pas de découverte réelle et ne demande jamais de donnée personnelle.'
-    : 'Tu es SolarBot, assistant spatial pour enfants de 8 à 12 ans. Réponds en français avec des phrases courtes et une seule idée par phrase. Commence par une réponse simple, explique chaque mot scientifique et ajoute une comparaison concrète si elle aide. Termine par « À retenir : » avec une phrase. Distingue clairement fait, hypothèse et fiction, dis quand tu n’es pas sûr, n’invente jamais de source et ne demande jamais de donnée personnelle.'
+  const systemPrompt = locale === 'en'
+    ? mode === 'story'
+      ? 'You are SolarBot, a space storyteller for children aged 8 to 12. Write in English an educational, poetic and scientifically careful story of 180 to 220 words. Start by saying clearly that it is a story. Never invent a real discovery and never ask for personal information.'
+      : 'You are SolarBot, a space assistant for children aged 8 to 12. Answer in English with short sentences and one idea per sentence. Start with a simple answer, explain every scientific word and add a concrete comparison if it helps. End with “Remember:” and one sentence. Clearly separate fact, hypothesis and fiction, say when you are not sure, never invent a source and never ask for personal information.'
+    : mode === 'story'
+      ? 'Tu es SolarBot, conteur spatial pour enfants de 8 à 12 ans. Écris en français une histoire éducative, poétique et scientifiquement prudente de 180 à 220 mots. Commence par annoncer clairement qu’il s’agit d’une histoire. N’invente pas de découverte réelle et ne demande jamais de donnée personnelle.'
+      : 'Tu es SolarBot, assistant spatial pour enfants de 8 à 12 ans. Réponds en français avec des phrases courtes et une seule idée par phrase. Commence par une réponse simple, explique chaque mot scientifique et ajoute une comparaison concrète si elle aide. Termine par « À retenir : » avec une phrase. Distingue clairement fait, hypothèse et fiction, dis quand tu n’es pas sûr, n’invente jamais de source et ne demande jamais de donnée personnelle.'
 
   const safeHistory = history
     .slice(-4)
@@ -117,22 +143,26 @@ export async function POST(request: NextRequest) {
     }))
 
   if (!solarBotContentIsSafe(question, safeHistory)) {
-    return NextResponse.json({ error: SOLARBOT_PRIVACY_REMINDER }, { status: 400 })
+    return NextResponse.json({ error: errors.privacy }, { status: 400 })
   }
 
   const selectedSources = selectSolarBotSources(question)
   const publicSources = toPublicSolarBotSources(selectedSources)
   const sourceContext = formatSolarBotSourceContext(selectedSources)
 
+  const grounding = locale === 'en'
+    ? 'Base the astronomy facts in your answer on the official references below (written in French: answer in English anyway). Add the reference number in square brackets, for example [1], right after each important fact. Do not claim to have read other pages. If these references are not enough to answer with confidence, simply say so instead of inventing. The numbered links will be shown separately below your answer.'
+    : 'Appuie les faits astronomiques de ta réponse sur les repères officiels ci-dessous. Ajoute le numéro du repère entre crochets, par exemple [1], juste après chaque fait important. Ne prétends pas avoir consulté d’autres pages. Si ces repères ne suffisent pas pour répondre avec confiance, dis-le simplement au lieu d’inventer. Les liens numérotés seront affichés séparément sous ta réponse.'
+
   const groundedPrompt = `${systemPrompt}
 
-Appuie les faits astronomiques de ta réponse sur les repères officiels ci-dessous. Ajoute le numéro du repère entre crochets, par exemple [1], juste après chaque fait important. Ne prétends pas avoir consulté d’autres pages. Si ces repères ne suffisent pas pour répondre avec confiance, dis-le simplement au lieu d’inventer. Les liens numérotés seront affichés séparément sous ta réponse.
+${grounding}
 
 ${sourceContext}`
 
   if (!getGeminiConfig().apiKey) {
     return NextResponse.json(
-      { text: fallbackAnswer(question, mode), degraded: true, sources: publicSources },
+      { text: fallbackAnswer(question, mode, locale), degraded: true, sources: publicSources },
       { headers: { 'Cache-Control': 'no-store', 'X-SolarBot-Mode': 'fallback' } },
     )
   }
@@ -159,7 +189,7 @@ ${sourceContext}`
     const response = await requestGemini(payload)
     if (!response.ok) {
       return NextResponse.json(
-        { text: fallbackAnswer(question, mode), degraded: true, sources: publicSources },
+        { text: fallbackAnswer(question, mode, locale), degraded: true, sources: publicSources },
         { headers: { 'Cache-Control': 'no-store', 'X-SolarBot-Mode': 'fallback' } },
       )
     }
@@ -171,7 +201,7 @@ ${sourceContext}`
 
     const degraded = !text
     return NextResponse.json(
-      { text: text || fallbackAnswer(question, mode), degraded, sources: publicSources },
+      { text: text || fallbackAnswer(question, mode, locale), degraded, sources: publicSources },
       {
         headers: {
           'Cache-Control': 'no-store',
@@ -182,7 +212,7 @@ ${sourceContext}`
     )
   } catch {
     return NextResponse.json(
-      { text: fallbackAnswer(question, mode), degraded: true, sources: publicSources },
+      { text: fallbackAnswer(question, mode, locale), degraded: true, sources: publicSources },
       { headers: { 'Cache-Control': 'no-store', 'X-SolarBot-Mode': 'fallback' } },
     )
   }

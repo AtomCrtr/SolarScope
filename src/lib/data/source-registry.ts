@@ -7,6 +7,7 @@ export type ScientificSource = {
   cadence: SourceCadence
   checkedOn: string
   childNote: string
+  childNoteEn: string
 }
 
 export const SCIENTIFIC_SOURCES = {
@@ -17,6 +18,7 @@ export const SCIENTIFIC_SOURCES = {
     cadence: 'reference',
     checkedOn: '2026-07-26',
     childNote: 'Ce sont des valeurs moyennes : ce n’est pas une météo en direct.',
+    childNoteEn: 'These are average values, not live weather.',
   },
   planetMoons: {
     id: 'nasa-planetary-moons',
@@ -25,6 +27,7 @@ export const SCIENTIFIC_SOURCES = {
     cadence: 'reference',
     checkedOn: '2026-07-26',
     childNote: 'Le nombre de lunes peut changer lorsqu’une nouvelle lune est confirmée.',
+    childNoteEn: 'The number of moons can change when a new moon is confirmed.',
   },
   marsFacts: {
     id: 'nasa-mars-facts',
@@ -33,6 +36,7 @@ export const SCIENTIFIC_SOURCES = {
     cadence: 'reference',
     checkedOn: '2026-07-26',
     childNote: 'Ces valeurs décrivent Mars en général : ce ne sont pas des mesures en direct.',
+    childNoteEn: 'These values describe Mars in general: they are not live measurements.',
   },
   marsRovers: {
     id: 'nasa-mars-rovers',
@@ -41,6 +45,7 @@ export const SCIENTIFIC_SOURCES = {
     cadence: 'reference',
     checkedOn: '2026-07-26',
     childNote: 'Les missions évoluent. SolarScope indique la date de vérification à côté de leurs chiffres.',
+    childNoteEn: 'Missions change over time. SolarScope shows when each figure was checked.',
   },
   marsSampleReturn: {
     id: 'nasa-mars-sample-return',
@@ -49,6 +54,7 @@ export const SCIENTIFIC_SOURCES = {
     cadence: 'reference',
     checkedOn: '2026-07-26',
     childNote: 'Le projet est encore étudié : aucune date de retour des échantillons n’est affichée comme certaine.',
+    childNoteEn: 'The project is still being studied: no return date for the samples is shown as certain.',
   },
   jwstFacts: {
     id: 'nasa-jwst-facts',
@@ -57,6 +63,7 @@ export const SCIENTIFIC_SOURCES = {
     cadence: 'reference',
     checkedOn: '2026-08-06',
     childNote: 'Les images sont officielles ; leurs couleurs peuvent représenter des lumières invisibles à nos yeux.',
+    childNoteEn: 'The pictures are official; their colours can stand for light our eyes cannot see.',
   },
   spaceWeather: {
     id: 'noaa-space-weather',
@@ -65,6 +72,7 @@ export const SCIENTIFIC_SOURCES = {
     cadence: 'live',
     checkedOn: '2026-07-26',
     childNote: 'Cette donnée évolue : SolarScope indique lorsqu’elle est indisponible.',
+    childNoteEn: 'This data changes: SolarScope says when it is unavailable.',
   },
   issPosition: {
     id: 'iss-position',
@@ -73,11 +81,12 @@ export const SCIENTIFIC_SOURCES = {
     cadence: 'live',
     checkedOn: '2026-07-26',
     childNote: 'La position change en permanence : elle est affichée avec son heure de mise à jour.',
+    childNoteEn: 'The position changes all the time: it is shown with the time it was updated.',
   },
 } as const satisfies Record<string, ScientificSource>
 
 export function formatCheckedOn(date: string, locale: 'fr' | 'en' = 'fr') {
-  return new Intl.DateTimeFormat(locale === 'fr' ? 'fr-FR' : 'en-US', {
+  return new Intl.DateTimeFormat(locale === 'fr' ? 'fr-FR' : 'en-GB', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',

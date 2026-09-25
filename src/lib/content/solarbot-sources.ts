@@ -17,7 +17,7 @@ const SOURCES: SolarBotSource[] = [
     href: 'https://science.nasa.gov/universe/stars/',
     organization: 'NASA',
     fact: 'Les étoiles produisent leur énergie par fusion nucléaire et évoluent différemment selon leur masse.',
-    keywords: ['etoile', 'soleil', 'fusion', 'supernova', 'naissance', 'brillent'],
+    keywords: ['etoile', 'soleil', 'fusion', 'supernova', 'naissance', 'brillent', 'star', 'shine', 'born'],
   },
   {
     id: 'nasa-black-holes',
@@ -25,7 +25,7 @@ const SOURCES: SolarBotSource[] = [
     href: 'https://science.nasa.gov/universe/black-holes/',
     organization: 'NASA',
     fact: 'Un trou noir est une concentration de matière dont la gravité empêche la lumière de s’échapper au-delà de son horizon.',
-    keywords: ['trou noir', 'horizon', 'singularite', 'spaghettification'],
+    keywords: ['trou noir', 'horizon', 'singularite', 'spaghettification', 'black hole', 'singularity'],
   },
   {
     id: 'nasa-planets',
@@ -33,7 +33,7 @@ const SOURCES: SolarBotSource[] = [
     href: 'https://science.nasa.gov/solar-system/planets/',
     organization: 'NASA',
     fact: 'Le Système solaire compte huit planètes reconnues, rocheuses près du Soleil et géantes plus loin.',
-    keywords: ['planete', 'mercure', 'venus', 'terre', 'jupiter', 'saturne', 'uranus', 'neptune', 'systeme solaire'],
+    keywords: ['planete', 'mercure', 'venus', 'terre', 'jupiter', 'saturne', 'uranus', 'neptune', 'systeme solaire', 'planet', 'mercury', 'earth', 'saturn', 'solar system'],
   },
   {
     id: 'nasa-mars',
@@ -41,7 +41,7 @@ const SOURCES: SolarBotSource[] = [
     href: 'https://science.nasa.gov/mars/facts/',
     organization: 'NASA',
     fact: 'Mars est une planète rocheuse froide dont les rovers étudient l’histoire géologique et l’habitabilité passée.',
-    keywords: ['mars', 'perseverance', 'curiosity', 'rover', 'planete rouge'],
+    keywords: ['mars', 'perseverance', 'curiosity', 'rover', 'planete rouge', 'red planet'],
   },
   {
     id: 'nasa-moon',
@@ -49,7 +49,7 @@ const SOURCES: SolarBotSource[] = [
     href: 'https://science.nasa.gov/moon/moon-phases/',
     organization: 'NASA',
     fact: 'Les phases de la Lune viennent de la portion de sa moitié éclairée par le Soleil que nous voyons depuis la Terre.',
-    keywords: ['lune', 'phase', 'croissant', 'pleine lune', 'apollo', 'armstrong'],
+    keywords: ['lune', 'phase', 'croissant', 'pleine lune', 'apollo', 'armstrong', 'moon', 'crescent', 'full moon'],
   },
   {
     id: 'nasa-sun',
@@ -57,7 +57,7 @@ const SOURCES: SolarBotSource[] = [
     href: 'https://science.nasa.gov/sun/facts/',
     organization: 'NASA',
     fact: 'Le Soleil est une étoile de 4,5 milliards d’années dont la gravité maintient le Système solaire ensemble.',
-    keywords: ['soleil', 'solaire', 'heliophysique', 'eruption', 'vent solaire'],
+    keywords: ['soleil', 'solaire', 'heliophysique', 'eruption', 'vent solaire', 'sun', 'solar flare', 'solar wind'],
   },
   {
     id: 'noaa-space-weather',
@@ -65,7 +65,7 @@ const SOURCES: SolarBotSource[] = [
     href: 'https://www.swpc.noaa.gov/',
     organization: 'NOAA',
     fact: 'La météo spatiale décrit les conditions variables produites par le Soleil dans l’espace proche de la Terre.',
-    keywords: ['meteo spatiale', 'aurore', 'vent solaire', 'tempete solaire', 'indice kp'],
+    keywords: ['meteo spatiale', 'aurore', 'vent solaire', 'tempete solaire', 'indice kp', 'space weather', 'aurora', 'northern lights', 'solar storm', 'kp index'],
   },
   {
     id: 'nasa-galaxies',
@@ -73,7 +73,7 @@ const SOURCES: SolarBotSource[] = [
     href: 'https://science.nasa.gov/universe/galaxies/',
     organization: 'NASA',
     fact: 'Une galaxie rassemble des étoiles, du gaz, de la poussière et de la matière noire liés par la gravité.',
-    keywords: ['galaxie', 'voie lactee', 'andromede', 'univers'],
+    keywords: ['galaxie', 'voie lactee', 'andromede', 'univers', 'galaxy', 'milky way', 'andromeda', 'universe'],
   },
   {
     id: 'nasa-exoplanets',
@@ -81,7 +81,7 @@ const SOURCES: SolarBotSource[] = [
     href: 'https://science.nasa.gov/exoplanets/',
     organization: 'NASA',
     fact: 'Une exoplanète est une planète qui tourne autour d’une étoile autre que le Soleil.',
-    keywords: ['exoplanete', 'transit', 'monde lointain', 'vie extraterrestre', 'habitable'],
+    keywords: ['exoplanete', 'transit', 'monde lointain', 'vie extraterrestre', 'habitable', 'exoplanet', 'alien life'],
   },
   {
     id: 'nasa-iss',
@@ -89,7 +89,7 @@ const SOURCES: SolarBotSource[] = [
     href: 'https://www.nasa.gov/international-space-station/space-station-facts-and-figures/',
     organization: 'NASA',
     fact: 'La Station spatiale internationale est un laboratoire habité qui fait environ seize orbites de la Terre par jour.',
-    keywords: ['iss', 'station spatiale', 'astronaute', 'orbite terrestre', 'apesanteur'],
+    keywords: ['iss', 'station spatiale', 'astronaute', 'orbite terrestre', 'apesanteur', 'space station', 'astronaut', 'weightless', 'float'],
   },
   {
     id: 'nasa-light',
@@ -97,7 +97,7 @@ const SOURCES: SolarBotSource[] = [
     href: 'https://science.nasa.gov/universe/sensing-the-universe/',
     organization: 'NASA',
     fact: 'Les télescopes étudient plusieurs formes de lumière pour révéler des phénomènes invisibles à nos yeux.',
-    keywords: ['lumiere', 'telescope', 'spectre', 'infrarouge', 'ultraviolet', 'rayon x', 'webb', 'hubble'],
+    keywords: ['lumiere', 'telescope', 'spectre', 'infrarouge', 'ultraviolet', 'rayon x', 'webb', 'hubble', 'light', 'infrared', 'x-ray'],
   },
 ]
 

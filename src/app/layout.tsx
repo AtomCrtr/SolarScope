@@ -8,40 +8,28 @@ import Footer from '@/components/layout/Footer'
 import MobileTabBar from '@/components/layout/MobileTabBar'
 import Breadcrumb from '@/components/layout/Breadcrumb'
 import ProgressTracker from '@/components/learning/ProgressTracker'
-import LanguageAvailabilityNotice from '@/components/layout/LanguageAvailabilityNotice'
 import ServiceWorkerRegistration from '@/components/layout/ServiceWorkerRegistration'
 import PrivacyAnalytics from '@/components/layout/PrivacyAnalytics'
-import { DEFAULT_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/config/site'
+import LanguageScope from '@/components/layout/LanguageScope'
+import { DEFAULT_DESCRIPTION, pageMetadata, SITE_NAME, SITE_URL } from '@/lib/config/site'
 
 // Self-hosted at build time by next/font: no request to Google from the visitor's browser.
 const bodyFont = Atkinson_Hyperlegible({ subsets: ['latin'], weight: ['400', '700'], variable: '--font-body', display: 'swap' })
 const displayFont = Fredoka({ subsets: ['latin'], weight: ['500', '600', '700'], variable: '--font-display', display: 'swap' })
 const noteFont = Caveat({ subsets: ['latin'], weight: ['600', '700'], variable: '--font-note', display: 'swap' })
 
+const home = pageMetadata('/')
+
 export const metadata: Metadata = {
+  ...home,
   title: {
     default: 'SolarScope — L’espace expliqué aux enfants',
     template: '%s · SolarScope',
   },
-  description: DEFAULT_DESCRIPTION,
-  keywords: 'espace enfants, astronomie enfants, planètes, NASA, système solaire, Mars, univers, JWST, ISS, quiz espace',
+  keywords: 'espace enfants, astronomie enfants, planètes, NASA, système solaire, Mars, univers, JWST, ISS, quiz espace, space for kids',
   authors: [{ name: 'SolarScope' }],
   creator: 'SolarScope',
   metadataBase: new URL(SITE_URL),
-  alternates: { canonical: '/' },
-  openGraph: {
-    type: 'website',
-    locale: 'fr_FR',
-    url: SITE_URL,
-    siteName: SITE_NAME,
-    title: 'SolarScope — L’espace expliqué aux enfants',
-    description: DEFAULT_DESCRIPTION,
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'SolarScope — L’espace expliqué aux enfants',
-    description: DEFAULT_DESCRIPTION,
-  },
   icons: {
     icon: [
       { url: '/favicon.ico' },
@@ -80,7 +68,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        <a href="#main-content" className="skip-link">Aller au contenu principal</a>
+        <LanguageScope>
         <ProgressTracker />
         <StarField />
         <Navbar />
@@ -89,7 +77,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div style={{ maxWidth: 'var(--max-w)', margin: '0 auto', padding: '0.5rem var(--section-px) 0' }}>
             <Breadcrumb />
           </div>
-          <LanguageAvailabilityNotice />
           {children}
         </main>
         <Footer />
@@ -97,6 +84,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SolarBotWidgetBoundary />
         <ServiceWorkerRegistration />
         <PrivacyAnalytics />
+        </LanguageScope>
       </body>
     </html>
   )

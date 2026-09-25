@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import Link from '@/components/ui/LocaleLink'
 import { useEffect, useState, type ReactNode } from 'react'
 import type { DashboardData } from '@/lib/data/space-data'
 import HomeMissionBoard from '@/components/learning/HomeMissionBoard'

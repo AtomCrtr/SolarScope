@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import Link from '@/components/ui/LocaleLink'
 import { useId, useState } from 'react'
 import { completeMission, useLocalProgress, type MissionId } from '@/lib/client/local-progress'
 import { ENGLISH_MISSION_CHECKS, MISSION_CHECKS, QUESTIONS_PER_STAMP, type CheckedMission } from '@/lib/content/mission-checks'

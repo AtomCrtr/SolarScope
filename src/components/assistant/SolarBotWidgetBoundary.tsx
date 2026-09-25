@@ -1,9 +1,9 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
+import { usePagePath } from '@/components/layout/LanguageToggle'
 import SolarBotWidget from '@/components/assistant/SolarBotWidget'
 
 export default function SolarBotWidgetBoundary() {
-  const pathname = usePathname()
+  const pathname = usePagePath()
   return pathname === '/solarbot' || pathname.startsWith('/solarbot/') ? null : <SolarBotWidget />
 }

@@ -1,6 +1,10 @@
+'use client'
+
 import SpaceIcon from '@/components/ui/SpaceIcon'
+import { useSiteLocale } from '@/components/layout/LanguageToggle'
 
 export default function Loading() {
+    const locale = useSiteLocale()
     return (
         <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
             <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
@@ -24,7 +28,7 @@ export default function Loading() {
             <div style={{ height: 450, borderRadius: '0.875rem', background: 'rgba(249,115,22,0.04)', border: '1px solid rgba(249,115,22,0.1)', marginBottom: '1.5rem', animation: 'pulse 1.6s ease-in-out infinite', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
                     <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}><SpaceIcon name="globe" size={18} className="inline-icon" /></div>
-                    <p style={{ fontSize: '0.82rem' }}>Chargement de la carte…</p>
+                    <p style={{ fontSize: '0.82rem' }}>{locale === 'en' ? 'Loading the map…' : 'Chargement de la carte…'}</p>
                 </div>
             </div>
             <style>{`@keyframes pulse { 0%,100%{opacity:0.6} 50%{opacity:1} }`}</style>

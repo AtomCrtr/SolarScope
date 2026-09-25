@@ -19,7 +19,8 @@ const learningRoutes = [
   '/solarbot',
 ]
 
-const routes = ['/', ...learningRoutes, '/passeport', '/parents-enseignants', '/sources', '/confidentialite']
+const englishRoutes = ['/en', '/en/soleil', '/en/planetes', '/en/ciel', '/en/quiz', '/en/passeport', '/en/sources']
+const routes = ['/', ...learningRoutes, '/passeport', '/parents-enseignants', '/sources', '/confidentialite', ...englishRoutes]
 const metricRoutes = ['/soleil', '/mars', '/asteroides', '/meteorites', '/iss', '/missions', '/jwst']
 
 async function gotoSettled(page: Page, route: string) {
@@ -288,22 +289,23 @@ test('the mission action remains inside the notebook at common viewport sizes', 
   }
 })
 
-test('English covers the home page and every lesson card', async ({ page }) => {
-  await page.goto('/', { waitUntil: 'domcontentloaded' })
-  const english = page.getByRole('button', { name: 'EN preview' })
-  await english.click()
-
+test('English pages live under /en with their own address and language', async ({ page }) => {
+  await page.goto('/en', { waitUntil: 'domcontentloaded' })
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en')
   await expect(page.locator('.home-category-card').filter({ hasText: 'Solar System' })).toBeVisible()
-  await expect(page.getByText(/Data sources/)).toBeVisible()
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /\/en$/)
 
-  await page.goto('/planetes', { waitUntil: 'domcontentloaded' })
-  await expect(page.getByText('English preview', { exact: true })).toBeVisible()
-  await expect(page.getByText(/The lesson card on this page is in English/)).toBeVisible()
+  await page.goto('/en/planetes', { waitUntil: 'domcontentloaded' })
   await expect(page.getByRole('heading', { name: 'Why are the eight planets so different?' })).toBeVisible()
+  await expect(page.locator('.locale-switcher a[hreflang="fr"]').first()).toHaveAttribute('href', '/planetes')
+
+  await page.goto('/en/soleil', { waitUntil: 'domcontentloaded' })
+  await expect(page.getByRole('heading', { name: 'Why is the Sun so important?' })).toBeVisible()
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en')
 
   await page.goto('/soleil', { waitUntil: 'domcontentloaded' })
-  await expect(page.getByRole('heading', { name: 'Why is the Sun so important?' })).toBeVisible()
-  await expect(page.locator('.kids-guide')).toHaveAttribute('lang', 'en')
+  await expect(page.locator('html')).toHaveAttribute('lang', 'fr')
+  await expect(page.locator('.locale-switcher a[hreflang="en"]').first()).toHaveAttribute('href', '/en/soleil')
 })
 
 test('SolarBot displays the official sources returned with an answer', async ({ page }) => {
@@ -376,7 +378,7 @@ test('the homepage remembers the 12+ route and shows its appropriate mission', a
 test('parent guide badges keep their spacing and produce a visual artifact', async ({ page }, testInfo) => {
   await gotoSettled(page, '/parents-enseignants')
   const cards = page.locator('.parent-guide')
-  await expect(cards).toHaveCount(4)
+  await expect(cards).toHaveCount(5)
   await expect(cards.first()).toBeVisible()
 
   for (let index = 0; index < await cards.count(); index += 1) {
@@ -437,7 +439,7 @@ test('ISS KPI use the validated server position feed', async ({ page }) => {
     updatedAt: '2026-07-22T20:00:00Z',
   } }))
   await page.goto('/iss', { waitUntil: 'domcontentloaded' })
-  await expect(page.locator('.stat-card', { hasText: 'Altitude' }).locator('.stat-value')).toHaveText('421.4 km')
+  await expect(page.locator('.stat-card', { hasText: 'Altitude' }).locator('.stat-value')).toHaveText('421,4 km')
   await expect(page.getByText('2 personnes')).toBeVisible()
 
   const cards = page.locator('.iss-live-metrics .metric-card')

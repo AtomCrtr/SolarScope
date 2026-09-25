@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
+import { useSiteLocale } from '@/components/layout/LanguageToggle'
 
 interface Planet3DProps {
     textureUrl: string          // path to /public/textures/xxx.jpg
@@ -24,10 +25,14 @@ export default function Planet3D({
     ringColor = '#c8a96e',
     atmosphereColor,
     bgAlpha = 0,
-    label = 'planète',
+    label,
     fallbackColor = '#64748b',
     onTextureError,
 }: Planet3DProps) {
+    const locale = useSiteLocale()
+    const ariaLabel = locale === 'en'
+        ? `3D model of ${label ?? 'a planet'}. Use the arrow keys to turn it.`
+        : `Modèle 3D de ${label ?? 'la planète'}. Utilise les flèches pour le tourner.`
     const mountRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
@@ -43,7 +48,7 @@ export default function Planet3D({
         renderer.setSize(w, h)
         renderer.setClearColor(0x000000, bgAlpha)
         renderer.domElement.tabIndex = 0
-        renderer.domElement.setAttribute('aria-label', `Modèle 3D de ${label}. Utilise les flèches pour le tourner.`)
+        renderer.domElement.setAttribute('aria-label', ariaLabel)
         el.appendChild(renderer.domElement)
 
         // Scene
@@ -185,7 +190,7 @@ export default function Planet3D({
             renderer.dispose()
             if (el.contains(renderer.domElement)) el.removeChild(renderer.domElement)
         }
-    }, [textureUrl, size, rotationSpeed, hasRings, ringColor, atmosphereColor, bgAlpha, label, fallbackColor, onTextureError])
+    }, [textureUrl, size, rotationSpeed, hasRings, ringColor, atmosphereColor, bgAlpha, ariaLabel, fallbackColor, onTextureError])
 
     return <div ref={mountRef} style={{ width: '100%', height: '100%', cursor: 'grab' }} />
 }
