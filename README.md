@@ -1,5 +1,7 @@
 # 🔭 SolarScope — explorer l’Univers, comprendre les données
 
+<p align="center"><a href="https://solar-scope.vercel.app"><img src="docs/banner.png" alt="SolarScope, l’espace expliqué aux enfants : Cosmo, la mascotte astronaute, salue à côté d’une planète orange." width="100%"></a></p>
+
 [![Quality](https://github.com/AtomCrtr/SolarScope/actions/workflows/quality.yml/badge.svg)](https://github.com/AtomCrtr/SolarScope/actions/workflows/quality.yml)
 [![External resources](https://github.com/AtomCrtr/SolarScope/actions/workflows/external-resources.yml/badge.svg)](https://github.com/AtomCrtr/SolarScope/actions/workflows/external-resources.yml)
 [![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs)](https://nextjs.org/)
@@ -17,7 +19,6 @@ Il s’adresse d’abord aux enfants de 6 à 12 ans, mais aussi aux adolescents,
 
 > **In English:** SolarScope is a free, ad-free educational website that helps children aged 6 to 12 discover space with simple words, real NASA, ESA and NOAA data, short missions and a space passport kept on their own device. The site is written in French; the home page, navigation, lessons and passport are also available in English (translation awaiting review). Code under MIT, lesson texts under CC BY 4.0.
 
-![Aperçu de SolarScope](https://solar-scope.vercel.app/opengraph-image)
 
 ## D’un projet de fin d’études à une application web complète
 

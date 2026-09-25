@@ -42,7 +42,8 @@
     "check:production": "node scripts/check-production-journeys.mjs",
     "media:optimize": "node scripts/optimize-curated-images.mjs",
     "check": "npm run lint && npm run typecheck && npm test && npm run build",
-    "textures:generate": "node scripts/generate-planet-textures.mjs"
+    "textures:generate": "node scripts/generate-planet-textures.mjs",
+    "banner:generate": "node scripts/generate-banner.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.8",
