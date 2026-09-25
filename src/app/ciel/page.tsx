@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import KidsGuide from '@/components/learning/KidsGuide'
+import TonightSky from '@/components/space/TonightSky'
 
 export default function CielPage() {
     const [lat, setLat] = useState<number | null>(null)
@@ -64,6 +65,10 @@ export default function CielPage() {
         ? `https://stellarium-web.org/?date=${encodeURIComponent(observationTime)}&lat=${approximateLat}&lng=${approximateLng}&fov=120`
         : null
 
+    const placeLabel = geoError || city.startsWith('Paris (')
+        ? 'Paris'
+        : city && city !== 'Votre position' ? city : 'chez toi'
+
     return (
         <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
 
@@ -75,7 +80,7 @@ export default function CielPage() {
                     Carte du Ciel
                 </h1>
                 <p className="page-subtitle">
-                    Qu&apos;est-ce qu&apos;on voit <strong style={{ color: '#38bdf8' }}>ce soir</strong> depuis chez toi ? Explore les étoiles, planètes et constellations visibles en ce moment.
+                    Qu&apos;est-ce qu&apos;on voit <strong style={{ color: '#38bdf8' }}>ce soir</strong> depuis chez toi ? La Lune, les planètes et les passages de la Station spatiale, calculés pour ta zone.
                 </p>
             </motion.div>
 
@@ -107,6 +112,8 @@ export default function CielPage() {
                 )}
             </div>
 
+            <TonightSky latitude={lat} longitude={lng} place={placeLabel} />
+
             <section className="card sky-observation-launcher" aria-labelledby="sky-map-title">
                 <div className="sky-observation-visual" aria-hidden="true">
                     <span className="sky-star sky-star-one">✦</span>
@@ -116,8 +123,8 @@ export default function CielPage() {
                     <span className="sky-compass">N</span>
                 </div>
                 <div>
-                    <span className="section-kicker">CARTE INTERACTIVE EXTERNE</span>
-                    <h2 id="sky-map-title">Ouvre le ciel correspondant à ta zone</h2>
+                    <span className="section-kicker">POUR ALLER PLUS LOIN · CARTE EXTERNE</span>
+                    <h2 id="sky-map-title">Explore toutes les étoiles et constellations</h2>
                     <p>
                         Stellarium s’ouvre dans un nouvel onglet avec la date actuelle et une position arrondie.
                         SolarScope ne transmet jamais ta position exacte et ne l’enregistre pas.
@@ -131,23 +138,6 @@ export default function CielPage() {
                     )}
                     <small>Service externe : ses conditions d’accessibilité et de confidentialité s’appliquent.</small>
                 </div>
-            </section>
-
-            <section className="card" style={{ padding: '1.25rem', marginBottom: '2rem' }}>
-                <h2 className="section-title" style={{ color: 'var(--text)' }}>Que peut-on réellement voir ?</h2>
-                <p style={{ color: 'var(--text-subtle)', lineHeight: 1.7, marginBottom: '1rem' }}>
-                    La carte proposée calcule le ciel à l’instant présent pour votre zone approximative. La visibilité
-                    réelle dépend aussi de l’heure, de la météo et de la pollution lumineuse. SolarScope ne présente
-                    plus de liste mensuelle figée comme une donnée « en direct ».
-                </p>
-                <a
-                    href="https://science.nasa.gov/skywatching/whats-up/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-secondary"
-                >
-                    Consulter le guide mensuel officiel de la NASA ↗
-                </a>
             </section>
 
             {/* Tips */}
