@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import KidsGuide from '@/components/learning/KidsGuide'
 import MetricGrid from '@/components/space/MetricGrid'
+import MeteoritesNearMe from '@/components/space/MeteoritesNearMe'
 
 interface Meteorite {
     name: string
@@ -172,7 +173,7 @@ export default function MeteoritesPage() {
 
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="page-header">
                 <div className="badge" style={{ background: 'rgba(249,115,22,0.12)', color: '#fb923c', borderColor: 'rgba(249,115,22,0.25)' }}>
-                    ☄️ ARCHIVE NASA — ÉCHANTILLON DE {meteorites.length.toLocaleString('fr-FR')} MÉTÉORITES
+                    ARCHIVE NASA · METEORITICAL SOCIETY
                 </div>
                 <h1 className="page-title">
                     Carte des Météorites
@@ -184,13 +185,15 @@ export default function MeteoritesPage() {
 
             <KidsGuide topic="meteorites" />
 
+            <MeteoritesNearMe />
+
             {/* Stats */}
             {stats && (
                 <section className="meteorite-stats-section" aria-labelledby="meteorite-stats-title">
                     <header className="meteorite-section-heading">
                         <div>
-                            <span className="meteorite-kicker">ARCHIVE MONDIALE</span>
-                            <h2 id="meteorite-stats-title">Les chiffres de la collection</h2>
+                            <span className="meteorite-kicker">CARTE PÉDAGOGIQUE</span>
+                            <h2 id="meteorite-stats-title">Les météorites de la carte</h2>
                         </div>
                         <span className="meteorite-sample-badge">Échantillon pédagogique</span>
                     </header>

@@ -129,10 +129,13 @@ Lorsqu’une source distante ne répond pas, SolarScope affiche soit la dernièr
 | [NASA Open APIs](https://api.nasa.gov/) | APOD, astéroïdes proches et événements DONKI |
 | [NASA Images](https://images.nasa.gov/) | Galerie d’images du télescope James-Webb |
 | [NASA Exoplanet Archive](https://exoplanetarchive.ipac.caltech.edu/) | Nombre et catalogue d’exoplanètes confirmées |
+| [NASA Open Data — Meteorite Landings](https://data.nasa.gov/dataset/meteorite-landings) | Météorites trouvées près de chez soi (lu à la demande, sans copie permanente) |
+| [CelesTrak](https://celestrak.org/) | Orbite de l’ISS pour calculer ses passages visibles |
+| [astronomy-engine](https://github.com/cosinekitty/astronomy) | Lune, planètes visibles et distances calculées dans le navigateur |
 | [NASA Science](https://science.nasa.gov/) | Faits de référence sur les planètes, Mars et Webb |
 | [NOAA Space Weather Prediction Center](https://www.swpc.noaa.gov/) | Vent solaire, champ magnétique, rayons X et indice Kp |
 | [Where the ISS at?](https://wheretheiss.at/) | Position et télémétrie de l’ISS |
-| [Launch Library 2](https://thespacedevs.com/llapi) | Prochains lancements spatiaux |
+| [Launch Library 2](https://thespacedevs.com/llapi) · [Space Launch Now](https://spacelaunchnow.app/) | Prochains lancements spatiaux et leur fiche |
 | [Nominatim / OpenStreetMap](https://nominatim.org/) | Nom de la zone d’observation à partir d’une position |
 | [Google Gemini](https://ai.google.dev/) | Réponses optionnelles de SolarBot, avec repli local |
 

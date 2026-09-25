@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import KidsGuide from '@/components/learning/KidsGuide'
+import ExoplanetCatalog from '@/components/space/ExoplanetCatalog'
 
 const FAMOUS_EXOPLANETS = [
     { name: 'Proxima Centauri b', distance: '4,2 années-lumière', type: 'Probablement rocheuse', inHabitableZone: true, color: '#10b981', description: "L’exoplanète connue la plus proche tourne autour de Proxima du Centaure. Elle se trouve dans sa zone habitable, sans que l’on sache si elle possède de l’eau.", fun: 'Sa lumière met plus de quatre ans à nous parvenir. Un vaisseau actuel mettrait des milliers d’années à faire le voyage.' },
@@ -127,6 +128,8 @@ export default function ExoplanetesPage() {
             </div>
 
             {/* Famous exoplanets */}
+            <ExoplanetCatalog />
+
             <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '1rem' }}>Exoplanètes célèbres</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
                 {filtered.map(exo => (
