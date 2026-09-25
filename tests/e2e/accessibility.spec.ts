@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test, type Page } from '@playwright/test'
+import { MISSION_CHECKS } from '../../src/lib/content/mission-checks'
 
 const learningRoutes = [
   '/soleil',
@@ -468,9 +469,19 @@ test('solar KPI render normalized NOAA data', async ({ page }) => {
 
 test('a mission stamp is earned by answering, and erasing the passport asks first', async ({ page }) => {
   await page.goto('/ciel', { waitUntil: 'domcontentloaded' })
-  await page.getByRole('button', { name: 'Parce que les étoiles tombent' }).click()
-  await expect(page.getByText(/Pas tout à fait/)).toBeVisible()
-  await page.getByRole('button', { name: 'Parce que la Terre tourne sur elle-même' }).click()
+  // Two of the three questions are drawn at random: read each one and answer it, with one mistake first.
+  for (const [round, label] of ['Question 1 sur 2', 'Question 2 sur 2'].entries()) {
+    // Wait for the random draw done in the browser, or the question could change under the test.
+    const check = page.locator('.mission-check[data-ready]')
+    await expect(check.getByText(label)).toBeVisible()
+    const question = (await check.locator('h3').innerText()).replace(/[\u00a0\u202f]/g, ' ')
+    const data = MISSION_CHECKS.ciel.find(item => question.startsWith(item.question.slice(0, 20)))!
+    if (round === 0) {
+      await check.locator('.mission-check-choices button').nth((data.answer + 1) % 3).click()
+      await expect(page.getByText(/Pas tout à fait/)).toBeVisible()
+    }
+    await check.locator('.mission-check-choices button').nth(data.answer).click()
+  }
   await expect(page.getByText('Bravo, c’est la bonne réponse !')).toBeVisible()
 
   await page.goto('/passeport', { waitUntil: 'domcontentloaded' })

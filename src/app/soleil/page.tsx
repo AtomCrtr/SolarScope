@@ -9,7 +9,7 @@ import MetricGrid from '@/components/space/MetricGrid'
 import KpChart from '@/components/space/KpChart'
 import SolarFlareHistory from '@/components/space/SolarFlareHistory'
 
-const Sun3D = dynamic(() => import('@/components/space/Sun3D'), { ssr: false })
+import { SunScene as Sun3D } from '@/components/space/LightScenes'
 const SpaceWeatherDashboard = dynamic(() => import('@/components/space/SpaceWeatherDashboard'), { ssr: false })
 
 

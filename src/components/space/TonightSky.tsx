@@ -5,6 +5,8 @@ import type { TonightSky as TonightSkyData } from '@/lib/astronomy/tonight'
 import { fromDirection, towards } from '@/lib/astronomy/sky-words'
 import type { IssPass } from '@/lib/astronomy/iss-passes'
 import SpaceIcon from '@/components/ui/SpaceIcon'
+import Link from 'next/link'
+import { toggleObservation, useLocalProgress, type SkyObjectId } from '@/lib/client/local-progress'
 
 type TonightSkyProps = {
   latitude: number | null
@@ -37,6 +39,18 @@ function MoonPhaseIcon({ fraction, waxing }: { fraction: number; waxing: boolean
       <circle cx={c} cy={c} r={r} fill="#1b2550" stroke="#2a3566" strokeWidth="2" />
       {fraction > 0.02 && <path d={lit} fill="#eef1fa" />}
     </svg>
+  )
+}
+
+/** « Je l'ai vu ! » : ticks the object in the passport's observation log. Nothing leaves the device. */
+function SeenButton({ object, label }: { object: SkyObjectId; label: string }) {
+  const progress = useLocalProgress()
+  const seen = Boolean(progress?.observed?.[object])
+  return (
+    <button type="button" className="tonight-seen" aria-pressed={seen} onClick={() => toggleObservation(object)}>
+      <SpaceIcon name={seen ? 'check' : 'eye'} size={16} />
+      {seen ? `${label} : noté dans mon carnet` : `J’ai vu ${label}`}
+    </button>
   )
 }
 
@@ -112,6 +126,7 @@ export default function TonightSky({ latitude, longitude, place }: TonightSkyPro
                 : 'Elle reste sous l’horizon cette nuit.'}
           </p>
           {sky.moon.illuminatedPercent > 70 && <p className="tonight-note">Très lumineuse, elle cache les étoiles les plus faibles.</p>}
+          <SeenButton object="moon" label="la Lune" />
         </article>
 
         <article className="tonight-block" aria-labelledby="tonight-planets">
@@ -123,6 +138,7 @@ export default function TonightSky({ latitude, longitude, place }: TonightSkyPro
                   <strong>{planet.name}</strong>
                   <span>{towards(planet.direction)}, {planet.height} · {planet.brightness}</span>
                   <small>{planet.tip}</small>
+                  <SeenButton object={planet.id as SkyObjectId} label={planet.name} />
                 </li>
               ))}
             </ul>
@@ -146,12 +162,18 @@ export default function TonightSky({ latitude, longitude, place }: TonightSkyPro
                 ))}
               </ul>
               <p className="tonight-note">Elle ressemble à une étoile très brillante qui avance sans clignoter.</p>
+              <SeenButton object="iss" label="l’ISS" />
             </>
           ) : (
             <p className="tonight-muted">Pas de passage visible dans les trois prochains jours depuis ta zone.</p>
           ))}
         </article>
       </div>
+
+      <p className="tonight-logbook">
+        <SpaceIcon name="passport" size={18} />
+        <span>Coche ce que tu as vraiment vu : ta première observation te fait gagner le tampon <strong>Observateur·rice du ciel</strong>. <Link href="/passeport#carnet">Voir mon carnet</Link></span>
+      </p>
 
       <p className="tonight-footer">
         Calculs astronomiques faits dans ton navigateur (astronomy-engine, orbite CelesTrak). La météo et les lumières de la ville peuvent gêner l’observation.{' '}

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, Suspense, lazy } from 'react'
+import { useState, Suspense } from 'react'
 import SpaceIcon from '@/components/ui/SpaceIcon'
 import dynamic from 'next/dynamic'
 import KidsGuide from '@/components/learning/KidsGuide'
@@ -8,7 +8,7 @@ import DataSourceNote from '@/components/learning/DataSourceNote'
 import PlanetExplorer from '@/components/space/PlanetExplorer'
 import { SCIENTIFIC_SOURCES } from '@/lib/data/source-registry'
 
-const Planet3D = lazy(() => import('@/components/space/Planet3D'))
+import { PlanetScene as Planet3D } from '@/components/space/LightScenes'
 const SolarSystem2D = dynamic(() => import('@/components/space/SolarSystem2D'), { ssr: false })
 
 const PLANETS = [

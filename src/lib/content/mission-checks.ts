@@ -1,4 +1,5 @@
 import type { MissionId } from '@/lib/client/local-progress'
+import { ENGLISH_EXTRA_CHECKS, EXTRA_CHECKS } from './mission-checks-extra'
 
 export type MissionCheck = {
   question: string
@@ -8,10 +9,11 @@ export type MissionCheck = {
   explanation: string
 }
 
-type Checks = Record<Exclude<MissionId, 'quiz'>, MissionCheck>
+export type CheckedMission = Exclude<MissionId, 'quiz'>
+type Checks = Record<CheckedMission, MissionCheck>
 
-// One question per lesson, answered with what the lesson card says. The quiz mission is stamped by the quiz itself.
-export const MISSION_CHECKS: Checks = {
+// Questions answered with what the lesson card says. The quiz mission is stamped by the quiz itself.
+const FIRST_CHECKS: Checks = {
   soleil: {
     question: 'Qu’est-ce que le Soleil ?',
     choices: ['Une planète très chaude', 'Une étoile', 'Une lune géante'],
@@ -92,7 +94,7 @@ export const MISSION_CHECKS: Checks = {
   },
 }
 
-export const ENGLISH_MISSION_CHECKS: Checks = {
+const ENGLISH_FIRST_CHECKS: Checks = {
   soleil: {
     question: 'What is the Sun?',
     choices: ['A very hot planet', 'A star', 'A giant moon'],
@@ -172,3 +174,14 @@ export const ENGLISH_MISSION_CHECKS: Checks = {
     explanation: 'Never give your full name, your address or your school. SolarBot does not need them to answer you.',
   },
 }
+
+function combine(first: Checks, extra: Record<string, MissionCheck[]>): Record<CheckedMission, MissionCheck[]> {
+  return Object.fromEntries(
+    (Object.keys(first) as CheckedMission[]).map(mission => [mission, [first[mission], ...extra[mission]]]),
+  ) as Record<CheckedMission, MissionCheck[]>
+}
+
+/** Three questions per lesson; the stamp needs two of them, drawn at random. */
+export const MISSION_CHECKS = combine(FIRST_CHECKS, EXTRA_CHECKS)
+export const ENGLISH_MISSION_CHECKS = combine(ENGLISH_FIRST_CHECKS, ENGLISH_EXTRA_CHECKS)
+export const QUESTIONS_PER_STAMP = 2

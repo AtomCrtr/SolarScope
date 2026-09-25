@@ -1,7 +1,7 @@
 import { MISSION_IDS, type LocalProgress } from './local-progress'
 
 // A passport fits in a 9-character code (« 4K7-2QD-9XA »): no account, nothing sent to a server.
-// 40 bits = version (3) + stamped missions (14) + visited missions (14) + best quiz score (7) + padding (2),
+// 40 bits = version (3) + stamped missions (14) + visited missions (14) + best quiz score (7) + sky stamp (1) + padding (1),
 // followed by one check character that catches most typing mistakes.
 const ALPHABET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ' // Crockford base 32: no I, L, O or U
 const VERSION = 1
@@ -11,6 +11,7 @@ export type PassportCodeContent = {
   completed: Set<(typeof MISSION_IDS)[number]>
   visited: Set<(typeof MISSION_IDS)[number]>
   bestQuizScore?: number
+  skyStamp: boolean
 }
 
 function checkCharacter(digits: number[]): number {
@@ -27,7 +28,8 @@ export function encodePassportCode(progress: LocalProgress): string {
     ...MISSION_IDS.map(mission => (progress.completed[mission] ? 1 : 0)),
     ...MISSION_IDS.map(mission => (progress.visited[mission] || progress.completed[mission] ? 1 : 0)),
     ...toBits(score, 7),
-    0, 0,
+    progress.skyStamp ? 1 : 0,
+    0,
   ]
   const digits = Array.from({ length: 8 }, (_, index) => fromBits(bits.slice(index * 5, index * 5 + 5)))
   digits.push(checkCharacter(digits))
@@ -55,6 +57,7 @@ export function decodePassportCode(input: string): PassportCodeContent | null {
     completed: new Set(MISSION_IDS.filter((_, index) => completedBits[index] === 1)),
     visited: new Set(MISSION_IDS.filter((_, index) => visitedBits[index] === 1)),
     bestQuizScore: score === NO_SCORE ? undefined : score,
+    skyStamp: bits[10 + 2 * count] === 1,
   }
 }
 
@@ -65,5 +68,11 @@ export function mergePassport(current: LocalProgress, imported: PassportCodeCont
   for (const mission of imported.completed) completed[mission] ??= now
   for (const mission of imported.visited) visited[mission] ??= now
   const scores = [current.bestQuizScore, imported.bestQuizScore].filter((score): score is number => score !== undefined)
-  return { completed, visited, bestQuizScore: scores.length ? Math.max(...scores) : undefined }
+  return {
+    completed,
+    visited,
+    bestQuizScore: scores.length ? Math.max(...scores) : undefined,
+    observed: current.observed,
+    skyStamp: current.skyStamp ?? (imported.skyStamp ? now : undefined),
+  }
 }

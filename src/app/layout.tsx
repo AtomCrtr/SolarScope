@@ -10,6 +10,7 @@ import Breadcrumb from '@/components/layout/Breadcrumb'
 import ProgressTracker from '@/components/learning/ProgressTracker'
 import LanguageAvailabilityNotice from '@/components/layout/LanguageAvailabilityNotice'
 import ServiceWorkerRegistration from '@/components/layout/ServiceWorkerRegistration'
+import PrivacyAnalytics from '@/components/layout/PrivacyAnalytics'
 import { DEFAULT_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/config/site'
 
 // Self-hosted at build time by next/font: no request to Google from the visitor's browser.
@@ -95,6 +96,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <MobileTabBar />
         <SolarBotWidgetBoundary />
         <ServiceWorkerRegistration />
+        <PrivacyAnalytics />
       </body>
     </html>
   )

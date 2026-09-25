@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { clearLocalProgress, useLocalProgress, type LocalProgress, type MissionId } from '@/lib/client/local-progress'
+import { clearLocalProgress, SKY_OBJECT_IDS, useLocalProgress, type LocalProgress, type MissionId, type SkyObjectId } from '@/lib/client/local-progress'
 import { SITE_URL } from '@/lib/config/site'
 import { missionState, nextMission, passportRank, PASSPORT_MISSIONS, type MissionState } from '@/lib/content/passport'
 import Cosmo from '@/components/learning/Cosmo'
@@ -11,6 +11,16 @@ import { useSiteLocale } from '@/components/layout/LanguageToggle'
 import SpaceIcon from '@/components/ui/SpaceIcon'
 
 const EMPTY: LocalProgress = { visited: {}, completed: {} }
+
+const SKY_OBJECTS: Record<SkyObjectId, { fr: string; en: string }> = {
+  moon: { fr: 'La Lune', en: 'The Moon' },
+  mercury: { fr: 'Mercure', en: 'Mercury' },
+  venus: { fr: 'Vénus', en: 'Venus' },
+  mars: { fr: 'Mars', en: 'Mars' },
+  jupiter: { fr: 'Jupiter', en: 'Jupiter' },
+  saturn: { fr: 'Saturne', en: 'Saturn' },
+  iss: { fr: 'L’ISS', en: 'The ISS' },
+}
 
 const COPY = {
   fr: {
@@ -43,6 +53,14 @@ const COPY = {
     cancel: 'Annuler',
     printName: 'Nom de l’explorateur ou de l’exploratrice : ______________________________',
     dateLocale: 'fr-FR',
+    logbook: 'Mon carnet d’observation',
+    logbookIntro: 'Sur la page « Ciel ce soir », coche ce que tu as vraiment vu dans le ciel.',
+    skyStamp: 'Tampon spécial : Observateur·rice du ciel',
+    skyStampOn: (date: string) => `Obtenu le ${date}`,
+    skyStampHint: 'Ta première observation te le fait gagner.',
+    seenOn: (date: string) => `Vu le ${date}`,
+    notSeen: 'Pas encore vu',
+    goSky: 'Préparer une observation',
   },
   en: {
     badge: 'MY SPACE',
@@ -74,6 +92,14 @@ const COPY = {
     cancel: 'Cancel',
     printName: 'Explorer’s name: ______________________________',
     dateLocale: 'en-GB',
+    logbook: 'My stargazing logbook',
+    logbookIntro: 'On the “Tonight’s sky” page, tick what you really saw in the sky.',
+    skyStamp: 'Special stamp: Sky observer',
+    skyStampOn: (date: string) => `Earned on ${date}`,
+    skyStampHint: 'Your first observation earns it.',
+    seenOn: (date: string) => `Seen on ${date}`,
+    notSeen: 'Not seen yet',
+    goSky: 'Plan a stargazing session',
   },
 }
 
@@ -201,6 +227,31 @@ export default function SpacePassport() {
             )
           })()}
         </div>
+
+        <section id="carnet" className="passport-logbook" aria-labelledby="passport-logbook-title">
+          <h3 id="passport-logbook-title">{copy.logbook}</h3>
+          <div className={progress.skyStamp ? 'passport-sky-stamp is-earned' : 'passport-sky-stamp'}>
+            {progress.skyStamp ? <StampMark size={44} /> : <span className="passport-mission-icon"><SpaceIcon name="moon-stars" size={24} /></span>}
+            <div>
+              <strong>{copy.skyStamp}</strong>
+              <small>{progress.skyStamp ? copy.skyStampOn(formatDate(progress.skyStamp)) : copy.skyStampHint}</small>
+            </div>
+          </div>
+          <p>{copy.logbookIntro}</p>
+          <ul className="passport-sky-list">
+            {SKY_OBJECT_IDS.map(object => {
+              const seenAt = progress.observed?.[object]
+              return (
+                <li key={object} className={seenAt ? 'is-seen' : undefined}>
+                  <SpaceIcon name={seenAt ? 'check' : 'eye'} size={18} />
+                  <strong>{SKY_OBJECTS[object][locale]}</strong>
+                  <small>{seenAt ? copy.seenOn(formatDate(seenAt)) : copy.notSeen}</small>
+                </li>
+              )
+            })}
+          </ul>
+          <Link href="/ciel" className="btn-ghost">{copy.goSky}</Link>
+        </section>
 
         {progress.bestQuizScore !== undefined && <p className="passport-score">{copy.quizScore(progress.bestQuizScore)}</p>}
 

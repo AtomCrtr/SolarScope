@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import SpaceIcon, { type SpaceIconName } from '@/components/ui/SpaceIcon'
 
-import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import type { DashboardData, IssPosition } from '@/lib/data/space-data'
 import KidsGuide from '@/components/learning/KidsGuide'
@@ -11,7 +10,7 @@ import DataSourceNote from '@/components/learning/DataSourceNote'
 import MetricGrid from '@/components/space/MetricGrid'
 import { useDaysSince } from '@/lib/client/use-client-value'
 
-const ISSGlobe = dynamic(() => import('@/components/space/ISSGlobe'), { ssr: false })
+import { ISSGlobeScene as ISSGlobe } from '@/components/space/LightScenes'
 
 interface LaunchInfo {
     name: string

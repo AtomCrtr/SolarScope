@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useSiteLocale } from '@/components/layout/LanguageToggle'
 import { useClientValue } from '@/lib/client/use-client-value'
+import LightModeToggle from '@/components/layout/LightModeToggle'
 
 // Évaluée au build : la page prérendue affiche cette année jusqu’à l’hydratation.
 const BUILD_YEAR = new Date().getFullYear()
@@ -194,11 +195,12 @@ export default function Footer() {
                     <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>
                         © {year} SolarScope · {copy.copyright}
                     </p>
-                    <div style={{ display: 'flex', gap: '1rem' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '1rem' }}>
                         <Link href="/confidentialite" style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>{copy.privacy}</Link>
                         <Link href="/sources" style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>{copy.dataSources}</Link>
                         <Link href="/#explorer" style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>{copy.about}</Link>
                         <a href="https://github.com/AtomCrtr/SolarScope" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>{copy.contact}</a>
+                        <LightModeToggle />
                     </div>
                 </div>
             </div>

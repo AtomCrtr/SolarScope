@@ -19,10 +19,17 @@ export const MISSION_IDS = [
 ] as const
 export type MissionId = (typeof MISSION_IDS)[number]
 
+export const SKY_OBJECT_IDS = ['moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'iss'] as const
+export type SkyObjectId = (typeof SKY_OBJECT_IDS)[number]
+
 export type LocalProgress = {
   visited: Partial<Record<MissionId, string>>
   completed: Partial<Record<MissionId, string>>
   bestQuizScore?: number
+  /** Observation log: what the child really saw in the sky, and when. */
+  observed?: Partial<Record<SkyObjectId, string>>
+  /** Special « sky observer » stamp, earned with the first observation. */
+  skyStamp?: string
 }
 
 const STORAGE_KEY = 'solarscope-passport-v1'
@@ -34,7 +41,7 @@ export function readLocalProgress(): LocalProgress {
   if (typeof window === 'undefined') return emptyProgress()
   try {
     const saved = JSON.parse(readStorage(STORAGE_KEY) || '') as LocalProgress
-    return { visited: saved.visited || {}, completed: saved.completed || {}, bestQuizScore: saved.bestQuizScore }
+    return { visited: saved.visited || {}, completed: saved.completed || {}, bestQuizScore: saved.bestQuizScore, observed: saved.observed || {}, skyStamp: saved.skyStamp }
   } catch {
     return emptyProgress()
   }
@@ -89,6 +96,17 @@ export function completeMission(mission: MissionId) {
 
 export function recordQuizScore(score: number) {
   updateLocalProgress(current => ({ ...current, bestQuizScore: Math.max(current.bestQuizScore || 0, score), completed: { ...current.completed, quiz: new Date().toISOString() } }))
+}
+
+/** Ticks or unticks an object in the observation log; the first tick earns the special stamp for good. */
+export function toggleObservation(object: SkyObjectId) {
+  updateLocalProgress(current => {
+    const observed = { ...current.observed }
+    const now = new Date().toISOString()
+    if (observed[object]) delete observed[object]
+    else observed[object] = now
+    return { ...current, observed, skyStamp: current.skyStamp ?? (observed[object] ? now : undefined) }
+  })
 }
 
 export function clearLocalProgress() {

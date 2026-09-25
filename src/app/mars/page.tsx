@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react'
 import SpaceIcon, { type SpaceIconName } from '@/components/ui/SpaceIcon'
-import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import KidsGuide from '@/components/learning/KidsGuide'
 import DataSourceNote from '@/components/learning/DataSourceNote'
@@ -11,8 +10,7 @@ import MetricGrid from '@/components/space/MetricGrid'
 import { SCIENTIFIC_SOURCES } from '@/lib/data/source-registry'
 import { MARS_DATA_CHECKED_ON, MARS_DATA_DISCLAIMER, MARS_FACTS, MARS_ROVER_MISSIONS, type MarsRoverId } from '@/lib/content/mars-data'
 
-const Planet3D = dynamic(() => import('@/components/space/Planet3D'), { ssr: false })
-const RoverViewer3D = dynamic(() => import('@/components/space/RoverViewer3D'), { ssr: false })
+import { PlanetScene as Planet3D, RoverScene as RoverViewer3D } from '@/components/space/LightScenes'
 
 
 

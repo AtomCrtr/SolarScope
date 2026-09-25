@@ -1,6 +1,5 @@
 'use client'
 
-import dynamic from 'next/dynamic'
 import { useEffect, useMemo, useState } from 'react'
 import type { CSSProperties } from 'react'
 import { PLANET_EXPLORER_PLANETS, PLANET_FOCUS_ORDER, type PlanetFocus } from '@/lib/content/planet-explorer'
@@ -8,10 +7,7 @@ import { PLANET_MOONS } from '@/lib/content/moons'
 import { formatDistance, travelTimes } from '@/lib/astronomy/travel'
 import SpaceIcon, { type SpaceIconName } from '@/components/ui/SpaceIcon'
 
-const Planet3D = dynamic(() => import('@/components/space/Planet3D'), {
-  ssr: false,
-  loading: () => <div className="planet-explorer-loading">Chargement du globe…</div>,
-})
+import { PlanetScene as Planet3D } from '@/components/space/LightScenes'
 
 const FOCUS_ICONS: Record<PlanetFocus, SpaceIconName> = {
   identity: 'target',

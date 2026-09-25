@@ -34,6 +34,14 @@ export default function PrivacyPage() {
           habituelles d’une requête web, notamment l’adresse IP.
         </p>
 
+        <h2>Statistiques de visite</h2>
+        <p>
+          Pour savoir quelles missions sont vraiment utilisées, SolarScope compte les pages vues avec Vercel Web
+          Analytics. Ce service ne dépose aucun cookie, ne crée pas de profil et ne suit pas les visiteurs d’un site à
+          l’autre. SolarScope ne transmet que l’adresse de la page, sans paramètre ni code de passeport ; Vercel en
+          déduit aussi le pays, le type d’appareil et le navigateur, de façon agrégée.
+        </p>
+
         <h2>Stockage local et intelligence artificielle</h2>
         <p>
           SolarScope ne crée pas de compte. Le navigateur peut conserver la langue choisie, le public ou niveau

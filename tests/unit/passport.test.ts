@@ -19,10 +19,12 @@ describe('passport transfer code', () => {
     expect(decoded && [...decoded.completed].sort()).toEqual(['mars', 'quiz', 'soleil'])
     expect(decoded && [...decoded.visited].sort()).toEqual(['iss', 'mars', 'quiz', 'soleil'])
     expect(decoded?.bestQuizScore).toBe(80)
+    expect(decoded?.skyStamp).toBe(false)
+    expect(decodePassportCode(encodePassportCode({ ...progress, skyStamp: DAY }))?.skyStamp).toBe(true)
   })
 
   it('handles an empty passport and a full one', () => {
-    expect(decodePassportCode(encodePassportCode({ completed: {}, visited: {} }))).toEqual({ completed: new Set(), visited: new Set(), bestQuizScore: undefined })
+    expect(decodePassportCode(encodePassportCode({ completed: {}, visited: {} }))).toEqual({ completed: new Set(), visited: new Set(), bestQuizScore: undefined, skyStamp: false })
     const full = Object.fromEntries(MISSION_IDS.map(id => [id, DAY]))
     expect(decodePassportCode(encodePassportCode({ completed: full, visited: full, bestQuizScore: 100 }))?.completed.size).toBe(14)
   })
@@ -63,17 +65,22 @@ describe('passport content', () => {
     expect(nextMission({ completed: {}, visited: {} })?.id).toBe('soleil')
   })
 
-  it('asks one question per lesson in both languages', () => {
+  it('asks three questions per lesson in both languages', () => {
     for (const checks of [MISSION_CHECKS, ENGLISH_MISSION_CHECKS]) {
       expect(Object.keys(checks).sort()).toEqual(MISSION_IDS.filter(id => id !== 'quiz').sort())
-      for (const check of Object.values(checks)) {
-        expect(new Set(check.choices).size).toBe(3)
-        expect(check.choices[check.answer]).toBeTruthy()
+      for (const questions of Object.values(checks)) {
+        expect(questions).toHaveLength(3)
+        expect(new Set(questions.map(check => check.question)).size).toBe(3)
+        for (const check of questions) {
+          expect(new Set(check.choices).size).toBe(3)
+          expect(check.choices[check.answer]).toBeTruthy()
+        }
       }
     }
     // Same correct answer position in both languages, so a translation cannot silently change the answer.
-    for (const [id, check] of Object.entries(MISSION_CHECKS)) {
-      expect(ENGLISH_MISSION_CHECKS[id as keyof typeof MISSION_CHECKS].answer).toBe(check.answer)
+    for (const [id, questions] of Object.entries(MISSION_CHECKS)) {
+      const english = ENGLISH_MISSION_CHECKS[id as keyof typeof MISSION_CHECKS]
+      expect(english.map(check => check.answer)).toEqual(questions.map(check => check.answer))
     }
   })
 })

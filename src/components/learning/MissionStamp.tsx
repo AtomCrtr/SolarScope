@@ -3,13 +3,14 @@
 import Link from 'next/link'
 import { useId, useState } from 'react'
 import { completeMission, useLocalProgress, type MissionId } from '@/lib/client/local-progress'
-import { ENGLISH_MISSION_CHECKS, MISSION_CHECKS } from '@/lib/content/mission-checks'
+import { ENGLISH_MISSION_CHECKS, MISSION_CHECKS, QUESTIONS_PER_STAMP, type CheckedMission } from '@/lib/content/mission-checks'
+import { useClientValue } from '@/lib/client/use-client-value'
 import { useSiteLocale } from '@/components/layout/LanguageToggle'
 import { frenchNonBreakingSpaces } from '@/lib/content/typography'
 
 const COPY = {
-  fr: { kicker: 'Gagne ton tampon', hint: 'Réponds à une question sur la leçon pour tamponner ton passeport.', right: 'Bravo, c’est la bonne réponse !', wrong: 'Pas tout à fait…', retry: 'Tu peux réessayer, sans rien perdre.', stamped: 'Tampon ajouté à mon passeport', open: 'Voir mon passeport' },
-  en: { kicker: 'Earn your stamp', hint: 'Answer one question about the lesson to stamp your passport.', right: 'Well done, that’s right!', wrong: 'Not quite…', retry: 'You can try again, you lose nothing.', stamped: 'Mission stamp saved in my passport', open: 'Open my passport' },
+  fr: { kicker: 'Gagne ton tampon', hint: 'Réponds à deux questions sur la leçon pour tamponner ton passeport.', step: (n: number, total: number) => `Question ${n} sur ${total}`, next: 'Bonne réponse ! Encore une question.', right: 'Bravo, c’est la bonne réponse !', wrong: 'Pas tout à fait…', retry: 'Tu peux réessayer, sans rien perdre.', stamped: 'Tampon ajouté à mon passeport', open: 'Voir mon passeport' },
+  en: { kicker: 'Earn your stamp', hint: 'Answer two questions about the lesson to stamp your passport.', step: (n: number, total: number) => `Question ${n} of ${total}`, next: 'Right! One more question.', right: 'Well done, that’s right!', wrong: 'Not quite…', retry: 'You can try again, you lose nothing.', stamped: 'Mission stamp saved in my passport', open: 'Open my passport' },
 }
 
 function StampMark() {
@@ -22,15 +23,32 @@ function StampMark() {
   )
 }
 
-/** The stamp is earned by answering a question on the lesson: a wrong answer shows the explanation, then the child tries again. */
+// Drawn once per page load and kept, so the questions do not change while the child answers.
+const drawn = new Map<CheckedMission, number[]>()
+function drawQuestions(mission: CheckedMission): number[] {
+  if (!drawn.has(mission)) {
+    const order = MISSION_CHECKS[mission].map((_, index) => index)
+    for (let index = order.length - 1; index > 0; index -= 1) {
+      const other = Math.floor(Math.random() * (index + 1))
+      ;[order[index], order[other]] = [order[other], order[index]]
+    }
+    drawn.set(mission, order.slice(0, QUESTIONS_PER_STAMP))
+  }
+  return drawn.get(mission)!
+}
+const FIRST_QUESTIONS = Array.from({ length: QUESTIONS_PER_STAMP }, (_, index) => index)
+
+/** The stamp is earned by answering two questions on the lesson: a wrong answer shows the explanation, then the child tries again. */
 export default function MissionStamp({ mission }: { mission: Exclude<MissionId, 'quiz'> }) {
   const locale = useSiteLocale()
   const progress = useLocalProgress()
+  const questions = useClientValue(() => drawQuestions(mission), FIRST_QUESTIONS)
+  const [step, setStep] = useState(0)
   const [wrongChoices, setWrongChoices] = useState<number[]>([])
   const [justStamped, setJustStamped] = useState(false)
   const titleId = useId()
   const copy = COPY[locale]
-  const check = (locale === 'en' ? ENGLISH_MISSION_CHECKS : MISSION_CHECKS)[mission]
+  const check = (locale === 'en' ? ENGLISH_MISSION_CHECKS : MISSION_CHECKS)[mission][questions[step]]
   const text = (value: string) => (locale === 'en' ? value : frenchNonBreakingSpaces(value))
 
   if (progress?.completed[mission]) {
@@ -47,7 +65,10 @@ export default function MissionStamp({ mission }: { mission: Exclude<MissionId, 
   }
 
   const choose = (index: number) => {
-    if (index === check.answer) {
+    if (index === check.answer && step < questions.length - 1) {
+      setStep(step + 1)
+      setWrongChoices([])
+    } else if (index === check.answer) {
       setJustStamped(true)
       completeMission(mission)
     } else if (!wrongChoices.includes(index)) {
@@ -56,9 +77,10 @@ export default function MissionStamp({ mission }: { mission: Exclude<MissionId, 
   }
 
   return (
-    <section className="mission-check" aria-labelledby={titleId}>
+    <section className="mission-check" aria-labelledby={titleId} data-ready={questions !== FIRST_QUESTIONS || undefined}>
       <span className="kids-note-title">{copy.kicker}</span>
       <p className="mission-check-hint">{copy.hint}</p>
+      <p className="mission-check-step" aria-live="polite">{step > 0 && <strong>{copy.next} </strong>}{copy.step(step + 1, questions.length)}</p>
       <h3 id={titleId}>{text(check.question)}</h3>
       <div className="mission-check-choices">
         {check.choices.map((choice, index) => (
