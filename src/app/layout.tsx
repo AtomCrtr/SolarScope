@@ -53,6 +53,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr" data-theme="dark" className={`${bodyFont.variable} ${displayFont.variable} ${noteFont.variable}`} suppressHydrationWarning>
       <head>
+        {/* Sets <html lang> while the page is being parsed, before hydration (the layout is shared by FR and EN). */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.lang=/^\\/en(\\/|$)/.test(location.pathname)?'en':'fr'" }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

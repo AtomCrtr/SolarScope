@@ -37,11 +37,36 @@ export const PROGRESS_EVENT = 'solarscope-progress-change'
 
 const emptyProgress = (): LocalProgress => ({ visited: {}, completed: {} })
 
+function stampsFor<T extends string>(value: unknown, ids: readonly T[]): Partial<Record<T, string>> {
+  const result: Partial<Record<T, string>> = {}
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return result
+  const record = value as Record<string, unknown>
+  for (const id of ids) {
+    if (typeof record[id] === 'string') result[id] = record[id]
+  }
+  return result
+}
+
+/** Keeps only what the passport knows how to read: storage can be edited by hand or by another script. */
+export function sanitizeProgress(value: unknown): LocalProgress {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return emptyProgress()
+  const saved = value as Record<string, unknown>
+  const score = typeof saved.bestQuizScore === 'number' && Number.isFinite(saved.bestQuizScore)
+    ? Math.max(0, Math.min(100, saved.bestQuizScore))
+    : undefined
+  return {
+    visited: stampsFor(saved.visited, MISSION_IDS),
+    completed: stampsFor(saved.completed, MISSION_IDS),
+    bestQuizScore: score,
+    observed: stampsFor(saved.observed, SKY_OBJECT_IDS),
+    skyStamp: typeof saved.skyStamp === 'string' ? saved.skyStamp : undefined,
+  }
+}
+
 export function readLocalProgress(): LocalProgress {
   if (typeof window === 'undefined') return emptyProgress()
   try {
-    const saved = JSON.parse(readStorage(STORAGE_KEY) || '') as LocalProgress
-    return { visited: saved.visited || {}, completed: saved.completed || {}, bestQuizScore: saved.bestQuizScore, observed: saved.observed || {}, skyStamp: saved.skyStamp }
+    return sanitizeProgress(JSON.parse(readStorage(STORAGE_KEY) || ''))
   } catch {
     return emptyProgress()
   }

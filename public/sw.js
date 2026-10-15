@@ -20,8 +20,20 @@ self.addEventListener('activate', event => {
   )
 })
 
+const MAX_ENTRIES = 80
+
+// Keeps the cache bounded: oldest entries (insertion order) go first, the app shell stays.
+async function trimCache(cache) {
+  const keys = await cache.keys()
+  const removable = keys.filter(key => !APP_SHELL.includes(new URL(key.url).pathname))
+  await Promise.all(removable.slice(0, Math.max(0, keys.length - MAX_ENTRIES)).map(key => cache.delete(key)))
+}
+
 function putInCache(request, response) {
-  if (response.ok) caches.open(CACHE_NAME).then(cache => cache.put(request, response.clone()))
+  if (response.ok) {
+    const copy = response.clone()
+    caches.open(CACHE_NAME).then(cache => cache.put(request, copy).then(() => trimCache(cache))).catch(() => undefined)
+  }
   return response
 }
 

@@ -28,8 +28,9 @@ function parseAllowedUrl(value: string) {
 }
 
 export async function GET(req: NextRequest) {
-    const clientId = getClientIdentifier(req) ?? 'unknown'
-    const rate = await checkDistributedRateLimit(`sdo:${clientId}`, {
+    const clientId = getClientIdentifier(req)
+    if (process.env.VERCEL === '1' && !clientId) return errorResponse('Protection temporairement indisponible', 503)
+    const rate = await checkDistributedRateLimit(`sdo:${clientId ?? 'local-anonymous'}`, {
         namespace: 'sdo',
         limit: 30,
         windowSeconds: 60,

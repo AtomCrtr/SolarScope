@@ -39,6 +39,16 @@ describe('sdo proxy', () => {
     expect(fetch).not.toHaveBeenCalled()
   })
 
+  it('refuses to share one anonymous quota on Vercel without a client address', async () => {
+    process.env.VERCEL = '1'
+    try {
+      expect((await call(GOOD)).status).toBe(503)
+      expect(checkDistributedRateLimit).not.toHaveBeenCalled()
+    } finally {
+      delete process.env.VERCEL
+    }
+  })
+
   it('requires the url parameter', async () => {
     expect((await call()).status).toBe(400)
   })

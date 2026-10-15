@@ -20,13 +20,33 @@ describe('gemini route', () => {
     vi.stubGlobal('fetch', vi.fn())
   })
 
-  it('answers 503 when the limiter is unavailable and 429 when exceeded', async () => {
-    vi.mocked(checkDistributedRateLimit).mockResolvedValueOnce({ ...allowed, allowed: false, unavailable: true })
-    expect((await post({ question: 'Pourquoi ?' })).status).toBe(503)
+  it('answers 429 when the limit is exceeded', async () => {
     vi.mocked(checkDistributedRateLimit).mockResolvedValueOnce({ ...allowed, allowed: false, retryAfter: 30 })
     const limited = await post({ question: 'Pourquoi ?' })
     expect(limited.status).toBe(429)
     expect(limited.headers.get('retry-after')).toBe('30')
+  })
+
+  it('serves the local answer, never Gemini, when the limiter is unavailable', async () => {
+    process.env.GEMINI_API_KEY = 'key'
+    vi.mocked(checkDistributedRateLimit).mockResolvedValueOnce({ ...allowed, allowed: false, unavailable: true })
+    const response = await post({ question: 'Parle-moi de la Lune' })
+    expect(response.status).toBe(200)
+    expect(response.headers.get('x-solarbot-mode')).toBe('fallback')
+    expect(fetch).not.toHaveBeenCalled()
+  })
+
+  it('does not share one anonymous quota on Vercel without a client address', async () => {
+    process.env.GEMINI_API_KEY = 'key'
+    process.env.VERCEL = '1'
+    try {
+      const response = await post({ question: 'Parle-moi de la Lune' })
+      expect(response.headers.get('x-solarbot-mode')).toBe('fallback')
+      expect(checkDistributedRateLimit).not.toHaveBeenCalled()
+      expect(fetch).not.toHaveBeenCalled()
+    } finally {
+      delete process.env.VERCEL
+    }
   })
 
   it.each([

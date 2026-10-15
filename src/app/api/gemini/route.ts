@@ -82,18 +82,19 @@ async function requestGemini(payload: unknown): Promise<Response> {
 export async function POST(request: NextRequest) {
   const locale: Locale = request.headers.get('x-solarscope-locale') === 'en' ? 'en' : 'fr'
   const errors = ERRORS[locale]
-  const rateLimit = await checkDistributedRateLimit(`gemini:${getClientIdentifier(request) ?? 'anonymous'}`, {
-    namespace: 'gemini',
-    limit: 8,
-    windowSeconds: 60,
-  })
-  if (rateLimit.unavailable) {
-    return NextResponse.json(
-      { error: errors.busy },
-      { status: 503, headers: { 'Cache-Control': 'no-store' } },
-    )
-  }
-  if (!rateLimit.allowed) {
+  // Without a trustworthy client identifier or a working limiter, Gemini is never called (it costs
+  // quota), but the free local answer is still served instead of an error.
+  const clientId = getClientIdentifier(request)
+  const unidentified = process.env.VERCEL === '1' && !clientId
+  const rateLimit = unidentified
+    ? null
+    : await checkDistributedRateLimit(`gemini:${clientId ?? 'local-anonymous'}`, {
+      namespace: 'gemini',
+      limit: 8,
+      windowSeconds: 60,
+    })
+  const geminiAllowed = rateLimit !== null && !rateLimit.unavailable
+  if (rateLimit && !rateLimit.unavailable && !rateLimit.allowed) {
     return NextResponse.json(
       { error: errors.tooMany },
       {
@@ -162,7 +163,7 @@ ${grounding}
 
 ${sourceContext}`
 
-  if (!getGeminiConfig().apiKey) {
+  if (!geminiAllowed || !getGeminiConfig().apiKey) {
     return NextResponse.json(
       { text: fallbackAnswer(question, mode, locale), degraded: true, sources: publicSources },
       { headers: { 'Cache-Control': 'no-store', 'X-SolarBot-Mode': 'fallback' } },
@@ -207,7 +208,7 @@ ${sourceContext}`
       {
         headers: {
           'Cache-Control': 'no-store',
-          'X-RateLimit-Remaining': String(rateLimit.remaining),
+          'X-RateLimit-Remaining': String(rateLimit?.remaining ?? 0),
           'X-SolarBot-Mode': degraded ? 'fallback' : 'gemini',
         },
       },
