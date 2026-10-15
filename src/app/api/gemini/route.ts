@@ -5,6 +5,7 @@ import { readJsonBody } from '@/lib/security/request-body'
 import { solarBotContentIsSafe, SOLARBOT_PRIVACY_REMINDER, SOLARBOT_PRIVACY_REMINDER_EN } from '@/lib/security/solarbot-safety'
 import { formatSolarBotSourceContext, selectSolarBotSources, toPublicSolarBotSources } from '@/lib/content/solarbot-sources'
 import { getGeminiConfig } from '@/lib/server/gemini-health'
+import { normalizeHistory, type HistoryTurn } from '@/lib/server/solarbot-history'
 
 const MAX_BODY_BYTES = 32_000
 
@@ -130,19 +131,20 @@ export async function POST(request: NextRequest) {
       ? 'Tu es SolarBot, conteur spatial pour enfants de 8 à 12 ans. Écris en français une histoire éducative, poétique et scientifiquement prudente de 180 à 220 mots. Commence par annoncer clairement qu’il s’agit d’une histoire. N’invente pas de découverte réelle et ne demande jamais de donnée personnelle.'
       : 'Tu es SolarBot, assistant spatial pour enfants de 8 à 12 ans. Réponds en français avec des phrases courtes et une seule idée par phrase. Commence par une réponse simple, explique chaque mot scientifique et ajoute une comparaison concrète si elle aide. Termine par « À retenir : » avec une phrase. Distingue clairement fait, hypothèse et fiction, dis quand tu n’es pas sûr, n’invente jamais de source et ne demande jamais de donnée personnelle.'
 
-  const safeHistory = history
+  const rawHistory = history
     .slice(-4)
     .filter((item): item is Message => {
       if (!item || typeof item !== 'object' || Array.isArray(item)) return false
       const candidate = item as Record<string, unknown>
       return (candidate.role === 'user' || candidate.role === 'bot') && typeof candidate.text === 'string'
     })
-    .map((message) => ({
+    .map((message): HistoryTurn => ({
       role: message.role === 'user' ? 'user' : 'model',
       text: message.text.slice(0, 600),
     }))
+  const safeHistory = normalizeHistory(rawHistory)
 
-  if (!solarBotContentIsSafe(question, safeHistory)) {
+  if (!solarBotContentIsSafe(question, rawHistory)) {
     return NextResponse.json({ error: errors.privacy }, { status: 400 })
   }
 

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidateTag } from 'next/cache'
+import { createHash, timingSafeEqual } from 'node:crypto'
 import {
   getAsteroidFeed,
   getDashboardData,
@@ -13,9 +14,14 @@ import {
 
 export const dynamic = 'force-dynamic'
 
+function isAuthorized(authorization: string | null, secret: string) {
+  // Hashing gives both sides the same length, as timingSafeEqual requires.
+  const digest = (value: string) => createHash('sha256').update(value).digest()
+  return timingSafeEqual(digest(authorization ?? ''), digest(`Bearer ${secret}`))
+}
+
 export async function GET(request: NextRequest) {
   const secret = process.env.CRON_SECRET
-  const authorization = request.headers.get('authorization')
 
   if (!secret) {
     return NextResponse.json(
@@ -24,7 +30,7 @@ export async function GET(request: NextRequest) {
     )
   }
 
-  if (authorization !== `Bearer ${secret}`) {
+  if (!isAuthorized(request.headers.get('authorization'), secret)) {
     return NextResponse.json(
       { error: 'Non autorisé' },
       { status: 401, headers: { 'Cache-Control': 'no-store' } },
