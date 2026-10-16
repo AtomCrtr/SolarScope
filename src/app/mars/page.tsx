@@ -229,7 +229,7 @@ export default function MarsPage() {
                         </div>
                         <div style={{
                             position: 'absolute', bottom: 12, left: 0, right: 0, textAlign: 'center',
-                            color: 'var(--text-muted)', fontSize: '0.65rem', letterSpacing: '0.05em',
+                            color: 'var(--text-muted)', fontSize: '0.75rem', letterSpacing: '0.05em',
                         }}>{t.drag}</div>
                         <div style={{
                             position: 'absolute', top: 14, right: 14,
@@ -238,7 +238,7 @@ export default function MarsPage() {
                             padding: '4px 10px', display: 'flex', alignItems: 'center', gap: 5,
                         }}>
                             <span aria-hidden="true">●</span>
-                            <span style={{ color: '#f87171', fontSize: '0.68rem', fontWeight: 700 }}>{t.verified}</span>
+                            <span style={{ color: '#f87171', fontSize: '0.75rem', fontWeight: 700 }}>{t.verified}</span>
                         </div>
                     </div>
                 </div>
@@ -296,7 +296,7 @@ export default function MarsPage() {
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
                             {activeRoverDetail.achievements[locale].map(a => (
                                 <span key={a} style={{
-                                    padding: '4px 10px', borderRadius: 99, fontSize: '0.72rem', fontWeight: 600,
+                                    padding: '4px 10px', borderRadius: 99, fontSize: '0.75rem', fontWeight: 600,
                                     background: `${activeRoverDetail.color}12`, border: `1px solid ${activeRoverDetail.color}28`,
                                     color: activeRoverDetail.color,
                                 }}>✓ {a}</span>
@@ -314,7 +314,7 @@ export default function MarsPage() {
                             <div key={d.label} style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', padding: '0.5rem 0.75rem', borderRadius: '0.5rem', background: 'rgba(255,255,255,0.03)' }}>
                                 <SpaceIcon name={d.icon} size={18} />
                                 <div>
-                                    <div style={{ color: 'var(--text-muted)', fontSize: '0.65rem' }}>{d.label}</div>
+                                    <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{d.label}</div>
                                     <div style={{ color: 'var(--text)', fontSize: '0.8rem', fontWeight: 700 }}>{d.val}</div>
                                 </div>
                             </div>
@@ -328,7 +328,7 @@ export default function MarsPage() {
                 <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '0.5rem' }}>
                     {activeRover === 'perseverance' ? t.model : t.nasaView} — {activeRoverDetail.name}
                 </h2>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', marginBottom: '1rem' }}>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginBottom: '1rem' }}>
                     {activeRover === 'perseverance' ? t.modelHint : t.imageHint}
                 </p>
                 <RoverViewer3D rover={activeRover} height={360} />
@@ -338,7 +338,7 @@ export default function MarsPage() {
             <div className="divider" />
             <div style={{ marginBottom: '2.5rem' }}>
                 <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '0.25rem' }}>{t.galleryTitle}</h2>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', marginBottom: '1.25rem' }}>{t.gallerySub}</p>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginBottom: '1.25rem' }}>{t.gallerySub}</p>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.625rem' }} className="max-sm:grid-cols-2">
                     {MARS_GALLERY.map((item, i) => (
                         <button type="button" aria-label={t.enlarge(item.title[locale])} key={item.src} onClick={event => {
@@ -354,8 +354,8 @@ export default function MarsPage() {
                                 }}
                             />
                             <div style={{ padding: '0.4rem 0.6rem', background: 'rgba(0,0,0,0.78)', backdropFilter: 'blur(6px)' }}>
-                                <div style={{ color: item.color, fontSize: '0.65rem', fontWeight: 700, fontFamily: 'var(--font-display)' }}>{item.rover} · {item.camera}</div>
-                                <div style={{ color: 'var(--text-muted)', fontSize: '0.6rem', marginTop: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.title[locale]}</div>
+                                <div style={{ color: item.color, fontSize: '0.75rem', fontWeight: 700, fontFamily: 'var(--font-display)' }}>{item.rover} · {item.camera}</div>
+                                <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.title[locale]}</div>
                             </div>
                         </button>
                     ))}
@@ -381,7 +381,7 @@ export default function MarsPage() {
                             <div>
                                 <h2 id="mars-dialog-title" style={{ color: photo.color, fontWeight: 700, fontFamily: 'var(--font-display)' }}>{photo.title[locale]}</h2>
                                 <div id="mars-dialog-description" style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: 2 }}>{photo.desc[locale]}</div>
-                                <div style={{ color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: 3 }}>{t.rover} {photo.rover} · {photo.camera} · Sol {photo.sol}</div>
+                                <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: 3 }}>{t.rover} {photo.rover} · {photo.camera} · Sol {photo.sol}</div>
                             </div>
                             <div style={{ display: 'flex', gap: '0.5rem' }}>
                                 <a href={photo.src} target="_blank" rel="noopener noreferrer"
@@ -411,11 +411,11 @@ export default function MarsPage() {
                                 <span style={{ color: r.color }}><SpaceIcon name={r.icon} size={26} /></span>
                                 <div>
                                     <h3 style={{ color: r.color, fontWeight: 800, fontFamily: 'var(--font-display)', fontSize: '1.05rem' }}>{r.name}</h3>
-                                    <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{r.agency}</div>
+                                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{r.agency}</div>
                                 </div>
                             </div>
                             <span style={{
-                                padding: '3px 8px', borderRadius: 99, fontSize: '0.65rem', fontWeight: 700,
+                                padding: '3px 8px', borderRadius: 99, fontSize: '0.75rem', fontWeight: 700,
                                 background: r.active ? 'rgba(16,185,129,0.12)' : 'rgba(100,116,139,0.12)',
                                 border: `1px solid ${r.active ? 'rgba(16,185,129,0.3)' : 'rgba(100,116,139,0.2)'}`,
                                 color: r.active ? '#10b981' : 'var(--text-muted)',
@@ -430,16 +430,16 @@ export default function MarsPage() {
                             ] as Array<{ icon: SpaceIconName; label: string; val: string }>).map(d => (
                                 <div key={d.label} style={{ textAlign: 'center', background: 'rgba(255,255,255,0.03)', borderRadius: '0.5rem', padding: '0.4rem 0.25rem' }}>
                                     <SpaceIcon name={d.icon} size={14} />
-                                    <div style={{ color: 'var(--text)', fontWeight: 700, fontSize: '0.68rem' }}>{d.val}</div>
-                                    <div style={{ color: 'var(--text-muted)', fontSize: '0.6rem' }}>{d.label}</div>
+                                    <div style={{ color: 'var(--text)', fontWeight: 700, fontSize: '0.75rem' }}>{d.val}</div>
+                                    <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{d.label}</div>
                                 </div>
                             ))}
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                             {r.achievements[locale].slice(0, 3).map(a => (
                                 <div key={a} style={{ display: 'flex', gap: '0.375rem', alignItems: 'flex-start' }}>
-                                    <span style={{ color: r.color, fontSize: '0.65rem', marginTop: 2, flexShrink: 0 }}>✓</span>
-                                    <span style={{ color: 'var(--text-muted)', fontSize: '0.72rem', lineHeight: 1.5 }}>{a}</span>
+                                    <span style={{ color: r.color, fontSize: '0.75rem', marginTop: 2, flexShrink: 0 }}>✓</span>
+                                    <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem', lineHeight: 1.5 }}>{a}</span>
                                 </div>
                             ))}
                         </div>
@@ -457,7 +457,7 @@ export default function MarsPage() {
                             background: i === MARS_TIMELINE.length - 1
                                 ? 'linear-gradient(135deg, rgba(99,102,241,0.3), rgba(139,92,246,0.3))'
                                 : 'linear-gradient(135deg, #ef4444, #f97316)',
-                            fontSize: '0.68rem', fontWeight: 700, minWidth: 32, height: 32,
+                            fontSize: '0.75rem', fontWeight: 700, minWidth: 32, height: 32,
                         }}>
                             {i === MARS_TIMELINE.length - 1 ? <SpaceIcon name="sparkle" size={16} /> : ev.flag[locale]}
                         </div>

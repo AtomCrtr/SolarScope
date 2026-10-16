@@ -158,7 +158,7 @@ export default function AsteroidsPage() {
             <div className="card" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
                     <h2 className="section-title" style={{ color: 'var(--text)' }}>{t.tableTitle}</h2>
-                    {updatedAt && <span style={{ color: 'var(--text-muted)', fontSize: '0.68rem' }}>{t.checkedAt(new Date(updatedAt).toLocaleTimeString(t.numbers, { hour: '2-digit', minute: '2-digit' }))}</span>}
+                    {updatedAt && <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{t.checkedAt(new Date(updatedAt).toLocaleTimeString(t.numbers, { hour: '2-digit', minute: '2-digit' }))}</span>}
                 </div>
                 {loading ? (
                     <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}><SpaceIcon name="clock" size={18} className="inline-icon" /> {t.loading}</div>
@@ -220,7 +220,7 @@ export default function AsteroidsPage() {
                     <div key={a.name.fr} className="card" style={{ padding: '1.25rem', borderLeft: `4px solid ${a.color}` }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
                             <h3 style={{ color: a.color, fontFamily: 'var(--font-display)', fontWeight: 800 }}>{a.name[locale]}</h3>
-                            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{a.size[locale]}</span>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{a.size[locale]}</span>
                         </div>
                         {a.danger && <div style={{ color: '#f87171', fontSize: '0.75rem', marginBottom: '0.5rem' }}><SpaceIcon name="alert" size={18} className="inline-icon" /> {t.dangerTag}</div>}
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.82rem', lineHeight: 1.7, marginBottom: '0.75rem' }}>{a.description[locale]}</p>
@@ -237,7 +237,7 @@ export default function AsteroidsPage() {
                         <h3 style={{ color: 'var(--text)', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.5rem' }}>{v.title[locale]}</h3>
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', lineHeight: 1.6, marginBottom: '0.75rem' }}>{v.description[locale]}</p>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <span style={{ fontSize: '0.72rem', color: 'var(--nebula)', background: 'rgba(196,181,253,0.12)', padding: '2px 8px', borderRadius: 999 }}>{v.age[locale]}</span>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--nebula)', background: 'rgba(196,181,253,0.12)', padding: '2px 8px', borderRadius: 999 }}>{v.age[locale]}</span>
                             <a href={v.url} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ textDecoration: 'none', padding: '0.4rem 0.875rem', fontSize: '0.78rem' }}>
                                 ▶ YouTube
                             </a>

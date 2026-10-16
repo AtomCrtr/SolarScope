@@ -143,7 +143,7 @@ export default function QuizPage() {
                                         <div style={{ color: lv.color, marginBottom: '0.5rem' }}><SpaceIcon name={lv.icon} size={36} /></div>
                                         <div style={{ color: lv.color, fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.05rem', marginBottom: '0.25rem' }}>{lv.label[locale]}</div>
                                         <div style={{ color: 'var(--text-subtle)', fontSize: '0.82rem', marginBottom: '0.75rem' }}>{lv.ages[locale]}</div>
-                                        <div style={{ padding: '0.375rem 0.75rem', borderRadius: 99, background: `${lv.color}20`, color: lv.color, fontSize: '0.72rem', fontWeight: 700 }}>
+                                        <div style={{ padding: '0.375rem 0.75rem', borderRadius: 99, background: `${lv.color}20`, color: lv.color, fontSize: '0.75rem', fontWeight: 700 }}>
                                             {t.questions(lv.bank[locale].length)}
                                         </div>
                                     </button>
@@ -247,7 +247,7 @@ export default function QuizPage() {
                                 <div style={{ color: 'var(--nebula)', marginBottom: '0.5rem' }}><SpaceIcon name={v.icon} size={36} /></div>
                                 <h3 style={{ color: 'var(--text)', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.375rem' }}>{v.title[locale]}</h3>
                                 <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', lineHeight: 1.6, marginBottom: '0.875rem' }}>{v.description[locale]}</p>
-                                <span style={{ fontSize: '0.72rem', color: 'var(--nebula)', background: 'rgba(167,139,250,0.1)', padding: '2px 10px', borderRadius: 999 }}>{v.age[locale]}</span>
+                                <span style={{ fontSize: '0.75rem', color: 'var(--nebula)', background: 'rgba(167,139,250,0.1)', padding: '2px 10px', borderRadius: 999 }}>{v.age[locale]}</span>
                                 <br /><br />
                                 <a href={v.url} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ textDecoration: 'none', display: 'inline-flex' }}>{t.watch}</a>
                                 <a href={v.fallback} target="_blank" rel="noopener noreferrer" className="video-fallback">{t.unavailable(v.fallbackLabel[locale])}</a>
@@ -266,7 +266,7 @@ export default function QuizPage() {
                                 <div aria-hidden="true" style={{ color: 'var(--nebula)', marginBottom: '0.5rem' }}><SpaceIcon name={resource.icon} size={32} /></div>
                                 <strong style={{ color: 'var(--text)', display: 'block', marginBottom: '0.25rem' }}>{resource.name[locale]}</strong>
                                 <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>{resource.detail[locale]}</p>
-                                <span style={{ color: 'var(--nebula)', fontSize: '0.72rem', display: 'inline-block', marginTop: '0.75rem' }}>{t.openNasa}</span>
+                                <span style={{ color: 'var(--nebula)', fontSize: '0.75rem', display: 'inline-block', marginTop: '0.75rem' }}>{t.openNasa}</span>
                             </a>
                         ))}
                     </div>

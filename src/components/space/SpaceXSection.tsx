@@ -78,7 +78,7 @@ export default function SpaceXSection() {
             {t.source}
           </p>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', color: 'var(--text-muted)', fontSize: '0.68rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', color: 'var(--text-muted)', fontSize: '0.75rem' }}>
           <span className={error ? 'live-orb is-loading' : 'live-orb'} />
           {updatedAt ? t.updated(new Date(updatedAt).toLocaleTimeString(t.date, { hour: '2-digit', minute: '2-digit' })) : t.connecting}
         </div>
@@ -89,9 +89,9 @@ export default function SpaceXSection() {
           <article key={vehicle.name} className="card" style={{ padding: '1.2rem', borderTop: `2px solid ${vehicle.color}` }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.75rem', alignItems: 'center' }}>
               <h3 style={{ color: 'var(--text)', font: "750 1rem var(--font-display)" }}>{vehicle.name}</h3>
-              <span style={{ color: vehicle.color, fontSize: '0.62rem', fontWeight: 800 }}>{vehicle.status[locale]}</span>
+              <span style={{ color: vehicle.color, fontSize: '0.75rem', fontWeight: 800 }}>{vehicle.status[locale]}</span>
             </div>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.74rem', lineHeight: 1.65, marginTop: '0.75rem' }}>{vehicle.detail[locale]}</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', lineHeight: 1.65, marginTop: '0.75rem' }}>{vehicle.detail[locale]}</p>
           </article>
         ))}
       </div>
@@ -109,16 +109,16 @@ export default function SpaceXSection() {
           {launches.map((launch, index) => (
             <article key={launch.id} className="card motion-enter" style={{ animationDelay: `${Math.min(index * 0.04, 0.6)}s`,  padding: '1.1rem', display: 'flex', flexDirection: 'column', minHeight: 195 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
-                <time dateTime={launch.net} style={{ color: 'var(--nebula)', fontSize: '0.68rem', fontWeight: 800 }}>
+                <time dateTime={launch.net} style={{ color: 'var(--nebula)', fontSize: '0.75rem', fontWeight: 800 }}>
                   {new Date(launch.net).toLocaleDateString(t.date, { day: 'numeric', month: 'short', year: 'numeric' })}
                 </time>
-                <span style={{ color: launch.live ? '#34d399' : 'var(--text-muted)', fontSize: '0.6rem', fontWeight: 800 }}>
+                <span style={{ color: launch.live ? '#34d399' : 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 800 }}>
                   {launch.live ? '● LIVE' : launch.status.toUpperCase()}
                 </span>
               </div>
               <h3 style={{ marginTop: '0.8rem', color: 'var(--text)', font: "730 0.92rem/1.45 var(--font-display)" }}>{launch.name}</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.68rem', lineHeight: 1.6, marginTop: '0.45rem' }}>{launch.rocket} · {launch.location}</p>
-              <div style={{ marginTop: 'auto', paddingTop: '0.9rem', display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', fontSize: '0.65rem' }}>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', lineHeight: 1.6, marginTop: '0.45rem' }}>{launch.rocket} · {launch.location}</p>
+              <div style={{ marginTop: 'auto', paddingTop: '0.9rem', display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', fontSize: '0.75rem' }}>
                 <span>{new Date(launch.net).toLocaleTimeString(t.date, { hour: '2-digit', minute: '2-digit' })}</span>
                 {launch.url && <a href={launch.url} target="_blank" rel="noopener noreferrer" className="touch-link touch-link-compact" style={{ color: 'var(--star)', textDecoration: 'none' }} aria-label={t.detailsLabel(launch.name)}>{t.details}</a>}
                 {launch.webcast && <a href={launch.webcast} target="_blank" rel="noopener noreferrer" className="touch-link touch-link-compact" style={{ color: 'var(--nebula)', textDecoration: 'none' }}>{t.webcast}</a>}

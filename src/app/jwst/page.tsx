@@ -179,12 +179,12 @@ export default function JWSTPage() {
                 onError={e => { e.currentTarget.style.visibility = 'hidden' }} />
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, transparent 55%)' }} />
               <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1rem' }}>
-                <div style={{ fontSize: '0.62rem', fontWeight: 700, color: h.color, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: 700, color: h.color, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem' }}>
                   {h.category[locale]} · {h.year}
                 </div>
                 <h3 style={{ color: 'var(--text)', fontSize: '0.88rem', fontWeight: 700, fontFamily: 'var(--font-display)', lineHeight: 1.3 }}>{h.title[locale]}</h3>
               </div>
-              <div style={{ position: 'absolute', top: 10, right: 10, background: `${h.color}20`, border: `1px solid ${h.color}40`, borderRadius: 99, padding: '2px 8px', fontSize: '0.65rem', color: h.color, fontWeight: 700 }}>
+              <div style={{ position: 'absolute', top: 10, right: 10, background: `${h.color}20`, border: `1px solid ${h.color}40`, borderRadius: 99, padding: '2px 8px', fontSize: '0.75rem', color: h.color, fontWeight: 700 }}>
                 JWST
               </div>
             </button>
@@ -205,8 +205,8 @@ export default function JWSTPage() {
                 <Image src={img.thumb} alt={img.title} width={600} height={400} style={{ width: '100%', height: 170, objectFit: 'cover', display: 'block' }}
                   onError={e => { e.currentTarget.style.visibility = 'hidden' }} />
                 <div style={{ padding: '0.5rem 0.625rem', background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)' }}>
-                  <div lang="en" style={{ color: '#c7d2fe', fontSize: '0.65rem', fontWeight: 600, lineHeight: 1.3 }}>{img.title?.slice(0, 55)}{img.title?.length > 55 ? '…' : ''}</div>
-                  <div style={{ color: 'var(--text-muted)', fontSize: '0.6rem', marginTop: 2 }}>{img.date_created}</div>
+                  <div lang="en" style={{ color: '#c7d2fe', fontSize: '0.75rem', fontWeight: 600, lineHeight: 1.3 }}>{img.title?.slice(0, 55)}{img.title?.length > 55 ? '…' : ''}</div>
+                  <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: 2 }}>{img.date_created}</div>
                 </div>
               </a>
             ))}
@@ -220,7 +220,7 @@ export default function JWSTPage() {
           <div onClick={e => e.stopPropagation()} style={{ maxWidth: 900, width: '100%', borderRadius: '1.25rem', overflow: 'hidden', border: '1px solid rgba(99,102,241,0.2)' }}>
             <Image src={highlight.img} alt={highlight.title[locale]} width={1400} height={900} style={{ width: '100%', height: 'auto', maxHeight: '60vh', objectFit: 'contain', background: '#000', display: 'block' }} />
             <div style={{ padding: '1.25rem 1.5rem', background: 'var(--card)' }}>
-              <div style={{ color: highlight.color, fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.375rem' }}>
+              <div style={{ color: highlight.color, fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.375rem' }}>
                 {highlight.category[locale]} · JWST {highlight.year}
               </div>
               <h2 id="jwst-dialog-title" style={{ color: 'var(--text)', fontWeight: 700, fontFamily: 'var(--font-display)', fontSize: '1.1rem', marginBottom: '0.625rem' }}>{highlight.title[locale]}</h2>

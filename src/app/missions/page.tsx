@@ -185,16 +185,16 @@ export default function MissionsPage() {
                                     {l.image && <img src={l.image} alt="" loading="lazy" decoding="async" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.08 }} />}
                                     <div style={{ position: 'relative' }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
-                                            <span style={{ fontSize: '0.68rem', fontWeight: 700, padding: '2px 7px', borderRadius: 99, background: 'rgba(99,102,241,0.15)', color: 'var(--nebula)', border: '1px solid rgba(99,102,241,0.2)' }}>
+                                            <span style={{ fontSize: '0.75rem', fontWeight: 700, padding: '2px 7px', borderRadius: 99, background: 'rgba(99,102,241,0.15)', color: 'var(--nebula)', border: '1px solid rgba(99,102,241,0.2)' }}>
                                                 {daysUntil <= 0 ? t.imminent : t.inDays(daysUntil)}
                                             </span>
-                                            {i === 0 && <span style={{ fontSize: '0.65rem', color: '#10b981', fontWeight: 700 }}>{t.next}</span>}
+                                            {i === 0 && <span style={{ fontSize: '0.75rem', color: '#10b981', fontWeight: 700 }}>{t.next}</span>}
                                         </div>
                                         <h3 lang="en" style={{ color: 'var(--text)', fontSize: '0.85rem', fontWeight: 700, fontFamily: 'var(--font-display)', marginBottom: '0.25rem', lineHeight: 1.3 }}>{l.name}</h3>
-                                        <p style={{ color: 'var(--text-muted)', fontSize: '0.7rem', marginBottom: '0.375rem' }}>{l.rocket}</p>
+                                        <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginBottom: '0.375rem' }}>{l.rocket}</p>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <span style={{ color: 'var(--text-muted)', fontSize: '0.68rem' }}>{l.agency.length > 28 ? l.agency.slice(0, 28) + '…' : l.agency}</span>
-                                            <span style={{ color: 'var(--text-muted)', fontSize: '0.67rem' }}>{d.toLocaleDateString(t.date, { day: 'numeric', month: 'short' })}</span>
+                                            <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{l.agency.length > 28 ? l.agency.slice(0, 28) + '…' : l.agency}</span>
+                                            <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{d.toLocaleDateString(t.date, { day: 'numeric', month: 'short' })}</span>
                                         </div>
                                         {l.url && <a href={l.url} target="_blank" rel="noopener noreferrer" className="touch-link touch-link-compact" style={{ display: 'inline-flex', marginTop: '0.35rem', color: 'var(--star)', fontSize: '0.75rem', fontWeight: 700, textDecoration: 'none' }} aria-label={t.launchLabel(l.name)}>{t.launchPage}</a>}
                                     </div>
@@ -212,7 +212,7 @@ export default function MissionsPage() {
                         <div style={{ position: 'absolute', height: 2, background: 'rgba(255,255,255,0.1)', left: 0, right: 0, top: '50%', transform: 'translateY(-50%)', zIndex: 0 }} />
                         {MISSIONS.map(m => (
                             <div key={m.name.fr} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', zIndex: 1 }}>
-                                <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginBottom: '0.25rem', whiteSpace: 'nowrap' }}>{m.year}</div>
+                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem', whiteSpace: 'nowrap' }}>{m.year}</div>
                                 <div title={m.name[locale]} style={{
                                     width: 32, height: 32, borderRadius: '50%',
                                     background: m.status === 'active' ? `linear-gradient(135deg, ${TYPE_COLORS[m.type]}, ${TYPE_COLORS[m.type]}80)` : 'rgba(255,255,255,0.1)',
@@ -223,7 +223,7 @@ export default function MissionsPage() {
                                 }}>
                                     <SpaceIcon name={m.icon} size={16} />
                                 </div>
-                                <div style={{ fontSize: '0.58rem', color: 'var(--text-muted)', marginTop: '0.25rem', textAlign: 'center', whiteSpace: 'nowrap', maxWidth: 50, overflow: 'hidden', textOverflow: 'ellipsis' }}>{m.name[locale].split(' ')[0]}</div>
+                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem', textAlign: 'center', whiteSpace: 'nowrap', maxWidth: 50, overflow: 'hidden', textOverflow: 'ellipsis' }}>{m.name[locale].split(' ')[0]}</div>
                             </div>
                         ))}
                     </div>
@@ -232,7 +232,7 @@ export default function MissionsPage() {
                     {ALL_TYPES.map(type => (
                         <div key={type} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
                             <div style={{ width: 10, height: 10, borderRadius: '50%', background: TYPE_COLORS[type] }} />
-                            <span style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>{TYPE_LABELS[type][locale]}</span>
+                            <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{TYPE_LABELS[type][locale]}</span>
                         </div>
                     ))}
                 </div>
@@ -273,13 +273,13 @@ export default function MissionsPage() {
                                 <h3 style={{ color: 'var(--text)', fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1rem' }}>{m.name[locale]}</h3>
                             </div>
                             <div style={{ display: 'flex', gap: '0.375rem', flexShrink: 0 }}>
-                                <span style={{ fontSize: '0.7rem', padding: '2px 8px', borderRadius: 999, background: `${TYPE_COLORS[m.type]}15`, color: TYPE_COLORS[m.type] }}>{TYPE_LABELS[m.type][locale]}</span>
+                                <span style={{ fontSize: '0.75rem', padding: '2px 8px', borderRadius: 999, background: `${TYPE_COLORS[m.type]}15`, color: TYPE_COLORS[m.type] }}>{TYPE_LABELS[m.type][locale]}</span>
                                 {m.status === 'active' ? (
-                                    <span style={{ fontSize: '0.7rem', padding: '2px 8px', borderRadius: 999, background: 'rgba(16,185,129,0.1)', color: '#10b981', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                                    <span style={{ fontSize: '0.75rem', padding: '2px 8px', borderRadius: 999, background: 'rgba(16,185,129,0.1)', color: '#10b981', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                                         <span className="anim-pulse" style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981', display: 'inline-block' }} /> {t.activeTag}
                                     </span>
                                 ) : (
-                                    <span style={{ fontSize: '0.7rem', padding: '2px 8px', borderRadius: 999, background: 'rgba(100,116,139,0.1)', color: 'var(--text-muted)' }}>{t.endedTag}</span>
+                                    <span style={{ fontSize: '0.75rem', padding: '2px 8px', borderRadius: 999, background: 'rgba(100,116,139,0.1)', color: 'var(--text-muted)' }}>{t.endedTag}</span>
                                 )}
                             </div>
                         </div>

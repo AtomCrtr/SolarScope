@@ -50,7 +50,7 @@ export default async function ApodContent({ locale }: { locale: SiteLocale }) {
                             )}
                         </div>
                         <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                            <div style={{ fontSize: '0.72rem', color: '#22d3ee', fontWeight: 600, letterSpacing: '0.08em', marginBottom: '0.75rem' }}><SpaceIcon name="sparkle" size={18} className="inline-icon" /> {copy.today}</div>
+                            <div style={{ fontSize: '0.75rem', color: '#22d3ee', fontWeight: 600, letterSpacing: '0.08em', marginBottom: '0.75rem' }}><SpaceIcon name="sparkle" size={18} className="inline-icon" /> {copy.today}</div>
                             <h2 lang="en" style={{ color: 'var(--text)', fontWeight: 800, fontSize: '1.3rem', fontFamily: 'var(--font-display)', marginBottom: '1rem', lineHeight: 1.3 }}>
                                 {hero.title}
                             </h2>
@@ -84,7 +84,7 @@ export default async function ApodContent({ locale }: { locale: SiteLocale }) {
                         <Image src={p.url} alt={p.title} width={600} height={400} sizes="(max-width: 768px) 50vw, 25vw" style={{ width: '100%', height: '160px', objectFit: 'cover' }} />
                         <div style={{ padding: '0.75rem' }}>
                             <p style={{ color: 'var(--text)', fontSize: '0.78rem', fontWeight: 600, lineHeight: 1.4 }}>{p.title?.slice(0, 50)}{p.title?.length > 50 ? '…' : ''}</p>
-                            <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', marginTop: '0.3rem' }}><SpaceIcon name="calendar" size={18} className="inline-icon" /> {p.date}</p>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '0.3rem' }}><SpaceIcon name="calendar" size={18} className="inline-icon" /> {p.date}</p>
                         </div>
                     </div>
                 ))}

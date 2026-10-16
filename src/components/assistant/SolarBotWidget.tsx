@@ -163,7 +163,7 @@ export default function SolarBotWidget() {
                             <button onClick={() => setConversation([])} aria-label={t.clear} title={t.clearTitle} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.8rem', padding: '4px' }}><SpaceIcon name="trash" size={18} className="inline-icon" /></button>
                         </div>
 
-                        <p id="solarbot-privacy-tip" style={{ padding: '0.55rem 0.875rem', color: '#bfdbfe', background: 'rgba(14,165,233,0.08)', borderBottom: '1px solid rgba(125,211,252,0.14)', fontSize: '0.7rem', lineHeight: 1.45 }}>
+                        <p id="solarbot-privacy-tip" style={{ padding: '0.55rem 0.875rem', color: '#bfdbfe', background: 'rgba(14,165,233,0.08)', borderBottom: '1px solid rgba(125,211,252,0.14)', fontSize: '0.75rem', lineHeight: 1.45 }}>
                             <span aria-hidden="true"><SpaceIcon name="lock" size={18} className="inline-icon" /> </span>{t.privacy}
                         </p>
 
@@ -204,7 +204,7 @@ export default function SolarBotWidget() {
                         <div style={{ padding: '0.5rem 0.875rem', display: 'flex', gap: '0.375rem', flexWrap: 'wrap', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
                             {t.quick.map(q => (
                                 <button key={q} onClick={() => send(q)} disabled={loading} style={{
-                                    padding: '0.3rem 0.625rem', borderRadius: 999, fontSize: '0.7rem', cursor: 'pointer',
+                                    padding: '0.3rem 0.625rem', borderRadius: 999, fontSize: '0.75rem', cursor: 'pointer',
                                     background: 'var(--card-2)', color: 'var(--nebula)',
                                     border: '1px solid var(--orbit)', fontWeight: 500,
                                 }}>{q}</button>

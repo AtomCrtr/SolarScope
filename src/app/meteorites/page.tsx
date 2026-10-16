@@ -357,13 +357,13 @@ export default function MeteoritesPage() {
                                 <div style={{ color: '#fb923c', fontWeight: 700, fontSize: '0.85rem', marginBottom: '0.25rem' }}>
                                     {hovered.name}
                                 </div>
-                                <div style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>
+                                <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>
                                     {hovered.recclass} · {hovered.mass ? `${Number(hovered.mass).toLocaleString(t.numbers, { maximumFractionDigits: 0 })} g` : t.unknownMass}
                                 </div>
-                                <div style={{ color: 'var(--text-muted)', fontSize: '0.65rem' }}>
+                                <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>
                                     {hovered.year ? new Date(hovered.year).getFullYear() : t.unknownYear} · {hovered.fall === 'Fell' ? t.fell : t.found}
                                 </div>
-                                <div style={{ color: 'var(--text-muted)', fontSize: '0.62rem', marginTop: 2 }}>
+                                <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: 2 }}>
                                     {parseFloat(hovered.reclat).toFixed(2)}°, {parseFloat(hovered.reclong).toFixed(2)}°
                                 </div>
                             </div>

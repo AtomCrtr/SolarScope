@@ -230,7 +230,7 @@ export default function Navbar() {
                                         transition: 'all 0.15s',
                                     }}>
                                         <span>{group.label}</span>
-                                        <span className="nav-chevron" style={{ fontSize: '0.6rem', color: 'var(--text-muted)', display: 'inline-block', transform: isOpen ? 'rotate(180deg)' : undefined }} aria-hidden="true">▼</span>
+                                        <span className="nav-chevron" style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'inline-block', transform: isOpen ? 'rotate(180deg)' : undefined }} aria-hidden="true">▼</span>
                                     </button>
 
                                     {/* Dropdown panel */}
@@ -280,7 +280,7 @@ export default function Navbar() {
                                                                 <div style={{ color: isPageActive ? group.color : 'var(--text)', fontSize: '0.88rem', fontWeight: 700, fontFamily: 'var(--font-display)', lineHeight: 1.2 }}>
                                                                     {page.title}
                                                                 </div>
-                                                                <div style={{ color: 'var(--text-muted)', fontSize: '0.74rem', lineHeight: 1.3, marginTop: 2 }}>
+                                                                <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', lineHeight: 1.3, marginTop: 2 }}>
                                                                     {page.desc}
                                                                 </div>
                                                             </div>
@@ -311,7 +311,7 @@ export default function Navbar() {
                             type="button"
                             className="md:hidden"
                             style={{
-                                width: 36, height: 36, borderRadius: 10,
+                                width: 44, height: 44, borderRadius: 12,
                                 background: mobileOpen ? 'rgba(139,92,246,0.15)' : 'rgba(255,255,255,0.05)',
                                 border: `1px solid ${mobileOpen ? 'rgba(139,92,246,0.3)' : 'rgba(255,255,255,0.08)'}`,
                                 cursor: 'pointer', color: 'var(--text)', flexShrink: 0,
@@ -375,7 +375,7 @@ export default function Navbar() {
                                             <span style={{ color: isActive ? group.color : 'var(--text-subtle)', fontSize: '0.9rem', fontWeight: 700 }}>
                                                 {group.label}
                                             </span>
-                                            <span className="nav-chevron" style={{ color: 'var(--text-muted)', fontSize: '0.65rem', display: 'inline-block', transform: isGroupOpen ? 'rotate(180deg)' : undefined }} aria-hidden="true">▼</span>
+                                            <span className="nav-chevron" style={{ color: 'var(--text-muted)', fontSize: '0.75rem', display: 'inline-block', transform: isGroupOpen ? 'rotate(180deg)' : undefined }} aria-hidden="true">▼</span>
                                         </button>
                                         <>
                                             {isGroupOpen && (
@@ -395,7 +395,7 @@ export default function Navbar() {
                                                                 <SpaceIcon name={page.icon} size={18} />
                                                                 <div>
                                                                     <div>{page.title}</div>
-                                                                    <div style={{ color: 'var(--text-muted)', fontSize: '0.72rem', fontWeight: 400 }}>{page.desc}</div>
+                                                                    <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 400 }}>{page.desc}</div>
                                                                 </div>
                                                             </Link>
                                                         )

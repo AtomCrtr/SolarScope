@@ -114,7 +114,7 @@ export default function ActualitesPage() {
             <div style={{ color: 'var(--text)', fontSize: '0.8rem', fontWeight: 700 }}>
               {error ? t.feedDown : t.feedOk}
             </div>
-            <div style={{ color: 'var(--text-muted)', fontSize: '0.68rem' }}>
+            <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>
               {updatedAt ? t.updated(new Date(updatedAt).toLocaleTimeString(t.date, { hour: '2-digit', minute: '2-digit' })) : t.syncing} · {t.english}
             </div>
           </div>
@@ -139,7 +139,7 @@ export default function ActualitesPage() {
           />
           <span aria-hidden="true" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>⌕</span>
         </label>
-        <span style={{ color: 'var(--text-muted)', fontSize: '0.72rem', textAlign: 'right' }} aria-live="polite">
+        <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem', textAlign: 'right' }} aria-live="polite">
           {loading ? t.loading : t.count(filtered.length)}
         </span>
       </div>
@@ -157,7 +157,7 @@ export default function ActualitesPage() {
                 padding: '0.38rem 0.8rem', borderRadius: 999, cursor: 'pointer',
                 background: selected ? `${color}18` : 'var(--surface)',
                 border: `1px solid ${selected ? `${color}55` : 'var(--border)'}`,
-                color: selected ? color : 'var(--text-muted)', fontSize: '0.7rem', fontWeight: 700,
+                color: selected ? color : 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 700,
               }}
             >
               {item === 'all' ? t.all : categoryName(item)}
@@ -193,16 +193,16 @@ export default function ActualitesPage() {
             return (
               <a key={`${article.url}-${index}`} href={article.url} target="_blank" rel="noopener noreferrer" className="card motion-enter" style={{ animationDelay: `${Math.min(index * 0.035, 0.35)}s`, minHeight: 245, padding: '1.4rem', textDecoration: 'none', display: 'flex', flexDirection: 'column' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.75rem', alignItems: 'center' }}>
-                  <span style={{ color, background: `${color}12`, border: `1px solid ${color}30`, borderRadius: 999, padding: '0.2rem 0.65rem', fontSize: '0.64rem', fontWeight: 800 }}>
+                  <span style={{ color, background: `${color}12`, border: `1px solid ${color}30`, borderRadius: 999, padding: '0.2rem 0.65rem', fontSize: '0.75rem', fontWeight: 800 }}>
                     {categoryName(article.category)}
                   </span>
-                  <time dateTime={article.date ?? undefined} style={{ color: 'var(--text-muted)', fontSize: '0.65rem' }}>{formatDate(article.date, t)}</time>
+                  <time dateTime={article.date ?? undefined} style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{formatDate(article.date, t)}</time>
                 </div>
                 <h2 lang="en" style={{ margin: '1rem 0 0.6rem', color: 'var(--text)', font: "750 1rem/1.45 var(--font-display)" }}>{article.title}</h2>
                 <p lang="en" style={{ color: 'var(--text-muted)', fontSize: '0.77rem', lineHeight: 1.65, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                   {article.summary}
                 </p>
-                <div style={{ marginTop: 'auto', paddingTop: '1rem', display: 'flex', justifyContent: 'space-between', color: '#7c8ca4', fontSize: '0.7rem' }}>
+                <div style={{ marginTop: 'auto', paddingTop: '1rem', display: 'flex', justifyContent: 'space-between', color: '#7c8ca4', fontSize: '0.75rem' }}>
                   <span>NASA</span><span style={{ color }}>{t.read}</span>
                 </div>
               </a>

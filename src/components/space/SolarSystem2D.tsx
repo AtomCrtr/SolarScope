@@ -100,7 +100,7 @@ export default function SolarSystem2D() {
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                     <span className="pulse-dot" />
-                    <span style={{ color: '#10b981', fontSize: '0.7rem', fontWeight: 600 }}>{t.real}</span>
+                    <span style={{ color: '#10b981', fontSize: '0.75rem', fontWeight: 600 }}>{t.real}</span>
                 </div>
             </div>
 
@@ -108,7 +108,7 @@ export default function SolarSystem2D() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 {/* Full view */}
                 <div style={{ background: 'rgba(0,0,16,0.95)', borderRadius: '1rem', border: '1px solid rgba(255,255,255,0.06)', overflow: 'hidden', position: 'relative' }}>
-                    <div style={{ position: 'absolute', top: 8, left: 12, color: 'var(--text-muted)', fontSize: '0.62rem' }}>{t.whole}</div>
+                    <div style={{ position: 'absolute', top: 8, left: 12, color: 'var(--text-muted)', fontSize: '0.75rem' }}>{t.whole}</div>
                     <svg role="group" aria-label={t.mapLabel} width="100%" viewBox={`0 0 ${W} ${H}`} style={{ display: 'block' }}>
                         {/* Stars BG */}
                         {Array.from({ length: 100 }, (_, i) => (
@@ -149,7 +149,7 @@ export default function SolarSystem2D() {
 
                 {/* Inner planets zoom */}
                 <div style={{ background: 'rgba(0,0,16,0.95)', borderRadius: '1rem', border: '1px solid rgba(255,255,255,0.06)', overflow: 'hidden', position: 'relative' }}>
-                    <div style={{ position: 'absolute', top: 8, left: 12, color: 'var(--text-muted)', fontSize: '0.62rem' }}>{t.inner}</div>
+                    <div style={{ position: 'absolute', top: 8, left: 12, color: 'var(--text-muted)', fontSize: '0.75rem' }}>{t.inner}</div>
                     <svg role="group" aria-label={t.innerLabel} width="100%" viewBox="0 0 400 400" style={{ display: 'block' }}>
                         {[0.387, 0.723, 1.0, 1.524].map((a, i) => (
                             <circle key={i} cx={200} cy={200} r={a * 145} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="0.8" />

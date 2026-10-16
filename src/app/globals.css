@@ -436,7 +436,7 @@ video {
 .parent-guide { min-height: 255px; padding: clamp(1.2rem, 2.5vw, 1.5rem); display: grid; grid-template-rows: auto auto 1fr auto; gap: 0.85rem; transition: transform 0.3s ease-out, border-color 0.3s ease-out, background-color 0.3s ease-out; }
 .parent-guide:hover { transform: translateY(-3px); border-color: rgba(167, 139, 250, 0.38); }
 .parent-guide-meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-.parent-guide-meta span { padding: 0.2rem 0.6rem; border-radius: 999px; color: #ddd6fe; background: #2a1d5f; border: 1px solid rgba(167, 139, 250, 0.25); font-size: 0.72rem; font-weight: 800; white-space: nowrap; }
+.parent-guide-meta span { padding: 0.2rem 0.6rem; border-radius: 999px; color: #ddd6fe; background: #2a1d5f; border: 1px solid rgba(167, 139, 250, 0.25); font-size: 0.75rem; font-weight: 800; white-space: nowrap; }
 .parent-guide h3 { color: var(--text); font-size: 1.08rem; }
 .parent-guide-details { display: grid; align-content: start; gap: 0; margin: 0; }
 .parent-guide-detail { display: grid; grid-template-columns: minmax(6.5rem, auto) minmax(0, 1fr); gap: 0.75rem; padding: 0.65rem 0; border-top: 1px solid rgba(148, 163, 184, 0.12); }
@@ -454,14 +454,14 @@ video {
 .source-card h3 { margin: 0.7rem 0 0.45rem; color: var(--text); font-size: 1.02rem; }
 .source-card p { color: var(--text-subtle); font-size: 0.85rem; line-height: 1.55; }
 .source-card a { display: inline-block; margin-top: 0.7rem; color: #c4b5fd; font-size: 0.8rem; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
-.source-kind { display: inline-flex; padding: 0.2rem 0.5rem; border: 1px solid rgba(129, 140, 248, 0.35); border-radius: 999px; color: #ddd6fe; background: rgba(99, 102, 241, 0.14); font-size: 0.68rem; font-weight: 800; }
+.source-kind { display: inline-flex; padding: 0.2rem 0.5rem; border: 1px solid rgba(129, 140, 248, 0.35); border-radius: 999px; color: #ddd6fe; background: rgba(99, 102, 241, 0.14); font-size: 0.75rem; font-weight: 800; }
 .source-kind.is-live { border-color: rgba(52, 211, 153, 0.35); color: #bbf7d0; background: rgba(16, 185, 129, 0.12); }
-.source-checked { margin: 0.7rem 0 0; color: #94a3b8 !important; font-size: 0.74rem !important; }
+.source-checked { margin: 0.7rem 0 0; color: #94a3b8 !important; font-size: 0.75rem !important; }
 
 .kids-guide-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.55rem; }
 .kids-mode-button { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 48px; padding: 0.65rem 1rem; border: 2px solid var(--orbit); border-radius: 0.9rem; color: var(--text); background: transparent; font-weight: 700; cursor: pointer; }
 .kids-mode-button[aria-pressed="true"] { border-color: var(--aurora); color: var(--aurora); background: rgba(91, 227, 164, 0.1); }
-.video-fallback { display: block; margin-top: 0.75rem; color: #a5b4fc; font-size: 0.72rem; line-height: 1.45; text-decoration: none; }
+.video-fallback { display: block; margin-top: 0.75rem; color: #a5b4fc; font-size: 0.75rem; line-height: 1.45; text-decoration: none; }
 .video-fallback:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 .passport-status {
@@ -571,7 +571,7 @@ video {
 .iss-section-heading h2,
 .iss-panel-heading h2 { margin: 0; color: #eef6ff; font-family: var(--font-display), system-ui, sans-serif; }
 .iss-section-heading h2 { margin-top: 0.2rem; font-size: clamp(1.2rem, 2.3vw, 1.65rem); }
-.iss-kicker { color: #60a5fa; font-size: 0.67rem; font-weight: 850; letter-spacing: 0.13em; }
+.iss-kicker { color: #60a5fa; font-size: 0.75rem; font-weight: 850; letter-spacing: 0.13em; }
 .iss-live-status {
   display: inline-flex;
   flex: 0 0 auto;
@@ -584,7 +584,7 @@ video {
   color: #bfdbfe;
   background: rgba(8, 22, 50, 0.8);
   box-shadow: inset 0 1px rgba(255, 255, 255, 0.04), 0 8px 28px rgba(2, 8, 23, 0.28);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 750;
 }
 .iss-live-status .pulse-dot,
@@ -636,7 +636,7 @@ video {
   align-self: center;
   max-width: none;
   color: #91a4c2;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 750;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -669,17 +669,17 @@ video {
 .iss-panel-heading h2 { margin-top: 0.1rem; font-size: 1.05rem; }
 .iss-panel-icon { display: grid; width: 38px; height: 38px; flex: 0 0 auto; place-items: center; border: 1px solid rgba(96, 165, 250, 0.18); border-radius: 0.7rem; background: rgba(59, 130, 246, 0.09); font-size: 1rem; }
 .iss-orbit-badge,
-.iss-crew-count { flex: 0 0 auto; border-radius: 999px; font-size: 0.66rem; font-weight: 800; }
+.iss-crew-count { flex: 0 0 auto; border-radius: 999px; font-size: 0.75rem; font-weight: 800; }
 .iss-orbit-badge { padding: 0.3rem 0.65rem; color: #93c5fd; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(96, 165, 250, 0.18); }
 .iss-globe-stage { position: relative; min-height: 390px; overflow: hidden; background: radial-gradient(circle at 50% 48%, rgba(37, 99, 235, 0.09), transparent 52%), #070b21; }
 .iss-globe-overlay,
 .iss-globe-help { position: absolute; z-index: 2; color: #9fbce3; background: rgba(3, 8, 24, 0.72); backdrop-filter: blur(12px); }
-.iss-globe-overlay { top: 0.85rem; left: 0.85rem; display: inline-flex; align-items: center; gap: 0.5rem; min-height: 32px; padding: 0.35rem 0.65rem; border: 1px solid rgba(96, 165, 250, 0.2); border-radius: 999px; font-size: 0.68rem; font-weight: 750; }
-.iss-globe-help { right: 0.85rem; bottom: 0.85rem; padding: 0.35rem 0.55rem; border-radius: 0.5rem; font-size: 0.62rem; }
+.iss-globe-overlay { top: 0.85rem; left: 0.85rem; display: inline-flex; align-items: center; gap: 0.5rem; min-height: 32px; padding: 0.35rem 0.65rem; border: 1px solid rgba(96, 165, 250, 0.2); border-radius: 999px; font-size: 0.75rem; font-weight: 750; }
+.iss-globe-help { right: 0.85rem; bottom: 0.85rem; padding: 0.35rem 0.55rem; border-radius: 0.5rem; font-size: 0.75rem; }
 .iss-orbit-context { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid rgba(148, 163, 184, 0.1); }
 .iss-orbit-context div { display: grid; gap: 0.15rem; min-width: 0; padding: 0.8rem 1rem; }
 .iss-orbit-context div + div { border-left: 1px solid rgba(148, 163, 184, 0.1); }
-.iss-orbit-context span { color: var(--text-muted); font-size: 0.62rem; }
+.iss-orbit-context span { color: var(--text-muted); font-size: 0.75rem; }
 .iss-orbit-context strong { color: #bfdbfe; font-family: var(--font-display), system-ui, sans-serif; font-size: 0.82rem; }
 
 .iss-side-stack { display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 1rem; min-width: 0; }
@@ -690,13 +690,13 @@ video {
 .iss-crew-avatar { display: grid; width: 32px; height: 32px; flex: 0 0 auto; place-items: center; border: 1px solid rgba(196, 181, 253, 0.24); border-radius: 50%; color: #eef2ff; background: linear-gradient(135deg, #2563eb, #7c3aed); font-size: 0.75rem; font-weight: 800; }
 .iss-crew-list li > span:last-child { display: grid; min-width: 0; }
 .iss-crew-list strong { overflow: hidden; color: #e5edf9; font-size: 0.78rem; text-overflow: ellipsis; white-space: nowrap; }
-.iss-crew-list small { color: var(--text-muted); font-size: 0.64rem; }
-.iss-data-warning { margin: 0 0.85rem 0.85rem; color: #fbbf24; font-size: 0.72rem; }
+.iss-crew-list small { color: var(--text-muted); font-size: 0.75rem; }
+.iss-data-warning { margin: 0 0.85rem 0.85rem; color: #fbbf24; font-size: 0.75rem; }
 .iss-facts-card { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.5rem; padding: 0.75rem; }
 .iss-facts-card > div { display: grid; min-width: 0; min-height: 82px; place-items: center; align-content: center; gap: 0.1rem; padding: 0.45rem; border: 1px solid rgba(148, 163, 184, 0.08); border-radius: 0.65rem; background: rgba(255, 255, 255, 0.025); text-align: center; }
 .iss-facts-card > div > span { font-size: 0.9rem; }
 .iss-facts-card strong { color: #93c5fd; font-family: var(--font-display), system-ui, sans-serif; font-size: 0.75rem; white-space: nowrap; }
-.iss-facts-card small { color: var(--text-muted); font-size: 0.56rem; line-height: 1.2; }
+.iss-facts-card small { color: var(--text-muted); font-size: 0.75rem; line-height: 1.2; }
 .iss-next-launch { padding: 1.25rem; border-color: rgba(99, 102, 241, 0.2); background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(59, 130, 246, 0.06)); }
 .iss-next-launch a { justify-content: center; padding: 0 1rem; border: 1px solid rgba(129, 140, 248, 0.3); border-radius: 999px; color: #c7d2fe; background: rgba(99, 102, 241, 0.14); text-decoration: none; font-size: 0.78rem; font-weight: 750; }
 
@@ -721,7 +721,7 @@ video {
 @media (max-width: 480px) {
   .iss-live-metrics .metric-card { grid-template-columns: 34px minmax(0, 1fr); grid-template-rows: 34px minmax(2.8rem, auto); min-height: 124px; row-gap: 0.7rem; }
   .iss-live-metrics .metric-icon { width: 34px; height: 34px; border-radius: 0.6rem; font-size: 0.9rem; }
-  .iss-live-metrics .metric-label { font-size: 0.62rem; }
+  .iss-live-metrics .metric-label { font-size: 0.75rem; }
   .iss-live-metrics .metric-value,
   .iss-live-metrics .metric-value[data-long-value="true"] { font-size: clamp(0.88rem, 4.3vw, 1.08rem); }
   .iss-panel-heading { align-items: flex-start; min-height: 68px; padding: 0.85rem; }
@@ -730,8 +730,8 @@ video {
   .iss-orbit-card { grid-template-rows: auto minmax(300px, 1fr) auto; min-height: 490px; }
   .iss-globe-stage { min-height: 300px; }
   .iss-orbit-context div { padding: 0.65rem; }
-  .iss-orbit-context span { font-size: 0.55rem; }
-  .iss-orbit-context strong { font-size: 0.7rem; }
+  .iss-orbit-context span { font-size: 0.75rem; }
+  .iss-orbit-context strong { font-size: 0.75rem; }
   .iss-crew-list { grid-template-columns: 1fr; }
   .iss-facts-card { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -761,7 +761,7 @@ video {
 .mars-section-heading h2,
 .meteorite-section-heading h2 { margin-top: 0.2rem; font-size: clamp(1.2rem, 2.3vw, 1.65rem); }
 .mars-kicker,
-.meteorite-kicker { font-size: 0.67rem; font-weight: 850; letter-spacing: 0.13em; }
+.meteorite-kicker { font-size: 0.75rem; font-weight: 850; letter-spacing: 0.13em; }
 .mars-kicker { color: #fb7185; }
 .mars-reference-badge,
 .meteorite-sample-badge,
@@ -771,7 +771,7 @@ video {
   align-items: center;
   padding: 0.4rem 0.7rem;
   border-radius: 999px;
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   font-weight: 800;
   white-space: nowrap;
 }
@@ -819,7 +819,7 @@ video {
 .meteorite-metrics .metric-label {
   align-self: center;
   max-width: none;
-  font-size: 0.69rem;
+  font-size: 0.75rem;
   font-weight: 750;
   letter-spacing: 0.055em;
   line-height: 1.35;
@@ -881,7 +881,7 @@ video {
   background: rgba(22, 17, 39, 0.72);
   backdrop-filter: blur(12px);
 }
-.meteorite-filter-label { margin-right: 0.25rem; color: #78869d; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+.meteorite-filter-label { margin-right: 0.25rem; color: #78869d; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
 .meteorite-filter-bar button,
 .meteorite-sort-controls button {
   min-height: 34px;
@@ -890,7 +890,7 @@ video {
   border-radius: 999px;
   color: #94a3b8;
   background: rgba(255, 255, 255, 0.035);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 750;
   cursor: pointer;
   transition: border-color 0.3s ease-out, background 0.3s ease-out, color 0.3s ease-out, transform 0.3s ease-out;
@@ -899,7 +899,7 @@ video {
 .meteorite-sort-controls button:hover { transform: translateY(-1px); border-color: rgba(251, 146, 60, 0.28); color: #fed7aa; }
 .meteorite-filter-bar button.is-active,
 .meteorite-sort-controls button.is-active { color: #fdba74; border-color: rgba(251, 146, 60, 0.38); background: rgba(249, 115, 22, 0.14); }
-.meteorite-filter-count { margin-left: auto; color: #fb923c; font-size: 0.7rem; font-weight: 750; }
+.meteorite-filter-count { margin-left: auto; color: #fb923c; font-size: 0.75rem; font-weight: 750; }
 .meteorite-map-card { position: relative; overflow: hidden; margin-bottom: 1.25rem; padding: 0; border-color: rgba(251, 146, 60, 0.15); background: rgba(10, 10, 34, 0.9); }
 .meteorite-map-heading,
 .meteorite-panel-heading { justify-content: space-between; gap: 1rem; border-bottom: 1px solid rgba(251, 146, 60, 0.1); }
@@ -913,13 +913,13 @@ video {
 .meteorite-map-legend > div { display: inline-flex; align-items: center; gap: 0.3rem; }
 .meteorite-map-legend span,
 .meteorite-class-dot { width: 8px; height: 8px; flex: 0 0 auto; border-radius: 50%; }
-.meteorite-map-legend small { color: #6f809b; font-size: 0.62rem; }
+.meteorite-map-legend small { color: #6f809b; font-size: 0.75rem; }
 .meteorite-insights-grid { display: grid; grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr); align-items: start; gap: 1rem; }
 .meteorite-ranking-card,
 .meteorite-classes-card { min-width: 0; padding: 0; border-color: rgba(251, 146, 60, 0.14); background: linear-gradient(150deg, rgba(27, 24, 54, 0.92), rgba(17, 17, 39, 0.92)); }
 .meteorite-panel-heading { min-height: 72px; padding: 0.9rem 1rem; }
 .meteorite-sort-controls { display: flex; flex: 0 0 auto; gap: 0.35rem; }
-.meteorite-sort-controls button { min-height: 30px; padding: 0.25rem 0.55rem; font-size: 0.64rem; }
+.meteorite-sort-controls button { min-height: 30px; padding: 0.25rem 0.55rem; font-size: 0.75rem; }
 .meteorite-search { display: flex; min-height: 44px; align-items: center; gap: 0.5rem; margin: 0.85rem 0.9rem 0.7rem; padding: 0 0.75rem; border: 1px solid rgba(148, 163, 184, 0.1); border-radius: 0.65rem; background: rgba(255, 255, 255, 0.035); }
 .meteorite-search > span { color: var(--text-muted); font-size: 1.1rem; }
 .meteorite-search input { width: 100%; min-width: 0; border: 0; outline: 0; color: #e2e8f0; background: transparent; font-size: 0.76rem; }
@@ -929,20 +929,20 @@ video {
 .meteorite-ranking-row:hover { transform: translateX(2px); border-color: rgba(251, 146, 60, 0.2); background: rgba(249, 115, 22, 0.055); }
 .meteorite-ranking-row > div { display: grid; min-width: 0; }
 .meteorite-ranking-row strong { overflow: hidden; color: #e8edf5; font-size: 0.76rem; text-overflow: ellipsis; white-space: nowrap; }
-.meteorite-ranking-row small { overflow: hidden; color: var(--text-muted); font-size: 0.63rem; text-overflow: ellipsis; white-space: nowrap; }
-.meteorite-ranking-mass { color: #fb923c; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.72rem; font-weight: 800; white-space: nowrap; }
+.meteorite-ranking-row small { overflow: hidden; color: var(--text-muted); font-size: 0.75rem; text-overflow: ellipsis; white-space: nowrap; }
+.meteorite-ranking-mass { color: #fb923c; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.75rem; font-weight: 800; white-space: nowrap; }
 .meteorite-class-count { min-height: 30px; color: #fdba74; border: 1px solid rgba(251, 146, 60, 0.18); background: rgba(249, 115, 22, 0.08); }
 .meteorite-class-bars { display: grid; gap: 0.58rem; padding: 1rem; }
 .meteorite-class-bars > div { display: grid; grid-template-columns: 8px 42px minmax(0, 1fr) 32px; align-items: center; gap: 0.55rem; min-height: 20px; }
-.meteorite-class-bars strong { color: #a8b4c7; font-size: 0.7rem; }
-.meteorite-class-bars small { color: #718099; font-size: 0.67rem; text-align: right; }
+.meteorite-class-bars strong { color: #a8b4c7; font-size: 0.75rem; }
+.meteorite-class-bars small { color: #718099; font-size: 0.75rem; text-align: right; }
 .meteorite-class-track { height: 5px; overflow: hidden; border-radius: 99px; background: rgba(255, 255, 255, 0.055); }
 .meteorite-class-track span { display: block; max-width: 100%; height: 100%; border-radius: inherit; }
 .meteorite-type-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.55rem; margin: 0 1rem 1rem; padding-top: 1rem; border-top: 1px solid rgba(148, 163, 184, 0.09); }
 .meteorite-type-grid > div { display: grid; min-height: 116px; align-content: start; gap: 0.25rem; padding: 0.75rem; border: 1px solid rgba(251, 146, 60, 0.09); border-radius: 0.65rem; background: rgba(249, 115, 22, 0.035); }
 .meteorite-type-grid > div > span { font-size: 1rem; }
-.meteorite-type-grid strong { color: #fb923c; font-size: 0.72rem; }
-.meteorite-type-grid p { margin: 0; color: #687890; font-size: 0.65rem; line-height: 1.5; }
+.meteorite-type-grid strong { color: #fb923c; font-size: 0.75rem; }
+.meteorite-type-grid p { margin: 0; color: #687890; font-size: 0.75rem; line-height: 1.5; }
 
 @media (max-width: 900px) {
   .mars-metrics.metric-grid,
@@ -962,7 +962,7 @@ video {
   .mars-metrics .metric-icon,
   .meteorite-metrics .metric-icon { width: 34px; height: 34px; border-radius: 0.6rem; font-size: 0.9rem; }
   .mars-metrics .metric-label,
-  .meteorite-metrics .metric-label { font-size: 0.6rem; }
+  .meteorite-metrics .metric-label { font-size: 0.75rem; }
   .mars-metrics .metric-value,
   .mars-metrics .metric-value[data-long-value="true"],
   .meteorite-metrics .metric-value,
@@ -1077,13 +1077,13 @@ video {
 .space-data-empty { padding: 2rem 1rem; border-radius: 0.75rem; color: #94a3b8; background: rgba(0,0,0,0.2); text-align: center; line-height: 1.6; }
 .space-data-empty.is-unavailable { border: 1px dashed rgba(148, 163, 184, 0.25); }
 
-.solarbot-runtime-status { display: inline-flex; align-items: center; gap: 0.35rem; color: #fbbf24; font-size: 0.72rem; font-weight: 750; }
+.solarbot-runtime-status { display: inline-flex; align-items: center; gap: 0.35rem; color: #fbbf24; font-size: 0.75rem; font-weight: 750; }
 .solarbot-runtime-status > span { width: 7px; height: 7px; flex: 0 0 auto; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; }
 .solarbot-runtime-status.is-available { color: #34d399; }
 .solarbot-runtime-status.is-fallback { color: #fbbf24; }
 .solarbot-runtime-status.is-unavailable { color: #fb7185; }
 .solarbot-runtime-status.is-checking { color: #94a3b8; }
-.solarbot-runtime-status.is-compact { font-size: 0.68rem; }
+.solarbot-runtime-status.is-compact { font-size: 0.75rem; }
 .solarbot-hero-status { gap: 0.45rem; }
 .solarbot-hero-status .solarbot-runtime-status { font-size: inherit; letter-spacing: inherit; }
 
@@ -1252,7 +1252,7 @@ video {
     backdrop-filter: blur(16px);
     box-shadow: 0 8px 28px rgba(2, 6, 23, 0.35);
   }
-  .kids-guide-toc > span { display: block; margin: 0 0.25rem 0.4rem; color: var(--text-muted); font-size: 0.65rem; font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; }
+  .kids-guide-toc > span { display: block; margin: 0 0.25rem 0.4rem; color: var(--text-muted); font-size: 0.75rem; font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; }
   .kids-guide-toc > div { display: flex; gap: 0.4rem; overflow-x: auto; scrollbar-width: thin; }
   .kids-guide-toc button { display: inline-flex; min-width: max-content; min-height: 42px; align-items: center; gap: 0.35rem; padding: 0.5rem 0.65rem; border: 1px solid var(--orbit); border-radius: 0.8rem; color: var(--text-subtle); background: var(--card-2); font: inherit; font-size: 0.85rem; font-weight: 700; cursor: pointer; }
   .kids-guide-toc button.is-active { border-color: var(--sun); color: var(--ink); background: var(--sun); }
@@ -1665,7 +1665,7 @@ video {
   display: block;
   margin-bottom: 0.35rem;
   color: #93c5fd;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -1681,13 +1681,13 @@ video {
   line-height: 1.5;
 }
 
-.solarbot-reliability.is-compact { padding: 0.45rem 0.55rem; font-size: 0.7rem; }
+.solarbot-reliability.is-compact { padding: 0.45rem 0.55rem; font-size: 0.75rem; }
 
 .solarbot-sources ul { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0; padding: 0; list-style: none; }
-.solarbot-sources a { display: inline-flex; padding: 0.3rem 0.5rem; border: 1px solid rgba(125, 211, 252, 0.2); border-radius: 999px; color: #bfdbfe; background: rgba(14, 165, 233, 0.08); font-size: 0.68rem; line-height: 1.3; text-decoration: none; }
+.solarbot-sources a { display: inline-flex; padding: 0.3rem 0.5rem; border: 1px solid rgba(125, 211, 252, 0.2); border-radius: 999px; color: #bfdbfe; background: rgba(14, 165, 233, 0.08); font-size: 0.75rem; line-height: 1.3; text-decoration: none; }
 .solarbot-sources a:hover { border-color: rgba(125, 211, 252, 0.5); color: #e0f2fe; }
 .solarbot-sources.is-compact ul { display: grid; }
-.solarbot-sources.is-compact a { display: block; border: 0; border-radius: 0; padding: 0.15rem 0; background: transparent; font-size: 0.64rem; }
+.solarbot-sources.is-compact a { display: block; border: 0; border-radius: 0; padding: 0.15rem 0; background: transparent; font-size: 0.75rem; }
 
 body:has(.home-mission-board) .solarbot-launcher { display: none; }
 body:has(.home-mission-board) main > div:first-child { display: none; }
@@ -1879,7 +1879,7 @@ body:has(.home-mission-board) main > div:first-child { display: none; }
   align-items: center;
 }
 
-.breadcrumb { display: flex; flex-wrap: wrap; min-height: 32px; align-items: center; gap: 0.375rem; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.72rem; font-weight: 500; }
+.breadcrumb { display: flex; flex-wrap: wrap; min-height: 32px; align-items: center; gap: 0.375rem; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.75rem; font-weight: 500; }
 .breadcrumb-link { color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
 .breadcrumb-link:hover { color: var(--text); }
 .breadcrumb-separator { opacity: 0.6; }
@@ -1926,7 +1926,7 @@ body:has(.home-mission-board) main > div:first-child { display: none; }
 
 @media (max-width: 400px) {
   .home-title {
-    font-size: clamp(2.6rem, 14vw, 3.3rem);
+    font-size: clamp(2.1rem, 9.5vw, 2.6rem);
     overflow-wrap: anywhere;
   }
 }
@@ -1995,7 +1995,7 @@ body:has(.home-mission-board) main > div:first-child { display: none; }
 .planet-explorer-kicker {
   display: block;
   color: #c4b5fd;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.08em;
 }
@@ -2004,10 +2004,10 @@ body:has(.home-mission-board) main > div:first-child { display: none; }
 .planet-explorer h3 { font-family: var(--font-display), system-ui, sans-serif; }
 .planet-explorer-heading h2 { margin: 0.35rem 0; color: #f8fafc; font-size: clamp(1.25rem, 2.2vw, 1.65rem); }
 .planet-explorer-heading p { max-width: 680px; margin: 0; color: #a8b5c9; font-size: 0.88rem; line-height: 1.55; }
-.planet-explorer-progress { flex: 0 0 auto; padding: 0.45rem 0.7rem; border: 1px solid rgba(167, 139, 250, 0.3); border-radius: 999px; color: #ddd6fe; background: rgba(124, 58, 237, 0.12); font-size: 0.7rem; font-weight: 750; }
+.planet-explorer-progress { flex: 0 0 auto; padding: 0.45rem 0.7rem; border: 1px solid rgba(167, 139, 250, 0.3); border-radius: 999px; color: #ddd6fe; background: rgba(124, 58, 237, 0.12); font-size: 0.75rem; font-weight: 750; }
 
 .planet-explorer-selector { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 0.45rem; margin-bottom: 1rem; }
-.planet-explorer-selector button { min-height: 54px; padding: 0.4rem; border: 1px solid rgba(148, 163, 184, 0.18); border-radius: 0.75rem; color: #a8b5c9; background: rgba(15, 23, 42, 0.55); cursor: pointer; font: inherit; font-size: 0.7rem; font-weight: 700; transition: transform 160ms ease, border-color 160ms ease, background 160ms ease; }
+.planet-explorer-selector button { min-height: 54px; padding: 0.4rem; border: 1px solid rgba(148, 163, 184, 0.18); border-radius: 0.75rem; color: #a8b5c9; background: rgba(15, 23, 42, 0.55); cursor: pointer; font: inherit; font-size: 0.75rem; font-weight: 700; transition: transform 160ms ease, border-color 160ms ease, background 160ms ease; }
 .planet-explorer-selector button:hover { transform: translateY(-2px); border-color: var(--planet-color); }
 .planet-explorer-selector button.is-selected { border-color: var(--planet-color); color: var(--planet-color); background: color-mix(in srgb, var(--planet-color) 14%, #10152e); box-shadow: 0 0 20px color-mix(in srgb, var(--planet-color) 22%, transparent); }
 .planet-explorer-selector button span { display: block; }
@@ -2018,9 +2018,9 @@ body:has(.home-mission-board) main > div:first-child { display: none; }
 .planet-explorer-model { position: relative; height: clamp(240px, 26vw, 330px); min-height: 240px; overflow: hidden; border-radius: 1rem 1rem 0 0; background: radial-gradient(circle at 50% 46%, rgba(67, 56, 202, 0.16), rgba(2, 6, 23, 0.9) 72%); }
 .planet-explorer-loading, .planet-explorer-fallback { display: grid; width: 100%; height: 100%; min-height: 280px; place-items: center; color: #cbd5e1; font-weight: 700; }
 .planet-explorer-fallback span { font-size: clamp(5rem, 12vw, 8rem); }
-.planet-explorer-viewer-footer { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; padding: 0.6rem 0.75rem; color: #94a3b8; font-size: 0.7rem; }
+.planet-explorer-viewer-footer { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; padding: 0.6rem 0.75rem; color: #94a3b8; font-size: 0.75rem; }
 .planet-explorer-viewer-footer button, .planet-explorer-compare-toggle { border: 1px solid rgba(129, 140, 248, 0.4); border-radius: 0.55rem; color: #ddd6fe; background: rgba(99, 102, 241, 0.12); cursor: pointer; font: inherit; font-weight: 750; }
-.planet-explorer-viewer-footer button { flex: 0 0 auto; min-height: 34px; padding: 0.4rem 0.6rem; font-size: 0.68rem; }
+.planet-explorer-viewer-footer button { flex: 0 0 auto; min-height: 34px; padding: 0.4rem 0.6rem; font-size: 0.75rem; }
 
 .planet-explorer-story { padding: 1rem; }
 .planet-explorer-name { display: flex; align-items: center; gap: 0.65rem; }
@@ -2029,7 +2029,7 @@ body:has(.home-mission-board) main > div:first-child { display: none; }
 .planet-explorer-name p { margin: 0.25rem 0 0; color: #a8b5c9; font-size: 0.75rem; }
 .planet-explorer-description { margin: 0.85rem 0; color: #d8e0ee; font-size: 0.88rem; line-height: 1.6; }
 .planet-explorer-focuses { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.45rem; }
-.planet-explorer-focuses button { min-height: 42px; padding: 0.45rem 0.55rem; border: 1px solid rgba(148, 163, 184, 0.16); border-radius: 0.65rem; color: #cbd5e1; background: rgba(30, 41, 59, 0.45); cursor: pointer; font: inherit; font-size: 0.73rem; font-weight: 700; text-align: left; }
+.planet-explorer-focuses button { min-height: 42px; padding: 0.45rem 0.55rem; border: 1px solid rgba(148, 163, 184, 0.16); border-radius: 0.65rem; color: #cbd5e1; background: rgba(30, 41, 59, 0.45); cursor: pointer; font: inherit; font-size: 0.75rem; font-weight: 700; text-align: left; }
 .planet-explorer-focuses button[aria-selected="true"] { border-color: #818cf8; color: #ede9fe; background: rgba(99, 102, 241, 0.2); }
 .planet-explorer-focus-card { display: flex; gap: 0.55rem; min-height: 72px; margin-top: 0.7rem; padding: 0.7rem; border-left: 3px solid #818cf8; border-radius: 0 0.65rem 0.65rem 0; background: rgba(129, 140, 248, 0.1); }
 .planet-explorer-focus-card > span { font-size: 1.15rem; }
@@ -2045,7 +2045,7 @@ body:has(.home-mission-board) main > div:first-child { display: none; }
 .planet-explorer-comparison h3 { margin: 0 0 0.3rem; color: #e0f2fe; font-size: 1rem; }
 .planet-explorer-comparison p { margin: 0; color: #cbd5e1; font-size: 0.82rem; line-height: 1.55; }
 .planet-explorer-comparison strong { color: #7dd3fc; font-size: 1rem; }
-.planet-explorer-comparison small { display: block; margin-top: 0.45rem; color: #94a3b8; font-size: 0.68rem; line-height: 1.4; }
+.planet-explorer-comparison small { display: block; margin-top: 0.45rem; color: #94a3b8; font-size: 0.75rem; line-height: 1.4; }
 
 .planet-explorer-challenge { margin-top: 1rem; padding: 1rem; }
 .planet-explorer-challenge h3 { margin: 0.35rem 0 0; color: #f8fafc; font-size: 1rem; }
@@ -2059,7 +2059,7 @@ body:has(.home-mission-board) main > div:first-child { display: none; }
 .planet-explorer-challenge > p.is-correct { color: #bbf7d0; }
 .planet-explorer-challenge > p.is-wrong { color: #fecdd3; }
 .planet-details-heading { max-width: 52rem; margin: 3.5rem 0 1.15rem; }
-.planet-details-heading > span { color: #a5b4fc; font-size: 0.72rem; font-weight: 850; letter-spacing: 0.12em; }
+.planet-details-heading > span { color: #a5b4fc; font-size: 0.75rem; font-weight: 850; letter-spacing: 0.12em; }
 .planet-details-heading h2 { margin: 0.35rem 0; font-size: clamp(1.45rem, 3vw, 2.15rem); }
 .planet-details-heading p { margin: 0; color: #b7c3db; line-height: 1.65; }
 
@@ -2105,10 +2105,10 @@ body:has(.home-mission-board) main > div:first-child { display: none; }
 
 .mars-mission { margin: 1.25rem 0 2rem; padding: clamp(1rem, 3vw, 1.5rem); border: 1px solid rgba(248, 113, 113, 0.3); border-radius: 1.25rem; background: linear-gradient(145deg, rgba(69, 10, 10, 0.46), rgba(30, 15, 23, 0.9)); }
 .mars-mission-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
-.mars-mission-heading > div > span { color: #fda4af; font-size: 0.7rem; font-weight: 850; letter-spacing: 0.1em; }
+.mars-mission-heading > div > span { color: #fda4af; font-size: 0.75rem; font-weight: 850; letter-spacing: 0.1em; }
 .mars-mission h2 { margin: 0.4rem 0; color: #fff1f2; font-family: var(--font-display), system-ui, sans-serif; font-size: clamp(1.35rem, 2.4vw, 1.75rem); }
 .mars-mission-heading p { margin: 0; color: #cbd5e1; font-size: 0.86rem; line-height: 1.55; }
-.mars-mission-progress { flex: 0 0 auto; padding: 0.45rem 0.7rem; border: 1px solid rgba(251, 113, 133, 0.34); border-radius: 999px; color: #fecdd3; background: rgba(225, 29, 72, 0.1); font-size: 0.7rem !important; font-weight: 800; }
+.mars-mission-progress { flex: 0 0 auto; padding: 0.45rem 0.7rem; border: 1px solid rgba(251, 113, 133, 0.34); border-radius: 999px; color: #fecdd3; background: rgba(225, 29, 72, 0.1); font-size: 0.75rem !important; font-weight: 800; }
 .mars-mission-rovers { display: flex; flex-wrap: wrap; gap: 0.55rem; margin: 1rem 0; }
 .mars-mission-rovers button, .mars-mission-steps button { min-height: 40px; border: 1px solid rgba(251, 113, 133, 0.34); border-radius: 0.65rem; color: #fecdd3; background: rgba(136, 19, 55, 0.2); cursor: pointer; font: inherit; font-size: 0.78rem; font-weight: 800; }
 .mars-mission-rovers button { padding: 0.5rem 0.8rem; }
@@ -2117,7 +2117,7 @@ body:has(.home-mission-board) main > div:first-child { display: none; }
 .mars-mission-steps li { min-height: 185px; padding: 0.95rem; border: 1px solid rgba(254, 205, 211, 0.12); border-radius: 0.85rem; background: rgba(15, 23, 42, 0.46); }
 .mars-mission-steps strong { display: block; color: #fda4af; font-family: var(--font-display), system-ui, sans-serif; font-size: 0.86rem; }
 .mars-mission-steps p { margin: 0.55rem 0; color: #e2e8f0; font-size: 0.8rem; line-height: 1.55; }
-.mars-mission-steps button { padding: 0.42rem 0.65rem; font-size: 0.72rem; }
+.mars-mission-steps button { padding: 0.42rem 0.65rem; font-size: 0.75rem; }
 .mars-mission-answer { padding: 0.6rem; border-left: 3px solid #fda4af; border-radius: 0 0.5rem 0.5rem 0; background: rgba(190, 24, 93, 0.15); }
 
 @media (max-width: 720px) {
@@ -2243,5 +2243,5 @@ body:has(.home-mission-board) main > div:first-child { display: none; }
 .rover-still img { max-width: 90%; max-height: 90%; object-fit: contain; }
 .iss-still { position: relative; width: 100%; aspect-ratio: 2 / 1; border-radius: 0.8rem; background: #0b1026 url(/textures/earth.jpg) center / cover; }
 .iss-still span { position: absolute; width: 14px; height: 14px; border: 3px solid #fff; border-radius: 50%; background: var(--sun); transform: translate(-50%, -50%); box-shadow: 0 0 0 6px rgba(255, 138, 61, 0.35); }
-.light-mode-toggle { min-height: 32px; padding: 0; border: 0; background: transparent; color: var(--text-muted); font: inherit; font-size: 0.72rem; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.light-mode-toggle { min-height: 32px; padding: 0; border: 0; background: transparent; color: var(--text-muted); font: inherit; font-size: 0.75rem; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .light-mode-toggle:focus-visible { outline: 2px solid var(--sun); outline-offset: 2px; }

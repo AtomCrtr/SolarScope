@@ -123,7 +123,7 @@ function CuriosityDisplay({ height, copy }: { height: number; copy: Copy }) {
                     filter: 'drop-shadow(0 0 20px rgba(239,68,68,0.3))',
                 }}
             />
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', textAlign: 'center', marginTop: '0.25rem' }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', textAlign: 'center', marginTop: '0.25rem' }}>
                 {copy.curiosityCaption}
             </p>
         </div>
@@ -182,9 +182,9 @@ export default function RoverViewer3D({ rover, height = 340 }: RoverViewer3DProp
                     border: `1px solid ${meta.color}30`,
                     display: 'flex', alignItems: 'center', gap: 6,
                 }}>
-                    <span style={{ fontSize: '0.65rem' }}><SpaceIcon name="satellite" size={18} className="inline-icon" /></span>
-                    <span style={{ fontSize: '0.68rem', fontWeight: 700, color: meta.color, fontFamily: 'var(--font-display)' }}>{meta.name}</span>
-                    <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>
+                    <span style={{ fontSize: '0.75rem' }}><SpaceIcon name="satellite" size={18} className="inline-icon" /></span>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: meta.color, fontFamily: 'var(--font-display)' }}>{meta.name}</span>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                         {meta.has3D && !glbError ? copy.interactive : copy.official}
                     </span>
                 </div>
@@ -206,7 +206,7 @@ export default function RoverViewer3D({ rover, height = 340 }: RoverViewer3DProp
 
             {/* Controls hint for 3D */}
             {rover === 'perseverance' && !glbError && (
-                <div style={{ position: 'absolute', bottom: 8, right: 12, fontSize: '0.7rem', color: 'var(--text-muted)', pointerEvents: 'none' }}>
+                <div style={{ position: 'absolute', bottom: 8, right: 12, fontSize: '0.75rem', color: 'var(--text-muted)', pointerEvents: 'none' }}>
                     {copy.controls}
                 </div>
             )}

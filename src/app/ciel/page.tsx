@@ -63,8 +63,18 @@ export default function CielPage() {
             })
             return
         }
+        // The browser's own timeout only starts once the visitor answers the permission prompt, so an
+        // ignored prompt would leave the map link missing for ever: start from Paris after a few seconds,
+        // the real position still replaces it if it arrives later.
+        const waiting = window.setTimeout(() => {
+            setLat(current => current ?? 48.8566)
+            setLng(current => current ?? 2.3522)
+            setPlace(current => current ?? { kind: 'default' })
+            setGeoLoading(false)
+        }, 4000)
         navigator.geolocation.getCurrentPosition(
             async pos => {
+                window.clearTimeout(waiting)
                 const { latitude, longitude } = pos.coords
                 const coarseLatitude = Number(latitude.toFixed(2))
                 const coarseLongitude = Number(longitude.toFixed(2))
@@ -82,6 +92,7 @@ export default function CielPage() {
                 setGeoLoading(false)
             },
             () => {
+                window.clearTimeout(waiting)
                 setLat(48.8566)
                 setLng(2.3522)
                 setPlace({ kind: 'denied' })
@@ -90,6 +101,7 @@ export default function CielPage() {
             },
             { timeout: 8000 }
         )
+        return () => window.clearTimeout(waiting)
     }, [])
 
     // Two decimal places are sufficient for sky orientation and avoid sharing
@@ -132,7 +144,7 @@ export default function CielPage() {
                         <>
                             <span style={{ color: 'var(--text)', fontWeight: 600, fontSize: '0.85rem' }}>{cityLabel}</span>
                             {lat !== null && lng !== null && (
-                                <span style={{ color: 'var(--text-muted)', fontSize: '0.72rem', marginLeft: '0.5rem' }}>{t.approx(approximateLat, approximateLng)}</span>
+                                <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginLeft: '0.5rem' }}>{t.approx(approximateLat, approximateLng)}</span>
                             )}
                         </>
                     )}

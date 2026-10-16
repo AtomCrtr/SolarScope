@@ -105,7 +105,7 @@ export default function PlanetesPage() {
                     }}>
                         <div style={{ fontSize: '1.4rem', marginBottom: '0.2rem' }}>{pl.emoji}</div>
                         <div style={{ fontSize: '0.8rem' }}>{name(pl)}</div>
-                        <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: 1 }}>{t.moons(pl.moons)}</div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 1 }}>{t.moons(pl.moons)}</div>
                     </button>
                 ))}
             </div>
@@ -130,17 +130,17 @@ export default function PlanetesPage() {
                         ) : (
                             <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '0.5rem' }}>
                                 <div style={{ fontSize: '6rem', filter: `drop-shadow(0 0 30px ${p.color})` }}>{p.emoji}</div>
-                                <span style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>{t.noTexture}</span>
+                                <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{t.noTexture}</span>
                             </div>
                         )}
-                        <div style={{ position: 'absolute', bottom: '0.625rem', left: '50%', transform: 'translateX(-50%)', color: 'var(--text-muted)', fontSize: '0.65rem', whiteSpace: 'nowrap' }}>{t.drag}</div>
+                        <div style={{ position: 'absolute', bottom: '0.625rem', left: '50%', transform: 'translateX(-50%)', color: 'var(--text-muted)', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>{t.drag}</div>
                     </div>
 
                     {/* Info */}
                     <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.875rem' }}>
                             <h2 style={{ color: p.color, fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '1.6rem', lineHeight: 1 }}>{name(p)}</h2>
-                            <span style={{ fontSize: '0.72rem', padding: '2px 10px', borderRadius: 999, background: `${p.color}15`, color: p.color, border: `1px solid ${p.color}30` }}>{type(p)}</span>
+                            <span style={{ fontSize: '0.75rem', padding: '2px 10px', borderRadius: 999, background: `${p.color}15`, color: p.color, border: `1px solid ${p.color}30` }}>{type(p)}</span>
                         </div>
                         <p style={{ color: 'var(--text-muted)', lineHeight: 1.75, marginBottom: '0.875rem', fontSize: '0.85rem' }}>{locale === 'en' ? p.descriptionEn : p.description}</p>
                         <div style={{ padding: '0.75rem 1rem', borderRadius: '0.75rem', background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.18)', marginBottom: '1rem' }}>
@@ -156,7 +156,7 @@ export default function PlanetesPage() {
                                 { label: t.orbit, val: `${p.orbit.toLocaleString(numbers)} ${t.days}` },
                             ].map(s => (
                                 <div key={s.label} style={{ padding: '0.5rem 0.75rem', borderRadius: '0.5rem', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}>
-                                    <div style={{ color: 'var(--text-muted)', fontSize: '0.67rem', marginBottom: '0.1rem' }}>{s.label}</div>
+                                    <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginBottom: '0.1rem' }}>{s.label}</div>
                                     <div style={{ color: 'var(--text)', fontWeight: 700, fontFamily: 'var(--font-display)', fontSize: '0.8rem' }}>{s.val}</div>
                                 </div>
                             ))}
@@ -186,7 +186,7 @@ export default function PlanetesPage() {
                             <div style={{ flex: 1, background: 'rgba(255,255,255,0.04)', borderRadius: 6, overflow: 'hidden', height: 18 }}>
                                 <div className="bar-grow" style={{ width: `${(pl.meanRadius / maxRadius) * 100}%`, height: '100%', background: `linear-gradient(90deg, ${pl.color}70, ${pl.color})`, borderRadius: 6 }} />
                             </div>
-                            <div style={{ width: 84, color: 'var(--text-muted)', fontSize: '0.68rem', flexShrink: 0 }}>{pl.meanRadius.toLocaleString(numbers)} km</div>
+                            <div style={{ width: 84, color: 'var(--text-muted)', fontSize: '0.75rem', flexShrink: 0 }}>{pl.meanRadius.toLocaleString(numbers)} km</div>
                         </div>
                     ))}
                 </div>
@@ -195,7 +195,7 @@ export default function PlanetesPage() {
             {/* ── TAILLE RELATIVE ── */}
             <div className="card" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
                 <h2 className="section-title" style={{ color: 'var(--text)', marginBottom: '0.25rem' }}>{t.relativeTitle}</h2>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', marginBottom: '1.25rem' }}>{t.relativeText}</p>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginBottom: '1.25rem' }}>{t.relativeText}</p>
                 <div style={{ display: 'flex', alignItems: 'flex-end', gap: '0.75rem', flexWrap: 'wrap', justifyContent: 'center', padding: '1rem 0' }}>
                     {PLANETS.map((pl, i) => {
                         const maxPx = 76
@@ -214,17 +214,17 @@ export default function PlanetesPage() {
                                         boxShadow: selected === i ? `0 0 22px ${pl.color}55` : isEarth ? `0 0 10px ${pl.color}35` : 'none',
                                         transition: 'all 0.2s',
                                     }} />
-                                    {isEarth && <div style={{ position: 'absolute', top: -5, right: -5, background: '#1d4ed8', borderRadius: 99, padding: '1px 4px', fontSize: '0.48rem', color: '#fff', fontWeight: 700 }}><SpaceIcon name="globe" size={18} className="inline-icon" /> REF</div>}
+                                    {isEarth && <div style={{ position: 'absolute', top: -5, right: -5, background: '#1d4ed8', borderRadius: 99, padding: '1px 4px', fontSize: '0.75rem', color: '#fff', fontWeight: 700 }}><SpaceIcon name="globe" size={18} className="inline-icon" /> REF</div>}
                                 </div>
                                 <div style={{ textAlign: 'center' }}>
-                                    <div style={{ fontSize: '0.65rem', color: pl.color, fontWeight: 700 }}>{name(pl)}</div>
-                                    <div style={{ fontSize: '0.55rem', color: 'var(--text-muted)' }}>{t.earthTimes(xTimes)}</div>
+                                    <div style={{ fontSize: '0.75rem', color: pl.color, fontWeight: 700 }}>{name(pl)}</div>
+                                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{t.earthTimes(xTimes)}</div>
                                 </div>
                             </div>
                         )
                     })}
                 </div>
-                <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.62rem', marginTop: '0.25rem' }}>{t.relativeHint}</p>
+                <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '0.25rem' }}>{t.relativeHint}</p>
             </div>
 
             {/* Comparator */}
@@ -254,15 +254,15 @@ export default function PlanetesPage() {
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem', padding: '0.875rem', marginBottom: '1rem', borderRadius: '0.75rem', background: 'rgba(0,0,0,0.2)' }}>
                             <div style={{ textAlign: 'center' }}>
                                 <div style={{ width: 70, height: 70, borderRadius: '50%', background: `radial-gradient(circle at 35% 35%, ${bigger.color}cc, ${bigger.color}22)`, border: `2px solid ${bigger.color}55`, margin: '0 auto 0.25rem' }} />
-                                <div style={{ color: bigger.color, fontSize: '0.7rem', fontWeight: 700 }}>{name(bigger)}</div>
+                                <div style={{ color: bigger.color, fontSize: '0.75rem', fontWeight: 700 }}>{name(bigger)}</div>
                             </div>
                             <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
                                 <div style={{ fontSize: '1.3rem', color: 'var(--text-muted)', fontWeight: 900 }}>×{ratio}</div>
-                                <div style={{ fontSize: '0.58rem' }}>{t.bigger}</div>
+                                <div style={{ fontSize: '0.75rem' }}>{t.bigger}</div>
                             </div>
                             <div style={{ textAlign: 'center' }}>
                                 <div style={{ width: Math.max(10, 70 / ratioValue), height: Math.max(10, 70 / ratioValue), borderRadius: '50%', background: `radial-gradient(circle at 35% 35%, ${smaller.color}cc, ${smaller.color}22)`, border: `2px solid ${smaller.color}55`, margin: '0 auto 0.25rem' }} />
-                                <div style={{ color: smaller.color, fontSize: '0.7rem', fontWeight: 700 }}>{name(smaller)}</div>
+                                <div style={{ color: smaller.color, fontSize: '0.75rem', fontWeight: 700 }}>{name(smaller)}</div>
                             </div>
                         </div>
                     )
@@ -297,7 +297,7 @@ export default function PlanetesPage() {
                                     {t.weigh(name(pl))[0]}<strong style={{ color: pl.color }}>{(30 * pl.gravity / 9.81).toLocaleString(numbers, { maximumFractionDigits: 1 })} kg</strong>{t.weigh(name(pl))[1]}
                                 </div>
                             )}
-                            <div style={{ marginTop: '0.5rem', padding: '0.5rem 0.75rem', borderRadius: '0.5rem', background: `${pl.color}08`, border: `1px solid ${pl.color}15`, fontSize: '0.68rem', color: 'var(--text-muted)', lineHeight: 1.5, textAlign: 'left' }}>
+                            <div style={{ marginTop: '0.5rem', padding: '0.5rem 0.75rem', borderRadius: '0.5rem', background: `${pl.color}08`, border: `1px solid ${pl.color}15`, fontSize: '0.75rem', color: 'var(--text-muted)', lineHeight: 1.5, textAlign: 'left' }}>
                                 <SpaceIcon name="bulb" size={18} className="inline-icon" /> {locale === 'en' ? pl.funEn : pl.fun}
                             </div>
                         </div>

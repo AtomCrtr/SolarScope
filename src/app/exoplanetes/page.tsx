@@ -176,7 +176,7 @@ export default function ExoplanetesPage() {
                 }}>
                     <SpaceIcon name="globe" size={18} />
                     {habitableZoneOnly ? t.habitableOnly : t.allPlanets}
-                    <span style={{ fontSize: '0.65rem', padding: '1px 6px', borderRadius: 99, background: habitableZoneOnly ? '#10b98120' : 'rgba(255,255,255,0.06)', color: habitableZoneOnly ? '#10b981' : 'var(--text-muted)' }}>
+                    <span style={{ fontSize: '0.75rem', padding: '1px 6px', borderRadius: 99, background: habitableZoneOnly ? '#10b98120' : 'rgba(255,255,255,0.06)', color: habitableZoneOnly ? '#10b981' : 'var(--text-muted)' }}>
                         {filtered.length}
                     </span>
                 </button>
@@ -189,11 +189,11 @@ export default function ExoplanetesPage() {
                     <div key={exo.name} className="card" style={{ padding: '1.25rem', borderLeft: `4px solid ${exo.color}` }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
                             <h3 style={{ color: exo.color, fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '0.95rem' }}>{exo.name}</h3>
-                            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', marginLeft: '0.5rem' }}>{exo.distance[locale]}</span>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', marginLeft: '0.5rem' }}>{exo.distance[locale]}</span>
                         </div>
                         <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.625rem' }}>
-                            <span style={{ fontSize: '0.72rem', color: 'var(--nebula)', background: 'rgba(196,181,253,0.12)', padding: '2px 8px', borderRadius: 999 }}>{exo.type[locale]}</span>
-                            {exo.inHabitableZone && <span style={{ fontSize: '0.72rem', color: '#10b981', background: 'rgba(16,185,129,0.1)', padding: '2px 8px', borderRadius: 999 }}><SpaceIcon name="globe" size={18} className="inline-icon" /> {t.inZone}</span>}
+                            <span style={{ fontSize: '0.75rem', color: 'var(--nebula)', background: 'rgba(196,181,253,0.12)', padding: '2px 8px', borderRadius: 999 }}>{exo.type[locale]}</span>
+                            {exo.inHabitableZone && <span style={{ fontSize: '0.75rem', color: '#10b981', background: 'rgba(16,185,129,0.1)', padding: '2px 8px', borderRadius: 999 }}><SpaceIcon name="globe" size={18} className="inline-icon" /> {t.inZone}</span>}
                         </div>
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.82rem', lineHeight: 1.7, marginBottom: '0.625rem' }}>{exo.description[locale]}</p>
                         <p style={{ color: '#f59e0b', fontSize: '0.78rem', lineHeight: 1.6 }}><SpaceIcon name="bulb" size={18} className="inline-icon" /> {exo.fun[locale]}</p>
@@ -209,7 +209,7 @@ export default function ExoplanetesPage() {
                         <h3 style={{ color: 'var(--text)', fontWeight: 700, fontSize: '0.875rem', marginBottom: '0.5rem' }}>{v.title[locale]}</h3>
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '0.75rem', lineHeight: 1.6 }}>{v.description[locale]}</p>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <span style={{ fontSize: '0.72rem', color: 'var(--nebula)', background: 'rgba(196,181,253,0.12)', padding: '2px 8px', borderRadius: 999 }}>{v.age[locale]}</span>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--nebula)', background: 'rgba(196,181,253,0.12)', padding: '2px 8px', borderRadius: 999 }}>{v.age[locale]}</span>
                             <a href={v.url} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ textDecoration: 'none', padding: '0.4rem 0.875rem', fontSize: '0.78rem' }}>▶ YouTube</a>
                         </div>
                     </div>

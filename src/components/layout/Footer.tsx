@@ -136,7 +136,7 @@ export default function Footer() {
                                     display: 'flex', alignItems: 'center', gap: '0.3rem',
                                     padding: '4px 10px', borderRadius: 99, textDecoration: 'none',
                                     background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)',
-                                    color: 'var(--text-muted)', fontSize: '0.72rem', fontWeight: 600, transition: 'all 0.15s',
+                                    color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 600, transition: 'all 0.15s',
                                 }}
                                     onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#c4b5fd'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(196,181,253,0.25)' }}
                                     onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = '#94a3b8'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.07)' }}>
@@ -149,7 +149,7 @@ export default function Footer() {
                     {/* Navigation groups */}
                     {groups.map(group => (
                         <div key={group.label}>
-                            <div style={{ color: 'var(--text-muted)', fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>
                                 {group.label}
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem' }}>
@@ -170,7 +170,7 @@ export default function Footer() {
 
                 {/* Data sources */}
                 <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1.5rem', marginBottom: '1.5rem' }}>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>
+                    <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>
                         {copy.sources}
                     </div>
                     <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
@@ -183,8 +183,8 @@ export default function Footer() {
                             }}
                                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(99,102,241,0.06)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(99,102,241,0.2)' }}
                                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.02)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.05)' }}>
-                                <span style={{ color: 'var(--text-subtle)', fontSize: '0.72rem', fontWeight: 700 }}>{s.name}</span>
-                                <span style={{ color: 'var(--text-muted)', fontSize: '0.7rem' }}>{locale === 'en' ? SOURCE_DESC_EN[s.name] : s.desc}</span>
+                                <span style={{ color: 'var(--text-subtle)', fontSize: '0.75rem', fontWeight: 700 }}>{s.name}</span>
+                                <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{locale === 'en' ? SOURCE_DESC_EN[s.name] : s.desc}</span>
                             </a>
                         ))}
                     </div>
@@ -192,14 +192,14 @@ export default function Footer() {
 
                 {/* Bottom bar */}
                 <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>
                         © {year} SolarScope · {copy.copyright}
                     </p>
                     <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '1rem' }}>
-                        <Link href="/confidentialite" style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>{copy.privacy}</Link>
-                        <Link href="/sources" style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>{copy.dataSources}</Link>
-                        <Link href="/#explorer" style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>{copy.about}</Link>
-                        <a href="https://github.com/AtomCrtr/SolarScope" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>{copy.contact}</a>
+                        <Link href="/confidentialite" style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{copy.privacy}</Link>
+                        <Link href="/sources" style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{copy.dataSources}</Link>
+                        <Link href="/#explorer" style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{copy.about}</Link>
+                        <a href="https://github.com/AtomCrtr/SolarScope" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{copy.contact}</a>
                         <LightModeToggle />
                     </div>
                 </div>

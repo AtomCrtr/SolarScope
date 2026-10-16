@@ -181,7 +181,7 @@ export default function SolarBotPage() {
                                             }}><FormattedText text={msg.text} /></div>
                                             {msg.role === 'bot' && <SolarBotReliabilityNote degraded={msg.degraded} />}
                                             {msg.role === 'bot' && <SolarBotSourceLinks sources={msg.sources} />}
-                                            <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: '0.25rem', textAlign: msg.role === 'user' ? 'right' : 'left' }}>{msg.time}</div>
+                                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem', textAlign: msg.role === 'user' ? 'right' : 'left' }}>{msg.time}</div>
                                         </div>
                                     </div>
                                 ))}

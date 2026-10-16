@@ -94,11 +94,11 @@ export default function SolarFlareHistory() {
                         <div style={{ display: 'flex', gap: '1rem' }}>
                             <div style={{ textAlign: 'center', padding: '0.75rem 1rem', background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.25)', borderRadius: '0.75rem' }}>
                                 <div style={{ color: '#60a5fa', fontWeight: 900, fontFamily: 'var(--font-display)', fontSize: '1.5rem' }}>{Math.round(latestWind.speed)}</div>
-                                <div style={{ color: 'var(--text-muted)', fontSize: '0.7rem', fontWeight: 600 }}>km/s</div>
+                                <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 600 }}>km/s</div>
                             </div>
                             <div style={{ textAlign: 'center', padding: '0.75rem 1rem', background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.25)', borderRadius: '0.75rem' }}>
                                 <div style={{ color: '#22d3ee', fontWeight: 900, fontFamily: 'var(--font-display)', fontSize: '1.5rem' }}>{latestWind.density.toFixed(1)}</div>
-                                <div style={{ color: 'var(--text-muted)', fontSize: '0.7rem', fontWeight: 600 }}>p/cm³</div>
+                                <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 600 }}>p/cm³</div>
                             </div>
                         </div>
                     )}
@@ -141,7 +141,7 @@ export default function SolarFlareHistory() {
                         />
                     </svg>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.4rem', fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.4rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                     <span>{en ? '12h ago' : 'Il y a 12h'}</span>
                     <span style={{ color: '#f97316' }}>{en ? '— 500 km/s threshold' : '— seuil 500 km/s'}</span>
                     <span>{windState === 'cached' ? (en ? 'Last measurement' : 'Dernière mesure') : (en ? 'Now' : 'Maintenant')}</span>
@@ -176,7 +176,7 @@ export default function SolarFlareHistory() {
                                 return (
                                     <div key={cls} style={{ padding: '0.5rem 1rem', borderRadius: '0.625rem', background: `${color}12`, border: `1px solid ${color}30`, textAlign: 'center' }}>
                                         <div style={{ color, fontWeight: 900, fontFamily: 'var(--font-display)', fontSize: '1.4rem', lineHeight: 1 }}>{count}</div>
-                                        <div style={{ color, fontSize: '0.72rem', fontWeight: 700 }}>{en ? 'Class' : 'Classe'} {cls}</div>
+                                        <div style={{ color, fontSize: '0.75rem', fontWeight: 700 }}>{en ? 'Class' : 'Classe'} {cls}</div>
                                     </div>
                                 )
                             })}
@@ -217,7 +217,7 @@ export default function SolarFlareHistory() {
                                                     {f.sourceLocation || '—'}
                                                 </td>
                                                 <td style={{ padding: '0.7rem 1rem' }}>
-                                                    <span style={{ color, fontSize: '0.72rem', fontWeight: 500 }}>{getFlareDesc(f.classType || '', en)}</span>
+                                                    <span style={{ color, fontSize: '0.75rem', fontWeight: 500 }}>{getFlareDesc(f.classType || '', en)}</span>
                                                 </td>
                                             </tr>
                                         )

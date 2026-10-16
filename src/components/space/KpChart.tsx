@@ -194,9 +194,9 @@ export default function KpChart() {
                     background: `${kpColor}12`, border: `2px solid ${kpColor}40`,
                     borderRadius: '1rem', minWidth: 120,
                 }}>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.72rem', fontWeight: 600, letterSpacing: '0.06em', marginBottom: '0.25rem' }}>KP ACTUEL</div>
+                    <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.06em', marginBottom: '0.25rem' }}>KP ACTUEL</div>
                     <div style={{ color: kpColor, fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '2.8rem', lineHeight: 1, textShadow: `0 0 20px ${kpColor}` }}>{current.kp.toFixed(1)}</div>
-                    <div style={{ color: kpColor, fontSize: '0.72rem', fontWeight: 600, marginTop: '0.3rem' }}>{getKpLabel(current.kp, en)}</div>
+                    <div style={{ color: kpColor, fontSize: '0.75rem', fontWeight: 600, marginTop: '0.3rem' }}>{getKpLabel(current.kp, en)}</div>
                 </div>
             </div>
 
@@ -208,7 +208,7 @@ export default function KpChart() {
                     { label: 'Kp 5-6 G1-G2', color: '#f97316' },
                     { label: 'Kp 7+ G3+', color: '#f87171' },
                 ].map(s => (
-                    <span key={s.label} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: '0.72rem', color: s.color, fontWeight: 600 }}>
+                    <span key={s.label} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: '0.75rem', color: s.color, fontWeight: 600 }}>
                         <span style={{ width: 10, height: 10, borderRadius: 2, background: s.color, display: 'inline-block' }} />
                         {s.label}
                     </span>

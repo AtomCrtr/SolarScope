@@ -116,16 +116,16 @@ export default function SoleilPage() {
                             <div key={img.src} className="card motion-enter" style={{ animationDelay: `${Math.min(0.1 + i * 0.1, 0.6)}s`, overflow: 'hidden', padding: 0 }}>
                                 <div style={{ position: 'relative' }}>
                                     <Image src={img.src} alt={img.label[locale]} width={512} height={512} unoptimized style={{ width: '100%', height: 120, objectFit: 'cover', display: 'block' }} />
-                                    <div style={{ position: 'absolute', top: 6, right: 6, background: 'rgba(0,0,0,0.7)', borderRadius: 4, padding: '1px 6px', fontSize: '0.65rem', color: '#fbbf24', fontWeight: 600 }}>{img.wavelength[locale]}</div>
+                                    <div style={{ position: 'absolute', top: 6, right: 6, background: 'rgba(0,0,0,0.7)', borderRadius: 4, padding: '1px 6px', fontSize: '0.75rem', color: '#fbbf24', fontWeight: 600 }}>{img.wavelength[locale]}</div>
                                 </div>
                                 <div style={{ padding: '0.6rem' }}>
                                     <p style={{ color: '#fcd34d', fontWeight: 700, fontSize: '0.75rem' }}>{img.label[locale]}</p>
-                                    <p style={{ color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: 2 }}>{img.desc[locale]}</p>
+                                    <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: 2 }}>{img.desc[locale]}</p>
                                 </div>
                             </div>
                         ))}
                     </div>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: '0.5rem', textAlign: 'right' }}>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '0.5rem', textAlign: 'right' }}>
                         <SpaceIcon name="refresh" size={14} className="inline-icon" /> {copy.sdoSource}
                     </p>
                 </div>
@@ -139,7 +139,7 @@ export default function SoleilPage() {
                         <div key={l.name.fr} style={{ padding: '1rem', borderRadius: '0.875rem', background: `${l.color}10`, border: `1px solid ${l.color}25` }}>
                             <div style={{ color: l.color, fontWeight: 700, fontFamily: 'var(--font-display)', fontSize: '0.9rem', marginBottom: '0.25rem' }}>{l.name[locale]}</div>
                             <div style={{ color: l.color, fontWeight: 800, fontSize: '0.85rem', opacity: 0.9, marginBottom: '0.35rem' }}>{l.temp[locale]}</div>
-                            <div style={{ color: 'var(--text-muted)', fontSize: '0.7rem', marginBottom: '0.35rem' }}>{l.radius[locale]}</div>
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginBottom: '0.35rem' }}>{l.radius[locale]}</div>
                             <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', lineHeight: 1.5 }}>{l.desc[locale]}</p>
                         </div>
                     ))}
