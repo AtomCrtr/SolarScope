@@ -1879,7 +1879,7 @@ body:has(.home-mission-board) main > div:first-child { display: none; }
   align-items: center;
 }
 
-.breadcrumb { display: flex; flex-wrap: wrap; min-height: 32px; align-items: center; gap: 0.375rem; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.72rem; font-weight: 500; }
+.breadcrumb { display: flex; flex-wrap: wrap; min-height: 32px; align-items: center; gap: 0.375rem; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.85rem; font-weight: 500; }
 .breadcrumb-link { color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
 .breadcrumb-link:hover { color: var(--text); }
 .breadcrumb-separator { opacity: 0.6; }
@@ -2243,7 +2243,7 @@ body:has(.home-mission-board) main > div:first-child { display: none; }
 .rover-still img { max-width: 90%; max-height: 90%; object-fit: contain; }
 .iss-still { position: relative; width: 100%; aspect-ratio: 2 / 1; border-radius: 0.8rem; background: #0b1026 url(/textures/earth.jpg) center / cover; }
 .iss-still span { position: absolute; width: 14px; height: 14px; border: 3px solid #fff; border-radius: 50%; background: var(--sun); transform: translate(-50%, -50%); box-shadow: 0 0 0 6px rgba(255, 138, 61, 0.35); }
-.light-mode-toggle { min-height: 32px; padding: 0; border: 0; background: transparent; color: var(--text-muted); font: inherit; font-size: 0.72rem; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.light-mode-toggle { min-height: 32px; padding: 0; border: 0; background: transparent; color: var(--text-muted); font: inherit; font-size: 0.8125rem; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .light-mode-toggle:focus-visible { outline: 2px solid var(--sun); outline-offset: 2px; }
 
 /* ─── MISSION CONTROL layer ─── playful flight-deck details on top of the « carnet de bord » charte. */
@@ -2307,3 +2307,14 @@ a { text-underline-offset: 3px; }
 }
 @keyframes kpi-shimmer { to { background-position: -200% 0; } }
 @media (prefers-reduced-motion: reduce) { .home-kpi strong.is-loading { animation: none; } }
+
+/* Lesson card: two columns on wide screens so the real content (maps, data, 3D) starts higher on the page. */
+@media (min-width: 1000px) {
+  .kids-guide { display: grid; max-width: var(--max-w); grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 2rem; }
+  .kids-guide > * { grid-column: 1 / -1; }
+  .kids-guide > [data-guide-section="remember"] { grid-column: 1; grid-row: 3; }
+  .kids-guide > [data-guide-section="challenge"] { grid-column: 2; grid-row: 3; }
+  .kids-guide > [data-guide-section="words"] { grid-row: 4; }
+  .kids-guide .kids-takeaways ol, .kids-guide .kids-quick-mission ol { grid-template-columns: 1fr; }
+  .kids-guide .kids-analogy { margin-top: 0; }
+}
