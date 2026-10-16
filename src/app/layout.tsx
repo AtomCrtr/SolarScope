@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Atkinson_Hyperlegible, Caveat, Fredoka } from 'next/font/google'
+import { Atkinson_Hyperlegible, Caveat, Fredoka, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/layout/Navbar'
 import StarField from '@/components/layout/StarField'
@@ -17,6 +17,8 @@ import { DEFAULT_DESCRIPTION, pageMetadata, SITE_NAME, SITE_URL } from '@/lib/co
 const bodyFont = Atkinson_Hyperlegible({ subsets: ['latin'], weight: ['400', '700'], variable: '--font-body', display: 'swap' })
 const displayFont = Fredoka({ subsets: ['latin'], weight: ['500', '600', '700'], variable: '--font-display', display: 'swap' })
 const noteFont = Caveat({ subsets: ['latin'], weight: ['600', '700'], variable: '--font-note', display: 'swap' })
+
+const dataFont = JetBrains_Mono({ subsets: ['latin'], weight: ['500', '700'], variable: '--font-data', display: 'swap' })
 
 const home = pageMetadata('/')
 
@@ -51,7 +53,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" data-theme="dark" className={`${bodyFont.variable} ${displayFont.variable} ${noteFont.variable}`} suppressHydrationWarning>
+    <html lang="fr" data-theme="dark" className={`${bodyFont.variable} ${displayFont.variable} ${noteFont.variable} ${dataFont.variable}`} suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
