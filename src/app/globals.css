@@ -2318,3 +2318,29 @@ a { text-underline-offset: 3px; }
   .kids-guide .kids-takeaways ol, .kids-guide .kids-quick-mission ol { grid-template-columns: 1fr; }
   .kids-guide .kids-analogy { margin-top: 0; }
 }
+
+/* ─── Shared page chrome: one recognisable header and card edge for every page. ─── */
+.page-header { position: relative; isolation: isolate; padding-bottom: 1.75rem; }
+.page-header::before {
+  content: "";
+  position: absolute; inset: -2rem 10% auto; height: 16rem; z-index: -1;
+  background: radial-gradient(ellipse at 50% 30%, rgba(255, 138, 61, 0.16), rgba(142, 197, 255, 0.07) 45%, transparent 70%);
+  pointer-events: none;
+}
+.page-header::after {
+  content: "";
+  display: block; width: min(220px, 40%); height: 2px; margin: 1.5rem auto 0;
+  background: linear-gradient(90deg, transparent, var(--sun), transparent);
+  opacity: 0.7;
+}
+.page-title { text-wrap: balance; }
+.page-subtitle { text-wrap: pretty; }
+
+/* Lesson card: mission ticket feel. */
+.kids-guide { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 18px 40px rgba(3, 6, 20, 0.35); }
+.kids-guide-label::before {
+  content: ""; width: 7px; height: 7px; margin: auto 0.5rem auto 0; border-radius: 50%;
+  background: var(--led); box-shadow: 0 0 0 3px rgba(91, 227, 164, 0.18);
+}
+.card { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04); }
+@media (max-width: 720px) { .page-header::before { inset: -1rem 0 auto; height: 12rem; } }
