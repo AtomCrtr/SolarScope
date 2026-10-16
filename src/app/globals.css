@@ -1551,7 +1551,7 @@ video {
   color: var(--text);
   background: var(--card);
 }
-.home-discovery-banner > img { width: 100%; height: 100%; min-height: 240px; object-fit: cover; }
+.home-discovery-banner > img { background: var(--sky-2); width: 100%; height: 100%; min-height: 240px; object-fit: cover; }
 .home-discovery-banner > div { display: flex; flex-direction: column; justify-content: center; gap: 0.6rem; padding: clamp(1.5rem, 4vw, 3rem); }
 .home-discovery-kicker { color: var(--sun); font-family: var(--font-note), cursive; font-size: 1.7rem; font-weight: 700; }
 .home-discovery-banner strong { font-family: var(--font-display), system-ui, sans-serif; font-size: clamp(1.6rem, 3vw, 2.3rem); font-weight: 600; line-height: 1.1; }
@@ -2031,7 +2031,7 @@ body:has(.home-mission-board) main > div:first-child { display: none; }
 .planet-explorer-focuses { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.45rem; }
 .planet-explorer-focuses button { min-height: 42px; padding: 0.45rem 0.55rem; border: 1px solid rgba(148, 163, 184, 0.16); border-radius: 0.65rem; color: #cbd5e1; background: rgba(30, 41, 59, 0.45); cursor: pointer; font: inherit; font-size: 0.73rem; font-weight: 700; text-align: left; }
 .planet-explorer-focuses button[aria-selected="true"] { border-color: var(--star); color: var(--text); background: rgba(142, 197, 255, 0.2); }
-.planet-explorer-focus-card { display: flex; gap: 0.55rem; min-height: 72px; margin-top: 0.7rem; padding: 0.7rem; border-left: 3px solid var(--star); border-radius: 0 0.65rem 0.65rem 0; background: rgba(142, 197, 255, 0.1); }
+.planet-explorer-focus-card { display: flex; gap: 0.55rem; min-height: 72px; margin-top: 0.7rem; padding: 0.7rem; border: 1px solid rgba(142, 197, 255, 0.35); border-radius: 0.65rem; background: rgba(142, 197, 255, 0.1); }
 .planet-explorer-focus-card > span { font-size: 1.15rem; }
 .planet-explorer-focus-card p, .planet-explorer-fun-fact p { margin: 0; color: #d8e0ee; font-size: 0.8rem; line-height: 1.55; }
 .planet-explorer-fun-fact { display: flex; gap: 0.55rem; margin: 0.7rem 0; padding: 0.7rem; border: 1px solid rgba(251, 191, 36, 0.22); border-radius: 0.7rem; background: rgba(251, 191, 36, 0.06); }
@@ -2118,7 +2118,7 @@ body:has(.home-mission-board) main > div:first-child { display: none; }
 .mars-mission-steps strong { display: block; color: #fda4af; font-family: var(--font-display), system-ui, sans-serif; font-size: 0.86rem; }
 .mars-mission-steps p { margin: 0.55rem 0; color: #e2e8f0; font-size: 0.8rem; line-height: 1.55; }
 .mars-mission-steps button { padding: 0.42rem 0.65rem; font-size: 0.72rem; }
-.mars-mission-answer { padding: 0.6rem; border-left: 3px solid #fda4af; border-radius: 0 0.5rem 0.5rem 0; background: rgba(190, 24, 93, 0.15); }
+.mars-mission-answer { padding: 0.6rem; border: 1px solid rgba(253, 164, 175, 0.4); border-radius: 0.5rem; background: rgba(190, 24, 93, 0.15); }
 
 @media (max-width: 720px) {
   .mars-mission-heading { display: block; }
@@ -2298,3 +2298,12 @@ a { text-underline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) {
   .btn-primary, .home-featured-action, .home-path-card::before { transition: none; }
 }
+
+/* Loading skeleton for live figures instead of a bare ellipsis. */
+.home-kpi strong.is-loading {
+  width: 4ch; color: transparent !important; border-radius: 0.5rem;
+  background: linear-gradient(90deg, var(--orbit) 25%, var(--card-2) 50%, var(--orbit) 75%) 0 0 / 200% 100%;
+  animation: kpi-shimmer 1.4s linear infinite;
+}
+@keyframes kpi-shimmer { to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .home-kpi strong.is-loading { animation: none; } }

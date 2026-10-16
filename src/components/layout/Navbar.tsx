@@ -196,7 +196,7 @@ export default function Navbar() {
                         <Link href="/" style={{
                             display: 'flex', alignItems: 'center', gap: '0.3rem',
                             padding: '6px 11px', borderRadius: '10px', textDecoration: 'none',
-                            fontSize: '0.78rem', fontWeight: 600, whiteSpace: 'nowrap',
+                            fontSize: '0.9rem', fontWeight: 600, whiteSpace: 'nowrap',
                             color: pathname === '/' ? 'var(--text)' : 'var(--text-subtle)',
                             background: pathname === '/' ? '#18214a' : 'transparent',
                             border: `1px solid ${pathname === '/' ? 'var(--orbit)' : 'transparent'}`,
@@ -223,14 +223,14 @@ export default function Navbar() {
                                         style={{
                                         display: 'flex', alignItems: 'center', gap: '0.3rem',
                                         padding: '6px 11px', borderRadius: '10px', cursor: 'pointer',
-                                        fontSize: '0.78rem', fontWeight: 600, whiteSpace: 'nowrap',
+                                        fontSize: '0.9rem', fontWeight: 600, whiteSpace: 'nowrap',
                                         color: isActive || isOpen ? 'var(--text)' : 'var(--text-subtle)',
                                         background: isActive ? `${group.color}22` : isOpen ? 'rgba(255,255,255,0.08)' : 'transparent',
                                         border: `1px solid ${isActive ? `${group.color}44` : 'transparent'}`,
                                         transition: 'all 0.15s',
                                     }}>
                                         <span>{group.label}</span>
-                                        <span className="nav-chevron" style={{ fontSize: '0.6rem', color: 'var(--text-muted)', display: 'inline-block', transform: isOpen ? 'rotate(180deg)' : undefined }} aria-hidden="true">▼</span>
+                                        <span className="nav-chevron" style={{ color: 'var(--text-muted)', display: 'inline-flex', marginLeft: 2, transform: isOpen ? 'rotate(180deg)' : undefined }} aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" /></svg></span>
                                     </button>
 
                                     {/* Dropdown panel */}
@@ -375,7 +375,7 @@ export default function Navbar() {
                                             <span style={{ color: isActive ? group.color : 'var(--text-subtle)', fontSize: '0.9rem', fontWeight: 700 }}>
                                                 {group.label}
                                             </span>
-                                            <span className="nav-chevron" style={{ color: 'var(--text-muted)', fontSize: '0.65rem', display: 'inline-block', transform: isGroupOpen ? 'rotate(180deg)' : undefined }} aria-hidden="true">▼</span>
+                                            <span className="nav-chevron" style={{ color: 'var(--text-muted)', display: 'inline-flex', transform: isGroupOpen ? 'rotate(180deg)' : undefined }} aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" /></svg></span>
                                         </button>
                                         <>
                                             {isGroupOpen && (

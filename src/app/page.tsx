@@ -204,7 +204,7 @@ export default function HomePage() {
         <div className="home-kpi-grid">
           {kpis.map(kpi => (
             <article key={kpi.label} className="home-kpi">
-              <strong className={kpi.value === 'Indisponible' || kpi.value === 'Unavailable' ? 'is-unavailable' : undefined} style={{ color: kpi.color }}>{kpi.value}</strong>
+              <strong className={kpi.value === '…' ? 'is-loading' : kpi.value === 'Indisponible' || kpi.value === 'Unavailable' ? 'is-unavailable' : undefined} aria-busy={kpi.value === '…' || undefined} style={{ color: kpi.color }}>{kpi.value}</strong>
               <span className="home-kpi-label">{kpi.label}</span>
               <small>{kpi.source}</small>
             </article>
