@@ -312,7 +312,7 @@ export default function SpaceWeatherDashboard() {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }} className="max-md:grid-cols-1">
 
                         {/* Bz magnetic field */}
-                        <div style={{ background: 'rgba(99,102,241,0.04)', border: '1px solid rgba(99,102,241,0.12)', borderRadius: '1.25rem', padding: '1.5rem' }}>
+                        <div style={{ background: 'rgba(142, 197, 255, 0.04)', border: '1px solid rgba(142, 197, 255, 0.12)', borderRadius: '1.25rem', padding: '1.5rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
                                 <span style={{ fontSize: '1.2rem' }}><SpaceIcon name="magnet" size={18} className="inline-icon" /></span>
                                 <div>
@@ -335,7 +335,7 @@ export default function SpaceWeatherDashboard() {
                                     ))}
                                 </div>
                             )}
-                            <div style={{ marginTop: '0.875rem', padding: '0.625rem', background: 'rgba(99,102,241,0.06)', borderRadius: '0.625rem', border: '1px solid rgba(99,102,241,0.12)' }}>
+                            <div style={{ marginTop: '0.875rem', padding: '0.625rem', background: 'rgba(142, 197, 255, 0.06)', borderRadius: '0.625rem', border: '1px solid rgba(142, 197, 255, 0.12)' }}>
                                 <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
                                     <SpaceIcon name="bulb" size={18} className="inline-icon" /> {en
                                         ? <><strong style={{ color: 'var(--text-muted)' }}>Negative Bz</strong> = the solar magnetic field points south. It can connect with Earth’s field and let in the charged particles that cause auroras.</>

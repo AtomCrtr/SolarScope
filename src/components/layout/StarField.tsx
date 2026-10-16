@@ -47,8 +47,8 @@ export default function StarField() {
 
         // A few nebula-like colored blobs
         const blobs = [
-            { x: 0.15, y: 0.2, r: 300, color: 'rgba(99,102,241,0.04)' },
-            { x: 0.85, y: 0.75, r: 250, color: 'rgba(139,92,246,0.05)' },
+            { x: 0.15, y: 0.2, r: 300, color: 'rgba(142, 197, 255, 0.04)' },
+            { x: 0.85, y: 0.75, r: 250, color: 'rgba(142, 197, 255, 0.05)' },
             { x: 0.5, y: 0.5, r: 200, color: 'rgba(59,130,246,0.03)' },
         ]
 

@@ -312,8 +312,8 @@ export default function Navbar() {
                             className="md:hidden"
                             style={{
                                 width: 36, height: 36, borderRadius: 10,
-                                background: mobileOpen ? 'rgba(139,92,246,0.15)' : 'rgba(255,255,255,0.05)',
-                                border: `1px solid ${mobileOpen ? 'rgba(139,92,246,0.3)' : 'rgba(255,255,255,0.08)'}`,
+                                background: mobileOpen ? 'rgba(142, 197, 255, 0.15)' : 'rgba(255,255,255,0.05)',
+                                border: `1px solid ${mobileOpen ? 'rgba(142, 197, 255, 0.3)' : 'rgba(255,255,255,0.08)'}`,
                                 cursor: 'pointer', color: 'var(--text)', flexShrink: 0,
                                 alignItems: 'center', justifyContent: 'center',
                                 fontSize: '1rem', transition: 'all 0.2s',

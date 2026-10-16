@@ -220,7 +220,7 @@ export default function QuizPage() {
                             {finished && (
                                 <div className="motion-enter" style={{
                                     marginTop: '2rem', padding: '2rem', borderRadius: '1.25rem', textAlign: 'center',
-                                    background: totalCorrect === questions.length ? 'linear-gradient(135deg, rgba(16,185,129,0.1),rgba(99,102,241,0.1))' : 'rgba(255,255,255,0.04)',
+                                    background: totalCorrect === questions.length ? 'linear-gradient(135deg, rgba(16,185,129,0.1),rgba(142, 197, 255, 0.1))' : 'rgba(255,255,255,0.04)',
                                     border: `2px solid ${totalCorrect === questions.length ? '#10b981' : totalCorrect >= questions.length / 2 ? '#f59e0b' : '#f87171'}`,
                                 }}>
                                     <div style={{ marginBottom: '0.5rem' }}>
@@ -247,7 +247,7 @@ export default function QuizPage() {
                                 <div style={{ color: 'var(--nebula)', marginBottom: '0.5rem' }}><SpaceIcon name={v.icon} size={36} /></div>
                                 <h3 style={{ color: 'var(--text)', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.375rem' }}>{v.title[locale]}</h3>
                                 <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', lineHeight: 1.6, marginBottom: '0.875rem' }}>{v.description[locale]}</p>
-                                <span style={{ fontSize: '0.72rem', color: 'var(--nebula)', background: 'rgba(167,139,250,0.1)', padding: '2px 10px', borderRadius: 999 }}>{v.age[locale]}</span>
+                                <span style={{ fontSize: '0.72rem', color: 'var(--nebula)', background: 'rgba(142, 197, 255, 0.1)', padding: '2px 10px', borderRadius: 999 }}>{v.age[locale]}</span>
                                 <br /><br />
                                 <a href={v.url} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ textDecoration: 'none', display: 'inline-flex' }}>{t.watch}</a>
                                 <a href={v.fallback} target="_blank" rel="noopener noreferrer" className="video-fallback">{t.unavailable(v.fallbackLabel[locale])}</a>

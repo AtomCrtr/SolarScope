@@ -131,7 +131,7 @@ export default function JWSTPage() {
 
       {/* HERO */}
       <div className="page-header motion-enter">
-        <div className="badge" style={{ background: 'rgba(99,102,241,0.12)', color: 'var(--nebula)', borderColor: 'rgba(99,102,241,0.25)' }}>
+        <div className="badge" style={{ background: 'rgba(142, 197, 255, 0.12)', color: 'var(--nebula)', borderColor: 'rgba(142, 197, 255, 0.25)' }}>
           <SpaceIcon name="telescope" size={18} className="inline-icon" /> JAMES WEBB SPACE TELESCOPE
         </div>
         <h1 className="page-title">{t.title}</h1>
@@ -160,8 +160,8 @@ export default function JWSTPage() {
         {(['gallery', 'nasa'] as const).map(tab => (
           <button key={tab} role="tab" aria-selected={activeTab === tab} onClick={() => setActiveTab(tab)} style={{
             padding: '0.5rem 1.25rem', borderRadius: 99, fontSize: '0.82rem', fontWeight: 700, cursor: 'pointer',
-            background: activeTab === tab ? 'rgba(99,102,241,0.2)' : 'rgba(255,255,255,0.04)',
-            border: `1px solid ${activeTab === tab ? 'rgba(99,102,241,0.45)' : 'rgba(255,255,255,0.07)'}`,
+            background: activeTab === tab ? 'rgba(142, 197, 255, 0.2)' : 'rgba(255,255,255,0.04)',
+            border: `1px solid ${activeTab === tab ? 'rgba(142, 197, 255, 0.45)' : 'rgba(255,255,255,0.07)'}`,
             color: activeTab === tab ? 'var(--nebula)' : 'var(--text-muted)', transition: 'all 0.2s',
           }}>
             {tab === 'gallery' ? t.iconic : t.live}
@@ -201,7 +201,7 @@ export default function JWSTPage() {
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.625rem', marginBottom: '2rem' }} className="max-sm:grid-cols-2">
             {nasaImages.map((img, i) => (
-              <a className="motion-enter" key={img.nasa_id} href={img.href} target="_blank" rel="noopener noreferrer" aria-label={t.nasaPage(img.title)} style={{ animationDelay: `${Math.min(i * 0.03, 0.6)}s`, display: 'block', textDecoration: 'none', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid rgba(99,102,241,0.12)' }}>
+              <a className="motion-enter" key={img.nasa_id} href={img.href} target="_blank" rel="noopener noreferrer" aria-label={t.nasaPage(img.title)} style={{ animationDelay: `${Math.min(i * 0.03, 0.6)}s`, display: 'block', textDecoration: 'none', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid rgba(142, 197, 255, 0.12)' }}>
                 <Image src={img.thumb} alt={img.title} width={600} height={400} style={{ width: '100%', height: 170, objectFit: 'cover', display: 'block' }}
                   onError={e => { e.currentTarget.style.visibility = 'hidden' }} />
                 <div style={{ padding: '0.5rem 0.625rem', background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)' }}>
@@ -217,7 +217,7 @@ export default function JWSTPage() {
       {/* Lightbox */}
       {highlight && (
         <div className="motion-enter" onClick={() => setSelectedHighlight(null)} role="dialog" aria-modal="true" aria-labelledby="jwst-dialog-title" style={{ position: 'fixed', inset: 0, zIndex: 9000, background: 'rgba(0,0,0,0.93)', backdropFilter: 'blur(20px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-          <div onClick={e => e.stopPropagation()} style={{ maxWidth: 900, width: '100%', borderRadius: '1.25rem', overflow: 'hidden', border: '1px solid rgba(99,102,241,0.2)' }}>
+          <div onClick={e => e.stopPropagation()} style={{ maxWidth: 900, width: '100%', borderRadius: '1.25rem', overflow: 'hidden', border: '1px solid rgba(142, 197, 255, 0.2)' }}>
             <Image src={highlight.img} alt={highlight.title[locale]} width={1400} height={900} style={{ width: '100%', height: 'auto', maxHeight: '60vh', objectFit: 'contain', background: '#000', display: 'block' }} />
             <div style={{ padding: '1.25rem 1.5rem', background: 'var(--card)' }}>
               <div style={{ color: highlight.color, fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.375rem' }}>

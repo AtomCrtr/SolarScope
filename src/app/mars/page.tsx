@@ -455,7 +455,7 @@ export default function MarsPage() {
                     <div key={`${ev.year}-${i}`} className="timeline-item">
                         <div className="timeline-dot" style={{
                             background: i === MARS_TIMELINE.length - 1
-                                ? 'linear-gradient(135deg, rgba(99,102,241,0.3), rgba(139,92,246,0.3))'
+                                ? 'linear-gradient(135deg, rgba(142, 197, 255, 0.3), rgba(142, 197, 255, 0.3))'
                                 : 'linear-gradient(135deg, #ef4444, #f97316)',
                             fontSize: '0.68rem', fontWeight: 700, minWidth: 32, height: 32,
                         }}>

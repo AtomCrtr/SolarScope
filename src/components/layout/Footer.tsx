@@ -181,7 +181,7 @@ export default function Footer() {
                                 background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)',
                                 transition: 'all 0.15s',
                             }}
-                                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(99,102,241,0.06)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(99,102,241,0.2)' }}
+                                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(142, 197, 255, 0.06)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(142, 197, 255, 0.2)' }}
                                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.02)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.05)' }}>
                                 <span style={{ color: 'var(--text-subtle)', fontSize: '0.72rem', fontWeight: 700 }}>{s.name}</span>
                                 <span style={{ color: 'var(--text-muted)', fontSize: '0.7rem' }}>{locale === 'en' ? SOURCE_DESC_EN[s.name] : s.desc}</span>

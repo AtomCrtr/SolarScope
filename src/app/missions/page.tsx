@@ -185,7 +185,7 @@ export default function MissionsPage() {
                                     {l.image && <img src={l.image} alt="" loading="lazy" decoding="async" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.08 }} />}
                                     <div style={{ position: 'relative' }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
-                                            <span style={{ fontSize: '0.68rem', fontWeight: 700, padding: '2px 7px', borderRadius: 99, background: 'rgba(99,102,241,0.15)', color: 'var(--nebula)', border: '1px solid rgba(99,102,241,0.2)' }}>
+                                            <span style={{ fontSize: '0.68rem', fontWeight: 700, padding: '2px 7px', borderRadius: 99, background: 'rgba(142, 197, 255, 0.15)', color: 'var(--nebula)', border: '1px solid rgba(142, 197, 255, 0.2)' }}>
                                                 {daysUntil <= 0 ? t.imminent : t.inDays(daysUntil)}
                                             </span>
                                             {i === 0 && <span style={{ fontSize: '0.65rem', color: '#10b981', fontWeight: 700 }}>{t.next}</span>}
@@ -254,9 +254,9 @@ export default function MissionsPage() {
                     {(['all', 'active', 'ended'] as const).map(s => (
                         <button key={s} aria-pressed={statusFilter === s} onClick={() => setStatusFilter(s)} style={{
                             padding: '0.35rem 0.75rem', borderRadius: 999, fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer',
-                            background: statusFilter === s ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,0.04)',
+                            background: statusFilter === s ? 'rgba(142, 197, 255, 0.15)' : 'rgba(255,255,255,0.04)',
                             color: statusFilter === s ? '#c7d2fe' : '#a8b3c7',
-                            border: statusFilter === s ? '1px solid rgba(99,102,241,0.35)' : '1px solid rgba(255,255,255,0.07)',
+                            border: statusFilter === s ? '1px solid rgba(142, 197, 255, 0.35)' : '1px solid rgba(255,255,255,0.07)',
                         }}>{t[s]}</button>
                     ))}
                 </div>

@@ -122,7 +122,7 @@ export default function SolarBotPage() {
     return (
         <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem', maxWidth: 860 }}>
             <div className="page-header motion-enter">
-                <div className="badge solarbot-hero-status" style={{ background: 'rgba(139,92,246,0.12)', color: 'var(--nebula)', borderColor: 'rgba(139,92,246,0.25)' }}>
+                <div className="badge solarbot-hero-status" style={{ background: 'rgba(142, 197, 255, 0.12)', color: 'var(--nebula)', borderColor: 'rgba(142, 197, 255, 0.25)' }}>
                     <SpaceIcon name="robot" size={18} className="inline-icon" /> <SolarBotStatus status={status} />
                 </div>
                 <h1 className="page-title">SolarBot</h1>
@@ -167,7 +167,7 @@ export default function SolarBotPage() {
                                         <div style={{
                                             width: 36, height: 36, borderRadius: '50%', flexShrink: 0,
                                             background: msg.role === 'bot' ? 'var(--sun)' : 'linear-gradient(135deg, #0f172a, #1e293b)',
-                                            border: msg.role === 'bot' ? '2px solid rgba(99,102,241,0.4)' : '2px solid rgba(255,255,255,0.1)',
+                                            border: msg.role === 'bot' ? '2px solid rgba(142, 197, 255, 0.4)' : '2px solid rgba(255,255,255,0.1)',
                                             display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem'
                                         }}>
                                             <SpaceIcon name={msg.role === 'bot' ? 'robot' : 'child'} size={20} />
@@ -242,8 +242,8 @@ export default function SolarBotPage() {
                                 {t.stories.map((theme, i) => (
                                     <button key={theme.label} aria-pressed={selectedTheme === i} onClick={() => setSelectedTheme(i)} style={{
                                         padding: '0.875rem', borderRadius: 12, cursor: 'pointer', textAlign: 'center',
-                                        background: selectedTheme === i ? 'linear-gradient(135deg, rgba(99,102,241,0.2), rgba(139,92,246,0.2))' : 'rgba(255,255,255,0.04)',
-                                        border: `1px solid ${selectedTheme === i ? 'rgba(139,92,246,0.4)' : 'rgba(255,255,255,0.07)'}`,
+                                        background: selectedTheme === i ? 'linear-gradient(135deg, rgba(142, 197, 255, 0.2), rgba(142, 197, 255, 0.2))' : 'rgba(255,255,255,0.04)',
+                                        border: `1px solid ${selectedTheme === i ? 'rgba(142, 197, 255, 0.4)' : 'rgba(255,255,255,0.07)'}`,
                                         color: selectedTheme === i ? 'var(--text)' : 'var(--text-muted)', fontWeight: 600, fontSize: '0.82rem',
                                     }}>
                                         <div style={{ marginBottom: '0.3rem' }}><SpaceIcon name={theme.icon as SpaceIconName} size={24} /></div>
@@ -259,7 +259,7 @@ export default function SolarBotPage() {
                             {story && (
                                 <div className="motion-enter" style={{
                                     marginTop: '1.5rem', padding: '1.5rem', borderRadius: '1rem',
-                                    background: 'rgba(139,92,246,0.06)', border: '1px solid var(--orbit)',
+                                    background: 'rgba(142, 197, 255, 0.06)', border: '1px solid var(--orbit)',
                                     borderLeft: '4px solid var(--sun)',
                                 }}>
                                     <div style={{ color: '#c084fc', fontWeight: 700, fontFamily: 'var(--font-display)', marginBottom: '0.75rem' }}>
@@ -278,7 +278,7 @@ export default function SolarBotPage() {
             {/* API key note */}
             <div style={{
                 marginTop: '1.5rem', padding: '1rem 1.25rem', borderRadius: '0.875rem',
-                background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.15)',
+                background: 'rgba(142, 197, 255, 0.06)', border: '1px solid rgba(142, 197, 255, 0.15)',
             }}>
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem', lineHeight: 1.6 }}>
                     <SpaceIcon name="lock" size={18} className="inline-icon" /> {t.privacy}
