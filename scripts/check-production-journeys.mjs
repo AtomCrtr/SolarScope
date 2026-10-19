@@ -6,8 +6,10 @@ const context = await browser.newContext({ viewport: { width: 1440, height: 1000
 const page = await context.newPage()
 
 async function open(route) {
-  const response = await page.goto(`${baseUrl}${route}`, { waitUntil: 'networkidle', timeout: 60_000 })
+  const response = await page.goto(`${baseUrl}${route}`, { waitUntil: 'load', timeout: 60_000 })
   if (!response?.ok()) throw new Error(`${route} returned ${response?.status() || 'no response'}`)
+  // networkidle never settles on pages with live polling/external widgets; best effort only
+  await page.waitForLoadState('networkidle', { timeout: 10_000 }).catch(() => {})
 }
 
 await open('/ciel')
