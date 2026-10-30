@@ -341,7 +341,7 @@ export default function MarsPage() {
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', marginBottom: '1.25rem' }}>{t.gallerySub}</p>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.625rem' }} className="max-sm:grid-cols-2">
                     {MARS_GALLERY.map((item, i) => (
-                        <button type="button" aria-label={t.enlarge(item.title[locale])} key={item.src} onClick={event => {
+                        <button type="button" aria-label={t.enlarge(`${item.rover} · ${item.camera} ${item.title[locale]}`)} key={item.src} onClick={event => {
                                 lightboxTriggerRef.current = event.currentTarget
                                 setLightboxIdx(i)
                             }} style={{ cursor: 'pointer', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)', position: 'relative', padding: 0, textAlign: 'left', background: 'transparent' }}>
@@ -355,6 +355,7 @@ export default function MarsPage() {
                             />
                             <div style={{ padding: '0.4rem 0.6rem', background: 'rgba(0,0,0,0.78)', backdropFilter: 'blur(6px)' }}>
                                 <div style={{ color: item.color, fontSize: '0.65rem', fontWeight: 700, fontFamily: 'var(--font-display)' }}>{item.rover} · {item.camera}</div>
+                                {' '}
                                 <div style={{ color: 'var(--text-muted)', fontSize: '0.6rem', marginTop: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.title[locale]}</div>
                             </div>
                         </button>

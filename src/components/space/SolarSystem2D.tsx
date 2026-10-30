@@ -132,17 +132,20 @@ export default function SolarSystem2D() {
                         <text x={cx} y={cy + 24} textAnchor="middle" fill="#fbbf24" fontSize="9" fontWeight="bold">☀</text>
                         {/* Planets */}
                         {planets.map(p => (
-                            <a key={p.name} href={`#planete-${p.id}`} aria-label={t.explore(pname(p))} className="solar-map-planet">
-                                {/* Connector line from orbit to planet */}
-                                <line x1={cx} y1={cy} x2={p.x} y2={p.y} stroke={p.color} strokeWidth="0.3" strokeOpacity="0.15" />
-                                <circle cx={p.x} cy={p.y} r={p.r}
-                                    fill={p.color} filter={`drop-shadow(0 0 ${p.r}px ${p.color})`} opacity={0.9} />
-                                <text x={p.x} y={p.y - p.r - 3} textAnchor="middle" fill={p.color} fontSize="8.5" fontWeight="bold" opacity={0.9}>
+                            <g key={p.name}>
+                                <a href={`#planete-${p.id}`} aria-label={t.explore(pname(p))} className="solar-map-planet">
+                                    {/* Connector line from orbit to planet */}
+                                    <line x1={cx} y1={cy} x2={p.x} y2={p.y} stroke={p.color} strokeWidth="0.3" strokeOpacity="0.15" />
+                                    <circle cx={p.x} cy={p.y} r={p.r}
+                                        fill={p.color} filter={`drop-shadow(0 0 ${p.r}px ${p.color})`} opacity={0.9} />
+                                    {/* Larger invisible target so small planets are easy to tap. */}
+                                    <circle cx={p.x} cy={p.y} r={Math.max(p.r + 10, 18)} fill="transparent" />
+                                </a>
+                                {/* Abbreviation kept outside the link: its accessible name is the full label, not "TER". */}
+                                <text x={p.x} y={p.y - p.r - 3} textAnchor="middle" fill={p.color} fontSize="8.5" fontWeight="bold" opacity={0.9} aria-hidden="true" pointerEvents="none">
                                     {pname(p).slice(0, 3).toUpperCase()}
                                 </text>
-                                {/* Larger invisible target so small planets are easy to tap. */}
-                                <circle cx={p.x} cy={p.y} r={Math.max(p.r + 10, 18)} fill="transparent" />
-                            </a>
+                            </g>
                         ))}
                     </svg>
                 </div>
@@ -163,14 +166,16 @@ export default function SolarSystem2D() {
                         </defs>
                         <text x={200} y={220} textAnchor="middle" fill="#fbbf24" fontSize="10" fontWeight="bold">☀</text>
                         {innerPlanets.map(p => (
-                            <a key={p.name} href={`#planete-${p.id}`} aria-label={t.explore(pname(p))} className="solar-map-planet">
-                                <circle cx={p.x} cy={p.y} r={p.r + 2} fill={p.color} filter={`drop-shadow(0 0 ${p.r + 3}px ${p.color})`} />
-                                <text x={p.x} y={p.y - p.r - 4} textAnchor="middle" fill={p.color} fontSize="9" fontWeight="bold">
+                            <g key={p.name}>
+                                <a href={`#planete-${p.id}`} aria-label={t.explore(pname(p))} className="solar-map-planet">
+                                    <circle cx={p.x} cy={p.y} r={p.r + 2} fill={p.color} filter={`drop-shadow(0 0 ${p.r + 3}px ${p.color})`} />
+                                    <line x1={200} y1={200} x2={p.x} y2={p.y} stroke={p.color} strokeWidth="0.4" strokeOpacity="0.2" />
+                                    <circle cx={p.x} cy={p.y} r={Math.max(p.r + 12, 18)} fill="transparent" />
+                                </a>
+                                <text x={p.x} y={p.y - p.r - 4} textAnchor="middle" fill={p.color} fontSize="9" fontWeight="bold" aria-hidden="true" pointerEvents="none">
                                     {pname(p).slice(0, 3).toUpperCase()}
                                 </text>
-                                <line x1={200} y1={200} x2={p.x} y2={p.y} stroke={p.color} strokeWidth="0.4" strokeOpacity="0.2" />
-                                <circle cx={p.x} cy={p.y} r={Math.max(p.r + 12, 18)} fill="transparent" />
-                            </a>
+                            </g>
                         ))}
                     </svg>
                 </div>
