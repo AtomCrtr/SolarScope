@@ -173,7 +173,7 @@ export default function JWSTPage() {
       {activeTab === 'gallery' && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem', marginBottom: '2rem' }} className="max-sm:grid-cols-1">
           {HIGHLIGHTS.map((h, i) => (
-            <button className="motion-enter" type="button" aria-label={t.enlarge(h.title[locale])} key={h.img} onClick={() => setSelectedHighlight(i)} style={{ animationDelay: `${Math.min(i * 0.06, 0.6)}s`, cursor: 'pointer', borderRadius: '1rem', overflow: 'hidden', border: `1px solid ${h.color}20`, position: 'relative', padding: 0, textAlign: 'left', background: 'transparent' }}>
+            <button className="motion-enter" type="button" aria-label={t.enlarge(`${h.category[locale]} · ${h.year} ${h.title[locale]} JWST`)} key={h.img} onClick={() => setSelectedHighlight(i)} style={{ animationDelay: `${Math.min(i * 0.06, 0.6)}s`, cursor: 'pointer', borderRadius: '1rem', overflow: 'hidden', border: `1px solid ${h.color}20`, position: 'relative', padding: 0, textAlign: 'left', background: 'transparent' }}>
               <Image src={h.img} alt={h.title[locale]} width={800} height={440}
                 style={{ width: '100%', height: 220, objectFit: 'cover', display: 'block' }}
                 onError={e => { e.currentTarget.style.visibility = 'hidden' }} />
@@ -182,8 +182,10 @@ export default function JWSTPage() {
                 <div style={{ fontSize: '0.62rem', fontWeight: 700, color: h.color, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem' }}>
                   {h.category[locale]} · {h.year}
                 </div>
+                {' '}
                 <h3 style={{ color: 'var(--text)', fontSize: '0.88rem', fontWeight: 700, fontFamily: 'var(--font-display)', lineHeight: 1.3 }}>{h.title[locale]}</h3>
               </div>
+              {' '}
               <div style={{ position: 'absolute', top: 10, right: 10, background: `${h.color}20`, border: `1px solid ${h.color}40`, borderRadius: 99, padding: '2px 8px', fontSize: '0.65rem', color: h.color, fontWeight: 700 }}>
                 JWST
               </div>

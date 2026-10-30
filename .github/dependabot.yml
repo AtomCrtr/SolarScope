@@ -16,6 +16,9 @@ updates:
       # typescript-eslint, utilisé par eslint-config-next, ne prend pas encore TypeScript 7 en charge.
       - dependency-name: typescript
         update-types: ["version-update:semver-major"]
+      # satellite.js 7 charge des modules WASM que Turbopack ne parvient pas à compiler (next build se fige).
+      - dependency-name: satellite.js
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
