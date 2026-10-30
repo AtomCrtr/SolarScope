@@ -28,7 +28,7 @@ const EARTH_RADIUS_KM = 6_378
 type Vector = { x: number; y: number; z: number }
 
 function sunVector(time: Date): Vector {
-  const [x, y, z] = sunPos(jday(time)).rsun
+  const { x, y, z } = sunPos(jday(time)).rsun
   return { x, y, z }
 }
 
@@ -78,7 +78,7 @@ export function findVisibleIssPasses(
   for (let index = 0; index <= steps && passes.length < limit; index += 1) {
     const time = new Date(from.getTime() + index * STEP_SECONDS * 1_000)
     const position = propagate(satrec, time)?.position
-    if (!position || typeof position === 'boolean') {
+    if (!position) {
       close()
       continue
     }
